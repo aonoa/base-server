@@ -12,24 +12,29 @@ import (
 	"base-server/internal/data"
 	"base-server/internal/server"
 	"base-server/internal/service"
-
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+)
+
+import (
+	_ "go.uber.org/automaxprocs"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, menus *conf.Menus, logger log.Logger) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	baseRepo := data.NewBaseRepo(dataData, logger)
+	authUsecase := biz.NewAuthUsecase(auth, confData, logger)
+	baseUsecase := biz.NewBaseUsecase(baseRepo, logger, authUsecase, menus)
+	baseService := service.NewBaseService(baseUsecase, auth)
+	grpcServer := server.NewGRPCServer(confServer, baseService, logger)
+	enforcer := biz.NewEnforcer(auth, confData)
+	httpServer := server.NewHTTPServer(confServer, auth, enforcer, baseService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

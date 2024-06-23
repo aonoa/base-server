@@ -1,0 +1,10 @@
+p, admin1, data_group1, dom1
+
+g, alice, admin, dom1
+g, admin, admin1, dom1
+g, admin1, admin2, dom1
+
+g2, (GET|POST):/diagnoseClass/{id}/diagnoseRow, data_group
+g2, data_group, data_group1
+g2, data_group1, data_group2
+

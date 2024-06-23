@@ -8,6 +8,8 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
+  Auth auth = 3;
+  Menus menus = 4;
 }
 
 message Server {
@@ -38,4 +40,15 @@ message Data {
   }
   Database database = 1;
   Redis redis = 2;
+}
+
+message Auth {
+  string service_key = 1;
+  string api_key = 2;
+  string model_path = 3;
+  string policy_path = 4;
+}
+
+message Menus {
+  string default_menus = 1;
 }

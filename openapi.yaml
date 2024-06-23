@@ -3,21 +3,317 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: Base API
     version: 0.0.1
 paths:
-    /helloworld/{name}:
+    /basic-api/getMenuList:
         get:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
+                - Base
+            description: 获取路由菜单列表
+            operationId: Base_GetMenuList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetMenuListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/getPermCode:
+        get:
+            tags:
+                - Base
+            description: 获取权限code
+            operationId: Base_GetPermCode
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPermCodeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/getUserInfo:
+        get:
+            tags:
+                - Base
+            description: 获取用户信息
+            operationId: Base_GetUserInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserInfoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/login:
+        post:
+            tags:
+                - Base
+            description: 用户登陆
+            operationId: Base_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LoginReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/logout:
+        get:
+            tags:
+                - Base
+            description: 注销登陆
+            operationId: Base_Logout
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/accountExist:
+        post:
+            tags:
+                - Base
+            description: 检查用户是否存在
+            operationId: Base_IsAccountExist
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/IsAccountRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/addDept:
+        post:
+            tags:
+                - Base
+            description: 新增部门
+            operationId: Base_AddDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeptListItem'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/addRole:
+        post:
+            tags:
+                - Base
+            description: 新增角色
+            operationId: Base_AddRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RoleListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RoleListItem'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/addUser:
+        post:
+            tags:
+                - Base
+            description: 新增用户
+            operationId: Base_AddUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AccountListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AccountListItem'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/changePassword:
+        post:
+            tags:
+                - Base
+            description: 改密码
+            operationId: Base_ChangePassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ChangePasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/delDept/{id}:
+        delete:
+            tags:
+                - Base
+            description: 删除部门
+            operationId: Base_DelDept
             parameters:
-                - name: name
+                - name: id
                   in: path
                   required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/delRole/{id}:
+        delete:
+            tags:
+                - Base
+            description: 删除角色
+            operationId: Base_DelRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/delUser/{id}:
+        delete:
+            tags:
+                - Base
+            description: 删除用户
+            operationId: Base_DelUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/getAccountList:
+        get:
+            tags:
+                - Base
+            description: 获取账户列表
+            operationId: Base_GetAccountList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: account
+                  in: query
+                  schema:
+                    type: string
+                - name: nickname
+                  in: query
+                  schema:
+                    type: string
+                - name: deptId
+                  in: query
                   schema:
                     type: string
             responses:
@@ -26,14 +322,496 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/GetAccountListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/getAllRoleList:
+        get:
+            tags:
+                - Base
+            description: 获取角色信息
+            operationId: Base_GetAllRoleList
+            parameters:
+                - name: roleName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetRoleListByPageReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/getDeptList:
+        get:
+            tags:
+                - Base
+            description: 获取部门列表
+            operationId: Base_GetDeptList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetDeptListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/getMenuList:
+        get:
+            tags:
+                - Base
+            description: 获取菜单列表
+            operationId: Base_GetSysMenuList
+            parameters:
+                - name: menuName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetSysMenuListReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/getRoleListByPage:
+        get:
+            tags:
+                - Base
+            description: 获取角色列表
+            operationId: Base_GetRoleListByPage
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: roleNme
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: deptId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetRoleListByPageReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/setRoleStatus:
+        post:
+            tags:
+                - Base
+            description: 设置角色状态
+            operationId: Base_SetRoleStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SetRoleStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/updateDept:
+        post:
+            tags:
+                - Base
+            description: 修改部门
+            operationId: Base_UpdateDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeptListItem'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/system/updateRole:
+        post:
+            tags:
+                - Base
+            description: 修改角色
+            operationId: Base_UpdateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RoleListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/RoleListItem'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        AccountListItem:
             type: object
             properties:
+                id:
+                    type: string
+                account:
+                    type: string
+                email:
+                    type: string
+                nickname:
+                    type: string
+                role:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                status:
+                    type: string
+                dept:
+                    type: string
+        ChangePasswordRequest:
+            type: object
+            properties:
+                passwordOld:
+                    type: string
+                passwordNew:
+                    type: string
+        DeptListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                deptName:
+                    type: string
+                orderNo:
+                    type: string
+                remark:
+                    type: string
+                status:
+                    type: string
+                createTime:
+                    type: string
+                parentDept:
+                    type: string
+                dom:
+                    type: string
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DeptListItem'
+        GetAccountListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AccountListItem'
+                total:
+                    type: string
+        GetDeptListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/DeptListItem'
+                total:
+                    type: string
+        GetMenuListReply:
+            type: object
+            properties:
+                menuList:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/RouteItem'
+        GetPermCodeReply:
+            type: object
+            properties:
+                permCodeList:
+                    type: array
+                    items:
+                        type: string
+        GetRoleListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/RoleListItem'
+                total:
+                    type: string
+        GetSysMenuListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SysMenuListItem'
+                total:
+                    type: string
+        GetUserInfoReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                username:
+                    type: string
+                realName:
+                    type: string
+                avatar:
+                    type: string
+                desc:
+                    type: string
+                roles:
+                    allOf:
+                        - $ref: '#/components/schemas/RoleInfo'
+                    description: string homePath = 7;
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        IsAccountRequest:
+            type: object
+            properties:
+                account:
+                    type: string
+        LoginReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                accessToken:
+                    type: string
+                token:
+                    type: string
+                role:
+                    $ref: '#/components/schemas/RoleInfo'
+        LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        RoleInfo:
+            type: object
+            properties:
+                roleName:
+                    type: string
+                value:
+                    type: string
+        RoleListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                roleName:
+                    type: string
+                roleValue:
+                    type: string
+                status:
+                    type: string
+                orderNo:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                menu:
+                    type: array
+                    items:
+                        type: string
+                dept:
+                    type: string
+        RouteItem:
+            type: object
+            properties:
+                path:
+                    type: string
+                component:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/RouteMeta'
+                name:
+                    type: string
+                alias:
+                    type: array
+                    items:
+                        type: string
+                redirect:
+                    type: string
+                caseSensitive:
+                    type: boolean
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/RouteItem'
+                id:
+                    type: string
+        RouteMeta:
+            type: object
+            properties:
+                title:
+                    type: string
+                dynamicLevel:
+                    type: string
+                realPath:
+                    type: string
+                ignoreAuth:
+                    type: boolean
+                roles:
+                    type: array
+                    items:
+                        type: string
+                ignoreKeepAlive:
+                    type: boolean
+                affix:
+                    type: boolean
+                icon:
+                    type: string
+                frameSrc:
+                    type: string
+                transitionName:
+                    type: string
+                hideBreadcrumb:
+                    type: boolean
+                hideChildrenInMenu:
+                    type: boolean
+                carryParam:
+                    type: boolean
+                single:
+                    type: boolean
+                currentActiveMenu:
+                    type: string
+                hideTab:
+                    type: boolean
+                hideMenu:
+                    type: boolean
+                isLink:
+                    type: boolean
+                ignoreRoute:
+                    type: boolean
+                hidePathForChildren:
+                    type: boolean
+        SetRoleStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
                 message:
                     type: string
-            description: The response message containing the greetings
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SysMenuListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                orderNo:
+                    type: string
+                icon:
+                    type: string
+                menuName:
+                    type: string
+                status:
+                    type: string
+                createTime:
+                    type: string
+                component:
+                    type: string
+                permission:
+                    type: string
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SysMenuListItem'
 tags:
-    - name: Greeter
+    - name: Base

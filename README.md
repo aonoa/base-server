@@ -36,7 +36,7 @@ make all
 go get github.com/google/wire/cmd/wire
 
 # generate wire
-cd cmd/server
+cd cmd/base-server
 wire
 ```
 
@@ -45,7 +45,17 @@ wire
 # build
 docker build -t <your-docker-image-name> .
 
+# save image
+docker save <your-docker-image-name> | gzip > <your-docker-image-name>.tar.gz
+
+# load image
+gunzip -c <your-docker-image-name>.tar.gz | docker load
+
 # run
 docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
 ```
 
+## ent
+```bash
+base-server/internal/data$ ent generate ./schema --target ./ent
+```

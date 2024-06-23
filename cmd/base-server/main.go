@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"base-server/internal/conf"
@@ -41,7 +42,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 		kratos.Metadata(map[string]string{}),
 		kratos.Logger(logger),
 		kratos.Server(
-			gs,
+			//	gs,
 			hs,
 		),
 	)
@@ -73,8 +74,16 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+	if err := c.Watch("menus.default_menus", func(key string, value config.Value) {
+		fmt.Printf("config changed: %s = %v\n", key, value)
+		// 在这里写回调的逻辑
+		bc.Menus.DefaultMenus, _ = value.String()
+		fmt.Printf("bc.Menus.DefaultMenus: %s \n", bc.Menus.DefaultMenus)
+	}); err != nil {
+		log.Error(err)
+	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Auth, bc.Menus, logger)
 	if err != nil {
 		panic(err)
 	}

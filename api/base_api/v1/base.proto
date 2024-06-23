@@ -1,0 +1,381 @@
+syntax = "proto3";
+
+package api.base_api.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/base_api/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.base_api.v1";
+
+service Base {
+	// 用户登陆
+	rpc Login (LoginRequest) returns (LoginReply) {
+		option (google.api.http) = {
+			post: "/basic-api/login",
+			body: "*"
+		};
+	}
+
+	// 获取用户信息
+	rpc GetUserInfo (google.protobuf.Empty) returns (GetUserInfoReply) {
+		option (google.api.http) = {
+			get: "/basic-api/getUserInfo"
+		};
+	}
+
+	// 获取权限code
+	rpc GetPermCode (google.protobuf.Empty) returns (GetPermCodeReply) {
+		option (google.api.http) = {
+			get: "/basic-api/getPermCode",
+			response_body: "permCodeList"
+		};
+	}
+
+	// 注销登陆
+	rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			get: "/basic-api/logout"
+		};
+	}
+
+	// 获取路由菜单列表
+	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/getMenuList",
+			response_body: "menuList"
+		};
+	}
+
+	/////////////////////////////////////////////////////
+
+	// 获取部门列表
+	rpc GetDeptList (google.protobuf.Empty) returns (GetDeptListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getDeptList"
+			response_body: "items"
+		};
+	}
+
+	// 新增部门
+	rpc AddDept (DeptListItem) returns (DeptListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/addDept"
+			body: "*"
+		};
+	}
+	// 修改部门
+	rpc UpdateDept (DeptListItem) returns (DeptListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/updateDept"
+			body: "*"
+		};
+	}
+	// 删除部门
+	rpc DelDept (DeleteDept) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/delDept/{id}"
+			// body: "*"
+		};
+	}
+
+	// 获取角色列表
+	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getRoleListByPage"
+		};
+	}
+
+	// 新增角色
+	rpc AddRole (RoleListItem) returns (RoleListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/addRole"
+			body: "*"
+		};
+	}
+	// 删除角色
+	rpc DelRole (DeleteRole) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/delRole/{id}"
+			// body: "*"
+		};
+	}
+	// 修改角色
+	rpc UpdateRole (RoleListItem) returns (RoleListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/updateRole"
+			body: "*"
+		};
+	}
+
+
+	// 获取菜单列表
+	rpc GetSysMenuList (MenuParams) returns (GetSysMenuListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getMenuList"
+			response_body: "items"
+		};
+	}
+
+	// 获取账户列表
+	rpc GetAccountList (AccountParams) returns (GetAccountListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getAccountList"
+		};
+	}
+
+	// 新增用户
+	rpc AddUser (AccountListItem) returns (AccountListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/addUser"
+			body: "*"
+		};
+	}
+
+	// 删除用户
+	rpc DelUser (DeleteUser) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/delUser/{id}"
+			// body: "*"
+		};
+	}
+
+	// 获取角色信息
+	rpc GetAllRoleList (RoleParams) returns (GetRoleListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getAllRoleList"
+			response_body: "items"
+		};
+	}
+
+	// 设置角色状态
+	rpc SetRoleStatus (SetRoleStatusRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/system/setRoleStatus"
+			body: "*"
+		};
+	}
+
+	// 检查用户是否存在
+	rpc IsAccountExist (IsAccountRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/system/accountExist"
+			body: "*"
+		};
+	}
+
+	// 改密码
+	rpc ChangePassword (ChangePasswordRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/system/changePassword",
+			body: "*"
+		};
+	}
+}
+
+
+message LoginRequest {
+	string username = 1;
+	string password = 2;
+}
+message LoginReply {
+	string userId = 1;
+	string accessToken = 2;
+	string token = 4;
+	RoleInfo role = 3;
+}
+
+message GetUserInfoReply {
+	string userId = 1;
+	string username = 2;
+	string realName = 3;
+	string avatar = 4;
+	string desc = 5;
+	//string homePath = 7;
+	RoleInfo roles = 6;
+}
+
+message UserRole {
+	string dom = 1;
+	string role = 2;
+	string menu = 3;
+}
+
+message UserExtension {
+	repeated UserRole userRole = 1;
+}
+
+message GetPermCodeReply {
+	repeated string permCodeList = 1;
+}
+
+message GetMenuListReply {
+	repeated RouteItem menuList = 1;
+}
+
+
+message RoleInfo {
+	string roleName = 1;
+	string value = 2;
+}
+
+message RouteItem {
+	string path = 1;							// 路径
+	string component = 2;					// 组件路径
+	RouteMeta meta = 3;						//
+	string name = 4;							// 名称
+	repeated string alias = 5;		//
+	string redirect = 6;					///
+	bool caseSensitive = 7;				////
+	repeated RouteItem children = 8;
+	int64 id = 9;
+}
+
+message RouteMeta {
+	string title = 1;					/// 标题
+	int64 dynamicLevel = 2;		// 动态路由级别
+	string realPath = 3;			// 动态路由实际路由路径（用于性能）
+	bool ignoreAuth = 4;			/// 是否忽略权限
+	repeated string roles = 5;				// 角色信息
+	bool ignoreKeepAlive = 6;	/// 是否缓存
+	bool affix = 7;						/// 它是否固定在选项卡上
+	string icon = 8;					/// 选项卡上的图标
+	string frameSrc = 9;
+	string transitionName = 10;		//// 当前页面过渡
+	bool hideBreadcrumb = 11;			/// 路由是否已动态添加
+	bool hideChildrenInMenu = 12;	// 隐藏子菜单
+	bool carryParam = 13;					// 承载参数
+	bool single = 14;							// 内部用于标记单级菜单
+	string currentActiveMenu = 15;// 当前活动菜单
+	bool hideTab = 16;						// 从不显示在选项卡中
+	bool hideMenu = 17;						// 从不显示在菜单中
+	bool isLink = 18;							/// 外链
+	bool ignoreRoute = 19;				// 仅针对菜单构建
+	bool hidePathForChildren = 20;// 隐藏子项路径
+}
+
+////////////////////////////////////////////////////////////
+
+message DeptListItem {
+	string id = 1;			// id 多层之间用'-'拼接如:0-0
+	string deptName = 2;		// 部门名称
+	int64 orderNo = 3;			// 排序
+	string remark = 4;			// 备注
+	string status = 5;				// 状态
+	string createTime = 6;	// 创建时间
+	string parentDept = 7;	// 父节点id
+	int64 dom = 9;			// 域
+	repeated DeptListItem children = 8;
+}
+
+message DeleteDept {
+	string id = 1;
+}
+
+message GetDeptListReply {
+	repeated DeptListItem items = 1;
+	int64	total = 2;
+}
+
+message RolePageParams {
+	int64 page = 1;
+	int64 pageSize = 2;
+	string roleNme = 3;
+	int64 status = 4;
+	string deptId = 5;
+}
+
+message RoleListItem {
+	string id = 1;			// id
+	string roleName = 2;			// 角色名
+	string roleValue = 3;			// 角色值
+	int64 status = 4;				// 状态
+	string orderNo = 5;			// 排序
+	string createTime = 6;	// 创建时间
+	string remark = 7;			// 备注
+	repeated string menu = 8; // 菜单列表
+	string dept = 9;				// 部门
+}
+
+message GetRoleListByPageReply {
+	repeated RoleListItem items = 1;
+	int64	total = 2;
+}
+
+message DeleteRole {
+	string id = 1;
+}
+
+message MenuParams {
+	string menuName = 1;
+	string status = 2;
+}
+
+message SysMenuListItem {
+	string id = 1;					// id
+	string orderNo = 2;			// 排序
+	string icon = 3;				// 图标
+	string menuName = 4;					/// 标题
+	int64 status = 5;				// 状态
+	string createTime = 6;	// 创建时间
+	string component = 7;		// 组件
+	string permission = 8;	//
+	repeated SysMenuListItem children = 9;
+}
+
+message GetSysMenuListReply {
+	repeated SysMenuListItem items = 1;
+	int64	total = 2;
+}
+
+message AccountParams {
+	int64 page = 1;
+	int64 pageSize = 2;
+	string account = 3;
+	string nickname = 4;
+	string deptId = 5;
+}
+
+message AccountListItem {
+	string id = 1;
+	string account = 2;			// 账号
+	string email = 3;				// 邮箱
+	string nickname = 4;		// 昵称
+	int64 role = 5;					// 规则
+	string createTime = 6;	// 创建时间
+	string remark = 7;			// 备注
+	int64 status = 8;				// 状态
+	string dept = 9;				// 部门
+}
+
+message GetAccountListReply {
+	repeated AccountListItem items = 1;
+	int64	total = 2;
+}
+
+message DeleteUser {
+	string id = 1;
+}
+
+message RoleParams {
+	string roleName = 1;
+	int64 status = 2;
+}
+
+message SetRoleStatusRequest {
+	int64 id = 1;
+	string status = 2;
+}
+
+message IsAccountRequest {
+	string account = 1;
+}
+
+message ChangePasswordRequest {
+	string passwordOld = 1;
+	string passwordNew = 2;
+}
+
+
+
