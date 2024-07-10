@@ -29,15 +29,13 @@ func ResponseEncoder(w http.ResponseWriter, r *http.Request, v interface{}) erro
 
 	type Aa struct {
 		Code    int          `json:"code"`
-		Result  *interface{} `json:"result,omitempty"`
+		Data    *interface{} `json:"data,omitempty"`
 		Message string       `json:"Message"`
-		Type    string       `json:"type"`
 	}
 
 	item := &Aa{
-		Result:  &v,
+		Data:    &v,
 		Message: "ok",
-		Type:    "success",
 	}
 	data, err := codec.Marshal(item)
 	if err != nil {

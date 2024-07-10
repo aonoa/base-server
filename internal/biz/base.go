@@ -89,7 +89,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 		return nil, err
 	}
 
-	menus := []string{}
+	var menus []string
 
 	//uid := tools.GetUserId(ctx)
 	//user, err := uc.GetUserInfo(ctx, uid)
@@ -123,14 +123,29 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 	//	}
 	//}
 	for _, menu := range menuList {
+		//if !menu.Status {
+		//	continue
+		//}
 		menus = append(menus, strconv.FormatInt(menu.ID, 10))
 	}
 
 	for _, menu := range menuList {
+		if !menu.Status {
+			continue
+		}
 		for _, item := range menus {
 			menuID, _ := strconv.ParseInt(item, 10, 64)
 			if menuID == menu.ID {
-				uc.BuildMenuTree(&reqs.MenuList, menu, true)
+				if menu.Pid == 0 {
+					reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
+					continue
+				}
+
+				key := uc.BuildMenuTree(&reqs.MenuList, menu)
+				if !key {
+					// 如果菜单不属于任何父级，则将其加入顶层列表
+					reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
+				}
 			}
 		}
 	}
@@ -139,33 +154,23 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 }
 
 // BuildMenuTree 构造菜单树
-func (uc *BaseUsecase) BuildMenuTree(menuList *[]*pb.RouteItem, menu *ent.Menu, top bool) {
-	if !menu.Status {
-		return
-	}
-	if menu.Pid == 0 {
-		*menuList = append(*menuList, menuToRoute(menu))
-		return
-	}
-
+func (uc *BaseUsecase) BuildMenuTree(menuList *[]*pb.RouteItem, menu *ent.Menu) bool {
 	for _, item := range *menuList {
+		if item.Children != nil {
+			key := uc.BuildMenuTree(&item.Children, menu)
+			if key {
+				return key
+			}
+		}
 		if item.Id == menu.Pid {
 			if item.Children == nil {
 				item.Children = []*pb.RouteItem{}
 			}
 			item.Children = append(item.Children, menuToRoute(menu))
-			return
-		}
-
-		if item.Children != nil {
-			uc.BuildMenuTree(&item.Children, menu, false)
+			return true
 		}
 	}
-
-	if top {
-		// 如果菜单不属于任何父级，则将其加入顶层列表
-		*menuList = append(*menuList, menuToRoute(menu))
-	}
+	return false
 }
 
 func menuToRoute(menu *ent.Menu) *pb.RouteItem {

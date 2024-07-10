@@ -6,45 +6,26 @@ info:
     title: Base API
     version: 0.0.1
 paths:
-    /basic-api/getMenuList:
-        get:
-            tags:
-                - Base
-            description: 获取路由菜单列表
-            operationId: Base_GetMenuList
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetMenuListReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /basic-api/getPermCode:
+    /basic-api/auth/getAccessCodes:
         get:
             tags:
                 - Base
             description: 获取权限code
-            operationId: Base_GetPermCode
+            operationId: Base_GetAccessCodes
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetPermCodeReply'
+                                $ref: '#/components/schemas/GetAccessCodesReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /basic-api/getUserInfo:
+    /basic-api/auth/getUserInfo:
         get:
             tags:
                 - Base
@@ -63,7 +44,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /basic-api/login:
+    /basic-api/auth/login:
         post:
             tags:
                 - Base
@@ -98,6 +79,25 @@ paths:
                 "200":
                     description: OK
                     content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /basic-api/menu/getAll:
+        get:
+            tags:
+                - Base
+            description: 获取路由菜单列表
+            operationId: Base_GetMenuList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetMenuListReply'
                 default:
                     description: Default error response
                     content:
@@ -569,6 +569,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/DeptListItem'
+        GetAccessCodesReply:
+            type: object
+            properties:
+                accessCodeList:
+                    type: array
+                    items:
+                        type: string
         GetAccountListReply:
             type: object
             properties:
@@ -594,13 +601,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/RouteItem'
-        GetPermCodeReply:
-            type: object
-            properties:
-                permCodeList:
-                    type: array
-                    items:
-                        type: string
         GetRoleListByPageReply:
             type: object
             properties:
@@ -632,10 +632,12 @@ components:
                     type: string
                 desc:
                     type: string
+                homePath:
+                    type: string
+                token:
+                    type: string
                 roles:
-                    allOf:
-                        - $ref: '#/components/schemas/RoleInfo'
-                    description: string homePath = 7;
+                    $ref: '#/components/schemas/RoleInfo'
         GoogleProtobufAny:
             type: object
             properties:
@@ -656,10 +658,8 @@ components:
                     type: string
                 accessToken:
                     type: string
-                token:
+                refreshToken:
                     type: string
-                role:
-                    $ref: '#/components/schemas/RoleInfo'
         LoginRequest:
             type: object
             properties:
@@ -714,18 +714,31 @@ components:
                         type: string
                 redirect:
                     type: string
-                caseSensitive:
-                    type: boolean
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/RouteItem'
+                    description: "bool caseSensitive = 7;\t\t\t\t////"
                 id:
                     type: string
         RouteMeta:
             type: object
             properties:
                 title:
+                    type: string
+                badge:
+                    type: string
+                badgeType:
+                    type: string
+                badgeVariants:
+                    type: string
+                hideChildrenInMenu:
+                    type: boolean
+                icon:
+                    type: string
+                link:
+                    type: string
+                order:
                     type: string
                 dynamicLevel:
                     type: string
@@ -741,15 +754,11 @@ components:
                     type: boolean
                 affix:
                     type: boolean
-                icon:
-                    type: string
                 frameSrc:
                     type: string
                 transitionName:
                     type: string
                 hideBreadcrumb:
-                    type: boolean
-                hideChildrenInMenu:
                     type: boolean
                 carryParam:
                     type: boolean

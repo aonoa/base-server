@@ -13,7 +13,7 @@ service Base {
 	// 用户登陆
 	rpc Login (LoginRequest) returns (LoginReply) {
 		option (google.api.http) = {
-			post: "/basic-api/login",
+			post: "/basic-api/auth/login",
 			body: "*"
 		};
 	}
@@ -21,15 +21,15 @@ service Base {
 	// 获取用户信息
 	rpc GetUserInfo (google.protobuf.Empty) returns (GetUserInfoReply) {
 		option (google.api.http) = {
-			get: "/basic-api/getUserInfo"
+			get: "/basic-api/auth/getUserInfo"
 		};
 	}
 
 	// 获取权限code
-	rpc GetPermCode (google.protobuf.Empty) returns (GetPermCodeReply) {
+	rpc GetAccessCodes (google.protobuf.Empty) returns (GetAccessCodesReply) {
 		option (google.api.http) = {
-			get: "/basic-api/getPermCode",
-			response_body: "permCodeList"
+			get: "/basic-api/auth/getAccessCodes",
+			response_body: "accessCodeList"
 		};
 	}
 
@@ -43,7 +43,7 @@ service Base {
 	// 获取路由菜单列表
 	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 		option (google.api.http) = {
-			get: "/basic-api/getMenuList",
+			get: "/basic-api/menu/getAll",
 			response_body: "menuList"
 		};
 	}
@@ -182,8 +182,7 @@ message LoginRequest {
 message LoginReply {
 	string userId = 1;
 	string accessToken = 2;
-	string token = 4;
-	RoleInfo role = 3;
+	string refreshToken = 3;
 }
 
 message GetUserInfoReply {
@@ -192,8 +191,9 @@ message GetUserInfoReply {
 	string realName = 3;
 	string avatar = 4;
 	string desc = 5;
-	//string homePath = 7;
-	RoleInfo roles = 6;
+	string homePath = 6;
+	string token = 7;
+	RoleInfo roles = 8;
 }
 
 message UserRole {
@@ -206,8 +206,8 @@ message UserExtension {
 	repeated UserRole userRole = 1;
 }
 
-message GetPermCodeReply {
-	repeated string permCodeList = 1;
+message GetAccessCodesReply {
+	repeated string accessCodeList = 1;
 }
 
 message GetMenuListReply {
@@ -223,28 +223,37 @@ message RoleInfo {
 message RouteItem {
 	string path = 1;							// 路径
 	string component = 2;					// 组件路径
-	RouteMeta meta = 3;						//
-	string name = 4;							// 名称
-	repeated string alias = 5;		//
-	string redirect = 6;					///
-	bool caseSensitive = 7;				////
-	repeated RouteItem children = 8;
+	RouteMeta meta = 3;						// 附加到记录的任意数据
+	string name = 4;							// 路径的名称，必须是唯一的
+	repeated string alias = 5;		// 路径的别名
+	string redirect = 6;					// 如果路由直接匹配，则重定向到何处。重定向发生在任何导航保护之前，并触发具有新目标位置的新导航。
+	// bool caseSensitive = 7;				////
+	repeated RouteItem children = 8;	// 嵌套路由的数组
 	int64 id = 9;
 }
 
 message RouteMeta {
-	string title = 1;					/// 标题
+	string title = 1;							// 标题
+	string badge = 30;							// 徽标
+	string badgeType = 31;					// 徽标类型	'dot' | 'normal'
+	string badgeVariants = 32;			// 徽标颜色	'destructive' | 'primary' | string
+	bool hideChildrenInMenu = 33;		// 隐藏子项路径
+
+	string icon = 34;								// 图标名
+	string link = 35;								// 选项卡上的图标
+	string order = 36;							// 排序号
+
+	////// 旧菜单
+
 	int64 dynamicLevel = 2;		// 动态路由级别
 	string realPath = 3;			// 动态路由实际路由路径（用于性能）
 	bool ignoreAuth = 4;			/// 是否忽略权限
 	repeated string roles = 5;				// 角色信息
 	bool ignoreKeepAlive = 6;	/// 是否缓存
 	bool affix = 7;						/// 它是否固定在选项卡上
-	string icon = 8;					/// 选项卡上的图标
 	string frameSrc = 9;
 	string transitionName = 10;		//// 当前页面过渡
 	bool hideBreadcrumb = 11;			/// 路由是否已动态添加
-	bool hideChildrenInMenu = 12;	// 隐藏子菜单
 	bool carryParam = 13;					// 承载参数
 	bool single = 14;							// 内部用于标记单级菜单
 	string currentActiveMenu = 15;// 当前活动菜单

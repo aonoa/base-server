@@ -5,7 +5,6 @@ import (
 	"base-server/internal/conf"
 	"context"
 	"errors"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv4 "github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/copier"
@@ -46,12 +45,10 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		return nil, ErrLoginFailed
 	}
 
-	fmt.Println(signedString)
-
 	return &pb.LoginReply{
-		UserId:      g,
-		AccessToken: signedString,
-		Token:       signedString,
+		UserId:       g,
+		AccessToken:  signedString,
+		RefreshToken: signedString,
 	}, nil
 }
 func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.GetUserInfoReply, error) {
@@ -70,8 +67,13 @@ func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.
 	// /pages
 	return &res, nil
 }
-func (s *BaseService) GetPermCode(ctx context.Context, req *emptypb.Empty) (*pb.GetPermCodeReply, error) {
-	return &pb.GetPermCodeReply{PermCodeList: []string{}}, nil
+func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*pb.GetAccessCodesReply, error) {
+	return &pb.GetAccessCodesReply{AccessCodeList: []string{
+		"AC_100100",
+		"AC_100110",
+		"AC_100120",
+		"AC_100010",
+	}}, nil
 }
 func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
