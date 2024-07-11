@@ -9,6 +9,7 @@ import (
 	jwtv4 "github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"strings"
 
 	pb "base-server/api/base_api/v1"
 )
@@ -68,12 +69,19 @@ func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.
 	return &res, nil
 }
 func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*pb.GetAccessCodesReply, error) {
-	return &pb.GetAccessCodesReply{AccessCodeList: []string{
-		"AC_100100",
-		"AC_100110",
-		"AC_100120",
-		"AC_100010",
-	}}, nil
+	uid := ""
+	if claims, ok := jwt.FromContext(ctx); ok {
+		uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
+	}
+	user, err := s.uc.GetUserInfo(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+	var res pb.GetUserInfoReply
+	copier.Copy(&res, user)
+	res.UserId = user.ID.String()
+	accessCodeList := strings.Split(user.Extension, ",")
+	return &pb.GetAccessCodesReply{AccessCodeList: accessCodeList}, nil
 }
 func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
