@@ -21,14 +21,14 @@ service Base {
 	// 获取用户信息
 	rpc GetUserInfo (google.protobuf.Empty) returns (GetUserInfoReply) {
 		option (google.api.http) = {
-			get: "/basic-api/auth/getUserInfo"
+			get: "/basic-api/user/info"
 		};
 	}
 
 	// 获取权限code
 	rpc GetAccessCodes (google.protobuf.Empty) returns (GetAccessCodesReply) {
 		option (google.api.http) = {
-			get: "/basic-api/auth/getAccessCodes",
+			get: "/basic-api/auth/codes",
 			response_body: "accessCodeList"
 		};
 	}
@@ -43,7 +43,7 @@ service Base {
 	// 获取路由菜单列表
 	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 		option (google.api.http) = {
-			get: "/basic-api/menu/getAll",
+			get: "/basic-api/menu/all",
 			response_body: "menuList"
 		};
 	}

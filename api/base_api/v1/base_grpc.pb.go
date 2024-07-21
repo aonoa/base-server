@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v3.19.1
-// source: api/base_api/v1/base.proto
+// source: base_api/v1/base.proto
 
 package v1
 
@@ -909,5 +909,5 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/base_api/v1/base.proto",
+	Metadata: "base_api/v1/base.proto",
 }

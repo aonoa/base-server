@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.7.3
 // - protoc             v3.19.1
-// source: api/base_api/v1/base.proto
+// source: base_api/v1/base.proto
 
 package v1
 
@@ -90,10 +90,10 @@ type BaseHTTPServer interface {
 func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r := s.Route("/")
 	r.POST("/basic-api/auth/login", _Base_Login0_HTTP_Handler(srv))
-	r.GET("/basic-api/auth/getUserInfo", _Base_GetUserInfo0_HTTP_Handler(srv))
-	r.GET("/basic-api/auth/getAccessCodes", _Base_GetAccessCodes0_HTTP_Handler(srv))
+	r.GET("/basic-api/user/info", _Base_GetUserInfo0_HTTP_Handler(srv))
+	r.GET("/basic-api/auth/codes", _Base_GetAccessCodes0_HTTP_Handler(srv))
 	r.GET("/basic-api/logout", _Base_Logout0_HTTP_Handler(srv))
-	r.GET("/basic-api/menu/getAll", _Base_GetMenuList0_HTTP_Handler(srv))
+	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
@@ -672,7 +672,7 @@ func (c *BaseHTTPClientImpl) DelUser(ctx context.Context, in *DeleteUser, opts .
 
 func (c *BaseHTTPClientImpl) GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetAccessCodesReply, error) {
 	var out GetAccessCodesReply
-	pattern := "/basic-api/auth/getAccessCodes"
+	pattern := "/basic-api/auth/codes"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetAccessCodes))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -724,7 +724,7 @@ func (c *BaseHTTPClientImpl) GetDeptList(ctx context.Context, in *emptypb.Empty,
 
 func (c *BaseHTTPClientImpl) GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMenuListReply, error) {
 	var out GetMenuListReply
-	pattern := "/basic-api/menu/getAll"
+	pattern := "/basic-api/menu/all"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetMenuList))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -763,7 +763,7 @@ func (c *BaseHTTPClientImpl) GetSysMenuList(ctx context.Context, in *MenuParams,
 
 func (c *BaseHTTPClientImpl) GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserInfoReply, error) {
 	var out GetUserInfoReply
-	pattern := "/basic-api/auth/getUserInfo"
+	pattern := "/basic-api/user/info"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetUserInfo))
 	opts = append(opts, http.PathTemplate(pattern))

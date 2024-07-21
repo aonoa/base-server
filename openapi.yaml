@@ -6,7 +6,7 @@ info:
     title: Base API
     version: 0.0.1
 paths:
-    /basic-api/auth/getAccessCodes:
+    /basic-api/auth/codes:
         get:
             tags:
                 - Base
@@ -18,32 +18,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetAccessCodesReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /basic-api/auth/getUserInfo:
-        get:
-            tags:
-                - Base
-            description: 获取用户信息
-            operationId: Base_GetUserInfo
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetUserInfoReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetAccessCodesReply'
     /basic-api/auth/login:
         post:
             tags:
@@ -54,7 +29,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/LoginRequest'
+                            $ref: '#/components/schemas/api.base_api.v1.LoginRequest'
                 required: true
             responses:
                 "200":
@@ -62,13 +37,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/LoginReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.LoginReply'
     /basic-api/logout:
         get:
             tags:
@@ -79,13 +48,7 @@ paths:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /basic-api/menu/getAll:
+    /basic-api/menu/all:
         get:
             tags:
                 - Base
@@ -97,13 +60,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetMenuListReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetMenuListReply'
     /basic-api/system/accountExist:
         post:
             tags:
@@ -114,18 +71,12 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/IsAccountRequest'
+                            $ref: '#/components/schemas/api.base_api.v1.IsAccountRequest'
                 required: true
             responses:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/addDept:
         post:
             tags:
@@ -136,7 +87,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/DeptListItem'
+                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
                 required: true
             responses:
                 "200":
@@ -144,13 +95,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/DeptListItem'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
     /basic-api/system/addRole:
         post:
             tags:
@@ -161,7 +106,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/RoleListItem'
+                            $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
                 required: true
             responses:
                 "200":
@@ -169,13 +114,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/RoleListItem'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
     /basic-api/system/addUser:
         post:
             tags:
@@ -186,7 +125,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/AccountListItem'
+                            $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
                 required: true
             responses:
                 "200":
@@ -194,13 +133,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/AccountListItem'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
     /basic-api/system/changePassword:
         post:
             tags:
@@ -211,18 +144,12 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/ChangePasswordRequest'
+                            $ref: '#/components/schemas/api.base_api.v1.ChangePasswordRequest'
                 required: true
             responses:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/delDept/{id}:
         delete:
             tags:
@@ -239,12 +166,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/delRole/{id}:
         delete:
             tags:
@@ -261,12 +182,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/delUser/{id}:
         delete:
             tags:
@@ -283,12 +198,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/getAccountList:
         get:
             tags:
@@ -322,13 +231,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetAccountListReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetAccountListReply'
     /basic-api/system/getAllRoleList:
         get:
             tags:
@@ -350,13 +253,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetRoleListByPageReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetRoleListByPageReply'
     /basic-api/system/getDeptList:
         get:
             tags:
@@ -369,13 +266,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetDeptListReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetDeptListReply'
     /basic-api/system/getMenuList:
         get:
             tags:
@@ -397,13 +288,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetSysMenuListReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
     /basic-api/system/getRoleListByPage:
         get:
             tags:
@@ -437,13 +322,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetRoleListByPageReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetRoleListByPageReply'
     /basic-api/system/setRoleStatus:
         post:
             tags:
@@ -454,18 +333,12 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/SetRoleStatusRequest'
+                            $ref: '#/components/schemas/api.base_api.v1.SetRoleStatusRequest'
                 required: true
             responses:
                 "200":
                     description: OK
                     content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /basic-api/system/updateDept:
         post:
             tags:
@@ -476,7 +349,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/DeptListItem'
+                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
                 required: true
             responses:
                 "200":
@@ -484,13 +357,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/DeptListItem'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
     /basic-api/system/updateRole:
         post:
             tags:
@@ -501,7 +368,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/RoleListItem'
+                            $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
                 required: true
             responses:
                 "200":
@@ -509,16 +376,23 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/RoleListItem'
-                default:
-                    description: Default error response
+                                $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
+    /basic-api/user/info:
+        get:
+            tags:
+                - Base
+            description: 获取用户信息
+            operationId: Base_GetUserInfo
+            responses:
+                "200":
+                    description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Status'
+                                $ref: '#/components/schemas/api.base_api.v1.GetUserInfoReply'
 components:
     schemas:
-        AccountListItem:
+        api.base_api.v1.AccountListItem:
             type: object
             properties:
                 id:
@@ -539,14 +413,14 @@ components:
                     type: string
                 dept:
                     type: string
-        ChangePasswordRequest:
+        api.base_api.v1.ChangePasswordRequest:
             type: object
             properties:
                 passwordOld:
                     type: string
                 passwordNew:
                     type: string
-        DeptListItem:
+        api.base_api.v1.DeptListItem:
             type: object
             properties:
                 id:
@@ -568,58 +442,58 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/DeptListItem'
-        GetAccessCodesReply:
+                        $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+        api.base_api.v1.GetAccessCodesReply:
             type: object
             properties:
                 accessCodeList:
                     type: array
                     items:
                         type: string
-        GetAccountListReply:
+        api.base_api.v1.GetAccountListReply:
             type: object
             properties:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/AccountListItem'
+                        $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
                 total:
                     type: string
-        GetDeptListReply:
+        api.base_api.v1.GetDeptListReply:
             type: object
             properties:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/DeptListItem'
+                        $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
                 total:
                     type: string
-        GetMenuListReply:
+        api.base_api.v1.GetMenuListReply:
             type: object
             properties:
                 menuList:
                     type: array
                     items:
-                        $ref: '#/components/schemas/RouteItem'
-        GetRoleListByPageReply:
+                        $ref: '#/components/schemas/api.base_api.v1.RouteItem'
+        api.base_api.v1.GetRoleListByPageReply:
             type: object
             properties:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/RoleListItem'
+                        $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
                 total:
                     type: string
-        GetSysMenuListReply:
+        api.base_api.v1.GetSysMenuListReply:
             type: object
             properties:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/SysMenuListItem'
+                        $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
                 total:
                     type: string
-        GetUserInfoReply:
+        api.base_api.v1.GetUserInfoReply:
             type: object
             properties:
                 userId:
@@ -637,21 +511,13 @@ components:
                 token:
                     type: string
                 roles:
-                    $ref: '#/components/schemas/RoleInfo'
-        GoogleProtobufAny:
-            type: object
-            properties:
-                '@type':
-                    type: string
-                    description: The type of the serialized message.
-            additionalProperties: true
-            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        IsAccountRequest:
+                    $ref: '#/components/schemas/api.base_api.v1.RoleInfo'
+        api.base_api.v1.IsAccountRequest:
             type: object
             properties:
                 account:
                     type: string
-        LoginReply:
+        api.base_api.v1.LoginReply:
             type: object
             properties:
                 userId:
@@ -660,21 +526,21 @@ components:
                     type: string
                 refreshToken:
                     type: string
-        LoginRequest:
+        api.base_api.v1.LoginRequest:
             type: object
             properties:
                 username:
                     type: string
                 password:
                     type: string
-        RoleInfo:
+        api.base_api.v1.RoleInfo:
             type: object
             properties:
                 roleName:
                     type: string
                 value:
                     type: string
-        RoleListItem:
+        api.base_api.v1.RoleListItem:
             type: object
             properties:
                 id:
@@ -697,7 +563,7 @@ components:
                         type: string
                 dept:
                     type: string
-        RouteItem:
+        api.base_api.v1.RouteItem:
             type: object
             properties:
                 path:
@@ -705,7 +571,7 @@ components:
                 component:
                     type: string
                 meta:
-                    $ref: '#/components/schemas/RouteMeta'
+                    $ref: '#/components/schemas/api.base_api.v1.RouteMeta'
                 name:
                     type: string
                 alias:
@@ -717,11 +583,11 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/RouteItem'
+                        $ref: '#/components/schemas/api.base_api.v1.RouteItem'
                     description: "bool caseSensitive = 7;\t\t\t\t////"
                 id:
                     type: string
-        RouteMeta:
+        api.base_api.v1.RouteMeta:
             type: object
             properties:
                 title:
@@ -776,30 +642,14 @@ components:
                     type: boolean
                 hidePathForChildren:
                     type: boolean
-        SetRoleStatusRequest:
+        api.base_api.v1.SetRoleStatusRequest:
             type: object
             properties:
                 id:
                     type: string
                 status:
                     type: string
-        Status:
-            type: object
-            properties:
-                code:
-                    type: integer
-                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
-                    format: int32
-                message:
-                    type: string
-                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
-                details:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/GoogleProtobufAny'
-                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
-            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        SysMenuListItem:
+        api.base_api.v1.SysMenuListItem:
             type: object
             properties:
                 id:
@@ -821,6 +671,6 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/SysMenuListItem'
+                        $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
 tags:
     - name: Base
