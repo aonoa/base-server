@@ -21,36 +21,36 @@ const (
 	FieldPid = "pid"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldTitle holds the string denoting the title field in the database.
 	FieldTitle = "title"
-	// FieldSort holds the string denoting the sort field in the database.
-	FieldSort = "sort"
 	// FieldIcon holds the string denoting the icon field in the database.
 	FieldIcon = "icon"
+	// FieldOrder holds the string denoting the order field in the database.
+	FieldOrder = "order"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
 	// FieldComponent holds the string denoting the component field in the database.
 	FieldComponent = "component"
 	// FieldRedirect holds the string denoting the redirect field in the database.
 	FieldRedirect = "redirect"
-	// FieldStatus holds the string denoting the status field in the database.
-	FieldStatus = "status"
-	// FieldPermission holds the string denoting the permission field in the database.
-	FieldPermission = "permission"
-	// FieldIsext holds the string denoting the isext field in the database.
-	FieldIsext = "isext"
-	// FieldIsshow holds the string denoting the isshow field in the database.
-	FieldIsshow = "isshow"
-	// FieldKeepalive holds the string denoting the keepalive field in the database.
-	FieldKeepalive = "keepalive"
-	// FieldAffix holds the string denoting the affix field in the database.
-	FieldAffix = "affix"
+	// FieldLink holds the string denoting the link field in the database.
+	FieldLink = "link"
+	// FieldIframeSrc holds the string denoting the iframesrc field in the database.
+	FieldIframeSrc = "iframe_src"
 	// FieldIgnoreAuth holds the string denoting the ignore_auth field in the database.
 	FieldIgnoreAuth = "ignore_auth"
-	// FieldBreadcrumb holds the string denoting the breadcrumb field in the database.
-	FieldBreadcrumb = "breadcrumb"
+	// FieldKeepalive holds the string denoting the keepalive field in the database.
+	FieldKeepalive = "keepalive"
+	// FieldPermission holds the string denoting the permission field in the database.
+	FieldPermission = "permission"
+	// FieldAffixTab holds the string denoting the affix_tab field in the database.
+	FieldAffixTab = "affix_tab"
+	// FieldHideInBreadcrumb holds the string denoting the hideinbreadcrumb field in the database.
+	FieldHideInBreadcrumb = "hide_in_breadcrumb"
 	// Table holds the table name of the menu in the database.
 	Table = "menus"
 )
@@ -62,21 +62,21 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldPid,
 	FieldType,
+	FieldStatus,
 	FieldName,
 	FieldTitle,
-	FieldSort,
 	FieldIcon,
+	FieldOrder,
 	FieldPath,
 	FieldComponent,
 	FieldRedirect,
-	FieldStatus,
-	FieldPermission,
-	FieldIsext,
-	FieldIsshow,
-	FieldKeepalive,
-	FieldAffix,
+	FieldLink,
+	FieldIframeSrc,
 	FieldIgnoreAuth,
-	FieldBreadcrumb,
+	FieldKeepalive,
+	FieldPermission,
+	FieldAffixTab,
+	FieldHideInBreadcrumb,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -126,6 +126,11 @@ func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
 }
 
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
@@ -136,14 +141,14 @@ func ByTitle(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTitle, opts...).ToFunc()
 }
 
-// BySort orders the results by the sort field.
-func BySort(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldSort, opts...).ToFunc()
-}
-
 // ByIcon orders the results by the icon field.
 func ByIcon(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIcon, opts...).ToFunc()
+}
+
+// ByOrder orders the results by the order field.
+func ByOrder(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrder, opts...).ToFunc()
 }
 
 // ByPath orders the results by the path field.
@@ -161,34 +166,14 @@ func ByRedirect(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRedirect, opts...).ToFunc()
 }
 
-// ByStatus orders the results by the status field.
-func ByStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+// ByLink orders the results by the link field.
+func ByLink(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLink, opts...).ToFunc()
 }
 
-// ByPermission orders the results by the permission field.
-func ByPermission(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPermission, opts...).ToFunc()
-}
-
-// ByIsext orders the results by the isext field.
-func ByIsext(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsext, opts...).ToFunc()
-}
-
-// ByIsshow orders the results by the isshow field.
-func ByIsshow(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsshow, opts...).ToFunc()
-}
-
-// ByKeepalive orders the results by the keepalive field.
-func ByKeepalive(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldKeepalive, opts...).ToFunc()
-}
-
-// ByAffix orders the results by the affix field.
-func ByAffix(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAffix, opts...).ToFunc()
+// ByIframeSrc orders the results by the iframeSrc field.
+func ByIframeSrc(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIframeSrc, opts...).ToFunc()
 }
 
 // ByIgnoreAuth orders the results by the ignore_auth field.
@@ -196,7 +181,22 @@ func ByIgnoreAuth(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIgnoreAuth, opts...).ToFunc()
 }
 
-// ByBreadcrumb orders the results by the breadcrumb field.
-func ByBreadcrumb(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBreadcrumb, opts...).ToFunc()
+// ByKeepalive orders the results by the keepalive field.
+func ByKeepalive(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldKeepalive, opts...).ToFunc()
+}
+
+// ByPermission orders the results by the permission field.
+func ByPermission(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPermission, opts...).ToFunc()
+}
+
+// ByAffixTab orders the results by the affix_tab field.
+func ByAffixTab(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAffixTab, opts...).ToFunc()
+}
+
+// ByHideInBreadcrumb orders the results by the hideInBreadcrumb field.
+func ByHideInBreadcrumb(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHideInBreadcrumb, opts...).ToFunc()
 }

@@ -177,13 +177,17 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 	RouteItem := pb.RouteItem{Meta: &pb.RouteMeta{}}
 	copier.Copy(&RouteItem, menu)
 	RouteItem.Id = menu.ID
+
 	RouteItem.Meta.Title = menu.Title
-	RouteItem.Meta.IgnoreAuth = menu.IgnoreAuth
-	RouteItem.Meta.IgnoreKeepAlive = !menu.Keepalive
-	RouteItem.Meta.Affix = menu.Affix
 	RouteItem.Meta.Icon = menu.Icon
-	RouteItem.Meta.HideBreadcrumb = !menu.Breadcrumb
-	RouteItem.Meta.IsLink = menu.Isext
+	RouteItem.Meta.Order = strconv.Itoa(int(menu.Order))
+
+	RouteItem.Meta.Link = menu.Link
+	RouteItem.Meta.IframeSrc = menu.IframeSrc
+	RouteItem.Meta.IgnoreAccess = menu.IgnoreAuth
+	RouteItem.Meta.KeepAlive = menu.Keepalive
+
+	RouteItem.Meta.Authority = strings.Split(menu.Permission, ",")
 
 	return &RouteItem
 }
@@ -566,7 +570,7 @@ func ToMenuTree(forest []*pb.RouteItem) []*pb.SysMenuListItem {
 			Icon:     item.Meta.Icon,
 			MenuName: item.Name,
 			Status: func() int64 {
-				if item.Meta.HideMenu {
+				if item.Meta.HideInMenu {
 					return 1
 				} else {
 					return 0

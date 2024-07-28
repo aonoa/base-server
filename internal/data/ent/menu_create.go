@@ -60,6 +60,12 @@ func (mc *MenuCreate) SetType(i int8) *MenuCreate {
 	return mc
 }
 
+// SetStatus sets the "status" field.
+func (mc *MenuCreate) SetStatus(b bool) *MenuCreate {
+	mc.mutation.SetStatus(b)
+	return mc
+}
+
 // SetName sets the "name" field.
 func (mc *MenuCreate) SetName(s string) *MenuCreate {
 	mc.mutation.SetName(s)
@@ -72,15 +78,15 @@ func (mc *MenuCreate) SetTitle(s string) *MenuCreate {
 	return mc
 }
 
-// SetSort sets the "sort" field.
-func (mc *MenuCreate) SetSort(i int8) *MenuCreate {
-	mc.mutation.SetSort(i)
-	return mc
-}
-
 // SetIcon sets the "icon" field.
 func (mc *MenuCreate) SetIcon(s string) *MenuCreate {
 	mc.mutation.SetIcon(s)
+	return mc
+}
+
+// SetOrder sets the "order" field.
+func (mc *MenuCreate) SetOrder(i int32) *MenuCreate {
+	mc.mutation.SetOrder(i)
 	return mc
 }
 
@@ -102,39 +108,15 @@ func (mc *MenuCreate) SetRedirect(s string) *MenuCreate {
 	return mc
 }
 
-// SetStatus sets the "status" field.
-func (mc *MenuCreate) SetStatus(b bool) *MenuCreate {
-	mc.mutation.SetStatus(b)
+// SetLink sets the "link" field.
+func (mc *MenuCreate) SetLink(s string) *MenuCreate {
+	mc.mutation.SetLink(s)
 	return mc
 }
 
-// SetPermission sets the "permission" field.
-func (mc *MenuCreate) SetPermission(s string) *MenuCreate {
-	mc.mutation.SetPermission(s)
-	return mc
-}
-
-// SetIsext sets the "isext" field.
-func (mc *MenuCreate) SetIsext(b bool) *MenuCreate {
-	mc.mutation.SetIsext(b)
-	return mc
-}
-
-// SetIsshow sets the "isshow" field.
-func (mc *MenuCreate) SetIsshow(b bool) *MenuCreate {
-	mc.mutation.SetIsshow(b)
-	return mc
-}
-
-// SetKeepalive sets the "keepalive" field.
-func (mc *MenuCreate) SetKeepalive(b bool) *MenuCreate {
-	mc.mutation.SetKeepalive(b)
-	return mc
-}
-
-// SetAffix sets the "affix" field.
-func (mc *MenuCreate) SetAffix(b bool) *MenuCreate {
-	mc.mutation.SetAffix(b)
+// SetIframeSrc sets the "iframeSrc" field.
+func (mc *MenuCreate) SetIframeSrc(s string) *MenuCreate {
+	mc.mutation.SetIframeSrc(s)
 	return mc
 }
 
@@ -144,9 +126,27 @@ func (mc *MenuCreate) SetIgnoreAuth(b bool) *MenuCreate {
 	return mc
 }
 
-// SetBreadcrumb sets the "breadcrumb" field.
-func (mc *MenuCreate) SetBreadcrumb(b bool) *MenuCreate {
-	mc.mutation.SetBreadcrumb(b)
+// SetKeepalive sets the "keepalive" field.
+func (mc *MenuCreate) SetKeepalive(b bool) *MenuCreate {
+	mc.mutation.SetKeepalive(b)
+	return mc
+}
+
+// SetPermission sets the "permission" field.
+func (mc *MenuCreate) SetPermission(s string) *MenuCreate {
+	mc.mutation.SetPermission(s)
+	return mc
+}
+
+// SetAffixTab sets the "affix_tab" field.
+func (mc *MenuCreate) SetAffixTab(b bool) *MenuCreate {
+	mc.mutation.SetAffixTab(b)
+	return mc
+}
+
+// SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
+func (mc *MenuCreate) SetHideInBreadcrumb(b bool) *MenuCreate {
+	mc.mutation.SetHideInBreadcrumb(b)
 	return mc
 }
 
@@ -215,17 +215,20 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Menu.type"`)}
 	}
+	if _, ok := mc.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Menu.status"`)}
+	}
 	if _, ok := mc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Menu.name"`)}
 	}
 	if _, ok := mc.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Menu.title"`)}
 	}
-	if _, ok := mc.mutation.Sort(); !ok {
-		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Menu.sort"`)}
-	}
 	if _, ok := mc.mutation.Icon(); !ok {
 		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Menu.icon"`)}
+	}
+	if _, ok := mc.mutation.Order(); !ok {
+		return &ValidationError{Name: "order", err: errors.New(`ent: missing required field "Menu.order"`)}
 	}
 	if _, ok := mc.mutation.Path(); !ok {
 		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Menu.path"`)}
@@ -236,29 +239,26 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.Redirect(); !ok {
 		return &ValidationError{Name: "redirect", err: errors.New(`ent: missing required field "Menu.redirect"`)}
 	}
-	if _, ok := mc.mutation.Status(); !ok {
-		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Menu.status"`)}
+	if _, ok := mc.mutation.Link(); !ok {
+		return &ValidationError{Name: "link", err: errors.New(`ent: missing required field "Menu.link"`)}
 	}
-	if _, ok := mc.mutation.Permission(); !ok {
-		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required field "Menu.permission"`)}
-	}
-	if _, ok := mc.mutation.Isext(); !ok {
-		return &ValidationError{Name: "isext", err: errors.New(`ent: missing required field "Menu.isext"`)}
-	}
-	if _, ok := mc.mutation.Isshow(); !ok {
-		return &ValidationError{Name: "isshow", err: errors.New(`ent: missing required field "Menu.isshow"`)}
-	}
-	if _, ok := mc.mutation.Keepalive(); !ok {
-		return &ValidationError{Name: "keepalive", err: errors.New(`ent: missing required field "Menu.keepalive"`)}
-	}
-	if _, ok := mc.mutation.Affix(); !ok {
-		return &ValidationError{Name: "affix", err: errors.New(`ent: missing required field "Menu.affix"`)}
+	if _, ok := mc.mutation.IframeSrc(); !ok {
+		return &ValidationError{Name: "iframeSrc", err: errors.New(`ent: missing required field "Menu.iframeSrc"`)}
 	}
 	if _, ok := mc.mutation.IgnoreAuth(); !ok {
 		return &ValidationError{Name: "ignore_auth", err: errors.New(`ent: missing required field "Menu.ignore_auth"`)}
 	}
-	if _, ok := mc.mutation.Breadcrumb(); !ok {
-		return &ValidationError{Name: "breadcrumb", err: errors.New(`ent: missing required field "Menu.breadcrumb"`)}
+	if _, ok := mc.mutation.Keepalive(); !ok {
+		return &ValidationError{Name: "keepalive", err: errors.New(`ent: missing required field "Menu.keepalive"`)}
+	}
+	if _, ok := mc.mutation.Permission(); !ok {
+		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required field "Menu.permission"`)}
+	}
+	if _, ok := mc.mutation.AffixTab(); !ok {
+		return &ValidationError{Name: "affix_tab", err: errors.New(`ent: missing required field "Menu.affix_tab"`)}
+	}
+	if _, ok := mc.mutation.HideInBreadcrumb(); !ok {
+		return &ValidationError{Name: "hideInBreadcrumb", err: errors.New(`ent: missing required field "Menu.hideInBreadcrumb"`)}
 	}
 	return nil
 }
@@ -308,6 +308,10 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldType, field.TypeInt8, value)
 		_node.Type = value
 	}
+	if value, ok := mc.mutation.Status(); ok {
+		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
+		_node.Status = value
+	}
 	if value, ok := mc.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 		_node.Name = value
@@ -316,13 +320,13 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
-	if value, ok := mc.mutation.Sort(); ok {
-		_spec.SetField(menu.FieldSort, field.TypeInt8, value)
-		_node.Sort = value
-	}
 	if value, ok := mc.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
 		_node.Icon = value
+	}
+	if value, ok := mc.mutation.Order(); ok {
+		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
+		_node.Order = value
 	}
 	if value, ok := mc.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -336,37 +340,33 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
 		_node.Redirect = value
 	}
-	if value, ok := mc.mutation.Status(); ok {
-		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
-		_node.Status = value
+	if value, ok := mc.mutation.Link(); ok {
+		_spec.SetField(menu.FieldLink, field.TypeString, value)
+		_node.Link = value
 	}
-	if value, ok := mc.mutation.Permission(); ok {
-		_spec.SetField(menu.FieldPermission, field.TypeString, value)
-		_node.Permission = value
-	}
-	if value, ok := mc.mutation.Isext(); ok {
-		_spec.SetField(menu.FieldIsext, field.TypeBool, value)
-		_node.Isext = value
-	}
-	if value, ok := mc.mutation.Isshow(); ok {
-		_spec.SetField(menu.FieldIsshow, field.TypeBool, value)
-		_node.Isshow = value
-	}
-	if value, ok := mc.mutation.Keepalive(); ok {
-		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
-		_node.Keepalive = value
-	}
-	if value, ok := mc.mutation.Affix(); ok {
-		_spec.SetField(menu.FieldAffix, field.TypeBool, value)
-		_node.Affix = value
+	if value, ok := mc.mutation.IframeSrc(); ok {
+		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
+		_node.IframeSrc = value
 	}
 	if value, ok := mc.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 		_node.IgnoreAuth = value
 	}
-	if value, ok := mc.mutation.Breadcrumb(); ok {
-		_spec.SetField(menu.FieldBreadcrumb, field.TypeBool, value)
-		_node.Breadcrumb = value
+	if value, ok := mc.mutation.Keepalive(); ok {
+		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
+		_node.Keepalive = value
+	}
+	if value, ok := mc.mutation.Permission(); ok {
+		_spec.SetField(menu.FieldPermission, field.TypeString, value)
+		_node.Permission = value
+	}
+	if value, ok := mc.mutation.AffixTab(); ok {
+		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
+		_node.AffixTab = value
+	}
+	if value, ok := mc.mutation.HideInBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
+		_node.HideInBreadcrumb = value
 	}
 	return _node, _spec
 }

@@ -566,14 +566,16 @@ components:
         api.base_api.v1.RouteItem:
             type: object
             properties:
+                id:
+                    type: string
+                name:
+                    type: string
                 path:
                     type: string
                 component:
                     type: string
                 meta:
                     $ref: '#/components/schemas/api.base_api.v1.RouteMeta'
-                name:
-                    type: string
                 alias:
                     type: array
                     items:
@@ -584,14 +586,23 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.RouteItem'
-                    description: "bool caseSensitive = 7;\t\t\t\t////"
-                id:
-                    type: string
         api.base_api.v1.RouteMeta:
             type: object
             properties:
                 title:
                     type: string
+                icon:
+                    type: string
+                order:
+                    type: string
+                link:
+                    type: string
+                iframeSrc:
+                    type: string
+                ignoreAccess:
+                    type: boolean
+                keepAlive:
+                    type: boolean
                 badge:
                     type: string
                 badgeType:
@@ -600,48 +611,16 @@ components:
                     type: string
                 hideChildrenInMenu:
                     type: boolean
-                icon:
-                    type: string
-                link:
-                    type: string
-                order:
-                    type: string
-                dynamicLevel:
-                    type: string
-                realPath:
-                    type: string
-                ignoreAuth:
+                hideInBreadcrumb:
                     type: boolean
-                roles:
+                hideInMenu:
+                    type: boolean
+                hideInTab:
+                    type: boolean
+                authority:
                     type: array
                     items:
                         type: string
-                ignoreKeepAlive:
-                    type: boolean
-                affix:
-                    type: boolean
-                frameSrc:
-                    type: string
-                transitionName:
-                    type: string
-                hideBreadcrumb:
-                    type: boolean
-                carryParam:
-                    type: boolean
-                single:
-                    type: boolean
-                currentActiveMenu:
-                    type: string
-                hideTab:
-                    type: boolean
-                hideMenu:
-                    type: boolean
-                isLink:
-                    type: boolean
-                ignoreRoute:
-                    type: boolean
-                hidePathForChildren:
-                    type: boolean
         api.base_api.v1.SetRoleStatusRequest:
             type: object
             properties:

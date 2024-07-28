@@ -60,6 +60,12 @@ func (mu *MenuUpdate) AddType(i int8) *MenuUpdate {
 	return mu
 }
 
+// SetStatus sets the "status" field.
+func (mu *MenuUpdate) SetStatus(b bool) *MenuUpdate {
+	mu.mutation.SetStatus(b)
+	return mu
+}
+
 // SetName sets the "name" field.
 func (mu *MenuUpdate) SetName(s string) *MenuUpdate {
 	mu.mutation.SetName(s)
@@ -72,22 +78,22 @@ func (mu *MenuUpdate) SetTitle(s string) *MenuUpdate {
 	return mu
 }
 
-// SetSort sets the "sort" field.
-func (mu *MenuUpdate) SetSort(i int8) *MenuUpdate {
-	mu.mutation.ResetSort()
-	mu.mutation.SetSort(i)
-	return mu
-}
-
-// AddSort adds i to the "sort" field.
-func (mu *MenuUpdate) AddSort(i int8) *MenuUpdate {
-	mu.mutation.AddSort(i)
-	return mu
-}
-
 // SetIcon sets the "icon" field.
 func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
 	mu.mutation.SetIcon(s)
+	return mu
+}
+
+// SetOrder sets the "order" field.
+func (mu *MenuUpdate) SetOrder(i int32) *MenuUpdate {
+	mu.mutation.ResetOrder()
+	mu.mutation.SetOrder(i)
+	return mu
+}
+
+// AddOrder adds i to the "order" field.
+func (mu *MenuUpdate) AddOrder(i int32) *MenuUpdate {
+	mu.mutation.AddOrder(i)
 	return mu
 }
 
@@ -109,39 +115,15 @@ func (mu *MenuUpdate) SetRedirect(s string) *MenuUpdate {
 	return mu
 }
 
-// SetStatus sets the "status" field.
-func (mu *MenuUpdate) SetStatus(b bool) *MenuUpdate {
-	mu.mutation.SetStatus(b)
+// SetLink sets the "link" field.
+func (mu *MenuUpdate) SetLink(s string) *MenuUpdate {
+	mu.mutation.SetLink(s)
 	return mu
 }
 
-// SetPermission sets the "permission" field.
-func (mu *MenuUpdate) SetPermission(s string) *MenuUpdate {
-	mu.mutation.SetPermission(s)
-	return mu
-}
-
-// SetIsext sets the "isext" field.
-func (mu *MenuUpdate) SetIsext(b bool) *MenuUpdate {
-	mu.mutation.SetIsext(b)
-	return mu
-}
-
-// SetIsshow sets the "isshow" field.
-func (mu *MenuUpdate) SetIsshow(b bool) *MenuUpdate {
-	mu.mutation.SetIsshow(b)
-	return mu
-}
-
-// SetKeepalive sets the "keepalive" field.
-func (mu *MenuUpdate) SetKeepalive(b bool) *MenuUpdate {
-	mu.mutation.SetKeepalive(b)
-	return mu
-}
-
-// SetAffix sets the "affix" field.
-func (mu *MenuUpdate) SetAffix(b bool) *MenuUpdate {
-	mu.mutation.SetAffix(b)
+// SetIframeSrc sets the "iframeSrc" field.
+func (mu *MenuUpdate) SetIframeSrc(s string) *MenuUpdate {
+	mu.mutation.SetIframeSrc(s)
 	return mu
 }
 
@@ -151,9 +133,27 @@ func (mu *MenuUpdate) SetIgnoreAuth(b bool) *MenuUpdate {
 	return mu
 }
 
-// SetBreadcrumb sets the "breadcrumb" field.
-func (mu *MenuUpdate) SetBreadcrumb(b bool) *MenuUpdate {
-	mu.mutation.SetBreadcrumb(b)
+// SetKeepalive sets the "keepalive" field.
+func (mu *MenuUpdate) SetKeepalive(b bool) *MenuUpdate {
+	mu.mutation.SetKeepalive(b)
+	return mu
+}
+
+// SetPermission sets the "permission" field.
+func (mu *MenuUpdate) SetPermission(s string) *MenuUpdate {
+	mu.mutation.SetPermission(s)
+	return mu
+}
+
+// SetAffixTab sets the "affix_tab" field.
+func (mu *MenuUpdate) SetAffixTab(b bool) *MenuUpdate {
+	mu.mutation.SetAffixTab(b)
+	return mu
+}
+
+// SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
+func (mu *MenuUpdate) SetHideInBreadcrumb(b bool) *MenuUpdate {
+	mu.mutation.SetHideInBreadcrumb(b)
 	return mu
 }
 
@@ -222,20 +222,23 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.AddedType(); ok {
 		_spec.AddField(menu.FieldType, field.TypeInt8, value)
 	}
+	if value, ok := mu.mutation.Status(); ok {
+		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
+	}
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Title(); ok {
 		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.Sort(); ok {
-		_spec.SetField(menu.FieldSort, field.TypeInt8, value)
-	}
-	if value, ok := mu.mutation.AddedSort(); ok {
-		_spec.AddField(menu.FieldSort, field.TypeInt8, value)
-	}
 	if value, ok := mu.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Order(); ok {
+		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
+	}
+	if value, ok := mu.mutation.AddedOrder(); ok {
+		_spec.AddField(menu.FieldOrder, field.TypeInt32, value)
 	}
 	if value, ok := mu.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -246,29 +249,26 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.Redirect(); ok {
 		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.Status(); ok {
-		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
+	if value, ok := mu.mutation.Link(); ok {
+		_spec.SetField(menu.FieldLink, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.Permission(); ok {
-		_spec.SetField(menu.FieldPermission, field.TypeString, value)
-	}
-	if value, ok := mu.mutation.Isext(); ok {
-		_spec.SetField(menu.FieldIsext, field.TypeBool, value)
-	}
-	if value, ok := mu.mutation.Isshow(); ok {
-		_spec.SetField(menu.FieldIsshow, field.TypeBool, value)
-	}
-	if value, ok := mu.mutation.Keepalive(); ok {
-		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
-	}
-	if value, ok := mu.mutation.Affix(); ok {
-		_spec.SetField(menu.FieldAffix, field.TypeBool, value)
+	if value, ok := mu.mutation.IframeSrc(); ok {
+		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Breadcrumb(); ok {
-		_spec.SetField(menu.FieldBreadcrumb, field.TypeBool, value)
+	if value, ok := mu.mutation.Keepalive(); ok {
+		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.Permission(); ok {
+		_spec.SetField(menu.FieldPermission, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.AffixTab(); ok {
+		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideInBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -322,6 +322,12 @@ func (muo *MenuUpdateOne) AddType(i int8) *MenuUpdateOne {
 	return muo
 }
 
+// SetStatus sets the "status" field.
+func (muo *MenuUpdateOne) SetStatus(b bool) *MenuUpdateOne {
+	muo.mutation.SetStatus(b)
+	return muo
+}
+
 // SetName sets the "name" field.
 func (muo *MenuUpdateOne) SetName(s string) *MenuUpdateOne {
 	muo.mutation.SetName(s)
@@ -334,22 +340,22 @@ func (muo *MenuUpdateOne) SetTitle(s string) *MenuUpdateOne {
 	return muo
 }
 
-// SetSort sets the "sort" field.
-func (muo *MenuUpdateOne) SetSort(i int8) *MenuUpdateOne {
-	muo.mutation.ResetSort()
-	muo.mutation.SetSort(i)
-	return muo
-}
-
-// AddSort adds i to the "sort" field.
-func (muo *MenuUpdateOne) AddSort(i int8) *MenuUpdateOne {
-	muo.mutation.AddSort(i)
-	return muo
-}
-
 // SetIcon sets the "icon" field.
 func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
 	muo.mutation.SetIcon(s)
+	return muo
+}
+
+// SetOrder sets the "order" field.
+func (muo *MenuUpdateOne) SetOrder(i int32) *MenuUpdateOne {
+	muo.mutation.ResetOrder()
+	muo.mutation.SetOrder(i)
+	return muo
+}
+
+// AddOrder adds i to the "order" field.
+func (muo *MenuUpdateOne) AddOrder(i int32) *MenuUpdateOne {
+	muo.mutation.AddOrder(i)
 	return muo
 }
 
@@ -371,39 +377,15 @@ func (muo *MenuUpdateOne) SetRedirect(s string) *MenuUpdateOne {
 	return muo
 }
 
-// SetStatus sets the "status" field.
-func (muo *MenuUpdateOne) SetStatus(b bool) *MenuUpdateOne {
-	muo.mutation.SetStatus(b)
+// SetLink sets the "link" field.
+func (muo *MenuUpdateOne) SetLink(s string) *MenuUpdateOne {
+	muo.mutation.SetLink(s)
 	return muo
 }
 
-// SetPermission sets the "permission" field.
-func (muo *MenuUpdateOne) SetPermission(s string) *MenuUpdateOne {
-	muo.mutation.SetPermission(s)
-	return muo
-}
-
-// SetIsext sets the "isext" field.
-func (muo *MenuUpdateOne) SetIsext(b bool) *MenuUpdateOne {
-	muo.mutation.SetIsext(b)
-	return muo
-}
-
-// SetIsshow sets the "isshow" field.
-func (muo *MenuUpdateOne) SetIsshow(b bool) *MenuUpdateOne {
-	muo.mutation.SetIsshow(b)
-	return muo
-}
-
-// SetKeepalive sets the "keepalive" field.
-func (muo *MenuUpdateOne) SetKeepalive(b bool) *MenuUpdateOne {
-	muo.mutation.SetKeepalive(b)
-	return muo
-}
-
-// SetAffix sets the "affix" field.
-func (muo *MenuUpdateOne) SetAffix(b bool) *MenuUpdateOne {
-	muo.mutation.SetAffix(b)
+// SetIframeSrc sets the "iframeSrc" field.
+func (muo *MenuUpdateOne) SetIframeSrc(s string) *MenuUpdateOne {
+	muo.mutation.SetIframeSrc(s)
 	return muo
 }
 
@@ -413,9 +395,27 @@ func (muo *MenuUpdateOne) SetIgnoreAuth(b bool) *MenuUpdateOne {
 	return muo
 }
 
-// SetBreadcrumb sets the "breadcrumb" field.
-func (muo *MenuUpdateOne) SetBreadcrumb(b bool) *MenuUpdateOne {
-	muo.mutation.SetBreadcrumb(b)
+// SetKeepalive sets the "keepalive" field.
+func (muo *MenuUpdateOne) SetKeepalive(b bool) *MenuUpdateOne {
+	muo.mutation.SetKeepalive(b)
+	return muo
+}
+
+// SetPermission sets the "permission" field.
+func (muo *MenuUpdateOne) SetPermission(s string) *MenuUpdateOne {
+	muo.mutation.SetPermission(s)
+	return muo
+}
+
+// SetAffixTab sets the "affix_tab" field.
+func (muo *MenuUpdateOne) SetAffixTab(b bool) *MenuUpdateOne {
+	muo.mutation.SetAffixTab(b)
+	return muo
+}
+
+// SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
+func (muo *MenuUpdateOne) SetHideInBreadcrumb(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideInBreadcrumb(b)
 	return muo
 }
 
@@ -514,20 +514,23 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.AddedType(); ok {
 		_spec.AddField(menu.FieldType, field.TypeInt8, value)
 	}
+	if value, ok := muo.mutation.Status(); ok {
+		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
+	}
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Title(); ok {
 		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.Sort(); ok {
-		_spec.SetField(menu.FieldSort, field.TypeInt8, value)
-	}
-	if value, ok := muo.mutation.AddedSort(); ok {
-		_spec.AddField(menu.FieldSort, field.TypeInt8, value)
-	}
 	if value, ok := muo.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Order(); ok {
+		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
+	}
+	if value, ok := muo.mutation.AddedOrder(); ok {
+		_spec.AddField(menu.FieldOrder, field.TypeInt32, value)
 	}
 	if value, ok := muo.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -538,29 +541,26 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.Redirect(); ok {
 		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.Status(); ok {
-		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
+	if value, ok := muo.mutation.Link(); ok {
+		_spec.SetField(menu.FieldLink, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.Permission(); ok {
-		_spec.SetField(menu.FieldPermission, field.TypeString, value)
-	}
-	if value, ok := muo.mutation.Isext(); ok {
-		_spec.SetField(menu.FieldIsext, field.TypeBool, value)
-	}
-	if value, ok := muo.mutation.Isshow(); ok {
-		_spec.SetField(menu.FieldIsshow, field.TypeBool, value)
-	}
-	if value, ok := muo.mutation.Keepalive(); ok {
-		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
-	}
-	if value, ok := muo.mutation.Affix(); ok {
-		_spec.SetField(menu.FieldAffix, field.TypeBool, value)
+	if value, ok := muo.mutation.IframeSrc(); ok {
+		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Breadcrumb(); ok {
-		_spec.SetField(menu.FieldBreadcrumb, field.TypeBool, value)
+	if value, ok := muo.mutation.Keepalive(); ok {
+		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.Permission(); ok {
+		_spec.SetField(menu.FieldPermission, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.AffixTab(); ok {
+		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideInBreadcrumb(); ok {
+		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
 	}
 	_node = &Menu{config: muo.config}
 	_spec.Assign = _node.assignValues

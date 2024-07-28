@@ -25,37 +25,37 @@ type Menu struct {
 	Pid int64 `json:"pid,omitempty"`
 	// 菜单类型,0-目录,1-菜单,2-按钮
 	Type int8 `json:"type,omitempty"`
+	// 状态,0-禁用，1-启用
+	Status bool `json:"status,omitempty"`
 	// 组件名
 	Name string `json:"name,omitempty"`
 	// 显示名称
 	Title string `json:"title,omitempty"`
-	// 排序(越小越前)
-	Sort int8 `json:"sort,omitempty"`
 	// 图标
 	Icon string `json:"icon,omitempty"`
+	// 排序(越小越前)
+	Order int32 `json:"order,omitempty"`
 	// 路由path
 	Path string `json:"path,omitempty"`
 	// 组件路径
 	Component string `json:"component,omitempty"`
 	// 重定向path
 	Redirect string `json:"redirect,omitempty"`
-	// 状态,0-禁用，1-启用
-	Status bool `json:"status,omitempty"`
-	// 权限标识
-	Permission string `json:"permission,omitempty"`
-	// 外链,0-否，1-是
-	Isext bool `json:"isext,omitempty"`
-	// 显示,0-否，1-是
-	Isshow bool `json:"isshow,omitempty"`
-	// 缓存,0-否，1-是
-	Keepalive bool `json:"keepalive,omitempty"`
-	// 固钉,0-否，1-是
-	Affix bool `json:"affix,omitempty"`
+	// 外链-跳转路径
+	Link string `json:"link,omitempty"`
+	// iframe地址
+	IframeSrc string `json:"iframeSrc,omitempty"`
 	// 忽略权限,0-否，1-是
 	IgnoreAuth bool `json:"ignore_auth,omitempty"`
+	// 缓存,0-否，1-是
+	Keepalive bool `json:"keepalive,omitempty"`
+	// 权限标识
+	Permission string `json:"permission,omitempty"`
+	// 固钉,0-否，1-是
+	AffixTab bool `json:"affix_tab,omitempty"`
 	// 显示在面包屑,0-否，1-是
-	Breadcrumb   bool `json:"breadcrumb,omitempty"`
-	selectValues sql.SelectValues
+	HideInBreadcrumb bool `json:"hideInBreadcrumb,omitempty"`
+	selectValues     sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -63,11 +63,11 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldStatus, menu.FieldIsext, menu.FieldIsshow, menu.FieldKeepalive, menu.FieldAffix, menu.FieldIgnoreAuth, menu.FieldBreadcrumb:
+		case menu.FieldStatus, menu.FieldIgnoreAuth, menu.FieldKeepalive, menu.FieldAffixTab, menu.FieldHideInBreadcrumb:
 			values[i] = new(sql.NullBool)
-		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldSort:
+		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldName, menu.FieldTitle, menu.FieldIcon, menu.FieldPath, menu.FieldComponent, menu.FieldRedirect, menu.FieldPermission:
+		case menu.FieldName, menu.FieldTitle, menu.FieldIcon, menu.FieldPath, menu.FieldComponent, menu.FieldRedirect, menu.FieldLink, menu.FieldIframeSrc, menu.FieldPermission:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -116,6 +116,12 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Type = int8(value.Int64)
 			}
+		case menu.FieldStatus:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				m.Status = value.Bool
+			}
 		case menu.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -128,17 +134,17 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Title = value.String
 			}
-		case menu.FieldSort:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field sort", values[i])
-			} else if value.Valid {
-				m.Sort = int8(value.Int64)
-			}
 		case menu.FieldIcon:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field icon", values[i])
 			} else if value.Valid {
 				m.Icon = value.String
+			}
+		case menu.FieldOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field order", values[i])
+			} else if value.Valid {
+				m.Order = int32(value.Int64)
 			}
 		case menu.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -158,41 +164,17 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Redirect = value.String
 			}
-		case menu.FieldStatus:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field status", values[i])
-			} else if value.Valid {
-				m.Status = value.Bool
-			}
-		case menu.FieldPermission:
+		case menu.FieldLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field permission", values[i])
+				return fmt.Errorf("unexpected type %T for field link", values[i])
 			} else if value.Valid {
-				m.Permission = value.String
+				m.Link = value.String
 			}
-		case menu.FieldIsext:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field isext", values[i])
+		case menu.FieldIframeSrc:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field iframeSrc", values[i])
 			} else if value.Valid {
-				m.Isext = value.Bool
-			}
-		case menu.FieldIsshow:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field isshow", values[i])
-			} else if value.Valid {
-				m.Isshow = value.Bool
-			}
-		case menu.FieldKeepalive:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field keepalive", values[i])
-			} else if value.Valid {
-				m.Keepalive = value.Bool
-			}
-		case menu.FieldAffix:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field affix", values[i])
-			} else if value.Valid {
-				m.Affix = value.Bool
+				m.IframeSrc = value.String
 			}
 		case menu.FieldIgnoreAuth:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -200,11 +182,29 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.IgnoreAuth = value.Bool
 			}
-		case menu.FieldBreadcrumb:
+		case menu.FieldKeepalive:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field breadcrumb", values[i])
+				return fmt.Errorf("unexpected type %T for field keepalive", values[i])
 			} else if value.Valid {
-				m.Breadcrumb = value.Bool
+				m.Keepalive = value.Bool
+			}
+		case menu.FieldPermission:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field permission", values[i])
+			} else if value.Valid {
+				m.Permission = value.String
+			}
+		case menu.FieldAffixTab:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field affix_tab", values[i])
+			} else if value.Valid {
+				m.AffixTab = value.Bool
+			}
+		case menu.FieldHideInBreadcrumb:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hideInBreadcrumb", values[i])
+			} else if value.Valid {
+				m.HideInBreadcrumb = value.Bool
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -254,17 +254,20 @@ func (m *Menu) String() string {
 	builder.WriteString("type=")
 	builder.WriteString(fmt.Sprintf("%v", m.Type))
 	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", m.Status))
+	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("title=")
 	builder.WriteString(m.Title)
 	builder.WriteString(", ")
-	builder.WriteString("sort=")
-	builder.WriteString(fmt.Sprintf("%v", m.Sort))
-	builder.WriteString(", ")
 	builder.WriteString("icon=")
 	builder.WriteString(m.Icon)
+	builder.WriteString(", ")
+	builder.WriteString("order=")
+	builder.WriteString(fmt.Sprintf("%v", m.Order))
 	builder.WriteString(", ")
 	builder.WriteString("path=")
 	builder.WriteString(m.Path)
@@ -275,29 +278,26 @@ func (m *Menu) String() string {
 	builder.WriteString("redirect=")
 	builder.WriteString(m.Redirect)
 	builder.WriteString(", ")
-	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", m.Status))
+	builder.WriteString("link=")
+	builder.WriteString(m.Link)
 	builder.WriteString(", ")
-	builder.WriteString("permission=")
-	builder.WriteString(m.Permission)
-	builder.WriteString(", ")
-	builder.WriteString("isext=")
-	builder.WriteString(fmt.Sprintf("%v", m.Isext))
-	builder.WriteString(", ")
-	builder.WriteString("isshow=")
-	builder.WriteString(fmt.Sprintf("%v", m.Isshow))
-	builder.WriteString(", ")
-	builder.WriteString("keepalive=")
-	builder.WriteString(fmt.Sprintf("%v", m.Keepalive))
-	builder.WriteString(", ")
-	builder.WriteString("affix=")
-	builder.WriteString(fmt.Sprintf("%v", m.Affix))
+	builder.WriteString("iframeSrc=")
+	builder.WriteString(m.IframeSrc)
 	builder.WriteString(", ")
 	builder.WriteString("ignore_auth=")
 	builder.WriteString(fmt.Sprintf("%v", m.IgnoreAuth))
 	builder.WriteString(", ")
-	builder.WriteString("breadcrumb=")
-	builder.WriteString(fmt.Sprintf("%v", m.Breadcrumb))
+	builder.WriteString("keepalive=")
+	builder.WriteString(fmt.Sprintf("%v", m.Keepalive))
+	builder.WriteString(", ")
+	builder.WriteString("permission=")
+	builder.WriteString(m.Permission)
+	builder.WriteString(", ")
+	builder.WriteString("affix_tab=")
+	builder.WriteString(fmt.Sprintf("%v", m.AffixTab))
+	builder.WriteString(", ")
+	builder.WriteString("hideInBreadcrumb=")
+	builder.WriteString(fmt.Sprintf("%v", m.HideInBreadcrumb))
 	builder.WriteByte(')')
 	return builder.String()
 }

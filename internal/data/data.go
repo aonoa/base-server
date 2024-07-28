@@ -71,10 +71,10 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 		return nil, nil, err
 	}
 	// Run the auto migration tool.
-	//if err := client.Schema.Create(context.Background()); err != nil {
-	//	log.Errorf("failed creating schema resources: %v", err)
-	//	return nil, nil, err
-	//}
+	if err := client.Schema.Create(context.Background()); err != nil {
+		log.Errorf("failed creating schema resources: %v", err)
+		return nil, nil, err
+	}
 
 	//migrate.Create(context.Background(), client.Schema, []*schema.Table{migrate.UsersTable})
 

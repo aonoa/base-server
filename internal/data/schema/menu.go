@@ -25,21 +25,23 @@ func (Menu) Fields() []ent.Field {
 		field.Int64("id"),
 		field.Int64("pid").Comment("上一级ID"),
 		field.Int8("type").Comment("菜单类型,0-目录,1-菜单,2-按钮"),
+		field.Bool("status").Comment("状态,0-禁用，1-启用"),
 		field.String("name").Comment("组件名"),
 		field.String("title").Comment("显示名称"),
-		field.Int8("sort").Unique().Comment("排序(越小越前)"),
 		field.String("icon").Comment("图标"),
+		field.Int32("order").Comment("排序(越小越前)"),
 		field.String("path").Comment("路由path"),
 		field.String("component").Comment("组件路径"),
 		field.String("redirect").Comment("重定向path"),
-		field.Bool("status").Comment("状态,0-禁用，1-启用"),
-		field.String("permission").Comment("权限标识"),
-		field.Bool("isext").Comment("外链,0-否，1-是"),
-		field.Bool("isshow").Comment("显示,0-否，1-是"),
-		field.Bool("keepalive").Comment("缓存,0-否，1-是"),
-		field.Bool("affix").Comment("固钉,0-否，1-是"),
+
+		field.String("link").Comment("外链-跳转路径"),
+		field.String("iframeSrc").Comment("iframe地址"),
 		field.Bool("ignore_auth").Comment("忽略权限,0-否，1-是"),
-		field.Bool("breadcrumb").Comment("显示在面包屑,0-否，1-是"),
+		field.Bool("keepalive").Comment("缓存,0-否，1-是"),
+
+		field.String("permission").Comment("权限标识"),
+		field.Bool("affix_tab").Comment("固钉,0-否，1-是"),
+		field.Bool("hideInBreadcrumb").Comment("显示在面包屑,0-否，1-是"),
 	}
 }
 

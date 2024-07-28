@@ -3,6 +3,7 @@ package service
 import (
 	"base-server/internal/biz"
 	"base-server/internal/conf"
+	"base-server/internal/tools"
 	"context"
 	"errors"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
@@ -32,6 +33,7 @@ func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth) *BaseService {
 }
 
 func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
+	//req.Password = tools.UserPasswdEncrypt(req.Password, "")
 	// 检查是否有这个人
 	g, err := s.uc.Login(ctx, req)
 	if err != nil || g == "00000000-0000-0000-0000-000000000000" {
@@ -40,6 +42,9 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	claims := jwtv4.NewWithClaims(jwtv4.SigningMethodHS256, jwtv4.MapClaims{
 		"user_id": g,
+		"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
+		"nbf":     "", // 生效时间
+		"iat":     "", // 颁发时间
 	})
 	signedString, err := claims.SignedString([]byte(s.key))
 	if err != nil {
@@ -69,10 +74,7 @@ func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.
 	return &res, nil
 }
 func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*pb.GetAccessCodesReply, error) {
-	uid := ""
-	if claims, ok := jwt.FromContext(ctx); ok {
-		uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
-	}
+	uid := tools.GetUserId(ctx)
 	user, err := s.uc.GetUserInfo(ctx, uid)
 	if err != nil {
 		return nil, err
@@ -84,6 +86,7 @@ func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*
 	return &pb.GetAccessCodesReply{AccessCodeList: accessCodeList}, nil
 }
 func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	// 仅靠jwt无法实现退出功能
 	return &emptypb.Empty{}, nil
 }
 func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetMenuListReply, error) {
