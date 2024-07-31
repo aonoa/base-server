@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-
+    tags:
+      - v.**
+      
 jobs:
   pull_and_package:
     runs-on: ubuntu-latest
