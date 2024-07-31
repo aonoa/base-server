@@ -6,8 +6,7 @@ on:
     - 'v*'
 
 jobs:
-  build:
-    name: Create Release
+  pull_and_package:
     runs-on: ubuntu-latest
 
     steps:
