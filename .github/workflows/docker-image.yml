@@ -2,8 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    tags:
-    - 'v*'
+    branches: [ "master" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
 
 jobs:
   pull_and_package:
