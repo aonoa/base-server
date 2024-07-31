@@ -8,8 +8,8 @@ server:
 data:
   database:
     driver: pgx
-#    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test1
-    source: postgresql://postgres:postgresql666@149.88.72.48:32345/test1
+    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test1
+#    source: postgresql://postgres:postgresql666@149.88.72.48:32345/test1
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s

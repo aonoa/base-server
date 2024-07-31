@@ -42,9 +42,9 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 
 	claims := jwtv4.NewWithClaims(jwtv4.SigningMethodHS256, jwtv4.MapClaims{
 		"user_id": g,
-		"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
-		"nbf":     "", // 生效时间
-		"iat":     "", // 颁发时间
+		//"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
+		//"nbf":     "", // 生效时间
+		//"iat":     "", // 颁发时间
 	})
 	signedString, err := claims.SignedString([]byte(s.key))
 	if err != nil {
