@@ -51,6 +51,7 @@ wire
 ```bash
 # build
 docker build -t <your-docker-image-name> .
+docker build -t base-server:v1.1.0 .
 
 # save image
 docker save <your-docker-image-name> | gzip > <your-docker-image-name>.tar.gz
