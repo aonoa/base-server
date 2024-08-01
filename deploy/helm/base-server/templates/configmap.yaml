@@ -1,0 +1,113 @@
+apiVersion: v1
+data:
+  config.yaml: |-
+    server:
+      http:
+        addr: 0.0.0.0:8000
+        timeout: 1s
+      grpc:
+        addr: 0.0.0.0:9000
+        timeout: 1s
+    data:
+      database:
+        driver: pgx
+    #    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test1
+        source: postgresql://postgres:postgresql666@149.88.72.48:32345/test1
+      redis:
+        addr: 127.0.0.1:6379
+        read_timeout: 0.2s
+        write_timeout: 0.2s
+
+    auth:
+      service_key: some-secret-key
+      api_key: some-secret-key-for-forntend
+      model_path: ./authconf/keymatch_model.conf
+      policy_path: ./authconf/keymatch_policy.csv
+
+    menus:
+      default_menus: 1,2,3,10,4,5,6,7,8,9
+  keymatch_model.conf: |
+    # [request_definition]
+    # r = sub, obj, act
+    # r2 = sub, act   # 纯权限
+    # r3 = sub, dom, obj, act
+    #
+    # [policy_definition]
+    # p = sub, dom, obj, act
+    # p2 = sub, dom, obj, act
+    # p3 = sub, obj, act
+    # p4 = sub, dom, obj, act
+    #
+    # [role_definition]
+    # g = _, _
+    # g2 = _, _, _
+    # g3 = _, _, _
+    # g4 = _, _
+    #
+    # [policy_effect]
+    # e = some(where (p.eft == allow))
+    #
+    # [matchers]
+    # #m = g(r.sub, p.sub, r.dom) && r.dom == p.dom && keyMatch3(r.obj, p.obj) && r.act == p.act
+    # m = g(r.sub, p.sub) && keyMatch3(r.obj, p.obj) && r.act == p.act    # api权限
+    # m2 = g(r.sub, p3.sub) && r.obj == p3.obj && regexMatch(r.act, p3.act)  # 操作权限
+    # m3 = g2(r.sub, p.sub, r.dom) && r.dom == p.dom && r.obj == p.obj && regexMatch(r.act, p.act) # 资源权限
+    # m4 = g(r.sub, p2.sub) && g3(r.sub, p2.dom) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act) # 资源组权限
+    # m5 = g(r.sub, p4.sub) && keyMatch3(r.obj, p4.obj) && r.act == p4.act    # api权限
+    #
+
+    # 接口权限
+    # 操作权限
+    # 资源权限
+
+
+    [request_definition]
+    r = sub, obj, act
+    r2 = sub, act       # 纯权限
+
+    [policy_definition]
+    p = sub, obj, dom
+    p2 = sub, obj, dom, act
+    p3 = sub, obj, dom, act
+
+    [role_definition]
+    g = _, _, _
+    g2 = _, _
+    g3 = _, _, _
+
+    [policy_effect]
+    e = some(where (p.eft == allow))
+
+    [matchers]
+    # m = g(r.sub, p.sub, r.dom) && g2(r.obj, p.obj) && r.dom == p.dom #&& r.act == p.act
+    m = g(r.sub, p.sub, r.dom) && g2(r.obj, p.obj)
+
+    # [request_definition]
+    # r = sub, obj, act
+    #
+    # [policy_definition]
+    # p = sub, obj, act
+    #
+    # [role_definition]
+    # g = _, _
+    #
+    # [policy_effect]
+    # e = some(where (p.eft == allow))
+    #
+    # [matchers]
+    # m = g(r.obj, p.obj)
+  keymatch_policy.csv: |+
+    p, admin1, data_group1, dom1
+
+    g, alice, admin, dom1
+    g, admin, admin1, dom1
+    g, admin1, admin2, dom1
+
+    g2, (GET|POST):/diagnoseClass/{id}/diagnoseRow, data_group
+    g2, data_group, data_group1
+    g2, data_group1, data_group2
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: base-server-config
