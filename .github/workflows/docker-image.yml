@@ -1,9 +1,9 @@
 name: Docker Image CI
 
 on:
-  label:
-    types:
-      - created
+  create:
+    tags:
+      - 'v*'
       
 jobs:
   pull_and_package:
