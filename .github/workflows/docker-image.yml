@@ -20,7 +20,7 @@ jobs:
     
     - name: Build the Docker image
       run: |
-        images="base-server:${{ github.GITHUB_REF_NAME }}"
+        images="base-server:${{ github.ref_name }}"
         docker build . --file Dockerfile --tag "${image}"
         docker save "${image}" -o "${image}-amd64.tar"
 
