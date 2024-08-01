@@ -1,5 +1,5 @@
 # 服务演示地址  
-# http://149.88.72.48:8000/basic-api
+# http://149.88.72.48:30080/basic-api
 
 ## 接口文档 
 ## https://apifox.com/apidoc/shared-a2b9478a-1782-4094-95d2-dfd9d6c883ec
