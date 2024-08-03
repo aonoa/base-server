@@ -180,8 +180,7 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 
 	RouteItem.Meta.Title = menu.Title
 	RouteItem.Meta.Icon = menu.Icon
-	RouteItem.Meta.Order = strconv.Itoa(int(menu.Order))
-
+	RouteItem.Meta.Order = int64(menu.Order)
 	RouteItem.Meta.Link = menu.Link
 	RouteItem.Meta.IframeSrc = menu.IframeSrc
 	RouteItem.Meta.IgnoreAccess = menu.IgnoreAuth
