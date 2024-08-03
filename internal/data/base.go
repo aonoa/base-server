@@ -132,7 +132,7 @@ func (r *baseRepo) AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.U
 
 // GetMenuList 获取菜单列表
 func (r *baseRepo) GetMenuList(ctx context.Context) ([]*ent.Menu, error) {
-	return r.data.db.Menu.Query().Order(menu.ByPid()).All(ctx)
+	return r.data.db.Menu.Query().Order(menu.ByPid(), menu.ByOrder()).All(ctx)
 }
 
 // GetDeptList 获取部门列表

@@ -236,7 +236,7 @@ message RouteMeta {
 	string title = 1;							// 标题
 	string icon = 2;								// 图标名
 
-	int64 order = 3;							// 排序号
+	int64 order = 3;							// 排序号 不需要
 	string link = 4;								// 外链-跳转路径
 	string iframeSrc = 5;					// iframe 地址
 	bool ignoreAccess = 6;					// 是否忽略权限
