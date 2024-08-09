@@ -46,16 +46,22 @@ type Menu struct {
 	// iframe地址
 	IframeSrc string `json:"iframeSrc,omitempty"`
 	// 忽略权限,0-否，1-是
-	IgnoreAuth bool `json:"ignore_auth,omitempty"`
+	IgnoreAuth bool `json:"ignoreAuth,omitempty"`
 	// 缓存,0-否，1-是
 	Keepalive bool `json:"keepalive,omitempty"`
 	// 权限标识
 	Permission string `json:"permission,omitempty"`
 	// 固钉,0-否，1-是
 	AffixTab bool `json:"affix_tab,omitempty"`
-	// 显示在面包屑,0-否，1-是
+	// 隐藏在菜单,0-否，1-是
+	HideInMenu bool `json:"hideInMenu,omitempty"`
+	// 隐藏在标签页,0-否，1-是
+	HideInTab bool `json:"hideInTab,omitempty"`
+	// 隐藏在面包屑,0-否，1-是
 	HideInBreadcrumb bool `json:"hideInBreadcrumb,omitempty"`
-	selectValues     sql.SelectValues
+	// 子页面隐藏在菜单中,0-否，1-是
+	HideChildrenInMenu bool `json:"hideChildrenInMenu,omitempty"`
+	selectValues       sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -63,7 +69,7 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldStatus, menu.FieldIgnoreAuth, menu.FieldKeepalive, menu.FieldAffixTab, menu.FieldHideInBreadcrumb:
+		case menu.FieldStatus, menu.FieldIgnoreAuth, menu.FieldKeepalive, menu.FieldAffixTab, menu.FieldHideInMenu, menu.FieldHideInTab, menu.FieldHideInBreadcrumb, menu.FieldHideChildrenInMenu:
 			values[i] = new(sql.NullBool)
 		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder:
 			values[i] = new(sql.NullInt64)
@@ -178,7 +184,7 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			}
 		case menu.FieldIgnoreAuth:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field ignore_auth", values[i])
+				return fmt.Errorf("unexpected type %T for field ignoreAuth", values[i])
 			} else if value.Valid {
 				m.IgnoreAuth = value.Bool
 			}
@@ -200,11 +206,29 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.AffixTab = value.Bool
 			}
+		case menu.FieldHideInMenu:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hideInMenu", values[i])
+			} else if value.Valid {
+				m.HideInMenu = value.Bool
+			}
+		case menu.FieldHideInTab:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hideInTab", values[i])
+			} else if value.Valid {
+				m.HideInTab = value.Bool
+			}
 		case menu.FieldHideInBreadcrumb:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field hideInBreadcrumb", values[i])
 			} else if value.Valid {
 				m.HideInBreadcrumb = value.Bool
+			}
+		case menu.FieldHideChildrenInMenu:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hideChildrenInMenu", values[i])
+			} else if value.Valid {
+				m.HideChildrenInMenu = value.Bool
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -284,7 +308,7 @@ func (m *Menu) String() string {
 	builder.WriteString("iframeSrc=")
 	builder.WriteString(m.IframeSrc)
 	builder.WriteString(", ")
-	builder.WriteString("ignore_auth=")
+	builder.WriteString("ignoreAuth=")
 	builder.WriteString(fmt.Sprintf("%v", m.IgnoreAuth))
 	builder.WriteString(", ")
 	builder.WriteString("keepalive=")
@@ -296,8 +320,17 @@ func (m *Menu) String() string {
 	builder.WriteString("affix_tab=")
 	builder.WriteString(fmt.Sprintf("%v", m.AffixTab))
 	builder.WriteString(", ")
+	builder.WriteString("hideInMenu=")
+	builder.WriteString(fmt.Sprintf("%v", m.HideInMenu))
+	builder.WriteString(", ")
+	builder.WriteString("hideInTab=")
+	builder.WriteString(fmt.Sprintf("%v", m.HideInTab))
+	builder.WriteString(", ")
 	builder.WriteString("hideInBreadcrumb=")
 	builder.WriteString(fmt.Sprintf("%v", m.HideInBreadcrumb))
+	builder.WriteString(", ")
+	builder.WriteString("hideChildrenInMenu=")
+	builder.WriteString(fmt.Sprintf("%v", m.HideChildrenInMenu))
 	builder.WriteByte(')')
 	return builder.String()
 }

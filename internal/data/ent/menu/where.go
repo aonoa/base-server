@@ -124,7 +124,7 @@ func IframeSrc(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldIframeSrc, v))
 }
 
-// IgnoreAuth applies equality check predicate on the "ignore_auth" field. It's identical to IgnoreAuthEQ.
+// IgnoreAuth applies equality check predicate on the "ignoreAuth" field. It's identical to IgnoreAuthEQ.
 func IgnoreAuth(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldIgnoreAuth, v))
 }
@@ -144,9 +144,24 @@ func AffixTab(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldAffixTab, v))
 }
 
+// HideInMenu applies equality check predicate on the "hideInMenu" field. It's identical to HideInMenuEQ.
+func HideInMenu(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideInMenu, v))
+}
+
+// HideInTab applies equality check predicate on the "hideInTab" field. It's identical to HideInTabEQ.
+func HideInTab(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideInTab, v))
+}
+
 // HideInBreadcrumb applies equality check predicate on the "hideInBreadcrumb" field. It's identical to HideInBreadcrumbEQ.
 func HideInBreadcrumb(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldHideInBreadcrumb, v))
+}
+
+// HideChildrenInMenu applies equality check predicate on the "hideChildrenInMenu" field. It's identical to HideChildrenInMenuEQ.
+func HideChildrenInMenu(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideChildrenInMenu, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -879,12 +894,12 @@ func IframeSrcContainsFold(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldContainsFold(FieldIframeSrc, v))
 }
 
-// IgnoreAuthEQ applies the EQ predicate on the "ignore_auth" field.
+// IgnoreAuthEQ applies the EQ predicate on the "ignoreAuth" field.
 func IgnoreAuthEQ(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldIgnoreAuth, v))
 }
 
-// IgnoreAuthNEQ applies the NEQ predicate on the "ignore_auth" field.
+// IgnoreAuthNEQ applies the NEQ predicate on the "ignoreAuth" field.
 func IgnoreAuthNEQ(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldIgnoreAuth, v))
 }
@@ -974,6 +989,26 @@ func AffixTabNEQ(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldAffixTab, v))
 }
 
+// HideInMenuEQ applies the EQ predicate on the "hideInMenu" field.
+func HideInMenuEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideInMenu, v))
+}
+
+// HideInMenuNEQ applies the NEQ predicate on the "hideInMenu" field.
+func HideInMenuNEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldHideInMenu, v))
+}
+
+// HideInTabEQ applies the EQ predicate on the "hideInTab" field.
+func HideInTabEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideInTab, v))
+}
+
+// HideInTabNEQ applies the NEQ predicate on the "hideInTab" field.
+func HideInTabNEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldHideInTab, v))
+}
+
 // HideInBreadcrumbEQ applies the EQ predicate on the "hideInBreadcrumb" field.
 func HideInBreadcrumbEQ(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldHideInBreadcrumb, v))
@@ -982,6 +1017,16 @@ func HideInBreadcrumbEQ(v bool) predicate.Menu {
 // HideInBreadcrumbNEQ applies the NEQ predicate on the "hideInBreadcrumb" field.
 func HideInBreadcrumbNEQ(v bool) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldHideInBreadcrumb, v))
+}
+
+// HideChildrenInMenuEQ applies the EQ predicate on the "hideChildrenInMenu" field.
+func HideChildrenInMenuEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldHideChildrenInMenu, v))
+}
+
+// HideChildrenInMenuNEQ applies the NEQ predicate on the "hideChildrenInMenu" field.
+func HideChildrenInMenuNEQ(v bool) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldHideChildrenInMenu, v))
 }
 
 // And groups predicates with the AND operator between them.

@@ -1187,35 +1187,38 @@ func (m *DeptMutation) ResetEdge(name string) error {
 // MenuMutation represents an operation that mutates the Menu nodes in the graph.
 type MenuMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int64
-	create_time      *time.Time
-	update_time      *time.Time
-	pid              *int64
-	addpid           *int64
-	_type            *int8
-	add_type         *int8
-	status           *bool
-	name             *string
-	title            *string
-	icon             *string
-	_order           *int32
-	add_order        *int32
-	_path            *string
-	component        *string
-	redirect         *string
-	link             *string
-	iframeSrc        *string
-	ignore_auth      *bool
-	keepalive        *bool
-	permission       *string
-	affix_tab        *bool
-	hideInBreadcrumb *bool
-	clearedFields    map[string]struct{}
-	done             bool
-	oldValue         func(context.Context) (*Menu, error)
-	predicates       []predicate.Menu
+	op                 Op
+	typ                string
+	id                 *int64
+	create_time        *time.Time
+	update_time        *time.Time
+	pid                *int64
+	addpid             *int64
+	_type              *int8
+	add_type           *int8
+	status             *bool
+	name               *string
+	title              *string
+	icon               *string
+	_order             *int32
+	add_order          *int32
+	_path              *string
+	component          *string
+	redirect           *string
+	link               *string
+	iframeSrc          *string
+	ignoreAuth         *bool
+	keepalive          *bool
+	permission         *string
+	affix_tab          *bool
+	hideInMenu         *bool
+	hideInTab          *bool
+	hideInBreadcrumb   *bool
+	hideChildrenInMenu *bool
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Menu, error)
+	predicates         []predicate.Menu
 }
 
 var _ ent.Mutation = (*MenuMutation)(nil)
@@ -1886,21 +1889,21 @@ func (m *MenuMutation) ResetIframeSrc() {
 	m.iframeSrc = nil
 }
 
-// SetIgnoreAuth sets the "ignore_auth" field.
+// SetIgnoreAuth sets the "ignoreAuth" field.
 func (m *MenuMutation) SetIgnoreAuth(b bool) {
-	m.ignore_auth = &b
+	m.ignoreAuth = &b
 }
 
-// IgnoreAuth returns the value of the "ignore_auth" field in the mutation.
+// IgnoreAuth returns the value of the "ignoreAuth" field in the mutation.
 func (m *MenuMutation) IgnoreAuth() (r bool, exists bool) {
-	v := m.ignore_auth
+	v := m.ignoreAuth
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldIgnoreAuth returns the old "ignore_auth" field's value of the Menu entity.
+// OldIgnoreAuth returns the old "ignoreAuth" field's value of the Menu entity.
 // If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *MenuMutation) OldIgnoreAuth(ctx context.Context) (v bool, err error) {
@@ -1917,9 +1920,9 @@ func (m *MenuMutation) OldIgnoreAuth(ctx context.Context) (v bool, err error) {
 	return oldValue.IgnoreAuth, nil
 }
 
-// ResetIgnoreAuth resets all changes to the "ignore_auth" field.
+// ResetIgnoreAuth resets all changes to the "ignoreAuth" field.
 func (m *MenuMutation) ResetIgnoreAuth() {
-	m.ignore_auth = nil
+	m.ignoreAuth = nil
 }
 
 // SetKeepalive sets the "keepalive" field.
@@ -2030,6 +2033,78 @@ func (m *MenuMutation) ResetAffixTab() {
 	m.affix_tab = nil
 }
 
+// SetHideInMenu sets the "hideInMenu" field.
+func (m *MenuMutation) SetHideInMenu(b bool) {
+	m.hideInMenu = &b
+}
+
+// HideInMenu returns the value of the "hideInMenu" field in the mutation.
+func (m *MenuMutation) HideInMenu() (r bool, exists bool) {
+	v := m.hideInMenu
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHideInMenu returns the old "hideInMenu" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldHideInMenu(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHideInMenu is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHideInMenu requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHideInMenu: %w", err)
+	}
+	return oldValue.HideInMenu, nil
+}
+
+// ResetHideInMenu resets all changes to the "hideInMenu" field.
+func (m *MenuMutation) ResetHideInMenu() {
+	m.hideInMenu = nil
+}
+
+// SetHideInTab sets the "hideInTab" field.
+func (m *MenuMutation) SetHideInTab(b bool) {
+	m.hideInTab = &b
+}
+
+// HideInTab returns the value of the "hideInTab" field in the mutation.
+func (m *MenuMutation) HideInTab() (r bool, exists bool) {
+	v := m.hideInTab
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHideInTab returns the old "hideInTab" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldHideInTab(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHideInTab is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHideInTab requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHideInTab: %w", err)
+	}
+	return oldValue.HideInTab, nil
+}
+
+// ResetHideInTab resets all changes to the "hideInTab" field.
+func (m *MenuMutation) ResetHideInTab() {
+	m.hideInTab = nil
+}
+
 // SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
 func (m *MenuMutation) SetHideInBreadcrumb(b bool) {
 	m.hideInBreadcrumb = &b
@@ -2066,6 +2141,42 @@ func (m *MenuMutation) ResetHideInBreadcrumb() {
 	m.hideInBreadcrumb = nil
 }
 
+// SetHideChildrenInMenu sets the "hideChildrenInMenu" field.
+func (m *MenuMutation) SetHideChildrenInMenu(b bool) {
+	m.hideChildrenInMenu = &b
+}
+
+// HideChildrenInMenu returns the value of the "hideChildrenInMenu" field in the mutation.
+func (m *MenuMutation) HideChildrenInMenu() (r bool, exists bool) {
+	v := m.hideChildrenInMenu
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHideChildrenInMenu returns the old "hideChildrenInMenu" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldHideChildrenInMenu(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHideChildrenInMenu is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHideChildrenInMenu requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHideChildrenInMenu: %w", err)
+	}
+	return oldValue.HideChildrenInMenu, nil
+}
+
+// ResetHideChildrenInMenu resets all changes to the "hideChildrenInMenu" field.
+func (m *MenuMutation) ResetHideChildrenInMenu() {
+	m.hideChildrenInMenu = nil
+}
+
 // Where appends a list predicates to the MenuMutation builder.
 func (m *MenuMutation) Where(ps ...predicate.Menu) {
 	m.predicates = append(m.predicates, ps...)
@@ -2100,7 +2211,7 @@ func (m *MenuMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MenuMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 22)
 	if m.create_time != nil {
 		fields = append(fields, menu.FieldCreateTime)
 	}
@@ -2143,7 +2254,7 @@ func (m *MenuMutation) Fields() []string {
 	if m.iframeSrc != nil {
 		fields = append(fields, menu.FieldIframeSrc)
 	}
-	if m.ignore_auth != nil {
+	if m.ignoreAuth != nil {
 		fields = append(fields, menu.FieldIgnoreAuth)
 	}
 	if m.keepalive != nil {
@@ -2155,8 +2266,17 @@ func (m *MenuMutation) Fields() []string {
 	if m.affix_tab != nil {
 		fields = append(fields, menu.FieldAffixTab)
 	}
+	if m.hideInMenu != nil {
+		fields = append(fields, menu.FieldHideInMenu)
+	}
+	if m.hideInTab != nil {
+		fields = append(fields, menu.FieldHideInTab)
+	}
 	if m.hideInBreadcrumb != nil {
 		fields = append(fields, menu.FieldHideInBreadcrumb)
+	}
+	if m.hideChildrenInMenu != nil {
+		fields = append(fields, menu.FieldHideChildrenInMenu)
 	}
 	return fields
 }
@@ -2202,8 +2322,14 @@ func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 		return m.Permission()
 	case menu.FieldAffixTab:
 		return m.AffixTab()
+	case menu.FieldHideInMenu:
+		return m.HideInMenu()
+	case menu.FieldHideInTab:
+		return m.HideInTab()
 	case menu.FieldHideInBreadcrumb:
 		return m.HideInBreadcrumb()
+	case menu.FieldHideChildrenInMenu:
+		return m.HideChildrenInMenu()
 	}
 	return nil, false
 }
@@ -2249,8 +2375,14 @@ func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPermission(ctx)
 	case menu.FieldAffixTab:
 		return m.OldAffixTab(ctx)
+	case menu.FieldHideInMenu:
+		return m.OldHideInMenu(ctx)
+	case menu.FieldHideInTab:
+		return m.OldHideInTab(ctx)
 	case menu.FieldHideInBreadcrumb:
 		return m.OldHideInBreadcrumb(ctx)
+	case menu.FieldHideChildrenInMenu:
+		return m.OldHideChildrenInMenu(ctx)
 	}
 	return nil, fmt.Errorf("unknown Menu field %s", name)
 }
@@ -2386,12 +2518,33 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAffixTab(v)
 		return nil
+	case menu.FieldHideInMenu:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHideInMenu(v)
+		return nil
+	case menu.FieldHideInTab:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHideInTab(v)
+		return nil
 	case menu.FieldHideInBreadcrumb:
 		v, ok := value.(bool)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetHideInBreadcrumb(v)
+		return nil
+	case menu.FieldHideChildrenInMenu:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHideChildrenInMenu(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Menu field %s", name)
@@ -2535,8 +2688,17 @@ func (m *MenuMutation) ResetField(name string) error {
 	case menu.FieldAffixTab:
 		m.ResetAffixTab()
 		return nil
+	case menu.FieldHideInMenu:
+		m.ResetHideInMenu()
+		return nil
+	case menu.FieldHideInTab:
+		m.ResetHideInTab()
+		return nil
 	case menu.FieldHideInBreadcrumb:
 		m.ResetHideInBreadcrumb()
+		return nil
+	case menu.FieldHideChildrenInMenu:
+		m.ResetHideChildrenInMenu()
 		return nil
 	}
 	return fmt.Errorf("unknown Menu field %s", name)

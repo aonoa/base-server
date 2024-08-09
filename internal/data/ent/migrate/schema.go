@@ -64,7 +64,10 @@ var (
 		{Name: "keepalive", Type: field.TypeBool, Comment: "缓存,0-否，1-是"},
 		{Name: "permission", Type: field.TypeString, Comment: "权限标识"},
 		{Name: "affix_tab", Type: field.TypeBool, Comment: "固钉,0-否，1-是"},
-		{Name: "hide_in_breadcrumb", Type: field.TypeBool, Comment: "显示在面包屑,0-否，1-是"},
+		{Name: "hide_in_menu", Type: field.TypeBool, Comment: "隐藏在菜单,0-否，1-是", Default: false},
+		{Name: "hide_in_tab", Type: field.TypeBool, Comment: "隐藏在标签页,0-否，1-是", Default: false},
+		{Name: "hide_in_breadcrumb", Type: field.TypeBool, Comment: "隐藏在面包屑,0-否，1-是", Default: false},
+		{Name: "hide_children_in_menu", Type: field.TypeBool, Comment: "子页面隐藏在菜单中,0-否，1-是", Default: false},
 	}
 	// MenusTable holds the schema information for the "menus" table.
 	MenusTable = &schema.Table{

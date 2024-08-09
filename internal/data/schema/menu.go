@@ -36,12 +36,15 @@ func (Menu) Fields() []ent.Field {
 
 		field.String("link").Comment("外链-跳转路径"),
 		field.String("iframeSrc").Comment("iframe地址"),
-		field.Bool("ignore_auth").Comment("忽略权限,0-否，1-是"),
+		field.Bool("ignoreAuth").Comment("忽略权限,0-否，1-是"),
 		field.Bool("keepalive").Comment("缓存,0-否，1-是"),
 
 		field.String("permission").Comment("权限标识"),
 		field.Bool("affix_tab").Comment("固钉,0-否，1-是"),
-		field.Bool("hideInBreadcrumb").Comment("显示在面包屑,0-否，1-是"),
+		field.Bool("hideInMenu").Default(false).Comment("隐藏在菜单,0-否，1-是"),
+		field.Bool("hideInTab").Default(false).Comment("隐藏在标签页,0-否，1-是"),
+		field.Bool("hideInBreadcrumb").Default(false).Comment("隐藏在面包屑,0-否，1-是"),
+		field.Bool("hideChildrenInMenu").Default(false).Comment("子页面隐藏在菜单中,0-否，1-是"),
 	}
 }
 

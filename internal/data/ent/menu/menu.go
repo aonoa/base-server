@@ -41,7 +41,7 @@ const (
 	FieldLink = "link"
 	// FieldIframeSrc holds the string denoting the iframesrc field in the database.
 	FieldIframeSrc = "iframe_src"
-	// FieldIgnoreAuth holds the string denoting the ignore_auth field in the database.
+	// FieldIgnoreAuth holds the string denoting the ignoreauth field in the database.
 	FieldIgnoreAuth = "ignore_auth"
 	// FieldKeepalive holds the string denoting the keepalive field in the database.
 	FieldKeepalive = "keepalive"
@@ -49,8 +49,14 @@ const (
 	FieldPermission = "permission"
 	// FieldAffixTab holds the string denoting the affix_tab field in the database.
 	FieldAffixTab = "affix_tab"
+	// FieldHideInMenu holds the string denoting the hideinmenu field in the database.
+	FieldHideInMenu = "hide_in_menu"
+	// FieldHideInTab holds the string denoting the hideintab field in the database.
+	FieldHideInTab = "hide_in_tab"
 	// FieldHideInBreadcrumb holds the string denoting the hideinbreadcrumb field in the database.
 	FieldHideInBreadcrumb = "hide_in_breadcrumb"
+	// FieldHideChildrenInMenu holds the string denoting the hidechildreninmenu field in the database.
+	FieldHideChildrenInMenu = "hide_children_in_menu"
 	// Table holds the table name of the menu in the database.
 	Table = "menus"
 )
@@ -76,7 +82,10 @@ var Columns = []string{
 	FieldKeepalive,
 	FieldPermission,
 	FieldAffixTab,
+	FieldHideInMenu,
+	FieldHideInTab,
 	FieldHideInBreadcrumb,
+	FieldHideChildrenInMenu,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -96,6 +105,14 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultHideInMenu holds the default value on creation for the "hideInMenu" field.
+	DefaultHideInMenu bool
+	// DefaultHideInTab holds the default value on creation for the "hideInTab" field.
+	DefaultHideInTab bool
+	// DefaultHideInBreadcrumb holds the default value on creation for the "hideInBreadcrumb" field.
+	DefaultHideInBreadcrumb bool
+	// DefaultHideChildrenInMenu holds the default value on creation for the "hideChildrenInMenu" field.
+	DefaultHideChildrenInMenu bool
 )
 
 // OrderOption defines the ordering options for the Menu queries.
@@ -176,7 +193,7 @@ func ByIframeSrc(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIframeSrc, opts...).ToFunc()
 }
 
-// ByIgnoreAuth orders the results by the ignore_auth field.
+// ByIgnoreAuth orders the results by the ignoreAuth field.
 func ByIgnoreAuth(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIgnoreAuth, opts...).ToFunc()
 }
@@ -196,7 +213,22 @@ func ByAffixTab(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAffixTab, opts...).ToFunc()
 }
 
+// ByHideInMenu orders the results by the hideInMenu field.
+func ByHideInMenu(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHideInMenu, opts...).ToFunc()
+}
+
+// ByHideInTab orders the results by the hideInTab field.
+func ByHideInTab(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHideInTab, opts...).ToFunc()
+}
+
 // ByHideInBreadcrumb orders the results by the hideInBreadcrumb field.
 func ByHideInBreadcrumb(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHideInBreadcrumb, opts...).ToFunc()
+}
+
+// ByHideChildrenInMenu orders the results by the hideChildrenInMenu field.
+func ByHideChildrenInMenu(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHideChildrenInMenu, opts...).ToFunc()
 }

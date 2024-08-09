@@ -127,7 +127,7 @@ func (mu *MenuUpdate) SetIframeSrc(s string) *MenuUpdate {
 	return mu
 }
 
-// SetIgnoreAuth sets the "ignore_auth" field.
+// SetIgnoreAuth sets the "ignoreAuth" field.
 func (mu *MenuUpdate) SetIgnoreAuth(b bool) *MenuUpdate {
 	mu.mutation.SetIgnoreAuth(b)
 	return mu
@@ -151,9 +151,59 @@ func (mu *MenuUpdate) SetAffixTab(b bool) *MenuUpdate {
 	return mu
 }
 
+// SetHideInMenu sets the "hideInMenu" field.
+func (mu *MenuUpdate) SetHideInMenu(b bool) *MenuUpdate {
+	mu.mutation.SetHideInMenu(b)
+	return mu
+}
+
+// SetNillableHideInMenu sets the "hideInMenu" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideInMenu(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideInMenu(*b)
+	}
+	return mu
+}
+
+// SetHideInTab sets the "hideInTab" field.
+func (mu *MenuUpdate) SetHideInTab(b bool) *MenuUpdate {
+	mu.mutation.SetHideInTab(b)
+	return mu
+}
+
+// SetNillableHideInTab sets the "hideInTab" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideInTab(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideInTab(*b)
+	}
+	return mu
+}
+
 // SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
 func (mu *MenuUpdate) SetHideInBreadcrumb(b bool) *MenuUpdate {
 	mu.mutation.SetHideInBreadcrumb(b)
+	return mu
+}
+
+// SetNillableHideInBreadcrumb sets the "hideInBreadcrumb" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideInBreadcrumb(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideInBreadcrumb(*b)
+	}
+	return mu
+}
+
+// SetHideChildrenInMenu sets the "hideChildrenInMenu" field.
+func (mu *MenuUpdate) SetHideChildrenInMenu(b bool) *MenuUpdate {
+	mu.mutation.SetHideChildrenInMenu(b)
+	return mu
+}
+
+// SetNillableHideChildrenInMenu sets the "hideChildrenInMenu" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHideChildrenInMenu(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHideChildrenInMenu(*b)
+	}
 	return mu
 }
 
@@ -267,8 +317,17 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 	}
+	if value, ok := mu.mutation.HideInMenu(); ok {
+		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideInTab(); ok {
+		_spec.SetField(menu.FieldHideInTab, field.TypeBool, value)
+	}
 	if value, ok := mu.mutation.HideInBreadcrumb(); ok {
 		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.HideChildrenInMenu(); ok {
+		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -389,7 +448,7 @@ func (muo *MenuUpdateOne) SetIframeSrc(s string) *MenuUpdateOne {
 	return muo
 }
 
-// SetIgnoreAuth sets the "ignore_auth" field.
+// SetIgnoreAuth sets the "ignoreAuth" field.
 func (muo *MenuUpdateOne) SetIgnoreAuth(b bool) *MenuUpdateOne {
 	muo.mutation.SetIgnoreAuth(b)
 	return muo
@@ -413,9 +472,59 @@ func (muo *MenuUpdateOne) SetAffixTab(b bool) *MenuUpdateOne {
 	return muo
 }
 
+// SetHideInMenu sets the "hideInMenu" field.
+func (muo *MenuUpdateOne) SetHideInMenu(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideInMenu(b)
+	return muo
+}
+
+// SetNillableHideInMenu sets the "hideInMenu" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideInMenu(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideInMenu(*b)
+	}
+	return muo
+}
+
+// SetHideInTab sets the "hideInTab" field.
+func (muo *MenuUpdateOne) SetHideInTab(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideInTab(b)
+	return muo
+}
+
+// SetNillableHideInTab sets the "hideInTab" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideInTab(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideInTab(*b)
+	}
+	return muo
+}
+
 // SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
 func (muo *MenuUpdateOne) SetHideInBreadcrumb(b bool) *MenuUpdateOne {
 	muo.mutation.SetHideInBreadcrumb(b)
+	return muo
+}
+
+// SetNillableHideInBreadcrumb sets the "hideInBreadcrumb" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideInBreadcrumb(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideInBreadcrumb(*b)
+	}
+	return muo
+}
+
+// SetHideChildrenInMenu sets the "hideChildrenInMenu" field.
+func (muo *MenuUpdateOne) SetHideChildrenInMenu(b bool) *MenuUpdateOne {
+	muo.mutation.SetHideChildrenInMenu(b)
+	return muo
+}
+
+// SetNillableHideChildrenInMenu sets the "hideChildrenInMenu" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHideChildrenInMenu(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHideChildrenInMenu(*b)
+	}
 	return muo
 }
 
@@ -559,8 +668,17 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 	}
+	if value, ok := muo.mutation.HideInMenu(); ok {
+		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideInTab(); ok {
+		_spec.SetField(menu.FieldHideInTab, field.TypeBool, value)
+	}
 	if value, ok := muo.mutation.HideInBreadcrumb(); ok {
 		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.HideChildrenInMenu(); ok {
+		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
 	}
 	_node = &Menu{config: muo.config}
 	_spec.Assign = _node.assignValues

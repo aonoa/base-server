@@ -120,7 +120,7 @@ func (mc *MenuCreate) SetIframeSrc(s string) *MenuCreate {
 	return mc
 }
 
-// SetIgnoreAuth sets the "ignore_auth" field.
+// SetIgnoreAuth sets the "ignoreAuth" field.
 func (mc *MenuCreate) SetIgnoreAuth(b bool) *MenuCreate {
 	mc.mutation.SetIgnoreAuth(b)
 	return mc
@@ -144,9 +144,59 @@ func (mc *MenuCreate) SetAffixTab(b bool) *MenuCreate {
 	return mc
 }
 
+// SetHideInMenu sets the "hideInMenu" field.
+func (mc *MenuCreate) SetHideInMenu(b bool) *MenuCreate {
+	mc.mutation.SetHideInMenu(b)
+	return mc
+}
+
+// SetNillableHideInMenu sets the "hideInMenu" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideInMenu(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideInMenu(*b)
+	}
+	return mc
+}
+
+// SetHideInTab sets the "hideInTab" field.
+func (mc *MenuCreate) SetHideInTab(b bool) *MenuCreate {
+	mc.mutation.SetHideInTab(b)
+	return mc
+}
+
+// SetNillableHideInTab sets the "hideInTab" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideInTab(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideInTab(*b)
+	}
+	return mc
+}
+
 // SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
 func (mc *MenuCreate) SetHideInBreadcrumb(b bool) *MenuCreate {
 	mc.mutation.SetHideInBreadcrumb(b)
+	return mc
+}
+
+// SetNillableHideInBreadcrumb sets the "hideInBreadcrumb" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideInBreadcrumb(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideInBreadcrumb(*b)
+	}
+	return mc
+}
+
+// SetHideChildrenInMenu sets the "hideChildrenInMenu" field.
+func (mc *MenuCreate) SetHideChildrenInMenu(b bool) *MenuCreate {
+	mc.mutation.SetHideChildrenInMenu(b)
+	return mc
+}
+
+// SetNillableHideChildrenInMenu sets the "hideChildrenInMenu" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHideChildrenInMenu(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHideChildrenInMenu(*b)
+	}
 	return mc
 }
 
@@ -199,6 +249,22 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultUpdateTime()
 		mc.mutation.SetUpdateTime(v)
 	}
+	if _, ok := mc.mutation.HideInMenu(); !ok {
+		v := menu.DefaultHideInMenu
+		mc.mutation.SetHideInMenu(v)
+	}
+	if _, ok := mc.mutation.HideInTab(); !ok {
+		v := menu.DefaultHideInTab
+		mc.mutation.SetHideInTab(v)
+	}
+	if _, ok := mc.mutation.HideInBreadcrumb(); !ok {
+		v := menu.DefaultHideInBreadcrumb
+		mc.mutation.SetHideInBreadcrumb(v)
+	}
+	if _, ok := mc.mutation.HideChildrenInMenu(); !ok {
+		v := menu.DefaultHideChildrenInMenu
+		mc.mutation.SetHideChildrenInMenu(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -246,7 +312,7 @@ func (mc *MenuCreate) check() error {
 		return &ValidationError{Name: "iframeSrc", err: errors.New(`ent: missing required field "Menu.iframeSrc"`)}
 	}
 	if _, ok := mc.mutation.IgnoreAuth(); !ok {
-		return &ValidationError{Name: "ignore_auth", err: errors.New(`ent: missing required field "Menu.ignore_auth"`)}
+		return &ValidationError{Name: "ignoreAuth", err: errors.New(`ent: missing required field "Menu.ignoreAuth"`)}
 	}
 	if _, ok := mc.mutation.Keepalive(); !ok {
 		return &ValidationError{Name: "keepalive", err: errors.New(`ent: missing required field "Menu.keepalive"`)}
@@ -257,8 +323,17 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.AffixTab(); !ok {
 		return &ValidationError{Name: "affix_tab", err: errors.New(`ent: missing required field "Menu.affix_tab"`)}
 	}
+	if _, ok := mc.mutation.HideInMenu(); !ok {
+		return &ValidationError{Name: "hideInMenu", err: errors.New(`ent: missing required field "Menu.hideInMenu"`)}
+	}
+	if _, ok := mc.mutation.HideInTab(); !ok {
+		return &ValidationError{Name: "hideInTab", err: errors.New(`ent: missing required field "Menu.hideInTab"`)}
+	}
 	if _, ok := mc.mutation.HideInBreadcrumb(); !ok {
 		return &ValidationError{Name: "hideInBreadcrumb", err: errors.New(`ent: missing required field "Menu.hideInBreadcrumb"`)}
+	}
+	if _, ok := mc.mutation.HideChildrenInMenu(); !ok {
+		return &ValidationError{Name: "hideChildrenInMenu", err: errors.New(`ent: missing required field "Menu.hideChildrenInMenu"`)}
 	}
 	return nil
 }
@@ -364,9 +439,21 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 		_node.AffixTab = value
 	}
+	if value, ok := mc.mutation.HideInMenu(); ok {
+		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
+		_node.HideInMenu = value
+	}
+	if value, ok := mc.mutation.HideInTab(); ok {
+		_spec.SetField(menu.FieldHideInTab, field.TypeBool, value)
+		_node.HideInTab = value
+	}
 	if value, ok := mc.mutation.HideInBreadcrumb(); ok {
 		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
 		_node.HideInBreadcrumb = value
+	}
+	if value, ok := mc.mutation.HideChildrenInMenu(); ok {
+		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
+		_node.HideChildrenInMenu = value
 	}
 	return _node, _spec
 }
