@@ -1207,10 +1207,16 @@ type MenuMutation struct {
 	redirect           *string
 	link               *string
 	iframeSrc          *string
+	activeIcon         *string
+	activePath         *string
+	maxNumOfOpenTab    *int16
+	addmaxNumOfOpenTab *int16
 	ignoreAuth         *bool
 	keepalive          *bool
 	permission         *string
-	affix_tab          *bool
+	affixTab           *bool
+	affixTabOrder      *int64
+	addaffixTabOrder   *int64
 	hideInMenu         *bool
 	hideInTab          *bool
 	hideInBreadcrumb   *bool
@@ -1889,6 +1895,134 @@ func (m *MenuMutation) ResetIframeSrc() {
 	m.iframeSrc = nil
 }
 
+// SetActiveIcon sets the "activeIcon" field.
+func (m *MenuMutation) SetActiveIcon(s string) {
+	m.activeIcon = &s
+}
+
+// ActiveIcon returns the value of the "activeIcon" field in the mutation.
+func (m *MenuMutation) ActiveIcon() (r string, exists bool) {
+	v := m.activeIcon
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActiveIcon returns the old "activeIcon" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldActiveIcon(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActiveIcon is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActiveIcon requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActiveIcon: %w", err)
+	}
+	return oldValue.ActiveIcon, nil
+}
+
+// ResetActiveIcon resets all changes to the "activeIcon" field.
+func (m *MenuMutation) ResetActiveIcon() {
+	m.activeIcon = nil
+}
+
+// SetActivePath sets the "activePath" field.
+func (m *MenuMutation) SetActivePath(s string) {
+	m.activePath = &s
+}
+
+// ActivePath returns the value of the "activePath" field in the mutation.
+func (m *MenuMutation) ActivePath() (r string, exists bool) {
+	v := m.activePath
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActivePath returns the old "activePath" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldActivePath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActivePath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActivePath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActivePath: %w", err)
+	}
+	return oldValue.ActivePath, nil
+}
+
+// ResetActivePath resets all changes to the "activePath" field.
+func (m *MenuMutation) ResetActivePath() {
+	m.activePath = nil
+}
+
+// SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
+func (m *MenuMutation) SetMaxNumOfOpenTab(i int16) {
+	m.maxNumOfOpenTab = &i
+	m.addmaxNumOfOpenTab = nil
+}
+
+// MaxNumOfOpenTab returns the value of the "maxNumOfOpenTab" field in the mutation.
+func (m *MenuMutation) MaxNumOfOpenTab() (r int16, exists bool) {
+	v := m.maxNumOfOpenTab
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxNumOfOpenTab returns the old "maxNumOfOpenTab" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldMaxNumOfOpenTab(ctx context.Context) (v int16, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxNumOfOpenTab is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxNumOfOpenTab requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxNumOfOpenTab: %w", err)
+	}
+	return oldValue.MaxNumOfOpenTab, nil
+}
+
+// AddMaxNumOfOpenTab adds i to the "maxNumOfOpenTab" field.
+func (m *MenuMutation) AddMaxNumOfOpenTab(i int16) {
+	if m.addmaxNumOfOpenTab != nil {
+		*m.addmaxNumOfOpenTab += i
+	} else {
+		m.addmaxNumOfOpenTab = &i
+	}
+}
+
+// AddedMaxNumOfOpenTab returns the value that was added to the "maxNumOfOpenTab" field in this mutation.
+func (m *MenuMutation) AddedMaxNumOfOpenTab() (r int16, exists bool) {
+	v := m.addmaxNumOfOpenTab
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMaxNumOfOpenTab resets all changes to the "maxNumOfOpenTab" field.
+func (m *MenuMutation) ResetMaxNumOfOpenTab() {
+	m.maxNumOfOpenTab = nil
+	m.addmaxNumOfOpenTab = nil
+}
+
 // SetIgnoreAuth sets the "ignoreAuth" field.
 func (m *MenuMutation) SetIgnoreAuth(b bool) {
 	m.ignoreAuth = &b
@@ -1997,21 +2131,21 @@ func (m *MenuMutation) ResetPermission() {
 	m.permission = nil
 }
 
-// SetAffixTab sets the "affix_tab" field.
+// SetAffixTab sets the "affixTab" field.
 func (m *MenuMutation) SetAffixTab(b bool) {
-	m.affix_tab = &b
+	m.affixTab = &b
 }
 
-// AffixTab returns the value of the "affix_tab" field in the mutation.
+// AffixTab returns the value of the "affixTab" field in the mutation.
 func (m *MenuMutation) AffixTab() (r bool, exists bool) {
-	v := m.affix_tab
+	v := m.affixTab
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAffixTab returns the old "affix_tab" field's value of the Menu entity.
+// OldAffixTab returns the old "affixTab" field's value of the Menu entity.
 // If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
 func (m *MenuMutation) OldAffixTab(ctx context.Context) (v bool, err error) {
@@ -2028,9 +2162,65 @@ func (m *MenuMutation) OldAffixTab(ctx context.Context) (v bool, err error) {
 	return oldValue.AffixTab, nil
 }
 
-// ResetAffixTab resets all changes to the "affix_tab" field.
+// ResetAffixTab resets all changes to the "affixTab" field.
 func (m *MenuMutation) ResetAffixTab() {
-	m.affix_tab = nil
+	m.affixTab = nil
+}
+
+// SetAffixTabOrder sets the "affixTabOrder" field.
+func (m *MenuMutation) SetAffixTabOrder(i int64) {
+	m.affixTabOrder = &i
+	m.addaffixTabOrder = nil
+}
+
+// AffixTabOrder returns the value of the "affixTabOrder" field in the mutation.
+func (m *MenuMutation) AffixTabOrder() (r int64, exists bool) {
+	v := m.affixTabOrder
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAffixTabOrder returns the old "affixTabOrder" field's value of the Menu entity.
+// If the Menu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MenuMutation) OldAffixTabOrder(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAffixTabOrder is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAffixTabOrder requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAffixTabOrder: %w", err)
+	}
+	return oldValue.AffixTabOrder, nil
+}
+
+// AddAffixTabOrder adds i to the "affixTabOrder" field.
+func (m *MenuMutation) AddAffixTabOrder(i int64) {
+	if m.addaffixTabOrder != nil {
+		*m.addaffixTabOrder += i
+	} else {
+		m.addaffixTabOrder = &i
+	}
+}
+
+// AddedAffixTabOrder returns the value that was added to the "affixTabOrder" field in this mutation.
+func (m *MenuMutation) AddedAffixTabOrder() (r int64, exists bool) {
+	v := m.addaffixTabOrder
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAffixTabOrder resets all changes to the "affixTabOrder" field.
+func (m *MenuMutation) ResetAffixTabOrder() {
+	m.affixTabOrder = nil
+	m.addaffixTabOrder = nil
 }
 
 // SetHideInMenu sets the "hideInMenu" field.
@@ -2211,7 +2401,7 @@ func (m *MenuMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MenuMutation) Fields() []string {
-	fields := make([]string, 0, 22)
+	fields := make([]string, 0, 26)
 	if m.create_time != nil {
 		fields = append(fields, menu.FieldCreateTime)
 	}
@@ -2254,6 +2444,15 @@ func (m *MenuMutation) Fields() []string {
 	if m.iframeSrc != nil {
 		fields = append(fields, menu.FieldIframeSrc)
 	}
+	if m.activeIcon != nil {
+		fields = append(fields, menu.FieldActiveIcon)
+	}
+	if m.activePath != nil {
+		fields = append(fields, menu.FieldActivePath)
+	}
+	if m.maxNumOfOpenTab != nil {
+		fields = append(fields, menu.FieldMaxNumOfOpenTab)
+	}
 	if m.ignoreAuth != nil {
 		fields = append(fields, menu.FieldIgnoreAuth)
 	}
@@ -2263,8 +2462,11 @@ func (m *MenuMutation) Fields() []string {
 	if m.permission != nil {
 		fields = append(fields, menu.FieldPermission)
 	}
-	if m.affix_tab != nil {
+	if m.affixTab != nil {
 		fields = append(fields, menu.FieldAffixTab)
+	}
+	if m.affixTabOrder != nil {
+		fields = append(fields, menu.FieldAffixTabOrder)
 	}
 	if m.hideInMenu != nil {
 		fields = append(fields, menu.FieldHideInMenu)
@@ -2314,6 +2516,12 @@ func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 		return m.Link()
 	case menu.FieldIframeSrc:
 		return m.IframeSrc()
+	case menu.FieldActiveIcon:
+		return m.ActiveIcon()
+	case menu.FieldActivePath:
+		return m.ActivePath()
+	case menu.FieldMaxNumOfOpenTab:
+		return m.MaxNumOfOpenTab()
 	case menu.FieldIgnoreAuth:
 		return m.IgnoreAuth()
 	case menu.FieldKeepalive:
@@ -2322,6 +2530,8 @@ func (m *MenuMutation) Field(name string) (ent.Value, bool) {
 		return m.Permission()
 	case menu.FieldAffixTab:
 		return m.AffixTab()
+	case menu.FieldAffixTabOrder:
+		return m.AffixTabOrder()
 	case menu.FieldHideInMenu:
 		return m.HideInMenu()
 	case menu.FieldHideInTab:
@@ -2367,6 +2577,12 @@ func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldLink(ctx)
 	case menu.FieldIframeSrc:
 		return m.OldIframeSrc(ctx)
+	case menu.FieldActiveIcon:
+		return m.OldActiveIcon(ctx)
+	case menu.FieldActivePath:
+		return m.OldActivePath(ctx)
+	case menu.FieldMaxNumOfOpenTab:
+		return m.OldMaxNumOfOpenTab(ctx)
 	case menu.FieldIgnoreAuth:
 		return m.OldIgnoreAuth(ctx)
 	case menu.FieldKeepalive:
@@ -2375,6 +2591,8 @@ func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPermission(ctx)
 	case menu.FieldAffixTab:
 		return m.OldAffixTab(ctx)
+	case menu.FieldAffixTabOrder:
+		return m.OldAffixTabOrder(ctx)
 	case menu.FieldHideInMenu:
 		return m.OldHideInMenu(ctx)
 	case menu.FieldHideInTab:
@@ -2490,6 +2708,27 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetIframeSrc(v)
 		return nil
+	case menu.FieldActiveIcon:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActiveIcon(v)
+		return nil
+	case menu.FieldActivePath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActivePath(v)
+		return nil
+	case menu.FieldMaxNumOfOpenTab:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxNumOfOpenTab(v)
+		return nil
 	case menu.FieldIgnoreAuth:
 		v, ok := value.(bool)
 		if !ok {
@@ -2517,6 +2756,13 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAffixTab(v)
+		return nil
+	case menu.FieldAffixTabOrder:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAffixTabOrder(v)
 		return nil
 	case menu.FieldHideInMenu:
 		v, ok := value.(bool)
@@ -2563,6 +2809,12 @@ func (m *MenuMutation) AddedFields() []string {
 	if m.add_order != nil {
 		fields = append(fields, menu.FieldOrder)
 	}
+	if m.addmaxNumOfOpenTab != nil {
+		fields = append(fields, menu.FieldMaxNumOfOpenTab)
+	}
+	if m.addaffixTabOrder != nil {
+		fields = append(fields, menu.FieldAffixTabOrder)
+	}
 	return fields
 }
 
@@ -2577,6 +2829,10 @@ func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedType()
 	case menu.FieldOrder:
 		return m.AddedOrder()
+	case menu.FieldMaxNumOfOpenTab:
+		return m.AddedMaxNumOfOpenTab()
+	case menu.FieldAffixTabOrder:
+		return m.AddedAffixTabOrder()
 	}
 	return nil, false
 }
@@ -2606,6 +2862,20 @@ func (m *MenuMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddOrder(v)
+		return nil
+	case menu.FieldMaxNumOfOpenTab:
+		v, ok := value.(int16)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMaxNumOfOpenTab(v)
+		return nil
+	case menu.FieldAffixTabOrder:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAffixTabOrder(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Menu numeric field %s", name)
@@ -2676,6 +2946,15 @@ func (m *MenuMutation) ResetField(name string) error {
 	case menu.FieldIframeSrc:
 		m.ResetIframeSrc()
 		return nil
+	case menu.FieldActiveIcon:
+		m.ResetActiveIcon()
+		return nil
+	case menu.FieldActivePath:
+		m.ResetActivePath()
+		return nil
+	case menu.FieldMaxNumOfOpenTab:
+		m.ResetMaxNumOfOpenTab()
+		return nil
 	case menu.FieldIgnoreAuth:
 		m.ResetIgnoreAuth()
 		return nil
@@ -2687,6 +2966,9 @@ func (m *MenuMutation) ResetField(name string) error {
 		return nil
 	case menu.FieldAffixTab:
 		m.ResetAffixTab()
+		return nil
+	case menu.FieldAffixTabOrder:
+		m.ResetAffixTabOrder()
 		return nil
 	case menu.FieldHideInMenu:
 		m.ResetHideInMenu()

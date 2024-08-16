@@ -609,6 +609,10 @@ components:
                     type: string
                 badgeVariants:
                     type: string
+                activePath:
+                    type: string
+                maxNumOfOpenTab:
+                    type: string
                 hideChildrenInMenu:
                     type: boolean
                 hideInBreadcrumb:

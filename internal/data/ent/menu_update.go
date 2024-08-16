@@ -127,6 +127,31 @@ func (mu *MenuUpdate) SetIframeSrc(s string) *MenuUpdate {
 	return mu
 }
 
+// SetActiveIcon sets the "activeIcon" field.
+func (mu *MenuUpdate) SetActiveIcon(s string) *MenuUpdate {
+	mu.mutation.SetActiveIcon(s)
+	return mu
+}
+
+// SetActivePath sets the "activePath" field.
+func (mu *MenuUpdate) SetActivePath(s string) *MenuUpdate {
+	mu.mutation.SetActivePath(s)
+	return mu
+}
+
+// SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
+func (mu *MenuUpdate) SetMaxNumOfOpenTab(i int16) *MenuUpdate {
+	mu.mutation.ResetMaxNumOfOpenTab()
+	mu.mutation.SetMaxNumOfOpenTab(i)
+	return mu
+}
+
+// AddMaxNumOfOpenTab adds i to the "maxNumOfOpenTab" field.
+func (mu *MenuUpdate) AddMaxNumOfOpenTab(i int16) *MenuUpdate {
+	mu.mutation.AddMaxNumOfOpenTab(i)
+	return mu
+}
+
 // SetIgnoreAuth sets the "ignoreAuth" field.
 func (mu *MenuUpdate) SetIgnoreAuth(b bool) *MenuUpdate {
 	mu.mutation.SetIgnoreAuth(b)
@@ -145,9 +170,22 @@ func (mu *MenuUpdate) SetPermission(s string) *MenuUpdate {
 	return mu
 }
 
-// SetAffixTab sets the "affix_tab" field.
+// SetAffixTab sets the "affixTab" field.
 func (mu *MenuUpdate) SetAffixTab(b bool) *MenuUpdate {
 	mu.mutation.SetAffixTab(b)
+	return mu
+}
+
+// SetAffixTabOrder sets the "affixTabOrder" field.
+func (mu *MenuUpdate) SetAffixTabOrder(i int64) *MenuUpdate {
+	mu.mutation.ResetAffixTabOrder()
+	mu.mutation.SetAffixTabOrder(i)
+	return mu
+}
+
+// AddAffixTabOrder adds i to the "affixTabOrder" field.
+func (mu *MenuUpdate) AddAffixTabOrder(i int64) *MenuUpdate {
+	mu.mutation.AddAffixTabOrder(i)
 	return mu
 }
 
@@ -305,6 +343,18 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.IframeSrc(); ok {
 		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 	}
+	if value, ok := mu.mutation.ActiveIcon(); ok {
+		_spec.SetField(menu.FieldActiveIcon, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.ActivePath(); ok {
+		_spec.SetField(menu.FieldActivePath, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.MaxNumOfOpenTab(); ok {
+		_spec.SetField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
+	}
+	if value, ok := mu.mutation.AddedMaxNumOfOpenTab(); ok {
+		_spec.AddField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
+	}
 	if value, ok := mu.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 	}
@@ -316,6 +366,12 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := mu.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.AffixTabOrder(); ok {
+		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+	}
+	if value, ok := mu.mutation.AddedAffixTabOrder(); ok {
+		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt64, value)
 	}
 	if value, ok := mu.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
@@ -448,6 +504,31 @@ func (muo *MenuUpdateOne) SetIframeSrc(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetActiveIcon sets the "activeIcon" field.
+func (muo *MenuUpdateOne) SetActiveIcon(s string) *MenuUpdateOne {
+	muo.mutation.SetActiveIcon(s)
+	return muo
+}
+
+// SetActivePath sets the "activePath" field.
+func (muo *MenuUpdateOne) SetActivePath(s string) *MenuUpdateOne {
+	muo.mutation.SetActivePath(s)
+	return muo
+}
+
+// SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
+func (muo *MenuUpdateOne) SetMaxNumOfOpenTab(i int16) *MenuUpdateOne {
+	muo.mutation.ResetMaxNumOfOpenTab()
+	muo.mutation.SetMaxNumOfOpenTab(i)
+	return muo
+}
+
+// AddMaxNumOfOpenTab adds i to the "maxNumOfOpenTab" field.
+func (muo *MenuUpdateOne) AddMaxNumOfOpenTab(i int16) *MenuUpdateOne {
+	muo.mutation.AddMaxNumOfOpenTab(i)
+	return muo
+}
+
 // SetIgnoreAuth sets the "ignoreAuth" field.
 func (muo *MenuUpdateOne) SetIgnoreAuth(b bool) *MenuUpdateOne {
 	muo.mutation.SetIgnoreAuth(b)
@@ -466,9 +547,22 @@ func (muo *MenuUpdateOne) SetPermission(s string) *MenuUpdateOne {
 	return muo
 }
 
-// SetAffixTab sets the "affix_tab" field.
+// SetAffixTab sets the "affixTab" field.
 func (muo *MenuUpdateOne) SetAffixTab(b bool) *MenuUpdateOne {
 	muo.mutation.SetAffixTab(b)
+	return muo
+}
+
+// SetAffixTabOrder sets the "affixTabOrder" field.
+func (muo *MenuUpdateOne) SetAffixTabOrder(i int64) *MenuUpdateOne {
+	muo.mutation.ResetAffixTabOrder()
+	muo.mutation.SetAffixTabOrder(i)
+	return muo
+}
+
+// AddAffixTabOrder adds i to the "affixTabOrder" field.
+func (muo *MenuUpdateOne) AddAffixTabOrder(i int64) *MenuUpdateOne {
+	muo.mutation.AddAffixTabOrder(i)
 	return muo
 }
 
@@ -656,6 +750,18 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.IframeSrc(); ok {
 		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 	}
+	if value, ok := muo.mutation.ActiveIcon(); ok {
+		_spec.SetField(menu.FieldActiveIcon, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.ActivePath(); ok {
+		_spec.SetField(menu.FieldActivePath, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.MaxNumOfOpenTab(); ok {
+		_spec.SetField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
+	}
+	if value, ok := muo.mutation.AddedMaxNumOfOpenTab(); ok {
+		_spec.AddField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
+	}
 	if value, ok := muo.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 	}
@@ -667,6 +773,12 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	}
 	if value, ok := muo.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.AffixTabOrder(); ok {
+		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+	}
+	if value, ok := muo.mutation.AddedAffixTabOrder(); ok {
+		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt64, value)
 	}
 	if value, ok := muo.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)

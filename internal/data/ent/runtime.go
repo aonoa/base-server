@@ -49,19 +49,19 @@ func init() {
 	// menu.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	menu.UpdateDefaultUpdateTime = menuDescUpdateTime.UpdateDefault.(func() time.Time)
 	// menuDescHideInMenu is the schema descriptor for hideInMenu field.
-	menuDescHideInMenu := menuFields[17].Descriptor()
+	menuDescHideInMenu := menuFields[21].Descriptor()
 	// menu.DefaultHideInMenu holds the default value on creation for the hideInMenu field.
 	menu.DefaultHideInMenu = menuDescHideInMenu.Default.(bool)
 	// menuDescHideInTab is the schema descriptor for hideInTab field.
-	menuDescHideInTab := menuFields[18].Descriptor()
+	menuDescHideInTab := menuFields[22].Descriptor()
 	// menu.DefaultHideInTab holds the default value on creation for the hideInTab field.
 	menu.DefaultHideInTab = menuDescHideInTab.Default.(bool)
 	// menuDescHideInBreadcrumb is the schema descriptor for hideInBreadcrumb field.
-	menuDescHideInBreadcrumb := menuFields[19].Descriptor()
+	menuDescHideInBreadcrumb := menuFields[23].Descriptor()
 	// menu.DefaultHideInBreadcrumb holds the default value on creation for the hideInBreadcrumb field.
 	menu.DefaultHideInBreadcrumb = menuDescHideInBreadcrumb.Default.(bool)
 	// menuDescHideChildrenInMenu is the schema descriptor for hideChildrenInMenu field.
-	menuDescHideChildrenInMenu := menuFields[20].Descriptor()
+	menuDescHideChildrenInMenu := menuFields[24].Descriptor()
 	// menu.DefaultHideChildrenInMenu holds the default value on creation for the hideChildrenInMenu field.
 	menu.DefaultHideChildrenInMenu = menuDescHideChildrenInMenu.Default.(bool)
 	roleMixin := schema.Role{}.Mixin()

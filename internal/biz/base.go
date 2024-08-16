@@ -185,6 +185,8 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 	RouteItem.Meta.IframeSrc = menu.IframeSrc
 	RouteItem.Meta.IgnoreAccess = menu.IgnoreAuth
 	RouteItem.Meta.KeepAlive = menu.Keepalive
+	RouteItem.Meta.ActivePath = menu.ActivePath
+	RouteItem.Meta.MaxNumOfOpenTab = int64(menu.MaxNumOfOpenTab)
 	RouteItem.Meta.HideInMenu = menu.HideInMenu
 	RouteItem.Meta.HideInTab = menu.HideInTab
 	RouteItem.Meta.HideInBreadcrumb = menu.HideInBreadcrumb

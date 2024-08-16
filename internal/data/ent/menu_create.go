@@ -120,6 +120,24 @@ func (mc *MenuCreate) SetIframeSrc(s string) *MenuCreate {
 	return mc
 }
 
+// SetActiveIcon sets the "activeIcon" field.
+func (mc *MenuCreate) SetActiveIcon(s string) *MenuCreate {
+	mc.mutation.SetActiveIcon(s)
+	return mc
+}
+
+// SetActivePath sets the "activePath" field.
+func (mc *MenuCreate) SetActivePath(s string) *MenuCreate {
+	mc.mutation.SetActivePath(s)
+	return mc
+}
+
+// SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
+func (mc *MenuCreate) SetMaxNumOfOpenTab(i int16) *MenuCreate {
+	mc.mutation.SetMaxNumOfOpenTab(i)
+	return mc
+}
+
 // SetIgnoreAuth sets the "ignoreAuth" field.
 func (mc *MenuCreate) SetIgnoreAuth(b bool) *MenuCreate {
 	mc.mutation.SetIgnoreAuth(b)
@@ -138,9 +156,15 @@ func (mc *MenuCreate) SetPermission(s string) *MenuCreate {
 	return mc
 }
 
-// SetAffixTab sets the "affix_tab" field.
+// SetAffixTab sets the "affixTab" field.
 func (mc *MenuCreate) SetAffixTab(b bool) *MenuCreate {
 	mc.mutation.SetAffixTab(b)
+	return mc
+}
+
+// SetAffixTabOrder sets the "affixTabOrder" field.
+func (mc *MenuCreate) SetAffixTabOrder(i int64) *MenuCreate {
+	mc.mutation.SetAffixTabOrder(i)
 	return mc
 }
 
@@ -311,6 +335,15 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.IframeSrc(); !ok {
 		return &ValidationError{Name: "iframeSrc", err: errors.New(`ent: missing required field "Menu.iframeSrc"`)}
 	}
+	if _, ok := mc.mutation.ActiveIcon(); !ok {
+		return &ValidationError{Name: "activeIcon", err: errors.New(`ent: missing required field "Menu.activeIcon"`)}
+	}
+	if _, ok := mc.mutation.ActivePath(); !ok {
+		return &ValidationError{Name: "activePath", err: errors.New(`ent: missing required field "Menu.activePath"`)}
+	}
+	if _, ok := mc.mutation.MaxNumOfOpenTab(); !ok {
+		return &ValidationError{Name: "maxNumOfOpenTab", err: errors.New(`ent: missing required field "Menu.maxNumOfOpenTab"`)}
+	}
 	if _, ok := mc.mutation.IgnoreAuth(); !ok {
 		return &ValidationError{Name: "ignoreAuth", err: errors.New(`ent: missing required field "Menu.ignoreAuth"`)}
 	}
@@ -321,7 +354,10 @@ func (mc *MenuCreate) check() error {
 		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required field "Menu.permission"`)}
 	}
 	if _, ok := mc.mutation.AffixTab(); !ok {
-		return &ValidationError{Name: "affix_tab", err: errors.New(`ent: missing required field "Menu.affix_tab"`)}
+		return &ValidationError{Name: "affixTab", err: errors.New(`ent: missing required field "Menu.affixTab"`)}
+	}
+	if _, ok := mc.mutation.AffixTabOrder(); !ok {
+		return &ValidationError{Name: "affixTabOrder", err: errors.New(`ent: missing required field "Menu.affixTabOrder"`)}
 	}
 	if _, ok := mc.mutation.HideInMenu(); !ok {
 		return &ValidationError{Name: "hideInMenu", err: errors.New(`ent: missing required field "Menu.hideInMenu"`)}
@@ -423,6 +459,18 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 		_node.IframeSrc = value
 	}
+	if value, ok := mc.mutation.ActiveIcon(); ok {
+		_spec.SetField(menu.FieldActiveIcon, field.TypeString, value)
+		_node.ActiveIcon = value
+	}
+	if value, ok := mc.mutation.ActivePath(); ok {
+		_spec.SetField(menu.FieldActivePath, field.TypeString, value)
+		_node.ActivePath = value
+	}
+	if value, ok := mc.mutation.MaxNumOfOpenTab(); ok {
+		_spec.SetField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
+		_node.MaxNumOfOpenTab = value
+	}
 	if value, ok := mc.mutation.IgnoreAuth(); ok {
 		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
 		_node.IgnoreAuth = value
@@ -438,6 +486,10 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 	if value, ok := mc.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 		_node.AffixTab = value
+	}
+	if value, ok := mc.mutation.AffixTabOrder(); ok {
+		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+		_node.AffixTabOrder = value
 	}
 	if value, ok := mc.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)

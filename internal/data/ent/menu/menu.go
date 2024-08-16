@@ -41,14 +41,22 @@ const (
 	FieldLink = "link"
 	// FieldIframeSrc holds the string denoting the iframesrc field in the database.
 	FieldIframeSrc = "iframe_src"
+	// FieldActiveIcon holds the string denoting the activeicon field in the database.
+	FieldActiveIcon = "active_icon"
+	// FieldActivePath holds the string denoting the activepath field in the database.
+	FieldActivePath = "active_path"
+	// FieldMaxNumOfOpenTab holds the string denoting the maxnumofopentab field in the database.
+	FieldMaxNumOfOpenTab = "max_num_of_open_tab"
 	// FieldIgnoreAuth holds the string denoting the ignoreauth field in the database.
 	FieldIgnoreAuth = "ignore_auth"
 	// FieldKeepalive holds the string denoting the keepalive field in the database.
 	FieldKeepalive = "keepalive"
 	// FieldPermission holds the string denoting the permission field in the database.
 	FieldPermission = "permission"
-	// FieldAffixTab holds the string denoting the affix_tab field in the database.
+	// FieldAffixTab holds the string denoting the affixtab field in the database.
 	FieldAffixTab = "affix_tab"
+	// FieldAffixTabOrder holds the string denoting the affixtaborder field in the database.
+	FieldAffixTabOrder = "affix_tab_order"
 	// FieldHideInMenu holds the string denoting the hideinmenu field in the database.
 	FieldHideInMenu = "hide_in_menu"
 	// FieldHideInTab holds the string denoting the hideintab field in the database.
@@ -78,10 +86,14 @@ var Columns = []string{
 	FieldRedirect,
 	FieldLink,
 	FieldIframeSrc,
+	FieldActiveIcon,
+	FieldActivePath,
+	FieldMaxNumOfOpenTab,
 	FieldIgnoreAuth,
 	FieldKeepalive,
 	FieldPermission,
 	FieldAffixTab,
+	FieldAffixTabOrder,
 	FieldHideInMenu,
 	FieldHideInTab,
 	FieldHideInBreadcrumb,
@@ -193,6 +205,21 @@ func ByIframeSrc(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIframeSrc, opts...).ToFunc()
 }
 
+// ByActiveIcon orders the results by the activeIcon field.
+func ByActiveIcon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActiveIcon, opts...).ToFunc()
+}
+
+// ByActivePath orders the results by the activePath field.
+func ByActivePath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActivePath, opts...).ToFunc()
+}
+
+// ByMaxNumOfOpenTab orders the results by the maxNumOfOpenTab field.
+func ByMaxNumOfOpenTab(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMaxNumOfOpenTab, opts...).ToFunc()
+}
+
 // ByIgnoreAuth orders the results by the ignoreAuth field.
 func ByIgnoreAuth(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIgnoreAuth, opts...).ToFunc()
@@ -208,9 +235,14 @@ func ByPermission(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPermission, opts...).ToFunc()
 }
 
-// ByAffixTab orders the results by the affix_tab field.
+// ByAffixTab orders the results by the affixTab field.
 func ByAffixTab(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAffixTab, opts...).ToFunc()
+}
+
+// ByAffixTabOrder orders the results by the affixTabOrder field.
+func ByAffixTabOrder(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAffixTabOrder, opts...).ToFunc()
 }
 
 // ByHideInMenu orders the results by the hideInMenu field.

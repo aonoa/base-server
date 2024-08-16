@@ -45,6 +45,12 @@ type Menu struct {
 	Link string `json:"link,omitempty"`
 	// iframe地址
 	IframeSrc string `json:"iframeSrc,omitempty"`
+	// 激活图标
+	ActiveIcon string `json:"activeIcon,omitempty"`
+	// 当前激活的菜单，有时候不想激活现有菜单，需要激活父级菜单时使用
+	ActivePath string `json:"activePath,omitempty"`
+	// 标签页最大打开数量
+	MaxNumOfOpenTab int16 `json:"maxNumOfOpenTab,omitempty"`
 	// 忽略权限,0-否，1-是
 	IgnoreAuth bool `json:"ignoreAuth,omitempty"`
 	// 缓存,0-否，1-是
@@ -52,7 +58,9 @@ type Menu struct {
 	// 权限标识
 	Permission string `json:"permission,omitempty"`
 	// 固钉,0-否，1-是
-	AffixTab bool `json:"affix_tab,omitempty"`
+	AffixTab bool `json:"affixTab,omitempty"`
+	// 固定标签页的顺序
+	AffixTabOrder int64 `json:"affixTabOrder,omitempty"`
 	// 隐藏在菜单,0-否，1-是
 	HideInMenu bool `json:"hideInMenu,omitempty"`
 	// 隐藏在标签页,0-否，1-是
@@ -71,9 +79,9 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case menu.FieldStatus, menu.FieldIgnoreAuth, menu.FieldKeepalive, menu.FieldAffixTab, menu.FieldHideInMenu, menu.FieldHideInTab, menu.FieldHideInBreadcrumb, menu.FieldHideChildrenInMenu:
 			values[i] = new(sql.NullBool)
-		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder:
+		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder, menu.FieldMaxNumOfOpenTab, menu.FieldAffixTabOrder:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldName, menu.FieldTitle, menu.FieldIcon, menu.FieldPath, menu.FieldComponent, menu.FieldRedirect, menu.FieldLink, menu.FieldIframeSrc, menu.FieldPermission:
+		case menu.FieldName, menu.FieldTitle, menu.FieldIcon, menu.FieldPath, menu.FieldComponent, menu.FieldRedirect, menu.FieldLink, menu.FieldIframeSrc, menu.FieldActiveIcon, menu.FieldActivePath, menu.FieldPermission:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -182,6 +190,24 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.IframeSrc = value.String
 			}
+		case menu.FieldActiveIcon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field activeIcon", values[i])
+			} else if value.Valid {
+				m.ActiveIcon = value.String
+			}
+		case menu.FieldActivePath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field activePath", values[i])
+			} else if value.Valid {
+				m.ActivePath = value.String
+			}
+		case menu.FieldMaxNumOfOpenTab:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field maxNumOfOpenTab", values[i])
+			} else if value.Valid {
+				m.MaxNumOfOpenTab = int16(value.Int64)
+			}
 		case menu.FieldIgnoreAuth:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field ignoreAuth", values[i])
@@ -202,9 +228,15 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			}
 		case menu.FieldAffixTab:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field affix_tab", values[i])
+				return fmt.Errorf("unexpected type %T for field affixTab", values[i])
 			} else if value.Valid {
 				m.AffixTab = value.Bool
+			}
+		case menu.FieldAffixTabOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field affixTabOrder", values[i])
+			} else if value.Valid {
+				m.AffixTabOrder = value.Int64
 			}
 		case menu.FieldHideInMenu:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -308,6 +340,15 @@ func (m *Menu) String() string {
 	builder.WriteString("iframeSrc=")
 	builder.WriteString(m.IframeSrc)
 	builder.WriteString(", ")
+	builder.WriteString("activeIcon=")
+	builder.WriteString(m.ActiveIcon)
+	builder.WriteString(", ")
+	builder.WriteString("activePath=")
+	builder.WriteString(m.ActivePath)
+	builder.WriteString(", ")
+	builder.WriteString("maxNumOfOpenTab=")
+	builder.WriteString(fmt.Sprintf("%v", m.MaxNumOfOpenTab))
+	builder.WriteString(", ")
 	builder.WriteString("ignoreAuth=")
 	builder.WriteString(fmt.Sprintf("%v", m.IgnoreAuth))
 	builder.WriteString(", ")
@@ -317,8 +358,11 @@ func (m *Menu) String() string {
 	builder.WriteString("permission=")
 	builder.WriteString(m.Permission)
 	builder.WriteString(", ")
-	builder.WriteString("affix_tab=")
+	builder.WriteString("affixTab=")
 	builder.WriteString(fmt.Sprintf("%v", m.AffixTab))
+	builder.WriteString(", ")
+	builder.WriteString("affixTabOrder=")
+	builder.WriteString(fmt.Sprintf("%v", m.AffixTabOrder))
 	builder.WriteString(", ")
 	builder.WriteString("hideInMenu=")
 	builder.WriteString(fmt.Sprintf("%v", m.HideInMenu))
