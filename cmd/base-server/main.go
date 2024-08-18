@@ -1,6 +1,7 @@
 package main
 
 import (
+	"base-server/internal/server"
 	"flag"
 	"fmt"
 	"os"
@@ -34,7 +35,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "./configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, js *server.CronWorker) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -43,6 +44,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 		kratos.Logger(logger),
 		kratos.Server(
 			//	gs,
+			js,
 			hs,
 		),
 	)
@@ -83,7 +85,7 @@ func main() {
 		log.Error(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Auth, bc.Menus, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Auth, bc.Menus, bc.Job, logger)
 	if err != nil {
 		panic(err)
 	}

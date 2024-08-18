@@ -10,6 +10,7 @@ message Bootstrap {
   Data data = 2;
   Auth auth = 3;
   Menus menus = 4;
+  Job job = 5;
 }
 
 message Server {
@@ -51,4 +52,14 @@ message Auth {
 
 message Menus {
   string default_menus = 1;
+}
+
+message Job {
+  message JobConfig {
+    string name = 1;
+    string schedule = 2;
+    string input = 3;
+    string output = 4;
+  }
+  repeated JobConfig jobs = 1;
 }
