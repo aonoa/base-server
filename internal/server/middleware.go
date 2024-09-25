@@ -11,7 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	jwtv4 "github.com/golang-jwt/jwt/v4"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
 
 // NewWhiteListMatcher Path 白名单.
@@ -31,12 +31,12 @@ func NewWhiteListMatcher() selector.MatchFunc {
 func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer) middleware.Middleware {
 	return selector.Server(
 		jwt.Server(
-			func(token *jwtv4.Token) (interface{}, error) {
+			func(token *jwtv5.Token) (interface{}, error) {
 				return []byte(ac.ApiKey), nil
 			},
-			jwt.WithSigningMethod(jwtv4.SigningMethodHS256),
-			jwt.WithClaims(func() jwtv4.Claims {
-				return &jwtv4.MapClaims{}
+			jwt.WithSigningMethod(jwtv5.SigningMethodHS256),
+			jwt.WithClaims(func() jwtv5.Claims {
+				return &jwtv5.MapClaims{}
 			}),
 		),
 		MiddlewareCasbin(e),
@@ -48,7 +48,7 @@ func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			uid := ""
 			if claims, ok := jwt.FromContext(ctx); ok {
-				uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
+				uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 			} else {
 				return nil, errors.Unauthorized("UNAUTHORIZED", "uid is missing")
 			}

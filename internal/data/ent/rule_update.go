@@ -40,9 +40,25 @@ func (ru *RuleUpdate) SetPtype(s string) *RuleUpdate {
 	return ru
 }
 
+// SetNillablePtype sets the "ptype" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillablePtype(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetPtype(*s)
+	}
+	return ru
+}
+
 // SetV0 sets the "v0" field.
 func (ru *RuleUpdate) SetV0(s string) *RuleUpdate {
 	ru.mutation.SetV0(s)
+	return ru
+}
+
+// SetNillableV0 sets the "v0" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV0(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV0(*s)
+	}
 	return ru
 }
 
@@ -52,9 +68,25 @@ func (ru *RuleUpdate) SetV1(s string) *RuleUpdate {
 	return ru
 }
 
+// SetNillableV1 sets the "v1" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV1(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV1(*s)
+	}
+	return ru
+}
+
 // SetV2 sets the "v2" field.
 func (ru *RuleUpdate) SetV2(s string) *RuleUpdate {
 	ru.mutation.SetV2(s)
+	return ru
+}
+
+// SetNillableV2 sets the "v2" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV2(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV2(*s)
+	}
 	return ru
 }
 
@@ -64,15 +96,39 @@ func (ru *RuleUpdate) SetV3(s string) *RuleUpdate {
 	return ru
 }
 
+// SetNillableV3 sets the "v3" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV3(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV3(*s)
+	}
+	return ru
+}
+
 // SetV4 sets the "v4" field.
 func (ru *RuleUpdate) SetV4(s string) *RuleUpdate {
 	ru.mutation.SetV4(s)
 	return ru
 }
 
+// SetNillableV4 sets the "v4" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV4(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV4(*s)
+	}
+	return ru
+}
+
 // SetV5 sets the "v5" field.
 func (ru *RuleUpdate) SetV5(s string) *RuleUpdate {
 	ru.mutation.SetV5(s)
+	return ru
+}
+
+// SetNillableV5 sets the "v5" field if the given value is not nil.
+func (ru *RuleUpdate) SetNillableV5(s *string) *RuleUpdate {
+	if s != nil {
+		ru.SetV5(*s)
+	}
 	return ru
 }
 
@@ -182,9 +238,25 @@ func (ruo *RuleUpdateOne) SetPtype(s string) *RuleUpdateOne {
 	return ruo
 }
 
+// SetNillablePtype sets the "ptype" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillablePtype(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetPtype(*s)
+	}
+	return ruo
+}
+
 // SetV0 sets the "v0" field.
 func (ruo *RuleUpdateOne) SetV0(s string) *RuleUpdateOne {
 	ruo.mutation.SetV0(s)
+	return ruo
+}
+
+// SetNillableV0 sets the "v0" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV0(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV0(*s)
+	}
 	return ruo
 }
 
@@ -194,9 +266,25 @@ func (ruo *RuleUpdateOne) SetV1(s string) *RuleUpdateOne {
 	return ruo
 }
 
+// SetNillableV1 sets the "v1" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV1(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV1(*s)
+	}
+	return ruo
+}
+
 // SetV2 sets the "v2" field.
 func (ruo *RuleUpdateOne) SetV2(s string) *RuleUpdateOne {
 	ruo.mutation.SetV2(s)
+	return ruo
+}
+
+// SetNillableV2 sets the "v2" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV2(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV2(*s)
+	}
 	return ruo
 }
 
@@ -206,15 +294,39 @@ func (ruo *RuleUpdateOne) SetV3(s string) *RuleUpdateOne {
 	return ruo
 }
 
+// SetNillableV3 sets the "v3" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV3(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV3(*s)
+	}
+	return ruo
+}
+
 // SetV4 sets the "v4" field.
 func (ruo *RuleUpdateOne) SetV4(s string) *RuleUpdateOne {
 	ruo.mutation.SetV4(s)
 	return ruo
 }
 
+// SetNillableV4 sets the "v4" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV4(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV4(*s)
+	}
+	return ruo
+}
+
 // SetV5 sets the "v5" field.
 func (ruo *RuleUpdateOne) SetV5(s string) *RuleUpdateOne {
 	ruo.mutation.SetV5(s)
+	return ruo
+}
+
+// SetNillableV5 sets the "v5" field if the given value is not nil.
+func (ruo *RuleUpdateOne) SetNillableV5(s *string) *RuleUpdateOne {
+	if s != nil {
+		ruo.SetV5(*s)
+	}
 	return ruo
 }
 

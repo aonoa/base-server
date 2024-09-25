@@ -36,7 +36,7 @@ service Base {
 	// 注销登陆
 	rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
-			get: "/basic-api/logout"
+			get: "/basic-api/auth/logout"
 		};
 	}
 
@@ -45,6 +45,12 @@ service Base {
 		option (google.api.http) = {
 			get: "/basic-api/menu/all",
 			response_body: "menuList"
+		};
+	}
+
+	rpc RefreshToken (google.protobuf.Empty) returns (LoginReply) {
+		option (google.api.http) = {
+			post: "/basic-api/auth/login",
 		};
 	}
 

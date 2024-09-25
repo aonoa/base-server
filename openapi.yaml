@@ -23,14 +23,7 @@ paths:
         post:
             tags:
                 - Base
-            description: 用户登陆
-            operationId: Base_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.base_api.v1.LoginRequest'
-                required: true
+            operationId: Base_RefreshToken
             responses:
                 "200":
                     description: OK
@@ -38,7 +31,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.LoginReply'
-    /basic-api/logout:
+    /basic-api/auth/logout:
         get:
             tags:
                 - Base

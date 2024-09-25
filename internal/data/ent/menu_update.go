@@ -41,6 +41,14 @@ func (mu *MenuUpdate) SetPid(i int64) *MenuUpdate {
 	return mu
 }
 
+// SetNillablePid sets the "pid" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePid(i *int64) *MenuUpdate {
+	if i != nil {
+		mu.SetPid(*i)
+	}
+	return mu
+}
+
 // AddPid adds i to the "pid" field.
 func (mu *MenuUpdate) AddPid(i int64) *MenuUpdate {
 	mu.mutation.AddPid(i)
@@ -51,6 +59,14 @@ func (mu *MenuUpdate) AddPid(i int64) *MenuUpdate {
 func (mu *MenuUpdate) SetType(i int8) *MenuUpdate {
 	mu.mutation.ResetType()
 	mu.mutation.SetType(i)
+	return mu
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableType(i *int8) *MenuUpdate {
+	if i != nil {
+		mu.SetType(*i)
+	}
 	return mu
 }
 
@@ -66,9 +82,25 @@ func (mu *MenuUpdate) SetStatus(b bool) *MenuUpdate {
 	return mu
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableStatus(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetStatus(*b)
+	}
+	return mu
+}
+
 // SetName sets the "name" field.
 func (mu *MenuUpdate) SetName(s string) *MenuUpdate {
 	mu.mutation.SetName(s)
+	return mu
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableName(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetName(*s)
+	}
 	return mu
 }
 
@@ -78,9 +110,25 @@ func (mu *MenuUpdate) SetTitle(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableTitle(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetTitle(*s)
+	}
+	return mu
+}
+
 // SetIcon sets the "icon" field.
 func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
 	mu.mutation.SetIcon(s)
+	return mu
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIcon(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetIcon(*s)
+	}
 	return mu
 }
 
@@ -88,6 +136,14 @@ func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
 func (mu *MenuUpdate) SetOrder(i int32) *MenuUpdate {
 	mu.mutation.ResetOrder()
 	mu.mutation.SetOrder(i)
+	return mu
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableOrder(i *int32) *MenuUpdate {
+	if i != nil {
+		mu.SetOrder(*i)
+	}
 	return mu
 }
 
@@ -103,9 +159,25 @@ func (mu *MenuUpdate) SetPath(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePath(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetPath(*s)
+	}
+	return mu
+}
+
 // SetComponent sets the "component" field.
 func (mu *MenuUpdate) SetComponent(s string) *MenuUpdate {
 	mu.mutation.SetComponent(s)
+	return mu
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableComponent(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetComponent(*s)
+	}
 	return mu
 }
 
@@ -115,9 +187,25 @@ func (mu *MenuUpdate) SetRedirect(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableRedirect(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetRedirect(*s)
+	}
+	return mu
+}
+
 // SetLink sets the "link" field.
 func (mu *MenuUpdate) SetLink(s string) *MenuUpdate {
 	mu.mutation.SetLink(s)
+	return mu
+}
+
+// SetNillableLink sets the "link" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableLink(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetLink(*s)
+	}
 	return mu
 }
 
@@ -127,9 +215,25 @@ func (mu *MenuUpdate) SetIframeSrc(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillableIframeSrc sets the "iframeSrc" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIframeSrc(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetIframeSrc(*s)
+	}
+	return mu
+}
+
 // SetActiveIcon sets the "activeIcon" field.
 func (mu *MenuUpdate) SetActiveIcon(s string) *MenuUpdate {
 	mu.mutation.SetActiveIcon(s)
+	return mu
+}
+
+// SetNillableActiveIcon sets the "activeIcon" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableActiveIcon(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetActiveIcon(*s)
+	}
 	return mu
 }
 
@@ -139,10 +243,26 @@ func (mu *MenuUpdate) SetActivePath(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillableActivePath sets the "activePath" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableActivePath(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetActivePath(*s)
+	}
+	return mu
+}
+
 // SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
 func (mu *MenuUpdate) SetMaxNumOfOpenTab(i int16) *MenuUpdate {
 	mu.mutation.ResetMaxNumOfOpenTab()
 	mu.mutation.SetMaxNumOfOpenTab(i)
+	return mu
+}
+
+// SetNillableMaxNumOfOpenTab sets the "maxNumOfOpenTab" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableMaxNumOfOpenTab(i *int16) *MenuUpdate {
+	if i != nil {
+		mu.SetMaxNumOfOpenTab(*i)
+	}
 	return mu
 }
 
@@ -158,9 +278,25 @@ func (mu *MenuUpdate) SetIgnoreAuth(b bool) *MenuUpdate {
 	return mu
 }
 
+// SetNillableIgnoreAuth sets the "ignoreAuth" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIgnoreAuth(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetIgnoreAuth(*b)
+	}
+	return mu
+}
+
 // SetKeepalive sets the "keepalive" field.
 func (mu *MenuUpdate) SetKeepalive(b bool) *MenuUpdate {
 	mu.mutation.SetKeepalive(b)
+	return mu
+}
+
+// SetNillableKeepalive sets the "keepalive" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableKeepalive(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetKeepalive(*b)
+	}
 	return mu
 }
 
@@ -170,9 +306,25 @@ func (mu *MenuUpdate) SetPermission(s string) *MenuUpdate {
 	return mu
 }
 
+// SetNillablePermission sets the "permission" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePermission(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetPermission(*s)
+	}
+	return mu
+}
+
 // SetAffixTab sets the "affixTab" field.
 func (mu *MenuUpdate) SetAffixTab(b bool) *MenuUpdate {
 	mu.mutation.SetAffixTab(b)
+	return mu
+}
+
+// SetNillableAffixTab sets the "affixTab" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableAffixTab(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetAffixTab(*b)
+	}
 	return mu
 }
 
@@ -180,6 +332,14 @@ func (mu *MenuUpdate) SetAffixTab(b bool) *MenuUpdate {
 func (mu *MenuUpdate) SetAffixTabOrder(i int64) *MenuUpdate {
 	mu.mutation.ResetAffixTabOrder()
 	mu.mutation.SetAffixTabOrder(i)
+	return mu
+}
+
+// SetNillableAffixTabOrder sets the "affixTabOrder" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableAffixTabOrder(i *int64) *MenuUpdate {
+	if i != nil {
+		mu.SetAffixTabOrder(*i)
+	}
 	return mu
 }
 
@@ -418,6 +578,14 @@ func (muo *MenuUpdateOne) SetPid(i int64) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillablePid sets the "pid" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePid(i *int64) *MenuUpdateOne {
+	if i != nil {
+		muo.SetPid(*i)
+	}
+	return muo
+}
+
 // AddPid adds i to the "pid" field.
 func (muo *MenuUpdateOne) AddPid(i int64) *MenuUpdateOne {
 	muo.mutation.AddPid(i)
@@ -428,6 +596,14 @@ func (muo *MenuUpdateOne) AddPid(i int64) *MenuUpdateOne {
 func (muo *MenuUpdateOne) SetType(i int8) *MenuUpdateOne {
 	muo.mutation.ResetType()
 	muo.mutation.SetType(i)
+	return muo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableType(i *int8) *MenuUpdateOne {
+	if i != nil {
+		muo.SetType(*i)
+	}
 	return muo
 }
 
@@ -443,9 +619,25 @@ func (muo *MenuUpdateOne) SetStatus(b bool) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableStatus(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetStatus(*b)
+	}
+	return muo
+}
+
 // SetName sets the "name" field.
 func (muo *MenuUpdateOne) SetName(s string) *MenuUpdateOne {
 	muo.mutation.SetName(s)
+	return muo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableName(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetName(*s)
+	}
 	return muo
 }
 
@@ -455,9 +647,25 @@ func (muo *MenuUpdateOne) SetTitle(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableTitle(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetTitle(*s)
+	}
+	return muo
+}
+
 // SetIcon sets the "icon" field.
 func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
 	muo.mutation.SetIcon(s)
+	return muo
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIcon(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetIcon(*s)
+	}
 	return muo
 }
 
@@ -465,6 +673,14 @@ func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
 func (muo *MenuUpdateOne) SetOrder(i int32) *MenuUpdateOne {
 	muo.mutation.ResetOrder()
 	muo.mutation.SetOrder(i)
+	return muo
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableOrder(i *int32) *MenuUpdateOne {
+	if i != nil {
+		muo.SetOrder(*i)
+	}
 	return muo
 }
 
@@ -480,9 +696,25 @@ func (muo *MenuUpdateOne) SetPath(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePath(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetPath(*s)
+	}
+	return muo
+}
+
 // SetComponent sets the "component" field.
 func (muo *MenuUpdateOne) SetComponent(s string) *MenuUpdateOne {
 	muo.mutation.SetComponent(s)
+	return muo
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableComponent(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetComponent(*s)
+	}
 	return muo
 }
 
@@ -492,9 +724,25 @@ func (muo *MenuUpdateOne) SetRedirect(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableRedirect(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetRedirect(*s)
+	}
+	return muo
+}
+
 // SetLink sets the "link" field.
 func (muo *MenuUpdateOne) SetLink(s string) *MenuUpdateOne {
 	muo.mutation.SetLink(s)
+	return muo
+}
+
+// SetNillableLink sets the "link" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableLink(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetLink(*s)
+	}
 	return muo
 }
 
@@ -504,9 +752,25 @@ func (muo *MenuUpdateOne) SetIframeSrc(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableIframeSrc sets the "iframeSrc" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIframeSrc(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetIframeSrc(*s)
+	}
+	return muo
+}
+
 // SetActiveIcon sets the "activeIcon" field.
 func (muo *MenuUpdateOne) SetActiveIcon(s string) *MenuUpdateOne {
 	muo.mutation.SetActiveIcon(s)
+	return muo
+}
+
+// SetNillableActiveIcon sets the "activeIcon" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableActiveIcon(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetActiveIcon(*s)
+	}
 	return muo
 }
 
@@ -516,10 +780,26 @@ func (muo *MenuUpdateOne) SetActivePath(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableActivePath sets the "activePath" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableActivePath(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetActivePath(*s)
+	}
+	return muo
+}
+
 // SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
 func (muo *MenuUpdateOne) SetMaxNumOfOpenTab(i int16) *MenuUpdateOne {
 	muo.mutation.ResetMaxNumOfOpenTab()
 	muo.mutation.SetMaxNumOfOpenTab(i)
+	return muo
+}
+
+// SetNillableMaxNumOfOpenTab sets the "maxNumOfOpenTab" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableMaxNumOfOpenTab(i *int16) *MenuUpdateOne {
+	if i != nil {
+		muo.SetMaxNumOfOpenTab(*i)
+	}
 	return muo
 }
 
@@ -535,9 +815,25 @@ func (muo *MenuUpdateOne) SetIgnoreAuth(b bool) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillableIgnoreAuth sets the "ignoreAuth" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIgnoreAuth(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetIgnoreAuth(*b)
+	}
+	return muo
+}
+
 // SetKeepalive sets the "keepalive" field.
 func (muo *MenuUpdateOne) SetKeepalive(b bool) *MenuUpdateOne {
 	muo.mutation.SetKeepalive(b)
+	return muo
+}
+
+// SetNillableKeepalive sets the "keepalive" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableKeepalive(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetKeepalive(*b)
+	}
 	return muo
 }
 
@@ -547,9 +843,25 @@ func (muo *MenuUpdateOne) SetPermission(s string) *MenuUpdateOne {
 	return muo
 }
 
+// SetNillablePermission sets the "permission" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePermission(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetPermission(*s)
+	}
+	return muo
+}
+
 // SetAffixTab sets the "affixTab" field.
 func (muo *MenuUpdateOne) SetAffixTab(b bool) *MenuUpdateOne {
 	muo.mutation.SetAffixTab(b)
+	return muo
+}
+
+// SetNillableAffixTab sets the "affixTab" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableAffixTab(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetAffixTab(*b)
+	}
 	return muo
 }
 
@@ -557,6 +869,14 @@ func (muo *MenuUpdateOne) SetAffixTab(b bool) *MenuUpdateOne {
 func (muo *MenuUpdateOne) SetAffixTabOrder(i int64) *MenuUpdateOne {
 	muo.mutation.ResetAffixTabOrder()
 	muo.mutation.SetAffixTabOrder(i)
+	return muo
+}
+
+// SetNillableAffixTabOrder sets the "affixTabOrder" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableAffixTabOrder(i *int64) *MenuUpdateOne {
+	if i != nil {
+		muo.SetAffixTabOrder(*i)
+	}
 	return muo
 }
 

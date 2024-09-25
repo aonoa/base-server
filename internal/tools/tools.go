@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha1"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
-	jwtv4 "github.com/golang-jwt/jwt/v4"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"strconv"
 	"strings"
 )
@@ -13,7 +13,7 @@ import (
 func GetUserId(ctx context.Context) string {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
-		uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
+		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 	}
 	return uid
 }

@@ -382,11 +382,15 @@ func (dc *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 // DeptCreateBulk is the builder for creating many Dept entities in bulk.
 type DeptCreateBulk struct {
 	config
+	err      error
 	builders []*DeptCreate
 }
 
 // Save creates the Dept entities in the database.
 func (dcb *DeptCreateBulk) Save(ctx context.Context) ([]*Dept, error) {
+	if dcb.err != nil {
+		return nil, dcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(dcb.builders))
 	nodes := make([]*Dept, len(dcb.builders))
 	mutators := make([]Mutator, len(dcb.builders))

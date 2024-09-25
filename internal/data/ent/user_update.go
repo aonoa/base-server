@@ -42,9 +42,25 @@ func (uu *UserUpdate) SetUsername(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUsername(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetUsername(*s)
+	}
+	return uu
+}
+
 // SetPassword sets the "password" field.
 func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	uu.mutation.SetPassword(s)
+	return uu
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetPassword(*s)
+	}
 	return uu
 }
 
@@ -54,10 +70,26 @@ func (uu *UserUpdate) SetNickname(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableNickname(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetNickname(*s)
+	}
+	return uu
+}
+
 // SetStatus sets the "status" field.
 func (uu *UserUpdate) SetStatus(i int8) *UserUpdate {
 	uu.mutation.ResetStatus()
 	uu.mutation.SetStatus(i)
+	return uu
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableStatus(i *int8) *UserUpdate {
+	if i != nil {
+		uu.SetStatus(*i)
+	}
 	return uu
 }
 
@@ -73,15 +105,39 @@ func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetAvatar(*s)
+	}
+	return uu
+}
+
 // SetDesc sets the "desc" field.
 func (uu *UserUpdate) SetDesc(s string) *UserUpdate {
 	uu.mutation.SetDesc(s)
 	return uu
 }
 
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDesc(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetDesc(*s)
+	}
+	return uu
+}
+
 // SetExtension sets the "extension" field.
 func (uu *UserUpdate) SetExtension(s string) *UserUpdate {
 	uu.mutation.SetExtension(s)
+	return uu
+}
+
+// SetNillableExtension sets the "extension" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableExtension(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetExtension(*s)
+	}
 	return uu
 }
 
@@ -356,9 +412,25 @@ func (uuo *UserUpdateOne) SetUsername(s string) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUsername(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetUsername(*s)
+	}
+	return uuo
+}
+
 // SetPassword sets the "password" field.
 func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
 	uuo.mutation.SetPassword(s)
+	return uuo
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetPassword(*s)
+	}
 	return uuo
 }
 
@@ -368,10 +440,26 @@ func (uuo *UserUpdateOne) SetNickname(s string) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableNickname(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetNickname(*s)
+	}
+	return uuo
+}
+
 // SetStatus sets the "status" field.
 func (uuo *UserUpdateOne) SetStatus(i int8) *UserUpdateOne {
 	uuo.mutation.ResetStatus()
 	uuo.mutation.SetStatus(i)
+	return uuo
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableStatus(i *int8) *UserUpdateOne {
+	if i != nil {
+		uuo.SetStatus(*i)
+	}
 	return uuo
 }
 
@@ -387,15 +475,39 @@ func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetAvatar(*s)
+	}
+	return uuo
+}
+
 // SetDesc sets the "desc" field.
 func (uuo *UserUpdateOne) SetDesc(s string) *UserUpdateOne {
 	uuo.mutation.SetDesc(s)
 	return uuo
 }
 
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDesc(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetDesc(*s)
+	}
+	return uuo
+}
+
 // SetExtension sets the "extension" field.
 func (uuo *UserUpdateOne) SetExtension(s string) *UserUpdateOne {
 	uuo.mutation.SetExtension(s)
+	return uuo
+}
+
+// SetNillableExtension sets the "extension" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableExtension(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetExtension(*s)
+	}
 	return uuo
 }
 

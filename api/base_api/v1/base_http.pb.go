@@ -38,6 +38,7 @@ const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseIsAccountExist = "/api.base_api.v1.Base/IsAccountExist"
 const OperationBaseLogin = "/api.base_api.v1.Base/Login"
 const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
+const OperationBaseRefreshToken = "/api.base_api.v1.Base/RefreshToken"
 const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
 const OperationBaseUpdateDept = "/api.base_api.v1.Base/UpdateDept"
 const OperationBaseUpdateRole = "/api.base_api.v1.Base/UpdateRole"
@@ -79,6 +80,7 @@ type BaseHTTPServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// Logout 注销登陆
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// SetRoleStatus 设置角色状态
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
 	// UpdateDept 修改部门
@@ -92,8 +94,9 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/auth/login", _Base_Login0_HTTP_Handler(srv))
 	r.GET("/basic-api/user/info", _Base_GetUserInfo0_HTTP_Handler(srv))
 	r.GET("/basic-api/auth/codes", _Base_GetAccessCodes0_HTTP_Handler(srv))
-	r.GET("/basic-api/logout", _Base_Logout0_HTTP_Handler(srv))
+	r.GET("/basic-api/auth/logout", _Base_Logout0_HTTP_Handler(srv))
 	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
+	r.POST("/basic-api/auth/login", _Base_RefreshToken0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
@@ -207,6 +210,25 @@ func _Base_GetMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) 
 		}
 		reply := out.(*GetMenuListReply)
 		return ctx.Result(200, reply.MenuList)
+	}
+}
+
+func _Base_RefreshToken0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseRefreshToken)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginReply)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -566,6 +588,7 @@ type BaseHTTPClient interface {
 	IsAccountExist(ctx context.Context, req *IsAccountRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
 	SetRoleStatus(ctx context.Context, req *SetRoleStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
@@ -802,11 +825,24 @@ func (c *BaseHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts .
 
 func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/basic-api/logout"
+	pattern := "/basic-api/auth/logout"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseLogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*LoginReply, error) {
+	var out LoginReply
+	pattern := "/basic-api/auth/login"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseRefreshToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

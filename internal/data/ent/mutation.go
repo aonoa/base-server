@@ -650,6 +650,7 @@ func (m *DeptMutation) SetParentID(id int64) {
 // ClearParent clears the "parent" edge to the Dept entity.
 func (m *DeptMutation) ClearParent() {
 	m.clearedparent = true
+	m.clearedFields[dept.FieldPid] = struct{}{}
 }
 
 // ParentCleared reports if the "parent" edge to the Dept entity was cleared.

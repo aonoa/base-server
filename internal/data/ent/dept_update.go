@@ -43,10 +43,26 @@ func (du *DeptUpdate) SetName(s string) *DeptUpdate {
 	return du
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableName(s *string) *DeptUpdate {
+	if s != nil {
+		du.SetName(*s)
+	}
+	return du
+}
+
 // SetSort sets the "sort" field.
 func (du *DeptUpdate) SetSort(i int) *DeptUpdate {
 	du.mutation.ResetSort()
 	du.mutation.SetSort(i)
+	return du
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableSort(i *int) *DeptUpdate {
+	if i != nil {
+		du.SetSort(*i)
+	}
 	return du
 }
 
@@ -62,9 +78,25 @@ func (du *DeptUpdate) SetStatus(b bool) *DeptUpdate {
 	return du
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableStatus(b *bool) *DeptUpdate {
+	if b != nil {
+		du.SetStatus(*b)
+	}
+	return du
+}
+
 // SetDesc sets the "desc" field.
 func (du *DeptUpdate) SetDesc(s string) *DeptUpdate {
 	du.mutation.SetDesc(s)
+	return du
+}
+
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableDesc(s *string) *DeptUpdate {
+	if s != nil {
+		du.SetDesc(*s)
+	}
 	return du
 }
 
@@ -74,10 +106,26 @@ func (du *DeptUpdate) SetExtension(s string) *DeptUpdate {
 	return du
 }
 
+// SetNillableExtension sets the "extension" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableExtension(s *string) *DeptUpdate {
+	if s != nil {
+		du.SetExtension(*s)
+	}
+	return du
+}
+
 // SetDom sets the "dom" field.
 func (du *DeptUpdate) SetDom(i int64) *DeptUpdate {
 	du.mutation.ResetDom()
 	du.mutation.SetDom(i)
+	return du
+}
+
+// SetNillableDom sets the "dom" field if the given value is not nil.
+func (du *DeptUpdate) SetNillableDom(i *int64) *DeptUpdate {
+	if i != nil {
+		du.SetDom(*i)
+	}
 	return du
 }
 
@@ -486,10 +534,26 @@ func (duo *DeptUpdateOne) SetName(s string) *DeptUpdateOne {
 	return duo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableName(s *string) *DeptUpdateOne {
+	if s != nil {
+		duo.SetName(*s)
+	}
+	return duo
+}
+
 // SetSort sets the "sort" field.
 func (duo *DeptUpdateOne) SetSort(i int) *DeptUpdateOne {
 	duo.mutation.ResetSort()
 	duo.mutation.SetSort(i)
+	return duo
+}
+
+// SetNillableSort sets the "sort" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableSort(i *int) *DeptUpdateOne {
+	if i != nil {
+		duo.SetSort(*i)
+	}
 	return duo
 }
 
@@ -505,9 +569,25 @@ func (duo *DeptUpdateOne) SetStatus(b bool) *DeptUpdateOne {
 	return duo
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableStatus(b *bool) *DeptUpdateOne {
+	if b != nil {
+		duo.SetStatus(*b)
+	}
+	return duo
+}
+
 // SetDesc sets the "desc" field.
 func (duo *DeptUpdateOne) SetDesc(s string) *DeptUpdateOne {
 	duo.mutation.SetDesc(s)
+	return duo
+}
+
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableDesc(s *string) *DeptUpdateOne {
+	if s != nil {
+		duo.SetDesc(*s)
+	}
 	return duo
 }
 
@@ -517,10 +597,26 @@ func (duo *DeptUpdateOne) SetExtension(s string) *DeptUpdateOne {
 	return duo
 }
 
+// SetNillableExtension sets the "extension" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableExtension(s *string) *DeptUpdateOne {
+	if s != nil {
+		duo.SetExtension(*s)
+	}
+	return duo
+}
+
 // SetDom sets the "dom" field.
 func (duo *DeptUpdateOne) SetDom(i int64) *DeptUpdateOne {
 	duo.mutation.ResetDom()
 	duo.mutation.SetDom(i)
+	return duo
+}
+
+// SetNillableDom sets the "dom" field if the given value is not nil.
+func (duo *DeptUpdateOne) SetNillableDom(i *int64) *DeptUpdateOne {
+	if i != nil {
+		duo.SetDom(*i)
+	}
 	return duo
 }
 

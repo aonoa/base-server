@@ -232,11 +232,15 @@ func (rc *RuleCreate) createSpec() (*Rule, *sqlgraph.CreateSpec) {
 // RuleCreateBulk is the builder for creating many Rule entities in bulk.
 type RuleCreateBulk struct {
 	config
+	err      error
 	builders []*RuleCreate
 }
 
 // Save creates the Rule entities in the database.
 func (rcb *RuleCreateBulk) Save(ctx context.Context) ([]*Rule, error) {
+	if rcb.err != nil {
+		return nil, rcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
 	nodes := make([]*Rule, len(rcb.builders))
 	mutators := make([]Mutator, len(rcb.builders))

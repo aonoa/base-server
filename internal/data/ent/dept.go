@@ -70,12 +70,10 @@ func (e DeptEdges) UsersOrErr() ([]*User, error) {
 // RolesOrErr returns the Roles value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e DeptEdges) RolesOrErr() (*Role, error) {
-	if e.loadedTypes[1] {
-		if e.Roles == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: role.Label}
-		}
+	if e.Roles != nil {
 		return e.Roles, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: role.Label}
 	}
 	return nil, &NotLoadedError{edge: "roles"}
 }
@@ -83,12 +81,10 @@ func (e DeptEdges) RolesOrErr() (*Role, error) {
 // ParentOrErr returns the Parent value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e DeptEdges) ParentOrErr() (*Dept, error) {
-	if e.loadedTypes[2] {
-		if e.Parent == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: dept.Label}
-		}
+	if e.Parent != nil {
 		return e.Parent, nil
+	} else if e.loadedTypes[2] {
+		return nil, &NotFoundError{label: dept.Label}
 	}
 	return nil, &NotLoadedError{edge: "parent"}
 }

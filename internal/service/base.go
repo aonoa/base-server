@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
-	jwtv4 "github.com/golang-jwt/jwt/v4"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"strings"
@@ -40,9 +40,9 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		return nil, err
 	}
 
-	claims := jwtv4.NewWithClaims(jwtv4.SigningMethodHS256, jwtv4.MapClaims{
+	claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
 		"user_id": g,
-		"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
+		//"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
 		//"nbf":     "", // 生效时间
 		//"iat":     "", // 颁发时间
 	})
@@ -60,7 +60,7 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.GetUserInfoReply, error) {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
-		uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
+		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 	}
 	user, err := s.uc.GetUserInfo(ctx, uid)
 	if err != nil {
@@ -163,7 +163,7 @@ func (s *BaseService) IsAccountExist(ctx context.Context, req *pb.IsAccountReque
 func (s *BaseService) ChangePassword(ctx context.Context, req *pb.ChangePasswordRequest) (*emptypb.Empty, error) {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
-		uid = (*claims.(*jwtv4.MapClaims))["user_id"].(string)
+		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 	}
 	return &emptypb.Empty{}, s.uc.ChangePassword(ctx, uid, req.PasswordOld, req.PasswordNew)
 }

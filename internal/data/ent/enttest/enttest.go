@@ -3,8 +3,9 @@
 package enttest
 
 import (
-	"base-server/internal/data/ent"
 	"context"
+
+	"base-server/internal/data/ent"
 	// required by schema hooks.
 	_ "base-server/internal/data/ent/runtime"
 

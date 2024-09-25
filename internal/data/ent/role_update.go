@@ -43,9 +43,25 @@ func (ru *RoleUpdate) SetName(s string) *RoleUpdate {
 	return ru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableName(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetName(*s)
+	}
+	return ru
+}
+
 // SetValue sets the "value" field.
 func (ru *RoleUpdate) SetValue(s string) *RoleUpdate {
 	ru.mutation.SetValue(s)
+	return ru
+}
+
+// SetNillableValue sets the "value" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableValue(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetValue(*s)
+	}
 	return ru
 }
 
@@ -55,15 +71,39 @@ func (ru *RoleUpdate) SetStatus(b bool) *RoleUpdate {
 	return ru
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableStatus(b *bool) *RoleUpdate {
+	if b != nil {
+		ru.SetStatus(*b)
+	}
+	return ru
+}
+
 // SetDesc sets the "desc" field.
 func (ru *RoleUpdate) SetDesc(s string) *RoleUpdate {
 	ru.mutation.SetDesc(s)
 	return ru
 }
 
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableDesc(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetDesc(*s)
+	}
+	return ru
+}
+
 // SetMenu sets the "menu" field.
 func (ru *RoleUpdate) SetMenu(s string) *RoleUpdate {
 	ru.mutation.SetMenu(s)
+	return ru
+}
+
+// SetNillableMenu sets the "menu" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableMenu(s *string) *RoleUpdate {
+	if s != nil {
+		ru.SetMenu(*s)
+	}
 	return ru
 }
 
@@ -329,9 +369,25 @@ func (ruo *RoleUpdateOne) SetName(s string) *RoleUpdateOne {
 	return ruo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableName(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetName(*s)
+	}
+	return ruo
+}
+
 // SetValue sets the "value" field.
 func (ruo *RoleUpdateOne) SetValue(s string) *RoleUpdateOne {
 	ruo.mutation.SetValue(s)
+	return ruo
+}
+
+// SetNillableValue sets the "value" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableValue(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetValue(*s)
+	}
 	return ruo
 }
 
@@ -341,15 +397,39 @@ func (ruo *RoleUpdateOne) SetStatus(b bool) *RoleUpdateOne {
 	return ruo
 }
 
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableStatus(b *bool) *RoleUpdateOne {
+	if b != nil {
+		ruo.SetStatus(*b)
+	}
+	return ruo
+}
+
 // SetDesc sets the "desc" field.
 func (ruo *RoleUpdateOne) SetDesc(s string) *RoleUpdateOne {
 	ruo.mutation.SetDesc(s)
 	return ruo
 }
 
+// SetNillableDesc sets the "desc" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableDesc(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetDesc(*s)
+	}
+	return ruo
+}
+
 // SetMenu sets the "menu" field.
 func (ruo *RoleUpdateOne) SetMenu(s string) *RoleUpdateOne {
 	ruo.mutation.SetMenu(s)
+	return ruo
+}
+
+// SetNillableMenu sets the "menu" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableMenu(s *string) *RoleUpdateOne {
+	if s != nil {
+		ruo.SetMenu(*s)
+	}
 	return ruo
 }
 
