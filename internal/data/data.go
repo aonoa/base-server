@@ -7,6 +7,10 @@ import (
 	"database/sql"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
+	"github.com/dgraph-io/ristretto"
+	"github.com/eko/gocache/lib/v4/cache"
+	"github.com/eko/gocache/lib/v4/store"
+	ristretto_store "github.com/eko/gocache/store/ristretto/v4"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"time"
@@ -25,6 +29,10 @@ const (
 type Data struct {
 	// TODO wrapped database client
 	db *ent.Client
+	// 本地缓存库
+	cacheManager *cache.Cache[string]
+	// gorm数据库 演示
+	//msdb *gorm.DB
 }
 
 // NewData .
@@ -77,9 +85,42 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}
 
 	//migrate.Create(context.Background(), client.Schema, []*schema.Table{migrate.UsersTable})
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////// 本地缓存
+	ristrettoCache, err := ristretto.NewCache(&ristretto.Config{
+		NumCounters: 1000,
+		MaxCost:     100000000, // 100MB
+		BufferItems: 64,
+	})
+	if err != nil {
+		panic(err)
+	}
+	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache, store.WithSynchronousSet())
+	cacheManager := cache.New[string](ristrettoStore)
+	// 存
+	err = cacheManager.Set(context.Background(), "my-key", "my-value", store.WithCost(2))
+	if err != nil {
+		panic(err)
+	}
+	// 取
+	value, err := cacheManager.Get(context.Background(), "my-key")
+	if err != nil {
+		panic(err)
+	}
+	println(value)
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////// gorm演示
+	//msdb, err := gorm.Open(conf.OtherDatabase.Driver, conf.OtherDatabase.Source)
+	//msdb, err := gorm.Open(sqlserver.Open(conf.OtherDatabase.Source), &gorm.Config{})
+	//if err != nil {
+	//	log.Errorf("failed opening connection to gorm: %v", err)
+	//	return nil, nil, err
+	//}
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	d := &Data{
-		db: client,
+		db:           client,
+		cacheManager: cacheManager,
+		//msdb:         msdb,       // gorm演示
 	}
 	cleanup := func() {
 		log.Info("message", "closing the data resources")
