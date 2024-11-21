@@ -44,6 +44,7 @@ func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer) middleware.Middleware {
 }
 
 func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
+	enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			uid := ""
@@ -56,14 +57,15 @@ func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
 				// 断言成HTTP的Transport可以拿到特殊信息
 				fmt.Println(tr.Operation())
 				if ht, ok := tr.(*http.Transport); ok {
-					////enforceContext := casbin.EnforceContext{RType: "r", PType: "p", EType: "e", MType: "m"}
-					fmt.Println(uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")
-					////ok, err := e.Enforce(enforceContext, uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")
+					//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m1"}
+					fmt.Println(uid, ht.Request().Method+":"+ht.Request().RequestURI)
+					//ok, err := e.Enforce(enforceContext, uid, ht.Request().Method+":"+ht.Request().RequestURI)
+					ok, err := e.Enforce(enforceContext, uid, ht.Request().RequestURI, ht.Request().Method)
 					//ok, err := e.Enforce(uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")
-					//if err != nil || !ok {
-					//	// 拒绝请求，抛出异常
-					//	return nil, errors.Unauthorized("UNAUTHORIZED", "Authentication failed")
-					//}
+					if err != nil || !ok {
+						// 拒绝请求，抛出异常
+						return nil, errors.Unauthorized("UNAUTHORIZED", "Authentication failed")
+					}
 				}
 			}
 			return handler(ctx, req)

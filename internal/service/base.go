@@ -11,6 +11,7 @@ import (
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"strings"
+	"time"
 
 	pb "base-server/api/base_api/v1"
 )
@@ -40,11 +41,13 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		return nil, err
 	}
 
+	now := time.Now()
+
 	claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
 		"user_id": g,
-		//"exp":     "", // 过期时间（暂时先不处理这个，不然调试麻烦）
-		//"nbf":     "", // 生效时间
-		//"iat":     "", // 颁发时间
+		"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
+		"nbf":     now.Unix(),                       // 生效时间
+		"iat":     now.Unix(),                       // 颁发时间
 	})
 	signedString, err := claims.SignedString([]byte(s.key))
 	if err != nil {

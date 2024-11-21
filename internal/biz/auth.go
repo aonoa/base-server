@@ -25,6 +25,7 @@ func NewAuthUsecase(confAuth *conf.Auth, confData *conf.Data, logger log.Logger)
 }
 
 func KeyMatch6(key1 string, key2 string) bool {
+	fmt.Printf("key1:%s  key2:%s\n", key1, key2)
 
 	i := strings.Index(key1, "?")
 
@@ -67,11 +68,13 @@ func NewEnforcer(confAuth *conf.Auth, confData *conf.Data) *casbin.Enforcer {
 	////})
 
 	//e, _ := casbin.NewEnforcer(confAuth.ModelPath, confAuth.PolicyPath)
-	//e.AddNamedMatchingFunc("g2", "KeyMatch6", KeyMatch6)
-	e.AddNamedMatchingFunc("g2", "KeyMatch5", util.KeyMatch5)
+	e.AddNamedMatchingFunc("g2", "KeyMatch6", KeyMatch6)
+	//e.AddNamedMatchingFunc("g2", "KeyMatch5", util.KeyMatch5)
 	//e.AddNamedDomainMatchingFunc("g2", "KeyMatch6", KeyMatch6)
 
-	ok, err := e.Enforce("d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "GET:/basic-api/getUserInfo", "dom:default")
+	// ok, err := e.Enforce("d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getUserInfo/1", "GET")
+	enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
+	ok, err := e.Enforce(enforceContext, "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/diagnoseClass/1/diagnoseRow/aa?2", "GET")
 	fmt.Println(ok)
 	if err != nil {
 		fmt.Println(err)
@@ -189,3 +192,17 @@ func (uc *AuthUsecase) EnforcePolicy(rvals ...interface{}) (bool, error) {
 // 删除用户
 // 1.删除用户与当前域的关系
 // 2.删除用户在当前域的相关权限
+
+///////////////
+// 用户、角色、权限（用户拥有角色，角色绑定权限）
+/////// 权限（抽象为对资源的操作，资源类型、操作方法）
+// 菜单权限	可见、不可见	（菜单绑定部分api，权限组合，所以可以抽象为菜单角色）
+// api权限   get、post、delete、put
+// 资源权限	增删改查
+/////// 用户
+// admin	（只拥有超级管理员角色、包含所有权限）
+// 普通用户	（初始角色，拥有少量权限）
+/////// 角色（角色会出现职能重复、所以角色应该是可以组合和继承的）
+// admin	（超级管理员角色、包含所有权限）
+// 普通		（初始角色，拥有少量权限）
+/////////
