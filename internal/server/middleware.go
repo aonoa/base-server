@@ -48,14 +48,21 @@ func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			uid := ""
+			aud := ""
 			if claims, ok := jwt.FromContext(ctx); ok {
 				uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
+				aud = (*claims.(*jwtv5.MapClaims))["aud"].(string)
+				context.WithValue(ctx, "uid", uid)
 			} else {
 				return nil, errors.Unauthorized("UNAUTHORIZED", "uid is missing")
 			}
 			if tr, ok := transport.FromServerContext(ctx); ok {
 				// 断言成HTTP的Transport可以拿到特殊信息
 				fmt.Println(tr.Operation())
+				if (aud == "refresh") && (tr.Operation() != "/api.base_api.v1.Base/RefreshToken") {
+					// refreshToken只能用来刷新token
+					return nil, errors.Unauthorized("UNAUTHORIZED", "Authentication failed")
+				}
 				if ht, ok := tr.(*http.Transport); ok {
 					//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m1"}
 					fmt.Println(uid, ht.Request().Method+":"+ht.Request().RequestURI)

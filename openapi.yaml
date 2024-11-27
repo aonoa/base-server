@@ -23,7 +23,14 @@ paths:
         post:
             tags:
                 - Base
-            operationId: Base_RefreshToken
+            description: 用户登陆
+            operationId: Base_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.LoginRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -41,6 +48,19 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /basic-api/auth/refresh:
+        post:
+            tags:
+                - Base
+            description: 使用refreshToken换取accessToken
+            operationId: Base_RefreshToken
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.LoginReply'
     /basic-api/menu/all:
         get:
             tags:

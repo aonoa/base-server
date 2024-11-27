@@ -38,3 +38,6 @@ bin/
 *.swp
 *.tar
 *.tar.gz
+
+# config
+configs/

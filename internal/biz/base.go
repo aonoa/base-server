@@ -7,12 +7,15 @@ import (
 	"base-server/internal/tools"
 	"base-server/internal/types"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Base is a Base model.
@@ -67,6 +70,46 @@ func (uc *BaseUsecase) IsUserExists(ctx context.Context, req *pb.LoginRequest) (
 // Login 登陆，存在返回Id
 func (uc *BaseUsecase) Login(ctx context.Context, req *pb.LoginRequest) (string, error) {
 	return uc.repo.Login(ctx, req)
+}
+
+// GenerateToken 生成Token
+func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.LoginReply, error) {
+	now := time.Now()
+	// 生成accessToken
+	claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
+		"user_id": uid,
+		"sub":     uid,
+		"aud":     "login",
+		"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
+		"nbf":     now.Unix(),                       // 生效时间
+		"iat":     now.Unix(),                       // 颁发时间
+	})
+	accessToken, err := claims.SignedString([]byte(key))
+	if err != nil {
+		return nil, errors.New("")
+	}
+
+	// 生成refreshToken，提前5分钟生效
+	claims = jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
+		"user_id": uid,
+		"sub":     uid,
+		"aud":     "refresh",
+		"exp":     now.Add(60 * time.Minute).Unix(), // 过期时间（60分钟后过期）
+		"nbf":     now.Add(25 * time.Minute).Unix(), // 生效时间（accessToken过期前5分钟才能生效）
+		"iat":     now.Unix(),                       // 颁发时间
+		// 这里需要配合缓存，暂时没写
+		"jti": uuid.New().String(), // 唯一标识符，主要用来作为一次性 token，从而回避重放（replay）攻击
+	})
+	refreshToken, err := claims.SignedString([]byte(key))
+	if err != nil {
+		return nil, errors.New("")
+	}
+
+	return &pb.LoginReply{
+		UserId:       uid,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
 
 // GetUserInfo 获取用户信息

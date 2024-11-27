@@ -58,6 +58,7 @@ type BaseClient interface {
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取路由菜单列表
 	GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMenuListReply, error)
+	// 使用refreshToken换取accessToken
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
 	// 获取部门列表
 	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
@@ -335,6 +336,7 @@ type BaseServer interface {
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取路由菜单列表
 	GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error)
+	// 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)

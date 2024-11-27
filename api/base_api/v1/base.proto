@@ -48,9 +48,10 @@ service Base {
 		};
 	}
 
+	// 使用refreshToken换取accessToken
 	rpc RefreshToken (google.protobuf.Empty) returns (LoginReply) {
 		option (google.api.http) = {
-			post: "/basic-api/auth/login",
+			post: "/basic-api/auth/refresh",
 		};
 	}
 

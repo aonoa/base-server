@@ -1,6 +1,7 @@
 package service
 
 import (
+	pb "base-server/api/base_api/v1"
 	"base-server/internal/biz"
 	"base-server/internal/conf"
 	"base-server/internal/tools"
@@ -11,9 +12,6 @@ import (
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"strings"
-	"time"
-
-	pb "base-server/api/base_api/v1"
 )
 
 type BaseService struct {
@@ -36,29 +34,47 @@ func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth) *BaseService {
 func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
 	//req.Password = tools.UserPasswdEncrypt(req.Password, "")
 	// 检查是否有这个人
-	g, err := s.uc.Login(ctx, req)
-	if err != nil || g == "00000000-0000-0000-0000-000000000000" {
+	uid, err := s.uc.Login(ctx, req)
+	if err != nil || uid == "00000000-0000-0000-0000-000000000000" {
 		return nil, err
 	}
 
-	now := time.Now()
+	return s.uc.GenerateToken(ctx, uid, s.key)
 
-	claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
-		"user_id": g,
-		"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
-		"nbf":     now.Unix(),                       // 生效时间
-		"iat":     now.Unix(),                       // 颁发时间
-	})
-	signedString, err := claims.SignedString([]byte(s.key))
-	if err != nil {
-		return nil, ErrLoginFailed
-	}
-
-	return &pb.LoginReply{
-		UserId:       g,
-		AccessToken:  signedString,
-		RefreshToken: signedString,
-	}, nil
+	//now := time.Now()
+	//
+	//// 生成accessToken
+	//claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
+	//	"user_id": g,
+	//	"sub":     g,
+	//	"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
+	//	"nbf":     now.Unix(),                       // 生效时间
+	//	"iat":     now.Unix(),                       // 颁发时间
+	//})
+	//accessToken, err := claims.SignedString([]byte(s.key))
+	//if err != nil {
+	//	return nil, ErrLoginFailed
+	//}
+	//
+	//// 生成refreshToken，提前5分钟生效
+	//claims = jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
+	//	"user_id": g,
+	//	"sub":     g,
+	//	"exp":     now.Add(60 * time.Minute).Unix(), // 过期时间（30分钟后过期）
+	//	"nbf":     now.Add(25 * time.Minute).Unix(), // 生效时间
+	//	"iat":     now.Unix(),                       // 颁发时间
+	//	"jti":     uuid.New().String(),              // 唯一标识符，主要用来作为一次性 token，从而回避重放（replay）攻击
+	//})
+	//refreshToken, err := claims.SignedString([]byte(s.key))
+	//if err != nil {
+	//	return nil, ErrLoginFailed
+	//}
+	//
+	//return &pb.LoginReply{
+	//	UserId:       g,
+	//	AccessToken:  accessToken,
+	//	RefreshToken: refreshToken,
+	//}, nil
 }
 func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.GetUserInfoReply, error) {
 	uid := ""
@@ -94,6 +110,20 @@ func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.
 }
 func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetMenuListReply, error) {
 	return s.uc.CreateMenuTree(ctx)
+}
+func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb.LoginReply, error) {
+	uid := ""
+	aud := ""
+	if claims, ok := jwt.FromContext(ctx); ok {
+		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
+		aud = (*claims.(*jwtv5.MapClaims))["aud"].(string)
+	}
+
+	if aud == "refresh" {
+		return s.uc.GenerateToken(ctx, uid, s.key)
+	}
+
+	return &pb.LoginReply{}, nil
 }
 
 /////////////////////////
