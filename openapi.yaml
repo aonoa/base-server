@@ -39,7 +39,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.LoginReply'
     /basic-api/auth/logout:
-        get:
+        post:
             tags:
                 - Base
             description: 注销登陆

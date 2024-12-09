@@ -40,4 +40,4 @@ bin/
 *.tar.gz
 
 # config
-configs/
+configs/config.yaml

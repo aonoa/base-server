@@ -95,7 +95,7 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/auth/login", _Base_Login0_HTTP_Handler(srv))
 	r.GET("/basic-api/user/info", _Base_GetUserInfo0_HTTP_Handler(srv))
 	r.GET("/basic-api/auth/codes", _Base_GetAccessCodes0_HTTP_Handler(srv))
-	r.GET("/basic-api/auth/logout", _Base_Logout0_HTTP_Handler(srv))
+	r.POST("/basic-api/auth/logout", _Base_Logout0_HTTP_Handler(srv))
 	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
 	r.POST("/basic-api/auth/refresh", _Base_RefreshToken0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
@@ -830,7 +830,7 @@ func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseLogout))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
