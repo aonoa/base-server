@@ -5,12 +5,18 @@ import (
 	"base-server/internal/biz"
 	"base-server/internal/conf"
 	"base-server/internal/tools"
+	"bytes"
 	"context"
 	"errors"
+	"fmt"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/jinzhu/copier"
+	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"io"
+	"os"
 	"strings"
 )
 
@@ -199,4 +205,49 @@ func (s *BaseService) ChangePassword(ctx context.Context, req *pb.ChangePassword
 		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 	}
 	return &emptypb.Empty{}, s.uc.ChangePassword(ctx, uid, req.PasswordOld, req.PasswordNew)
+}
+
+func (s *BaseService) UploadFileHttp(ctx context.Context, reqFile *pb.File, opts ...grpc.CallOption) (*pb.UploadResponse, error) {
+	log.Infof("文件:%s,大小:%d", reqFile.FileName, reqFile.FileSize)
+	if reqFile.FileSize <= 0 {
+		reqFile.FileSize = int64(len(reqFile.File))
+	}
+	fileName := fmt.Sprintf("%s", reqFile.FileName)
+	if fileName == "" {
+		fileName = "aaa.png"
+	}
+	if reqFile.FileSize <= 0 {
+		reqFile.FileSize = int64(len(reqFile.File))
+	}
+
+	//err := s.minio.Save(bucket, fileName, bytes.NewReader(reqFile.File), reqFile.FileSize) // 文件上传到minio
+	//if err != nil {
+	//	log.Error(err.Error())
+	//}
+	//fileType := file.CheckFileType(reqFile.FileName)
+
+	// 创建一个新文件用于写入
+	file, err := os.Create(fileName)
+	if err != nil {
+		log.Fatalf("Failed to create file: %s", err)
+	}
+	defer file.Close()
+
+	// 使用 bytes.NewReader 创建一个 Reader
+	reader := bytes.NewReader(reqFile.File)
+
+	// 将 reader 的内容写入文件
+	_, err = io.Copy(file, reader)
+	if err != nil {
+		log.Fatalf("Failed to write to file: %s", err)
+	}
+
+	// 文件写入成功
+	log.Infof("File '%s' saved successfully.", fileName)
+
+	return &pb.UploadResponse{
+		FileInfoId: "456465",
+		FullUrl:    "aaa",
+		Url:        "https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640",
+	}, nil
 }

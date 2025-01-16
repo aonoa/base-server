@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package api.base_api.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/base_api/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.base_api.v1";
+
+// 注：文件上传无法通过 proto 文件直接生成，这里主要作用是展示api定义的字段
+
+service UploadService {
+  // 上传文件
+  rpc UploadFile(stream File) returns(UploadResponse){
+    option (google.api.http) = {
+      post: "/basic-api/v1/server/file/upload",
+      body: "*",
+    };
+  }
+}
+
+message RemoveFileRsq {
+  //文件路径
+  string fileUrl = 1;
+}
+
+message File {
+  bytes file = 1;
+  string fileName = 2;
+  int64 fileSize = 3;
+  // 其他可自定义
+}
+
+message UploadResponse {
+  string fileInfoId = 1;
+  string fullUrl = 2;
+  string url = 3;
+}

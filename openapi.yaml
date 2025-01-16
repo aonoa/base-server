@@ -3,7 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: Base API
+    title: ""
     version: 0.0.1
 paths:
     /basic-api/auth/codes:
@@ -403,6 +403,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetUserInfoReply'
+    /v1/server/file/upload:
+        post:
+            tags:
+                - UploadService
+            description: 上传文件
+            operationId: UploadService_UploadFile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.File'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.UploadResponse'
 components:
     schemas:
         api.base_api.v1.AccountListItem:
@@ -456,6 +475,16 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+        api.base_api.v1.File:
+            type: object
+            properties:
+                file:
+                    type: string
+                    format: bytes
+                fileName:
+                    type: string
+                fileSize:
+                    type: string
         api.base_api.v1.GetAccessCodesReply:
             type: object
             properties:
@@ -668,5 +697,15 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
+        api.base_api.v1.UploadResponse:
+            type: object
+            properties:
+                fileInfoId:
+                    type: string
+                fullUrl:
+                    type: string
+                url:
+                    type: string
 tags:
     - name: Base
+    - name: UploadService

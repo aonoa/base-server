@@ -1,6 +1,7 @@
 package server
 
 import (
+	"base-server/api/base_api"
 	basev1 "base-server/api/base_api/v1"
 	"base-server/internal/conf"
 	"base-server/internal/service"
@@ -43,7 +44,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 
 	srv := http.NewServer(opts...)
 	basev1.RegisterBaseHTTPServer(srv, base)
-
+	base_api.RegisterFileServiceHTTPServer(srv, base)
 	// http://<ip>:<port>/q/services
 	// http://127.0.0.1:8000/q/swagger-ui
 	openAPIhandler := openapiv2.NewHandler()
