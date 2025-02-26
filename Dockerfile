@@ -1,9 +1,15 @@
-FROM golang:1.21.8-alpine AS builder
+FROM golang:1.23.1-bullseye AS builder
 
 COPY . /src
 WORKDIR /src
 
-RUN apk add make
+RUN apt-get update && apt-get install make
+#FROM golang:1.21.8-alpine AS builder
+#
+#COPY . /src
+#WORKDIR /src
+#
+#RUN apk add make
 RUN GOPROXY=https://goproxy.cn make build
 
 FROM debian:stable-slim

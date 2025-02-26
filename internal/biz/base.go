@@ -7,6 +7,7 @@ import (
 	"base-server/internal/tools"
 	"base-server/internal/types"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
@@ -42,7 +43,7 @@ type BaseRepo interface {
 	GetRolesByDept(ctx context.Context, id int64) ([]*ent.Role, error)
 	GetRolesFromUser(ctx context.Context, user1 *ent.User) ([]*ent.Role, error)
 	GetUsersByDept(ctx context.Context, id int64) ([]*ent.User, error)
-	GetAllRoleList(ctx context.Context, deptId int64, req *pb.RolePageParams) ([]*ent.Role, error)
+	GetAllRoleList(ctx context.Context, req *pb.RolePageParams) ([]*ent.Role, error)
 	AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role, error)
 	UpdateRole(ctx context.Context, deptId int64, req *pb.RoleListItem) (*ent.Role, error)
 	DelRole(ctx context.Context, id int64) error
@@ -134,11 +135,22 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 
 	var menus []string
 
-	//uid := tools.GetUserId(ctx)
-	//user, err := uc.GetUserInfo(ctx, uid)
-	//if err != nil {
-	//	return nil, err
-	//}
+	uid := tools.GetUserId(ctx)
+	user, err := uc.GetUserInfo(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取用户本身所在域的角色
+	roles, err := uc.repo.GetRolesFromUser(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	// 取并集
+	for _, role := range roles {
+		menus = append(menus, strings.Split(role.Menu, ",")...)
+	}
+
 	//if user.Dom != 0 {
 	//	// 获取用户本身所在域的角色
 	//	roles, err := uc.repo.GetRolesFromUser(ctx, user)
@@ -165,12 +177,13 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 	//		menus = append(menus, strings.Split(uc.conf.DefaultMenus, ",")...)
 	//	}
 	//}
-	for _, menu := range menuList {
-		//if !menu.Status {
-		//	continue
-		//}
-		menus = append(menus, strconv.FormatInt(menu.ID, 10))
-	}
+
+	//for _, menu := range menuList {
+	//	//if !menu.Status {
+	//	//	continue
+	//	//}
+	//	menus = append(menus, strconv.FormatInt(menu.ID, 10))
+	//}
 
 	for _, menu := range menuList {
 		if !menu.Status {
@@ -505,17 +518,9 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 	// 获取某个域的角色
 	reqs := &pb.GetRoleListByPageReply{Items: []*pb.RoleListItem{}}
 
-	deptId, _ := tools.DeptStrSplitToInt(req.DeptId)
-	dept, _ := uc.repo.GetDeptById(ctx, deptId)
-	if dept.Dom > 1 {
-		deptId = dept.Dom
-	} else if dept.Dom == 1 {
-		deptId = dept.ID
-	}
-
 	// # 权限验证
 
-	roleList, err := uc.repo.GetAllRoleList(ctx, deptId, req)
+	roleList, err := uc.repo.GetAllRoleList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -525,7 +530,7 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 		reqs.Items = append(reqs.Items, &pb.RoleListItem{
 			Id:        id,
 			RoleName:  item.Name,
-			RoleValue: id,
+			RoleValue: item.Value,
 			Status: func() int64 {
 				if item.Status {
 					return 1
@@ -651,10 +656,19 @@ func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams
 		Items: func() []*pb.AccountListItem {
 			var items []*pb.AccountListItem
 			for _, user := range userList {
+				var extension pb.UserExtension
+				// 解析JSON字符串并填充结构体
+				email := ""
+				err := json.Unmarshal([]byte(user.Extension), &extension)
+				if err != nil {
+					fmt.Println("解析错误：", err)
+				}
+				email = extension.Email
 				items = append(items, &pb.AccountListItem{
 					Id:         user.ID.String(),
 					Account:    user.Username,
-					Email:      user.Extension,
+					Avatar:     user.Avatar,
+					Email:      email,
 					Nickname:   user.Nickname,
 					Remark:     user.Desc,
 					Status:     int64(user.Status),
@@ -668,29 +682,22 @@ func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams
 
 // AddUser 新增用户
 func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.AccountListItem) (*pb.AccountListItem, error) {
-	// 判断是否有添加新用户的权限
-	deptId, err := tools.DeptStrSplitToInt(req.Dept)
-	if err != nil {
-		return nil, err
-	}
-	if ok, err := uc.auth.EnforcePolicy(tools.GetUserId(ctx), string(types.PolicyType_User)+":"+strconv.FormatInt(deptId, 10), "add"); ok {
-		fmt.Println("ok ")
-	} else {
-		fmt.Println("err ")
-		return nil, err
-	}
-
 	// 往数据库添加用户
 	user, err := uc.repo.AddUser(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	// #寻找当前部门的dom
-	// #新增权限，将用户加到域中（在默认域也添加一个角色）
-	//uc.auth.AddRoleForUserInDomain(user.ID.String(), strconv.FormatInt(req.Role, 10), strconv.FormatInt(user.Dom, 10))
-	//// 添加默认域、默认角色
-	//uc.auth.AddRoleForUserInDomain(user.ID.String(), "role:default", "dom:default")
+	role := "default"
+	if req.Role == 0 {
+		role = "default"
+	} else if req.Role == 2 {
+		role = "admin"
+	}
+
+	// 设置用户角色
+	uc.auth.AddUserRoles(user.ID.String(), []string{role})
+
 	return &pb.AccountListItem{
 		Id:         user.ID.String(),
 		Account:    user.Username,
@@ -710,9 +717,15 @@ func (uc *BaseUsecase) DelUser(ctx context.Context, uuidString string) error {
 		uc.log.Debug("string to uuid err")
 		return err
 	}
-	// #删除权限
-	//uc.auth.DelUser(uuidString)
-	return uc.repo.DeleteByID(ctx, &uuid)
+
+	err = uc.repo.DeleteByID(ctx, &uuid)
+	if err != nil {
+		return err
+	}
+	// 删除用户
+	uc.auth.DelUser(uuidString)
+	//uc.auth.DelUserRoles(uuidString, []string{"default"})
+	return nil
 }
 
 // ChangePassword 修改密码

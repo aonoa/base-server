@@ -57,6 +57,38 @@ service Base {
 
 	/////////////////////////////////////////////////////
 
+	// 获取账户列表
+	rpc GetAccountList (AccountParams) returns (GetAccountListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getAccountList"
+		};
+	}
+
+	// 新增用户
+	rpc AddUser (AccountListItem) returns (AccountListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/addUser"
+			body: "*"
+		};
+	}
+
+	// 删除用户
+	rpc DelUser (DeleteUser) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/delUser/{id}"
+			// body: "*"
+		};
+	}
+
+	// 获取角色列表
+	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getRoleListByPage"
+		};
+	}
+
+	/////////////////////////////////////////////////////
+
 	// 获取部门列表
 	rpc GetDeptList (google.protobuf.Empty) returns (GetDeptListReply) {
 		option (google.api.http) = {
@@ -84,13 +116,6 @@ service Base {
 		option (google.api.http) = {
 			delete: "/basic-api/system/delDept/{id}"
 			// body: "*"
-		};
-	}
-
-	// 获取角色列表
-	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
-		option (google.api.http) = {
-			get: "/basic-api/system/getRoleListByPage"
 		};
 	}
 
@@ -125,28 +150,11 @@ service Base {
 		};
 	}
 
-	// 获取账户列表
-	rpc GetAccountList (AccountParams) returns (GetAccountListReply) {
-		option (google.api.http) = {
-			get: "/basic-api/system/getAccountList"
-		};
-	}
 
-	// 新增用户
-	rpc AddUser (AccountListItem) returns (AccountListItem) {
-		option (google.api.http) = {
-			post: "/basic-api/system/addUser"
-			body: "*"
-		};
-	}
 
-	// 删除用户
-	rpc DelUser (DeleteUser) returns (google.protobuf.Empty) {
-		option (google.api.http) = {
-			delete: "/basic-api/system/delUser/{id}"
-			// body: "*"
-		};
-	}
+
+
+
 
 	// 获取角色信息
 	rpc GetAllRoleList (RoleParams) returns (GetRoleListByPageReply) {
@@ -211,6 +219,7 @@ message UserRole {
 
 message UserExtension {
 	repeated UserRole userRole = 1;
+	string email = 2;
 }
 
 message GetAccessCodesReply {
@@ -349,6 +358,7 @@ message AccountParams {
 message AccountListItem {
 	string id = 1;
 	string account = 2;			// 账号
+	string password = 11;		// 密码
 	string email = 3;				// 邮箱
 	string nickname = 4;		// 昵称
 	int64 role = 5;					// 规则
@@ -356,6 +366,7 @@ message AccountListItem {
 	string remark = 7;			// 备注
 	int64 status = 8;				// 状态
 	string dept = 9;				// 部门
+	string avatar = 10;			// 头像
 }
 
 message GetAccountListReply {

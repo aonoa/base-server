@@ -92,38 +92,25 @@ func (r *baseRepo) GetAccountList(ctx context.Context, deptId int64, req *pb.Acc
 
 // AddUser 新增用户
 func (r *baseRepo) AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.User, error) {
-	deptList := strings.Split(req.Dept, "-")
-	deptId := deptList[len(deptList)-1]
-	deptID, err := strconv.ParseInt(deptId, 10, 64)
+	// 添加角色关系、添加部门关系
+	userRole, _ := r.data.db.Role.Get(ctx, req.Role)
+
 	var extension *pb.UserExtension
 	extensionStr := ""
-	if err != nil {
-		deptID = 0
-		extension = &pb.UserExtension{UserRole: []*pb.UserRole{
-			{Dom: "default", Role: "default", Menu: ""},
-		}}
-	} else {
-		extension = &pb.UserExtension{UserRole: []*pb.UserRole{
-			{Dom: "default", Role: "default", Menu: ""},
-			{Dom: deptId, Role: "default", Menu: ""},
-		}}
-	}
+	extension = &pb.UserExtension{UserRole: []*pb.UserRole{
+		{Role: userRole.Value, Menu: ""},
+	}, Email: req.Email}
 	extensionByte, _ := json.Marshal(extension)
 	extensionStr = string(extensionByte)
-
-	// 添加角色关系、添加部门关系
-	userDept, err := r.data.db.Dept.Get(ctx, deptID)
-	userRole, err := r.data.db.Role.Get(ctx, req.Role)
 
 	return r.data.db.User.Create().
 		SetUsername(req.Account).
 		SetAvatar("https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640").
-		SetPassword("test666").
-		SetNickname("test").
+		SetPassword(req.Password).
+		SetNickname(req.Nickname).
 		SetStatus(int8(req.Status)).
 		SetDesc(req.Remark).
 		SetExtension(extensionStr).
-		AddDept(userDept).
 		AddRoles(userRole).
 		Save(ctx)
 }
@@ -288,7 +275,7 @@ func (r *baseRepo) GetUsersByDept(ctx context.Context, id int64) ([]*ent.User, e
 }
 
 // GetAllRoleList 获取角色列表
-func (r *baseRepo) GetAllRoleList(ctx context.Context, deptId int64, req *pb.RolePageParams) ([]*ent.Role, error) {
+func (r *baseRepo) GetAllRoleList(ctx context.Context, req *pb.RolePageParams) ([]*ent.Role, error) {
 	query := r.data.db.Role.Query()
 	if req.RoleNme != "" {
 		query = query.Where(role.NameEQ(req.RoleNme))
@@ -301,9 +288,6 @@ func (r *baseRepo) GetAllRoleList(ctx context.Context, deptId int64, req *pb.Rol
 				return false
 			}
 		}()))
-	}
-	if deptId != 0 {
-		query.Where(role.HasDeptWith(dept.IDEQ(deptId)))
 	}
 	return query.All(ctx)
 }

@@ -67,3 +67,17 @@ docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf 
 ```bash
 base-server/internal/data$ ent generate ./schema --target ./ent
 ```
+
+## casbin
+数据表中手动导入或者迁移的id可能与新增的id冲突导致插入失败，需手动重置序列的当前值
+```shell
+-- 1. 查询表中当前最大 ID
+SELECT MAX(id) FROM casbin_rules;
+
+-- 2. 通过 PostgreSQL 系统表 pg_sequences 直接获取序列的当前值
+SELECT last_value FROM pg_sequences WHERE schemaname = 'public' AND sequencename = 'casbin_rules_id_seq';
+
+-- 3. 重置序列起始值为当前最大 ID + 1
+ALTER SEQUENCE casbin_rules_id_seq RESTART WITH {max_id + 1};
+ALTER SEQUENCE casbin_rules_id_seq RESTART WITH 10001;
+```

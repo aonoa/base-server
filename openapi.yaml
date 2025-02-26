@@ -403,7 +403,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetUserInfoReply'
-    /v1/server/file/upload:
+    /basic-api/v1/server/file/upload:
         post:
             tags:
                 - UploadService
@@ -431,6 +431,8 @@ components:
                     type: string
                 account:
                     type: string
+                password:
+                    type: string
                 email:
                     type: string
                 nickname:
@@ -444,6 +446,8 @@ components:
                 status:
                     type: string
                 dept:
+                    type: string
+                avatar:
                     type: string
         api.base_api.v1.ChangePasswordRequest:
             type: object

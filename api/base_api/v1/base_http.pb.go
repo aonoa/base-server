@@ -98,18 +98,18 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/auth/logout", _Base_Logout0_HTTP_Handler(srv))
 	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
 	r.POST("/basic-api/auth/refresh", _Base_RefreshToken0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/getAccountList", _Base_GetAccountList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/getRoleListByPage", _Base_GetRoleListByPage0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delDept/{id}", _Base_DelDept0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getRoleListByPage", _Base_GetRoleListByPage0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addRole", _Base_AddRole0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delRole/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateRole", _Base_UpdateRole0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getMenuList", _Base_GetSysMenuList0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getAccountList", _Base_GetAccountList0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
-	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getAllRoleList", _Base_GetAllRoleList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/accountExist", _Base_IsAccountExist0_HTTP_Handler(srv))
@@ -233,6 +233,88 @@ func _Base_RefreshToken0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Base_GetAccountList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AccountParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetAccountList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetAccountList(ctx, req.(*AccountParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetAccountListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_AddUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AccountListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseAddUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddUser(ctx, req.(*AccountListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AccountListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_DelUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUser
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseDelUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelUser(ctx, req.(*DeleteUser))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_GetRoleListByPage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RolePageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetRoleListByPage)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetRoleListByPage(ctx, req.(*RolePageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetRoleListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Base_GetDeptList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
@@ -314,25 +396,6 @@ func _Base_DelDept0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 			return err
 		}
 		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_GetRoleListByPage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RolePageParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseGetRoleListByPage)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetRoleListByPage(ctx, req.(*RolePageParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetRoleListByPageReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -419,69 +482,6 @@ func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 		}
 		reply := out.(*GetSysMenuListReply)
 		return ctx.Result(200, reply.Items)
-	}
-}
-
-func _Base_GetAccountList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in AccountParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseGetAccountList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAccountList(ctx, req.(*AccountParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetAccountListReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_AddUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in AccountListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseAddUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddUser(ctx, req.(*AccountListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*AccountListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_DelUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteUser
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseDelUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DelUser(ctx, req.(*DeleteUser))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
 	}
 }
 

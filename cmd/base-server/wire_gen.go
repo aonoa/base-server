@@ -29,11 +29,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, menu
 		return nil, nil, err
 	}
 	baseRepo := data.NewBaseRepo(dataData, logger)
-	authUsecase := biz.NewAuthUsecase(auth, confData, logger)
+	enforcer := biz.NewEnforcer(auth, confData)
+	authUsecase := biz.NewAuthUsecase(enforcer, logger)
 	baseUsecase := biz.NewBaseUsecase(baseRepo, logger, authUsecase, menus)
 	baseService := service.NewBaseService(baseUsecase, auth)
 	grpcServer := server.NewGRPCServer(confServer, baseService, logger)
-	enforcer := biz.NewEnforcer(auth, confData)
 	httpServer := server.NewHTTPServer(confServer, auth, enforcer, baseService, logger)
 	jobService := service.NewJobService()
 	cronWorker := server.NewCronWorker(job, jobService)

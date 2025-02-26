@@ -46,41 +46,6 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 	}
 
 	return s.uc.GenerateToken(ctx, uid, s.key)
-
-	//now := time.Now()
-	//
-	//// 生成accessToken
-	//claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
-	//	"user_id": g,
-	//	"sub":     g,
-	//	"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
-	//	"nbf":     now.Unix(),                       // 生效时间
-	//	"iat":     now.Unix(),                       // 颁发时间
-	//})
-	//accessToken, err := claims.SignedString([]byte(s.key))
-	//if err != nil {
-	//	return nil, ErrLoginFailed
-	//}
-	//
-	//// 生成refreshToken，提前5分钟生效
-	//claims = jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
-	//	"user_id": g,
-	//	"sub":     g,
-	//	"exp":     now.Add(60 * time.Minute).Unix(), // 过期时间（30分钟后过期）
-	//	"nbf":     now.Add(25 * time.Minute).Unix(), // 生效时间
-	//	"iat":     now.Unix(),                       // 颁发时间
-	//	"jti":     uuid.New().String(),              // 唯一标识符，主要用来作为一次性 token，从而回避重放（replay）攻击
-	//})
-	//refreshToken, err := claims.SignedString([]byte(s.key))
-	//if err != nil {
-	//	return nil, ErrLoginFailed
-	//}
-	//
-	//return &pb.LoginReply{
-	//	UserId:       g,
-	//	AccessToken:  accessToken,
-	//	RefreshToken: refreshToken,
-	//}, nil
 }
 func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.GetUserInfoReply, error) {
 	uid := ""
@@ -134,6 +99,24 @@ func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb
 
 /////////////////////////
 
+func (s *BaseService) GetAccountList(ctx context.Context, req *pb.AccountParams) (*pb.GetAccountListReply, error) {
+	return s.uc.GetAccountList(ctx, req)
+}
+
+func (s *BaseService) AddUser(ctx context.Context, req *pb.AccountListItem) (*pb.AccountListItem, error) {
+	return s.uc.AddUser(ctx, req)
+}
+
+func (s *BaseService) DelUser(ctx context.Context, req *pb.DeleteUser) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DelUser(ctx, req.Id)
+}
+
+func (s *BaseService) GetRoleListByPage(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
+	return s.uc.GetAllRoleList(ctx, req)
+}
+
+////////////////////////////////////////
+
 func (s *BaseService) GetDeptList(ctx context.Context, req *emptypb.Empty) (*pb.GetDeptListReply, error) {
 	return s.uc.CreateDeptTree(ctx)
 }
@@ -154,9 +137,7 @@ func (s *BaseService) UpdateDept(ctx context.Context, req *pb.DeptListItem) (*pb
 func (s *BaseService) DelDept(ctx context.Context, req *pb.DeleteDept) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelDept(ctx, req.Id)
 }
-func (s *BaseService) GetRoleListByPage(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
-	return s.uc.GetAllRoleList(ctx, req)
-}
+
 func (s *BaseService) AddRole(ctx context.Context, req *pb.RoleListItem) (*pb.RoleListItem, error) {
 	err := s.uc.AddRole(ctx, req)
 	if err != nil {
@@ -177,15 +158,7 @@ func (s *BaseService) UpdateRole(ctx context.Context, req *pb.RoleListItem) (*pb
 func (s *BaseService) GetSysMenuList(ctx context.Context, req *pb.MenuParams) (*pb.GetSysMenuListReply, error) {
 	return s.uc.GetSysMenuList(ctx)
 }
-func (s *BaseService) GetAccountList(ctx context.Context, req *pb.AccountParams) (*pb.GetAccountListReply, error) {
-	return s.uc.GetAccountList(ctx, req)
-}
-func (s *BaseService) AddUser(ctx context.Context, req *pb.AccountListItem) (*pb.AccountListItem, error) {
-	return s.uc.AddUser(ctx, req)
-}
-func (s *BaseService) DelUser(ctx context.Context, req *pb.DeleteUser) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, s.uc.DelUser(ctx, req.Id)
-}
+
 func (s *BaseService) GetAllRoleList(ctx context.Context, req *pb.RoleParams) (*pb.GetRoleListByPageReply, error) {
 	return s.uc.GetAllRoleList(ctx, &pb.RolePageParams{
 		RoleNme: req.RoleName,

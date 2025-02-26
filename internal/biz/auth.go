@@ -11,15 +11,24 @@ import (
 	"strings"
 )
 
+var (
+	RoleToResourceEnforceContext = casbin.EnforceContext{RType: "r", PType: "p", EType: "e", MType: "m"}
+	RoleToApiEnforceContext      = casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
+	ApiToResourceEnforceContext  = casbin.EnforceContext{RType: "r", PType: "p3", EType: "e", MType: "m3"}
+	UserToRole                   = "g"
+	ApiToGroup                   = "g2"
+	ResourceToGroup              = "g3"
+)
+
 // AuthUsecase is an Auth usecase.
 type AuthUsecase struct {
 	e   *casbin.Enforcer
 	log *log.Helper
 }
 
-func NewAuthUsecase(confAuth *conf.Auth, confData *conf.Data, logger log.Logger) *AuthUsecase {
+func NewAuthUsecase(e *casbin.Enforcer, logger log.Logger) *AuthUsecase {
 	return &AuthUsecase{
-		e:   NewEnforcer(confAuth, confData),
+		e:   e,
 		log: log.NewHelper(logger),
 	}
 }
@@ -51,6 +60,7 @@ func NewEnforcer(confAuth *conf.Auth, confData *conf.Data) *casbin.Enforcer {
 	//a.AddPolicy("", "p", []string{"d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getMenuList", "GET"})
 	//a.AddPolicy("", "p", []string{"d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getPermCode", "GET"})
 	e, _ := casbin.NewEnforcer(confAuth.ModelPath, a)
+	//e.EnableAutoSave(true)
 	//e.AddNamedMatchingFunc("g", "KeyMatch6", KeyMatch6)
 
 	////e.AddPolicies([][]string{
@@ -74,7 +84,8 @@ func NewEnforcer(confAuth *conf.Auth, confData *conf.Data) *casbin.Enforcer {
 
 	// ok, err := e.Enforce("d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getUserInfo/1", "GET")
 	enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
-	ok, err := e.Enforce(enforceContext, "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/diagnoseClass/1/diagnoseRow/aa?2", "GET")
+	//ok, err := e.Enforce(enforceContext, "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/diagnoseClass/1/diagnoseRow/aa?2", "GET")
+	ok, err := e.Enforce(enforceContext, "a0bb672a-a4b1-4ec9-807a-ba11e000d2a4", "/basic-api/user/info", "GET")
 	fmt.Println(ok)
 	if err != nil {
 		fmt.Println(err)
@@ -97,6 +108,44 @@ func (uc *AuthUsecase) EnforcePolicy(rvals ...interface{}) (bool, error) {
 	enforceContext := casbin.EnforceContext{RType: "r", PType: "p3", EType: "e", MType: "m2"}
 	return uc.e.Enforce(enforceContext, rvals[0], rvals[1], rvals[2])
 }
+
+// AddUserRoles 用户添加角色
+func (uc *AuthUsecase) AddUserRoles(user string, roles []string) {
+	for _, role := range roles {
+		_, err := uc.e.AddNamedGroupingPolicy(UserToRole, user, "role:"+role)
+		if err != nil {
+			uc.log.Error(err)
+		}
+	}
+}
+
+// DelUserRoles 用户删除角色
+func (uc *AuthUsecase) DelUserRoles(user string, roles []string) {
+	for _, role := range roles {
+		_, err := uc.e.RemoveNamedGroupingPolicy(UserToRole, user, "role:"+role)
+		if err != nil {
+			uc.log.Error(err)
+		}
+	}
+}
+
+// DelUser 删除用户
+func (uc *AuthUsecase) DelUser(user string) {
+	// 获取用户的所有角色
+	namedGroupingPolicy, _ := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 0, user)
+	for _, policy := range namedGroupingPolicy {
+		_, err := uc.e.RemoveNamedGroupingPolicy(UserToRole, policy[0], policy[1])
+		if err != nil {
+			uc.log.Error(err)
+		}
+	}
+	//_, err := uc.e.RemoveNamedGroupingPolicy(UserToRole, user)
+	//if err != nil {
+	//	println(err)
+	//}
+}
+
+////////////////////////////////////////////////////////
 
 // 权限：
 // 1.新建（删除）用户
