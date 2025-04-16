@@ -64,9 +64,11 @@ docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf 
 ```
 
 ## ent
+使用`--template`添加更新全部字段的模板
 ```bash
-base-server/internal/data$ ent generate ./schema --target ./ent
+base-server/internal/data$ ent generate ./schema --template ./ent/template --target ./ent
 ```
+
 
 ## casbin
 数据表中手动导入或者迁移的id可能与新增的id冲突导致插入失败，需手动重置序列的当前值

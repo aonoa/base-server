@@ -3,7 +3,6 @@ syntax = "proto3";
 package api.base_api.v1;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 
 option go_package = "base-server/api/base_api/v1;v1";
 option java_multiple_files = true;

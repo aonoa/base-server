@@ -179,6 +179,9 @@ func _Base_GetAccessCodes0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 func _Base_Logout0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -217,6 +220,9 @@ func _Base_GetMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) 
 func _Base_RefreshToken0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -827,10 +833,10 @@ func (c *BaseHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts .
 func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/basic-api/auth/logout"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseLogout))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -840,10 +846,10 @@ func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts
 func (c *BaseHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
 	pattern := "/basic-api/auth/refresh"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

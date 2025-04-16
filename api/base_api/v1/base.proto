@@ -37,6 +37,7 @@ service Base {
 	rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/auth/logout"
+			body: "*"
 		};
 	}
 
@@ -52,6 +53,7 @@ service Base {
 	rpc RefreshToken (google.protobuf.Empty) returns (LoginReply) {
 		option (google.api.http) = {
 			post: "/basic-api/auth/refresh",
+			body: "*"
 		};
 	}
 

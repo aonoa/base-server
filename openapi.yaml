@@ -44,6 +44,10 @@ paths:
                 - Base
             description: 注销登陆
             operationId: Base_Logout
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
             responses:
                 "200":
                     description: OK
@@ -54,6 +58,10 @@ paths:
                 - Base
             description: 使用refreshToken换取accessToken
             operationId: Base_RefreshToken
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
             responses:
                 "200":
                     description: OK
