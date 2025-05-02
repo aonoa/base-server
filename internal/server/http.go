@@ -30,7 +30,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 			MiddlewareAuth(ac, e),
 		),
 		// 重定义返回结构
-		http.ResponseEncoder(ResponseEncoder),
+		//http.ResponseEncoder(ResponseEncoder),
 	}
 	if c.Http.Network != "" {
 		opts = append(opts, http.Network(c.Http.Network))
