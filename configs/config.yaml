@@ -5,10 +5,21 @@ server:
   grpc:
     addr: 0.0.0.0:9000
     timeout: 1s
+
+# 日志配置
+logger:
+  level: debug        # 日志等级 debug、info、warn、error
+  filename: ./log/app.log
+  max_size: 100       # 单文件最大大小（MB）
+  max_backups: 5      # 保留旧文件数量
+  max_age: 30         # 保留天数
+  compress: true      # 压缩旧文件
+
+# 数据库配置
 data:
   database:
     driver: pgx
-#    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test2
+    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test2
 #    source: postgresql://postgres:postgresql666@149.88.72.48:32345/test2
   redis:
     addr: 127.0.0.1:6379

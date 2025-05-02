@@ -1,6 +1,7 @@
 package main
 
 import (
+	zaplogger "base-server/internal/log"
 	"base-server/internal/server"
 	"flag"
 	"fmt"
@@ -12,7 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	//"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
@@ -52,15 +53,7 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, js *server.Cron
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
+
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -71,11 +64,23 @@ func main() {
 	if err := c.Load(); err != nil {
 		panic(err)
 	}
-
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+
+	logger := log.With(zaplogger.NewZapLogger(bc.Logger),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+		//"trace.id", tracing.TraceID(),
+		//"span.id", tracing.SpanID(),
+	)
+	// 设置全局 Logger
+	log.SetLogger(logger)
+
 	if err := c.Watch("menus.default_menus", func(key string, value config.Value) {
 		fmt.Printf("config changed: %s = %v\n", key, value)
 		// 在这里写回调的逻辑

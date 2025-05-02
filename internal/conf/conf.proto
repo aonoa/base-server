@@ -7,10 +7,11 @@ import "google/protobuf/duration.proto";
 
 message Bootstrap {
   Server server = 1;
-  Data data = 2;
-  Auth auth = 3;
-  Menus menus = 4;
-  Job job = 5;
+  Logger logger = 2;
+  Data data = 3;
+  Auth auth = 4;
+  Menus menus = 5;
+  Job job = 6;
 }
 
 message Server {
@@ -26,6 +27,15 @@ message Server {
   }
   HTTP http = 1;
   GRPC grpc = 2;
+}
+
+message Logger {
+  string level = 1;     // 日志等级 debug、info、warn、error
+  string filename = 2;  // 日志路径
+  uint32 max_size = 3;    // 单文件最大大小（MB）
+  uint32 max_backups = 4; // 保留旧文件数量
+  uint32 max_age = 5;     // 保留天数
+  bool compress = 6;    // 压缩旧文件
 }
 
 message Data {

@@ -34,7 +34,7 @@ func NewAuthUsecase(e *casbin.Enforcer, logger log.Logger) *AuthUsecase {
 }
 
 func KeyMatch6(key1 string, key2 string) bool {
-	fmt.Printf("key1:%s  key2:%s\n", key1, key2)
+	//fmt.Printf("key1:%s  key2:%s\n", key1, key2)
 
 	i := strings.Index(key1, "?")
 
@@ -46,7 +46,7 @@ func KeyMatch6(key1 string, key2 string) bool {
 
 	re := regexp.MustCompile(`\{[^/]+\}`)
 	key2 = re.ReplaceAllString(key2, "$1[^/]+$2")
-	fmt.Printf("res:%v key1:%s  key2:%s\n", util.RegexMatch(key1, "^"+key2+"$"), key1, key2)
+	//fmt.Printf("res:%v key1:%s  key2:%s\n", util.RegexMatch(key1, "^"+key2+"$"), key1, key2)
 	return util.RegexMatch(key1, "^"+key2+"$")
 }
 
