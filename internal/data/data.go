@@ -96,17 +96,17 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}
 	ristrettoStore := ristretto_store.NewRistretto(ristrettoCache, store.WithSynchronousSet())
 	cacheManager := cache.New[string](ristrettoStore)
-	// 存
-	err = cacheManager.Set(context.Background(), "my-key", "my-value", store.WithCost(2))
-	if err != nil {
-		panic(err)
-	}
-	// 取
-	value, err := cacheManager.Get(context.Background(), "my-key")
-	if err != nil {
-		panic(err)
-	}
-	println(value)
+	//// 存
+	//err = cacheManager.Set(context.Background(), "my-key", "my-value", store.WithCost(2))
+	//if err != nil {
+	//	panic(err)
+	//}
+	//// 取
+	//value, err := cacheManager.Get(context.Background(), "my-key")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//println(value)
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////// gorm演示
 	//msdb, err := gorm.Open(conf.OtherDatabase.Driver, conf.OtherDatabase.Source)

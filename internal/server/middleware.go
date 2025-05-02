@@ -3,9 +3,9 @@ package server
 import (
 	"base-server/internal/conf"
 	"context"
-	"fmt"
 	"github.com/casbin/casbin/v2"
 	"github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
@@ -29,7 +29,7 @@ func NewWhiteListMatcher() selector.MatchFunc {
 }
 
 // MiddlewareAuth Jwt Auth.
-func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer) middleware.Middleware {
+func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer, logger log.Logger) middleware.Middleware {
 	return selector.Server(
 		jwt.Server(
 			func(token *jwtv5.Token) (interface{}, error) {
@@ -40,11 +40,12 @@ func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer) middleware.Middleware {
 				return &jwtv5.MapClaims{}
 			}),
 		),
-		MiddlewareCasbin(e),
+		MiddlewareCasbin(e, logger),
 	).Match(NewWhiteListMatcher()).Build()
 }
 
-func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
+func MiddlewareCasbin(e *casbin.Enforcer, logger log.Logger) middleware.Middleware {
+	log := log.NewHelper(logger)
 	enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
@@ -59,14 +60,13 @@ func MiddlewareCasbin(e *casbin.Enforcer) middleware.Middleware {
 			}
 			if tr, ok := transport.FromServerContext(ctx); ok {
 				// 断言成HTTP的Transport可以拿到特殊信息
-				fmt.Println(tr.Operation())
 				if (aud == "refresh") && (tr.Operation() != "/api.base_api.v1.Base/RefreshToken") {
 					// refreshToken只能用来刷新token
 					return nil, errors.Unauthorized("UNAUTHORIZED", "Authentication failed")
 				}
 				if ht, ok := tr.(*http.Transport); ok {
 					//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m1"}
-					fmt.Println(uid, ht.Request().Method+":"+ht.Request().RequestURI)
+					log.Infof("uid:%s, %s", uid, ht.Request().Method+":"+ht.Request().RequestURI)
 					//ok, err := e.Enforce(enforceContext, uid, ht.Request().Method+":"+ht.Request().RequestURI)
 					ok, err := e.Enforce(enforceContext, uid, ht.Request().RequestURI, ht.Request().Method)
 					//ok, err := e.Enforce(uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")

@@ -63,6 +63,10 @@ func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase, conf *c
 	return &BaseUsecase{repo: repo, auth: auth, log: log.NewHelper(logger), conf: conf}
 }
 
+func (uc *BaseUsecase) ReLoadPolicy(ctx context.Context) error {
+	return uc.auth.ReLoadPolicy()
+}
+
 // IsUserExists 检查用户是否存在，存在返回Id
 func (uc *BaseUsecase) IsUserExists(ctx context.Context, req *pb.LoginRequest) (bool, error) {
 	return uc.repo.IsUserExistsByUserName(ctx, req)

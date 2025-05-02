@@ -37,6 +37,10 @@ func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth) *BaseService {
 	}
 }
 
+func (s *BaseService) ReLoadPolicy(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, nil
+}
+
 func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
 	//req.Password = tools.UserPasswdEncrypt(req.Password, "")
 	// 检查是否有这个人

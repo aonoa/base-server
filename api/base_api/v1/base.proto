@@ -57,6 +57,14 @@ service Base {
 		};
 	}
 
+	////////////////////////////////////////////////////
+	rpc ReLoadPolicy (google.protobuf.Empty) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/auth/reloadPolicy",
+			body: "*"
+		};
+	}
+
 	/////////////////////////////////////////////////////
 
 	// 获取账户列表
@@ -151,11 +159,6 @@ service Base {
 			response_body: "items"
 		};
 	}
-
-
-
-
-
 
 
 	// 获取角色信息

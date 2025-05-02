@@ -27,7 +27,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 		http.Middleware(
 			recovery.Recovery(),
 			//MiddlewareDemo(),
-			MiddlewareAuth(ac, e),
+			MiddlewareAuth(ac, e, logger),
 		),
 		// 重定义返回结构
 		//http.ResponseEncoder(ResponseEncoder),

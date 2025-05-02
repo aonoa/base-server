@@ -26,6 +26,7 @@ const (
 	Base_Logout_FullMethodName            = "/api.base_api.v1.Base/Logout"
 	Base_GetMenuList_FullMethodName       = "/api.base_api.v1.Base/GetMenuList"
 	Base_RefreshToken_FullMethodName      = "/api.base_api.v1.Base/RefreshToken"
+	Base_ReLoadPolicy_FullMethodName      = "/api.base_api.v1.Base/ReLoadPolicy"
 	Base_GetAccountList_FullMethodName    = "/api.base_api.v1.Base/GetAccountList"
 	Base_AddUser_FullMethodName           = "/api.base_api.v1.Base/AddUser"
 	Base_DelUser_FullMethodName           = "/api.base_api.v1.Base/DelUser"
@@ -60,6 +61,8 @@ type BaseClient interface {
 	GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
+	// //////////////////////////////////////////////////
+	ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取账户列表
 	GetAccountList(ctx context.Context, in *AccountParams, opts ...grpc.CallOption) (*GetAccountListReply, error)
 	// 新增用户
@@ -156,6 +159,16 @@ func (c *baseClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts .
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LoginReply)
 	err := c.cc.Invoke(ctx, Base_RefreshToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_ReLoadPolicy_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -338,6 +351,8 @@ type BaseServer interface {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
+	// //////////////////////////////////////////////////
+	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取账户列表
 	GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error)
 	// 新增用户
@@ -397,6 +412,9 @@ func (UnimplementedBaseServer) GetMenuList(context.Context, *emptypb.Empty) (*Ge
 }
 func (UnimplementedBaseServer) RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedBaseServer) ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReLoadPolicy not implemented")
 }
 func (UnimplementedBaseServer) GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccountList not implemented")
@@ -571,6 +589,24 @@ func _Base_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServer).RefreshToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_ReLoadPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).ReLoadPolicy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_ReLoadPolicy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).ReLoadPolicy(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -893,6 +929,10 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RefreshToken",
 			Handler:    _Base_RefreshToken_Handler,
+		},
+		{
+			MethodName: "ReLoadPolicy",
+			Handler:    _Base_ReLoadPolicy_Handler,
 		},
 		{
 			MethodName: "GetAccountList",

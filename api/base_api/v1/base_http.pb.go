@@ -38,6 +38,7 @@ const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseIsAccountExist = "/api.base_api.v1.Base/IsAccountExist"
 const OperationBaseLogin = "/api.base_api.v1.Base/Login"
 const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
+const OperationBaseReLoadPolicy = "/api.base_api.v1.Base/ReLoadPolicy"
 const OperationBaseRefreshToken = "/api.base_api.v1.Base/RefreshToken"
 const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
 const OperationBaseUpdateDept = "/api.base_api.v1.Base/UpdateDept"
@@ -80,6 +81,8 @@ type BaseHTTPServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// Logout 注销登陆
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// ReLoadPolicy//////////////////////////////////////////////////
+	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RefreshToken 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// SetRoleStatus 设置角色状态
@@ -98,6 +101,7 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/auth/logout", _Base_Logout0_HTTP_Handler(srv))
 	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
 	r.POST("/basic-api/auth/refresh", _Base_RefreshToken0_HTTP_Handler(srv))
+	r.POST("/basic-api/auth/reloadPolicy", _Base_ReLoadPolicy0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getAccountList", _Base_GetAccountList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
@@ -235,6 +239,28 @@ func _Base_RefreshToken0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context)
 			return err
 		}
 		reply := out.(*LoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_ReLoadPolicy0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseReLoadPolicy)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ReLoadPolicy(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -595,6 +621,7 @@ type BaseHTTPClient interface {
 	IsAccountExist(ctx context.Context, req *IsAccountRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
 	SetRoleStatus(ctx context.Context, req *SetRoleStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
@@ -835,6 +862,19 @@ func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts
 	pattern := "/basic-api/auth/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseLogout))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/auth/reloadPolicy"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseReLoadPolicy))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

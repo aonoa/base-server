@@ -69,6 +69,20 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.LoginReply'
+    /basic-api/auth/reloadPolicy:
+        post:
+            tags:
+                - Base
+            description: //////////////////////////////////////////////////
+            operationId: Base_ReLoadPolicy
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/menu/all:
         get:
             tags:

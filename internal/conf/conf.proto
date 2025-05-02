@@ -56,8 +56,6 @@ message Data {
 message Auth {
   string service_key = 1;
   string api_key = 2;
-  string model_path = 3;
-  string policy_path = 4;
 }
 
 message Menus {

@@ -29,7 +29,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, menu
 		return nil, nil, err
 	}
 	baseRepo := data.NewBaseRepo(dataData, logger)
-	enforcer := biz.NewEnforcer(auth, confData)
+	enforcer := biz.NewEnforcer(confData)
 	authUsecase := biz.NewAuthUsecase(enforcer, logger)
 	baseUsecase := biz.NewBaseUsecase(baseRepo, logger, authUsecase, menus)
 	baseService := service.NewBaseService(baseUsecase, auth)
