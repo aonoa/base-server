@@ -243,7 +243,7 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 	RouteItem.Meta.Order = int64(menu.Order)
 	RouteItem.Meta.Link = menu.Link
 	RouteItem.Meta.IframeSrc = menu.IframeSrc
-	RouteItem.Meta.IgnoreAccess = menu.IgnoreAuth
+	RouteItem.Meta.IgnoreAccess = menu.IgnoreAccess
 	RouteItem.Meta.KeepAlive = menu.Keepalive
 	RouteItem.Meta.ActivePath = menu.ActivePath
 	RouteItem.Meta.MaxNumOfOpenTab = int64(menu.MaxNumOfOpenTab)
@@ -252,7 +252,7 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 	RouteItem.Meta.HideInBreadcrumb = menu.HideInBreadcrumb
 	RouteItem.Meta.HideChildrenInMenu = menu.HideChildrenInMenu
 
-	RouteItem.Meta.Authority = strings.Split(menu.Permission, ",")
+	RouteItem.Meta.Authority = strings.Split(menu.Authority, ",")
 
 	return &RouteItem
 }

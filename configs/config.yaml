@@ -19,7 +19,8 @@ logger:
 data:
   database:
     driver: pgx
-    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test2
+#    source: postgresql://postgres:postgresql666@192.168.18.165:5432/test2
+    source: postgresql://postgres:postgresql666@10.10.100.99:15432/test1
 #    source: postgresql://postgres:postgresql666@149.88.72.48:32345/test2
   redis:
     addr: 127.0.0.1:6379

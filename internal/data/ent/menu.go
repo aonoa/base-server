@@ -27,49 +27,65 @@ type Menu struct {
 	Type int8 `json:"type,omitempty"`
 	// 状态,0-禁用，1-启用
 	Status bool `json:"status,omitempty"`
-	// 组件名
-	Name string `json:"name,omitempty"`
-	// 显示名称
-	Title string `json:"title,omitempty"`
-	// 图标
-	Icon string `json:"icon,omitempty"`
-	// 排序(越小越前)
-	Order int32 `json:"order,omitempty"`
 	// 路由path
 	Path string `json:"path,omitempty"`
-	// 组件路径
-	Component string `json:"component,omitempty"`
 	// 重定向path
 	Redirect string `json:"redirect,omitempty"`
+	// 记录的别名，例如/users/:id和/u/:id。所有alias和path值必须共享相同的参数。
+	Alias string `json:"alias,omitempty"`
+	// 组件名
+	Name string `json:"name,omitempty"`
+	// 组件路径
+	Component string `json:"component,omitempty"`
+	// 图标
+	Icon string `json:"icon,omitempty"`
+	// 显示名称
+	Title string `json:"title,omitempty"`
+	// 排序(越小越前)
+	Order int32 `json:"order,omitempty"`
+	// 在新窗口打开
+	OpenInNewWindow bool `json:"openInNewWindow,omitempty"`
+	// 不使用基础布局（仅在顶级生效）
+	NoBasicLayout bool `json:"noBasicLayout,omitempty"`
+	// 菜单可以看到，但是访问会被重定向到403
+	MenuVisibleWithForbidden bool `json:"menuVisibleWithForbidden,omitempty"`
 	// 外链-跳转路径
 	Link string `json:"link,omitempty"`
 	// iframe地址
 	IframeSrc string `json:"iframeSrc,omitempty"`
-	// 激活图标
+	// 激活图标（菜单）
 	ActiveIcon string `json:"activeIcon,omitempty"`
 	// 当前激活的菜单，有时候不想激活现有菜单，需要激活父级菜单时使用
 	ActivePath string `json:"activePath,omitempty"`
 	// 标签页最大打开数量
 	MaxNumOfOpenTab int16 `json:"maxNumOfOpenTab,omitempty"`
-	// 忽略权限,0-否，1-是
-	IgnoreAuth bool `json:"ignoreAuth,omitempty"`
 	// 缓存,0-否，1-是
 	Keepalive bool `json:"keepalive,omitempty"`
-	// 权限标识
-	Permission string `json:"permission,omitempty"`
-	// 固钉,0-否，1-是
+	// 忽略权限，直接可以访问
+	IgnoreAccess bool `json:"ignoreAccess,omitempty"`
+	// 需要特定的角色标识才可以访问(数组，','分割)
+	Authority string `json:"authority,omitempty"`
+	// 是否固定标签页,0-否，1-是
 	AffixTab bool `json:"affixTab,omitempty"`
 	// 固定标签页的顺序
-	AffixTabOrder int64 `json:"affixTabOrder,omitempty"`
-	// 隐藏在菜单,0-否，1-是
+	AffixTabOrder int16 `json:"affixTabOrder,omitempty"`
+	// 当前路由在菜单中不展现,0-否，1-是
 	HideInMenu bool `json:"hideInMenu,omitempty"`
-	// 隐藏在标签页,0-否，1-是
+	// 当前路由在标签页不展现,0-否，1-是
 	HideInTab bool `json:"hideInTab,omitempty"`
-	// 隐藏在面包屑,0-否，1-是
+	// 当前路由在面包屑中不展现,0-否，1-是
 	HideInBreadcrumb bool `json:"hideInBreadcrumb,omitempty"`
-	// 子页面隐藏在菜单中,0-否，1-是
+	// 当前路由的子级在菜单中不展现,0-否，1-是
 	HideChildrenInMenu bool `json:"hideChildrenInMenu,omitempty"`
-	selectValues       sql.SelectValues
+	// 路由的完整路径作为key（默认true）
+	FullPathKey bool `json:"fullPathKey,omitempty"`
+	// 用于配置页面的徽标，会在菜单显示
+	Badge string `json:"badge,omitempty"`
+	// 用于配置页面的徽标类型，dot 为小红点，normal 为文本
+	BadgeType string `json:"badgeType,omitempty"`
+	// 用于配置页面的徽标颜色。类型：'default' | 'destructive' | 'primary' | 'success' | 'warning' | string
+	BadgeVariants string `json:"badgeVariants,omitempty"`
+	selectValues  sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -77,11 +93,11 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldStatus, menu.FieldIgnoreAuth, menu.FieldKeepalive, menu.FieldAffixTab, menu.FieldHideInMenu, menu.FieldHideInTab, menu.FieldHideInBreadcrumb, menu.FieldHideChildrenInMenu:
+		case menu.FieldStatus, menu.FieldOpenInNewWindow, menu.FieldNoBasicLayout, menu.FieldMenuVisibleWithForbidden, menu.FieldKeepalive, menu.FieldIgnoreAccess, menu.FieldAffixTab, menu.FieldHideInMenu, menu.FieldHideInTab, menu.FieldHideInBreadcrumb, menu.FieldHideChildrenInMenu, menu.FieldFullPathKey:
 			values[i] = new(sql.NullBool)
 		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder, menu.FieldMaxNumOfOpenTab, menu.FieldAffixTabOrder:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldName, menu.FieldTitle, menu.FieldIcon, menu.FieldPath, menu.FieldComponent, menu.FieldRedirect, menu.FieldLink, menu.FieldIframeSrc, menu.FieldActiveIcon, menu.FieldActivePath, menu.FieldPermission:
+		case menu.FieldPath, menu.FieldRedirect, menu.FieldAlias, menu.FieldName, menu.FieldComponent, menu.FieldIcon, menu.FieldTitle, menu.FieldLink, menu.FieldIframeSrc, menu.FieldActiveIcon, menu.FieldActivePath, menu.FieldAuthority, menu.FieldBadge, menu.FieldBadgeType, menu.FieldBadgeVariants:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -136,35 +152,29 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Status = value.Bool
 			}
-		case menu.FieldName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
-			} else if value.Valid {
-				m.Name = value.String
-			}
-		case menu.FieldTitle:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field title", values[i])
-			} else if value.Valid {
-				m.Title = value.String
-			}
-		case menu.FieldIcon:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field icon", values[i])
-			} else if value.Valid {
-				m.Icon = value.String
-			}
-		case menu.FieldOrder:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field order", values[i])
-			} else if value.Valid {
-				m.Order = int32(value.Int64)
-			}
 		case menu.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
 				m.Path = value.String
+			}
+		case menu.FieldRedirect:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field redirect", values[i])
+			} else if value.Valid {
+				m.Redirect = value.String
+			}
+		case menu.FieldAlias:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field alias", values[i])
+			} else if value.Valid {
+				m.Alias = value.String
+			}
+		case menu.FieldName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name", values[i])
+			} else if value.Valid {
+				m.Name = value.String
 			}
 		case menu.FieldComponent:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -172,11 +182,41 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Component = value.String
 			}
-		case menu.FieldRedirect:
+		case menu.FieldIcon:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field redirect", values[i])
+				return fmt.Errorf("unexpected type %T for field icon", values[i])
 			} else if value.Valid {
-				m.Redirect = value.String
+				m.Icon = value.String
+			}
+		case menu.FieldTitle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field title", values[i])
+			} else if value.Valid {
+				m.Title = value.String
+			}
+		case menu.FieldOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field order", values[i])
+			} else if value.Valid {
+				m.Order = int32(value.Int64)
+			}
+		case menu.FieldOpenInNewWindow:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field openInNewWindow", values[i])
+			} else if value.Valid {
+				m.OpenInNewWindow = value.Bool
+			}
+		case menu.FieldNoBasicLayout:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field noBasicLayout", values[i])
+			} else if value.Valid {
+				m.NoBasicLayout = value.Bool
+			}
+		case menu.FieldMenuVisibleWithForbidden:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field menuVisibleWithForbidden", values[i])
+			} else if value.Valid {
+				m.MenuVisibleWithForbidden = value.Bool
 			}
 		case menu.FieldLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -208,23 +248,23 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.MaxNumOfOpenTab = int16(value.Int64)
 			}
-		case menu.FieldIgnoreAuth:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field ignoreAuth", values[i])
-			} else if value.Valid {
-				m.IgnoreAuth = value.Bool
-			}
 		case menu.FieldKeepalive:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field keepalive", values[i])
 			} else if value.Valid {
 				m.Keepalive = value.Bool
 			}
-		case menu.FieldPermission:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field permission", values[i])
+		case menu.FieldIgnoreAccess:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field ignoreAccess", values[i])
 			} else if value.Valid {
-				m.Permission = value.String
+				m.IgnoreAccess = value.Bool
+			}
+		case menu.FieldAuthority:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field authority", values[i])
+			} else if value.Valid {
+				m.Authority = value.String
 			}
 		case menu.FieldAffixTab:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -236,7 +276,7 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field affixTabOrder", values[i])
 			} else if value.Valid {
-				m.AffixTabOrder = value.Int64
+				m.AffixTabOrder = int16(value.Int64)
 			}
 		case menu.FieldHideInMenu:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -261,6 +301,30 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field hideChildrenInMenu", values[i])
 			} else if value.Valid {
 				m.HideChildrenInMenu = value.Bool
+			}
+		case menu.FieldFullPathKey:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field fullPathKey", values[i])
+			} else if value.Valid {
+				m.FullPathKey = value.Bool
+			}
+		case menu.FieldBadge:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badge", values[i])
+			} else if value.Valid {
+				m.Badge = value.String
+			}
+		case menu.FieldBadgeType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badgeType", values[i])
+			} else if value.Valid {
+				m.BadgeType = value.String
+			}
+		case menu.FieldBadgeVariants:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field badgeVariants", values[i])
+			} else if value.Valid {
+				m.BadgeVariants = value.String
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -313,26 +377,38 @@ func (m *Menu) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", m.Status))
 	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(m.Name)
-	builder.WriteString(", ")
-	builder.WriteString("title=")
-	builder.WriteString(m.Title)
-	builder.WriteString(", ")
-	builder.WriteString("icon=")
-	builder.WriteString(m.Icon)
-	builder.WriteString(", ")
-	builder.WriteString("order=")
-	builder.WriteString(fmt.Sprintf("%v", m.Order))
-	builder.WriteString(", ")
 	builder.WriteString("path=")
 	builder.WriteString(m.Path)
+	builder.WriteString(", ")
+	builder.WriteString("redirect=")
+	builder.WriteString(m.Redirect)
+	builder.WriteString(", ")
+	builder.WriteString("alias=")
+	builder.WriteString(m.Alias)
+	builder.WriteString(", ")
+	builder.WriteString("name=")
+	builder.WriteString(m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("component=")
 	builder.WriteString(m.Component)
 	builder.WriteString(", ")
-	builder.WriteString("redirect=")
-	builder.WriteString(m.Redirect)
+	builder.WriteString("icon=")
+	builder.WriteString(m.Icon)
+	builder.WriteString(", ")
+	builder.WriteString("title=")
+	builder.WriteString(m.Title)
+	builder.WriteString(", ")
+	builder.WriteString("order=")
+	builder.WriteString(fmt.Sprintf("%v", m.Order))
+	builder.WriteString(", ")
+	builder.WriteString("openInNewWindow=")
+	builder.WriteString(fmt.Sprintf("%v", m.OpenInNewWindow))
+	builder.WriteString(", ")
+	builder.WriteString("noBasicLayout=")
+	builder.WriteString(fmt.Sprintf("%v", m.NoBasicLayout))
+	builder.WriteString(", ")
+	builder.WriteString("menuVisibleWithForbidden=")
+	builder.WriteString(fmt.Sprintf("%v", m.MenuVisibleWithForbidden))
 	builder.WriteString(", ")
 	builder.WriteString("link=")
 	builder.WriteString(m.Link)
@@ -349,14 +425,14 @@ func (m *Menu) String() string {
 	builder.WriteString("maxNumOfOpenTab=")
 	builder.WriteString(fmt.Sprintf("%v", m.MaxNumOfOpenTab))
 	builder.WriteString(", ")
-	builder.WriteString("ignoreAuth=")
-	builder.WriteString(fmt.Sprintf("%v", m.IgnoreAuth))
-	builder.WriteString(", ")
 	builder.WriteString("keepalive=")
 	builder.WriteString(fmt.Sprintf("%v", m.Keepalive))
 	builder.WriteString(", ")
-	builder.WriteString("permission=")
-	builder.WriteString(m.Permission)
+	builder.WriteString("ignoreAccess=")
+	builder.WriteString(fmt.Sprintf("%v", m.IgnoreAccess))
+	builder.WriteString(", ")
+	builder.WriteString("authority=")
+	builder.WriteString(m.Authority)
 	builder.WriteString(", ")
 	builder.WriteString("affixTab=")
 	builder.WriteString(fmt.Sprintf("%v", m.AffixTab))
@@ -375,6 +451,18 @@ func (m *Menu) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("hideChildrenInMenu=")
 	builder.WriteString(fmt.Sprintf("%v", m.HideChildrenInMenu))
+	builder.WriteString(", ")
+	builder.WriteString("fullPathKey=")
+	builder.WriteString(fmt.Sprintf("%v", m.FullPathKey))
+	builder.WriteString(", ")
+	builder.WriteString("badge=")
+	builder.WriteString(m.Badge)
+	builder.WriteString(", ")
+	builder.WriteString("badgeType=")
+	builder.WriteString(m.BadgeType)
+	builder.WriteString(", ")
+	builder.WriteString("badgeVariants=")
+	builder.WriteString(m.BadgeVariants)
 	builder.WriteByte(')')
 	return builder.String()
 }

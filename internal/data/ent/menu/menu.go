@@ -23,20 +23,28 @@ const (
 	FieldType = "type"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
-	// FieldTitle holds the string denoting the title field in the database.
-	FieldTitle = "title"
-	// FieldIcon holds the string denoting the icon field in the database.
-	FieldIcon = "icon"
-	// FieldOrder holds the string denoting the order field in the database.
-	FieldOrder = "order"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
-	// FieldComponent holds the string denoting the component field in the database.
-	FieldComponent = "component"
 	// FieldRedirect holds the string denoting the redirect field in the database.
 	FieldRedirect = "redirect"
+	// FieldAlias holds the string denoting the alias field in the database.
+	FieldAlias = "alias"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldComponent holds the string denoting the component field in the database.
+	FieldComponent = "component"
+	// FieldIcon holds the string denoting the icon field in the database.
+	FieldIcon = "icon"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldOrder holds the string denoting the order field in the database.
+	FieldOrder = "order"
+	// FieldOpenInNewWindow holds the string denoting the openinnewwindow field in the database.
+	FieldOpenInNewWindow = "open_in_new_window"
+	// FieldNoBasicLayout holds the string denoting the nobasiclayout field in the database.
+	FieldNoBasicLayout = "no_basic_layout"
+	// FieldMenuVisibleWithForbidden holds the string denoting the menuvisiblewithforbidden field in the database.
+	FieldMenuVisibleWithForbidden = "menu_visible_with_forbidden"
 	// FieldLink holds the string denoting the link field in the database.
 	FieldLink = "link"
 	// FieldIframeSrc holds the string denoting the iframesrc field in the database.
@@ -47,12 +55,12 @@ const (
 	FieldActivePath = "active_path"
 	// FieldMaxNumOfOpenTab holds the string denoting the maxnumofopentab field in the database.
 	FieldMaxNumOfOpenTab = "max_num_of_open_tab"
-	// FieldIgnoreAuth holds the string denoting the ignoreauth field in the database.
-	FieldIgnoreAuth = "ignore_auth"
 	// FieldKeepalive holds the string denoting the keepalive field in the database.
 	FieldKeepalive = "keepalive"
-	// FieldPermission holds the string denoting the permission field in the database.
-	FieldPermission = "permission"
+	// FieldIgnoreAccess holds the string denoting the ignoreaccess field in the database.
+	FieldIgnoreAccess = "ignore_access"
+	// FieldAuthority holds the string denoting the authority field in the database.
+	FieldAuthority = "authority"
 	// FieldAffixTab holds the string denoting the affixtab field in the database.
 	FieldAffixTab = "affix_tab"
 	// FieldAffixTabOrder holds the string denoting the affixtaborder field in the database.
@@ -65,6 +73,14 @@ const (
 	FieldHideInBreadcrumb = "hide_in_breadcrumb"
 	// FieldHideChildrenInMenu holds the string denoting the hidechildreninmenu field in the database.
 	FieldHideChildrenInMenu = "hide_children_in_menu"
+	// FieldFullPathKey holds the string denoting the fullpathkey field in the database.
+	FieldFullPathKey = "full_path_key"
+	// FieldBadge holds the string denoting the badge field in the database.
+	FieldBadge = "badge"
+	// FieldBadgeType holds the string denoting the badgetype field in the database.
+	FieldBadgeType = "badge_type"
+	// FieldBadgeVariants holds the string denoting the badgevariants field in the database.
+	FieldBadgeVariants = "badge_variants"
 	// Table holds the table name of the menu in the database.
 	Table = "menus"
 )
@@ -77,27 +93,35 @@ var Columns = []string{
 	FieldPid,
 	FieldType,
 	FieldStatus,
-	FieldName,
-	FieldTitle,
-	FieldIcon,
-	FieldOrder,
 	FieldPath,
-	FieldComponent,
 	FieldRedirect,
+	FieldAlias,
+	FieldName,
+	FieldComponent,
+	FieldIcon,
+	FieldTitle,
+	FieldOrder,
+	FieldOpenInNewWindow,
+	FieldNoBasicLayout,
+	FieldMenuVisibleWithForbidden,
 	FieldLink,
 	FieldIframeSrc,
 	FieldActiveIcon,
 	FieldActivePath,
 	FieldMaxNumOfOpenTab,
-	FieldIgnoreAuth,
 	FieldKeepalive,
-	FieldPermission,
+	FieldIgnoreAccess,
+	FieldAuthority,
 	FieldAffixTab,
 	FieldAffixTabOrder,
 	FieldHideInMenu,
 	FieldHideInTab,
 	FieldHideInBreadcrumb,
 	FieldHideChildrenInMenu,
+	FieldFullPathKey,
+	FieldBadge,
+	FieldBadgeType,
+	FieldBadgeVariants,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -117,6 +141,42 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus bool
+	// DefaultRedirect holds the default value on creation for the "redirect" field.
+	DefaultRedirect string
+	// DefaultAlias holds the default value on creation for the "alias" field.
+	DefaultAlias string
+	// DefaultIcon holds the default value on creation for the "icon" field.
+	DefaultIcon string
+	// DefaultOrder holds the default value on creation for the "order" field.
+	DefaultOrder int32
+	// DefaultOpenInNewWindow holds the default value on creation for the "openInNewWindow" field.
+	DefaultOpenInNewWindow bool
+	// DefaultNoBasicLayout holds the default value on creation for the "noBasicLayout" field.
+	DefaultNoBasicLayout bool
+	// DefaultMenuVisibleWithForbidden holds the default value on creation for the "menuVisibleWithForbidden" field.
+	DefaultMenuVisibleWithForbidden bool
+	// DefaultLink holds the default value on creation for the "link" field.
+	DefaultLink string
+	// DefaultIframeSrc holds the default value on creation for the "iframeSrc" field.
+	DefaultIframeSrc string
+	// DefaultActiveIcon holds the default value on creation for the "activeIcon" field.
+	DefaultActiveIcon string
+	// DefaultActivePath holds the default value on creation for the "activePath" field.
+	DefaultActivePath string
+	// DefaultMaxNumOfOpenTab holds the default value on creation for the "maxNumOfOpenTab" field.
+	DefaultMaxNumOfOpenTab int16
+	// DefaultKeepalive holds the default value on creation for the "keepalive" field.
+	DefaultKeepalive bool
+	// DefaultIgnoreAccess holds the default value on creation for the "ignoreAccess" field.
+	DefaultIgnoreAccess bool
+	// DefaultAuthority holds the default value on creation for the "authority" field.
+	DefaultAuthority string
+	// DefaultAffixTab holds the default value on creation for the "affixTab" field.
+	DefaultAffixTab bool
+	// DefaultAffixTabOrder holds the default value on creation for the "affixTabOrder" field.
+	DefaultAffixTabOrder int16
 	// DefaultHideInMenu holds the default value on creation for the "hideInMenu" field.
 	DefaultHideInMenu bool
 	// DefaultHideInTab holds the default value on creation for the "hideInTab" field.
@@ -125,6 +185,14 @@ var (
 	DefaultHideInBreadcrumb bool
 	// DefaultHideChildrenInMenu holds the default value on creation for the "hideChildrenInMenu" field.
 	DefaultHideChildrenInMenu bool
+	// DefaultFullPathKey holds the default value on creation for the "fullPathKey" field.
+	DefaultFullPathKey bool
+	// DefaultBadge holds the default value on creation for the "badge" field.
+	DefaultBadge string
+	// DefaultBadgeType holds the default value on creation for the "badgeType" field.
+	DefaultBadgeType string
+	// DefaultBadgeVariants holds the default value on creation for the "badgeVariants" field.
+	DefaultBadgeVariants string
 )
 
 // OrderOption defines the ordering options for the Menu queries.
@@ -160,29 +228,24 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
-}
-
-// ByTitle orders the results by the title field.
-func ByTitle(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldTitle, opts...).ToFunc()
-}
-
-// ByIcon orders the results by the icon field.
-func ByIcon(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIcon, opts...).ToFunc()
-}
-
-// ByOrder orders the results by the order field.
-func ByOrder(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOrder, opts...).ToFunc()
-}
-
 // ByPath orders the results by the path field.
 func ByPath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
+// ByRedirect orders the results by the redirect field.
+func ByRedirect(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRedirect, opts...).ToFunc()
+}
+
+// ByAlias orders the results by the alias field.
+func ByAlias(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAlias, opts...).ToFunc()
+}
+
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
 // ByComponent orders the results by the component field.
@@ -190,9 +253,34 @@ func ByComponent(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldComponent, opts...).ToFunc()
 }
 
-// ByRedirect orders the results by the redirect field.
-func ByRedirect(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRedirect, opts...).ToFunc()
+// ByIcon orders the results by the icon field.
+func ByIcon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIcon, opts...).ToFunc()
+}
+
+// ByTitle orders the results by the title field.
+func ByTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTitle, opts...).ToFunc()
+}
+
+// ByOrder orders the results by the order field.
+func ByOrder(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrder, opts...).ToFunc()
+}
+
+// ByOpenInNewWindow orders the results by the openInNewWindow field.
+func ByOpenInNewWindow(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOpenInNewWindow, opts...).ToFunc()
+}
+
+// ByNoBasicLayout orders the results by the noBasicLayout field.
+func ByNoBasicLayout(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNoBasicLayout, opts...).ToFunc()
+}
+
+// ByMenuVisibleWithForbidden orders the results by the menuVisibleWithForbidden field.
+func ByMenuVisibleWithForbidden(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMenuVisibleWithForbidden, opts...).ToFunc()
 }
 
 // ByLink orders the results by the link field.
@@ -220,19 +308,19 @@ func ByMaxNumOfOpenTab(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldMaxNumOfOpenTab, opts...).ToFunc()
 }
 
-// ByIgnoreAuth orders the results by the ignoreAuth field.
-func ByIgnoreAuth(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIgnoreAuth, opts...).ToFunc()
-}
-
 // ByKeepalive orders the results by the keepalive field.
 func ByKeepalive(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldKeepalive, opts...).ToFunc()
 }
 
-// ByPermission orders the results by the permission field.
-func ByPermission(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPermission, opts...).ToFunc()
+// ByIgnoreAccess orders the results by the ignoreAccess field.
+func ByIgnoreAccess(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIgnoreAccess, opts...).ToFunc()
+}
+
+// ByAuthority orders the results by the authority field.
+func ByAuthority(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAuthority, opts...).ToFunc()
 }
 
 // ByAffixTab orders the results by the affixTab field.
@@ -263,4 +351,24 @@ func ByHideInBreadcrumb(opts ...sql.OrderTermOption) OrderOption {
 // ByHideChildrenInMenu orders the results by the hideChildrenInMenu field.
 func ByHideChildrenInMenu(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHideChildrenInMenu, opts...).ToFunc()
+}
+
+// ByFullPathKey orders the results by the fullPathKey field.
+func ByFullPathKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFullPathKey, opts...).ToFunc()
+}
+
+// ByBadge orders the results by the badge field.
+func ByBadge(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadge, opts...).ToFunc()
+}
+
+// ByBadgeType orders the results by the badgeType field.
+func ByBadgeType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeType, opts...).ToFunc()
+}
+
+// ByBadgeVariants orders the results by the badgeVariants field.
+func ByBadgeVariants(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldBadgeVariants, opts...).ToFunc()
 }

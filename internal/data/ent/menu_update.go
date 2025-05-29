@@ -90,6 +90,48 @@ func (mu *MenuUpdate) SetNillableStatus(b *bool) *MenuUpdate {
 	return mu
 }
 
+// SetPath sets the "path" field.
+func (mu *MenuUpdate) SetPath(s string) *MenuUpdate {
+	mu.mutation.SetPath(s)
+	return mu
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillablePath(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetPath(*s)
+	}
+	return mu
+}
+
+// SetRedirect sets the "redirect" field.
+func (mu *MenuUpdate) SetRedirect(s string) *MenuUpdate {
+	mu.mutation.SetRedirect(s)
+	return mu
+}
+
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableRedirect(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetRedirect(*s)
+	}
+	return mu
+}
+
+// SetAlias sets the "alias" field.
+func (mu *MenuUpdate) SetAlias(s string) *MenuUpdate {
+	mu.mutation.SetAlias(s)
+	return mu
+}
+
+// SetNillableAlias sets the "alias" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableAlias(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetAlias(*s)
+	}
+	return mu
+}
+
 // SetName sets the "name" field.
 func (mu *MenuUpdate) SetName(s string) *MenuUpdate {
 	mu.mutation.SetName(s)
@@ -104,16 +146,16 @@ func (mu *MenuUpdate) SetNillableName(s *string) *MenuUpdate {
 	return mu
 }
 
-// SetTitle sets the "title" field.
-func (mu *MenuUpdate) SetTitle(s string) *MenuUpdate {
-	mu.mutation.SetTitle(s)
+// SetComponent sets the "component" field.
+func (mu *MenuUpdate) SetComponent(s string) *MenuUpdate {
+	mu.mutation.SetComponent(s)
 	return mu
 }
 
-// SetNillableTitle sets the "title" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableTitle(s *string) *MenuUpdate {
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableComponent(s *string) *MenuUpdate {
 	if s != nil {
-		mu.SetTitle(*s)
+		mu.SetComponent(*s)
 	}
 	return mu
 }
@@ -128,6 +170,20 @@ func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
 func (mu *MenuUpdate) SetNillableIcon(s *string) *MenuUpdate {
 	if s != nil {
 		mu.SetIcon(*s)
+	}
+	return mu
+}
+
+// SetTitle sets the "title" field.
+func (mu *MenuUpdate) SetTitle(s string) *MenuUpdate {
+	mu.mutation.SetTitle(s)
+	return mu
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableTitle(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetTitle(*s)
 	}
 	return mu
 }
@@ -153,44 +209,44 @@ func (mu *MenuUpdate) AddOrder(i int32) *MenuUpdate {
 	return mu
 }
 
-// SetPath sets the "path" field.
-func (mu *MenuUpdate) SetPath(s string) *MenuUpdate {
-	mu.mutation.SetPath(s)
+// SetOpenInNewWindow sets the "openInNewWindow" field.
+func (mu *MenuUpdate) SetOpenInNewWindow(b bool) *MenuUpdate {
+	mu.mutation.SetOpenInNewWindow(b)
 	return mu
 }
 
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillablePath(s *string) *MenuUpdate {
-	if s != nil {
-		mu.SetPath(*s)
+// SetNillableOpenInNewWindow sets the "openInNewWindow" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableOpenInNewWindow(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetOpenInNewWindow(*b)
 	}
 	return mu
 }
 
-// SetComponent sets the "component" field.
-func (mu *MenuUpdate) SetComponent(s string) *MenuUpdate {
-	mu.mutation.SetComponent(s)
+// SetNoBasicLayout sets the "noBasicLayout" field.
+func (mu *MenuUpdate) SetNoBasicLayout(b bool) *MenuUpdate {
+	mu.mutation.SetNoBasicLayout(b)
 	return mu
 }
 
-// SetNillableComponent sets the "component" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableComponent(s *string) *MenuUpdate {
-	if s != nil {
-		mu.SetComponent(*s)
+// SetNillableNoBasicLayout sets the "noBasicLayout" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableNoBasicLayout(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetNoBasicLayout(*b)
 	}
 	return mu
 }
 
-// SetRedirect sets the "redirect" field.
-func (mu *MenuUpdate) SetRedirect(s string) *MenuUpdate {
-	mu.mutation.SetRedirect(s)
+// SetMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field.
+func (mu *MenuUpdate) SetMenuVisibleWithForbidden(b bool) *MenuUpdate {
+	mu.mutation.SetMenuVisibleWithForbidden(b)
 	return mu
 }
 
-// SetNillableRedirect sets the "redirect" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableRedirect(s *string) *MenuUpdate {
-	if s != nil {
-		mu.SetRedirect(*s)
+// SetNillableMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableMenuVisibleWithForbidden(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetMenuVisibleWithForbidden(*b)
 	}
 	return mu
 }
@@ -272,20 +328,6 @@ func (mu *MenuUpdate) AddMaxNumOfOpenTab(i int16) *MenuUpdate {
 	return mu
 }
 
-// SetIgnoreAuth sets the "ignoreAuth" field.
-func (mu *MenuUpdate) SetIgnoreAuth(b bool) *MenuUpdate {
-	mu.mutation.SetIgnoreAuth(b)
-	return mu
-}
-
-// SetNillableIgnoreAuth sets the "ignoreAuth" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableIgnoreAuth(b *bool) *MenuUpdate {
-	if b != nil {
-		mu.SetIgnoreAuth(*b)
-	}
-	return mu
-}
-
 // SetKeepalive sets the "keepalive" field.
 func (mu *MenuUpdate) SetKeepalive(b bool) *MenuUpdate {
 	mu.mutation.SetKeepalive(b)
@@ -300,16 +342,30 @@ func (mu *MenuUpdate) SetNillableKeepalive(b *bool) *MenuUpdate {
 	return mu
 }
 
-// SetPermission sets the "permission" field.
-func (mu *MenuUpdate) SetPermission(s string) *MenuUpdate {
-	mu.mutation.SetPermission(s)
+// SetIgnoreAccess sets the "ignoreAccess" field.
+func (mu *MenuUpdate) SetIgnoreAccess(b bool) *MenuUpdate {
+	mu.mutation.SetIgnoreAccess(b)
 	return mu
 }
 
-// SetNillablePermission sets the "permission" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillablePermission(s *string) *MenuUpdate {
+// SetNillableIgnoreAccess sets the "ignoreAccess" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIgnoreAccess(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetIgnoreAccess(*b)
+	}
+	return mu
+}
+
+// SetAuthority sets the "authority" field.
+func (mu *MenuUpdate) SetAuthority(s string) *MenuUpdate {
+	mu.mutation.SetAuthority(s)
+	return mu
+}
+
+// SetNillableAuthority sets the "authority" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableAuthority(s *string) *MenuUpdate {
 	if s != nil {
-		mu.SetPermission(*s)
+		mu.SetAuthority(*s)
 	}
 	return mu
 }
@@ -329,14 +385,14 @@ func (mu *MenuUpdate) SetNillableAffixTab(b *bool) *MenuUpdate {
 }
 
 // SetAffixTabOrder sets the "affixTabOrder" field.
-func (mu *MenuUpdate) SetAffixTabOrder(i int64) *MenuUpdate {
+func (mu *MenuUpdate) SetAffixTabOrder(i int16) *MenuUpdate {
 	mu.mutation.ResetAffixTabOrder()
 	mu.mutation.SetAffixTabOrder(i)
 	return mu
 }
 
 // SetNillableAffixTabOrder sets the "affixTabOrder" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableAffixTabOrder(i *int64) *MenuUpdate {
+func (mu *MenuUpdate) SetNillableAffixTabOrder(i *int16) *MenuUpdate {
 	if i != nil {
 		mu.SetAffixTabOrder(*i)
 	}
@@ -344,7 +400,7 @@ func (mu *MenuUpdate) SetNillableAffixTabOrder(i *int64) *MenuUpdate {
 }
 
 // AddAffixTabOrder adds i to the "affixTabOrder" field.
-func (mu *MenuUpdate) AddAffixTabOrder(i int64) *MenuUpdate {
+func (mu *MenuUpdate) AddAffixTabOrder(i int16) *MenuUpdate {
 	mu.mutation.AddAffixTabOrder(i)
 	return mu
 }
@@ -401,6 +457,62 @@ func (mu *MenuUpdate) SetHideChildrenInMenu(b bool) *MenuUpdate {
 func (mu *MenuUpdate) SetNillableHideChildrenInMenu(b *bool) *MenuUpdate {
 	if b != nil {
 		mu.SetHideChildrenInMenu(*b)
+	}
+	return mu
+}
+
+// SetFullPathKey sets the "fullPathKey" field.
+func (mu *MenuUpdate) SetFullPathKey(b bool) *MenuUpdate {
+	mu.mutation.SetFullPathKey(b)
+	return mu
+}
+
+// SetNillableFullPathKey sets the "fullPathKey" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableFullPathKey(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetFullPathKey(*b)
+	}
+	return mu
+}
+
+// SetBadge sets the "badge" field.
+func (mu *MenuUpdate) SetBadge(s string) *MenuUpdate {
+	mu.mutation.SetBadge(s)
+	return mu
+}
+
+// SetNillableBadge sets the "badge" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableBadge(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetBadge(*s)
+	}
+	return mu
+}
+
+// SetBadgeType sets the "badgeType" field.
+func (mu *MenuUpdate) SetBadgeType(s string) *MenuUpdate {
+	mu.mutation.SetBadgeType(s)
+	return mu
+}
+
+// SetNillableBadgeType sets the "badgeType" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableBadgeType(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetBadgeType(*s)
+	}
+	return mu
+}
+
+// SetBadgeVariants sets the "badgeVariants" field.
+func (mu *MenuUpdate) SetBadgeVariants(s string) *MenuUpdate {
+	mu.mutation.SetBadgeVariants(s)
+	return mu
+}
+
+// SetNillableBadgeVariants sets the "badgeVariants" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableBadgeVariants(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetBadgeVariants(*s)
 	}
 	return mu
 }
@@ -473,14 +585,26 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.Status(); ok {
 		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
 	}
+	if value, ok := mu.mutation.Path(); ok {
+		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Redirect(); ok {
+		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Alias(); ok {
+		_spec.SetField(menu.FieldAlias, field.TypeString, value)
+	}
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
-	if value, ok := mu.mutation.Title(); ok {
-		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	if value, ok := mu.mutation.Component(); ok {
+		_spec.SetField(menu.FieldComponent, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Order(); ok {
 		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
@@ -488,14 +612,14 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.AddedOrder(); ok {
 		_spec.AddField(menu.FieldOrder, field.TypeInt32, value)
 	}
-	if value, ok := mu.mutation.Path(); ok {
-		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	if value, ok := mu.mutation.OpenInNewWindow(); ok {
+		_spec.SetField(menu.FieldOpenInNewWindow, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Component(); ok {
-		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	if value, ok := mu.mutation.NoBasicLayout(); ok {
+		_spec.SetField(menu.FieldNoBasicLayout, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Redirect(); ok {
-		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	if value, ok := mu.mutation.MenuVisibleWithForbidden(); ok {
+		_spec.SetField(menu.FieldMenuVisibleWithForbidden, field.TypeBool, value)
 	}
 	if value, ok := mu.mutation.Link(); ok {
 		_spec.SetField(menu.FieldLink, field.TypeString, value)
@@ -515,23 +639,23 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.AddedMaxNumOfOpenTab(); ok {
 		_spec.AddField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
 	}
-	if value, ok := mu.mutation.IgnoreAuth(); ok {
-		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
-	}
 	if value, ok := mu.mutation.Keepalive(); ok {
 		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
 	}
-	if value, ok := mu.mutation.Permission(); ok {
-		_spec.SetField(menu.FieldPermission, field.TypeString, value)
+	if value, ok := mu.mutation.IgnoreAccess(); ok {
+		_spec.SetField(menu.FieldIgnoreAccess, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.Authority(); ok {
+		_spec.SetField(menu.FieldAuthority, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 	}
 	if value, ok := mu.mutation.AffixTabOrder(); ok {
-		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt16, value)
 	}
 	if value, ok := mu.mutation.AddedAffixTabOrder(); ok {
-		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt16, value)
 	}
 	if value, ok := mu.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
@@ -544,6 +668,18 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := mu.mutation.HideChildrenInMenu(); ok {
 		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.FullPathKey(); ok {
+		_spec.SetField(menu.FieldFullPathKey, field.TypeBool, value)
+	}
+	if value, ok := mu.mutation.Badge(); ok {
+		_spec.SetField(menu.FieldBadge, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.BadgeType(); ok {
+		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
+	}
+	if value, ok := mu.mutation.BadgeVariants(); ok {
+		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -627,6 +763,48 @@ func (muo *MenuUpdateOne) SetNillableStatus(b *bool) *MenuUpdateOne {
 	return muo
 }
 
+// SetPath sets the "path" field.
+func (muo *MenuUpdateOne) SetPath(s string) *MenuUpdateOne {
+	muo.mutation.SetPath(s)
+	return muo
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillablePath(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetPath(*s)
+	}
+	return muo
+}
+
+// SetRedirect sets the "redirect" field.
+func (muo *MenuUpdateOne) SetRedirect(s string) *MenuUpdateOne {
+	muo.mutation.SetRedirect(s)
+	return muo
+}
+
+// SetNillableRedirect sets the "redirect" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableRedirect(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetRedirect(*s)
+	}
+	return muo
+}
+
+// SetAlias sets the "alias" field.
+func (muo *MenuUpdateOne) SetAlias(s string) *MenuUpdateOne {
+	muo.mutation.SetAlias(s)
+	return muo
+}
+
+// SetNillableAlias sets the "alias" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableAlias(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetAlias(*s)
+	}
+	return muo
+}
+
 // SetName sets the "name" field.
 func (muo *MenuUpdateOne) SetName(s string) *MenuUpdateOne {
 	muo.mutation.SetName(s)
@@ -641,16 +819,16 @@ func (muo *MenuUpdateOne) SetNillableName(s *string) *MenuUpdateOne {
 	return muo
 }
 
-// SetTitle sets the "title" field.
-func (muo *MenuUpdateOne) SetTitle(s string) *MenuUpdateOne {
-	muo.mutation.SetTitle(s)
+// SetComponent sets the "component" field.
+func (muo *MenuUpdateOne) SetComponent(s string) *MenuUpdateOne {
+	muo.mutation.SetComponent(s)
 	return muo
 }
 
-// SetNillableTitle sets the "title" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableTitle(s *string) *MenuUpdateOne {
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableComponent(s *string) *MenuUpdateOne {
 	if s != nil {
-		muo.SetTitle(*s)
+		muo.SetComponent(*s)
 	}
 	return muo
 }
@@ -665,6 +843,20 @@ func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
 func (muo *MenuUpdateOne) SetNillableIcon(s *string) *MenuUpdateOne {
 	if s != nil {
 		muo.SetIcon(*s)
+	}
+	return muo
+}
+
+// SetTitle sets the "title" field.
+func (muo *MenuUpdateOne) SetTitle(s string) *MenuUpdateOne {
+	muo.mutation.SetTitle(s)
+	return muo
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableTitle(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetTitle(*s)
 	}
 	return muo
 }
@@ -690,44 +882,44 @@ func (muo *MenuUpdateOne) AddOrder(i int32) *MenuUpdateOne {
 	return muo
 }
 
-// SetPath sets the "path" field.
-func (muo *MenuUpdateOne) SetPath(s string) *MenuUpdateOne {
-	muo.mutation.SetPath(s)
+// SetOpenInNewWindow sets the "openInNewWindow" field.
+func (muo *MenuUpdateOne) SetOpenInNewWindow(b bool) *MenuUpdateOne {
+	muo.mutation.SetOpenInNewWindow(b)
 	return muo
 }
 
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillablePath(s *string) *MenuUpdateOne {
-	if s != nil {
-		muo.SetPath(*s)
+// SetNillableOpenInNewWindow sets the "openInNewWindow" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableOpenInNewWindow(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetOpenInNewWindow(*b)
 	}
 	return muo
 }
 
-// SetComponent sets the "component" field.
-func (muo *MenuUpdateOne) SetComponent(s string) *MenuUpdateOne {
-	muo.mutation.SetComponent(s)
+// SetNoBasicLayout sets the "noBasicLayout" field.
+func (muo *MenuUpdateOne) SetNoBasicLayout(b bool) *MenuUpdateOne {
+	muo.mutation.SetNoBasicLayout(b)
 	return muo
 }
 
-// SetNillableComponent sets the "component" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableComponent(s *string) *MenuUpdateOne {
-	if s != nil {
-		muo.SetComponent(*s)
+// SetNillableNoBasicLayout sets the "noBasicLayout" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableNoBasicLayout(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetNoBasicLayout(*b)
 	}
 	return muo
 }
 
-// SetRedirect sets the "redirect" field.
-func (muo *MenuUpdateOne) SetRedirect(s string) *MenuUpdateOne {
-	muo.mutation.SetRedirect(s)
+// SetMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field.
+func (muo *MenuUpdateOne) SetMenuVisibleWithForbidden(b bool) *MenuUpdateOne {
+	muo.mutation.SetMenuVisibleWithForbidden(b)
 	return muo
 }
 
-// SetNillableRedirect sets the "redirect" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableRedirect(s *string) *MenuUpdateOne {
-	if s != nil {
-		muo.SetRedirect(*s)
+// SetNillableMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableMenuVisibleWithForbidden(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetMenuVisibleWithForbidden(*b)
 	}
 	return muo
 }
@@ -809,20 +1001,6 @@ func (muo *MenuUpdateOne) AddMaxNumOfOpenTab(i int16) *MenuUpdateOne {
 	return muo
 }
 
-// SetIgnoreAuth sets the "ignoreAuth" field.
-func (muo *MenuUpdateOne) SetIgnoreAuth(b bool) *MenuUpdateOne {
-	muo.mutation.SetIgnoreAuth(b)
-	return muo
-}
-
-// SetNillableIgnoreAuth sets the "ignoreAuth" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableIgnoreAuth(b *bool) *MenuUpdateOne {
-	if b != nil {
-		muo.SetIgnoreAuth(*b)
-	}
-	return muo
-}
-
 // SetKeepalive sets the "keepalive" field.
 func (muo *MenuUpdateOne) SetKeepalive(b bool) *MenuUpdateOne {
 	muo.mutation.SetKeepalive(b)
@@ -837,16 +1015,30 @@ func (muo *MenuUpdateOne) SetNillableKeepalive(b *bool) *MenuUpdateOne {
 	return muo
 }
 
-// SetPermission sets the "permission" field.
-func (muo *MenuUpdateOne) SetPermission(s string) *MenuUpdateOne {
-	muo.mutation.SetPermission(s)
+// SetIgnoreAccess sets the "ignoreAccess" field.
+func (muo *MenuUpdateOne) SetIgnoreAccess(b bool) *MenuUpdateOne {
+	muo.mutation.SetIgnoreAccess(b)
 	return muo
 }
 
-// SetNillablePermission sets the "permission" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillablePermission(s *string) *MenuUpdateOne {
+// SetNillableIgnoreAccess sets the "ignoreAccess" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIgnoreAccess(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetIgnoreAccess(*b)
+	}
+	return muo
+}
+
+// SetAuthority sets the "authority" field.
+func (muo *MenuUpdateOne) SetAuthority(s string) *MenuUpdateOne {
+	muo.mutation.SetAuthority(s)
+	return muo
+}
+
+// SetNillableAuthority sets the "authority" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableAuthority(s *string) *MenuUpdateOne {
 	if s != nil {
-		muo.SetPermission(*s)
+		muo.SetAuthority(*s)
 	}
 	return muo
 }
@@ -866,14 +1058,14 @@ func (muo *MenuUpdateOne) SetNillableAffixTab(b *bool) *MenuUpdateOne {
 }
 
 // SetAffixTabOrder sets the "affixTabOrder" field.
-func (muo *MenuUpdateOne) SetAffixTabOrder(i int64) *MenuUpdateOne {
+func (muo *MenuUpdateOne) SetAffixTabOrder(i int16) *MenuUpdateOne {
 	muo.mutation.ResetAffixTabOrder()
 	muo.mutation.SetAffixTabOrder(i)
 	return muo
 }
 
 // SetNillableAffixTabOrder sets the "affixTabOrder" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableAffixTabOrder(i *int64) *MenuUpdateOne {
+func (muo *MenuUpdateOne) SetNillableAffixTabOrder(i *int16) *MenuUpdateOne {
 	if i != nil {
 		muo.SetAffixTabOrder(*i)
 	}
@@ -881,7 +1073,7 @@ func (muo *MenuUpdateOne) SetNillableAffixTabOrder(i *int64) *MenuUpdateOne {
 }
 
 // AddAffixTabOrder adds i to the "affixTabOrder" field.
-func (muo *MenuUpdateOne) AddAffixTabOrder(i int64) *MenuUpdateOne {
+func (muo *MenuUpdateOne) AddAffixTabOrder(i int16) *MenuUpdateOne {
 	muo.mutation.AddAffixTabOrder(i)
 	return muo
 }
@@ -938,6 +1130,62 @@ func (muo *MenuUpdateOne) SetHideChildrenInMenu(b bool) *MenuUpdateOne {
 func (muo *MenuUpdateOne) SetNillableHideChildrenInMenu(b *bool) *MenuUpdateOne {
 	if b != nil {
 		muo.SetHideChildrenInMenu(*b)
+	}
+	return muo
+}
+
+// SetFullPathKey sets the "fullPathKey" field.
+func (muo *MenuUpdateOne) SetFullPathKey(b bool) *MenuUpdateOne {
+	muo.mutation.SetFullPathKey(b)
+	return muo
+}
+
+// SetNillableFullPathKey sets the "fullPathKey" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableFullPathKey(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetFullPathKey(*b)
+	}
+	return muo
+}
+
+// SetBadge sets the "badge" field.
+func (muo *MenuUpdateOne) SetBadge(s string) *MenuUpdateOne {
+	muo.mutation.SetBadge(s)
+	return muo
+}
+
+// SetNillableBadge sets the "badge" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableBadge(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetBadge(*s)
+	}
+	return muo
+}
+
+// SetBadgeType sets the "badgeType" field.
+func (muo *MenuUpdateOne) SetBadgeType(s string) *MenuUpdateOne {
+	muo.mutation.SetBadgeType(s)
+	return muo
+}
+
+// SetNillableBadgeType sets the "badgeType" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableBadgeType(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetBadgeType(*s)
+	}
+	return muo
+}
+
+// SetBadgeVariants sets the "badgeVariants" field.
+func (muo *MenuUpdateOne) SetBadgeVariants(s string) *MenuUpdateOne {
+	muo.mutation.SetBadgeVariants(s)
+	return muo
+}
+
+// SetNillableBadgeVariants sets the "badgeVariants" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableBadgeVariants(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetBadgeVariants(*s)
 	}
 	return muo
 }
@@ -1040,14 +1288,26 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.Status(); ok {
 		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
 	}
+	if value, ok := muo.mutation.Path(); ok {
+		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Redirect(); ok {
+		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Alias(); ok {
+		_spec.SetField(menu.FieldAlias, field.TypeString, value)
+	}
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
-	if value, ok := muo.mutation.Title(); ok {
-		_spec.SetField(menu.FieldTitle, field.TypeString, value)
+	if value, ok := muo.mutation.Component(); ok {
+		_spec.SetField(menu.FieldComponent, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.Title(); ok {
+		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Order(); ok {
 		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
@@ -1055,14 +1315,14 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.AddedOrder(); ok {
 		_spec.AddField(menu.FieldOrder, field.TypeInt32, value)
 	}
-	if value, ok := muo.mutation.Path(); ok {
-		_spec.SetField(menu.FieldPath, field.TypeString, value)
+	if value, ok := muo.mutation.OpenInNewWindow(); ok {
+		_spec.SetField(menu.FieldOpenInNewWindow, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Component(); ok {
-		_spec.SetField(menu.FieldComponent, field.TypeString, value)
+	if value, ok := muo.mutation.NoBasicLayout(); ok {
+		_spec.SetField(menu.FieldNoBasicLayout, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Redirect(); ok {
-		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
+	if value, ok := muo.mutation.MenuVisibleWithForbidden(); ok {
+		_spec.SetField(menu.FieldMenuVisibleWithForbidden, field.TypeBool, value)
 	}
 	if value, ok := muo.mutation.Link(); ok {
 		_spec.SetField(menu.FieldLink, field.TypeString, value)
@@ -1082,23 +1342,23 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.AddedMaxNumOfOpenTab(); ok {
 		_spec.AddField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
 	}
-	if value, ok := muo.mutation.IgnoreAuth(); ok {
-		_spec.SetField(menu.FieldIgnoreAuth, field.TypeBool, value)
-	}
 	if value, ok := muo.mutation.Keepalive(); ok {
 		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
 	}
-	if value, ok := muo.mutation.Permission(); ok {
-		_spec.SetField(menu.FieldPermission, field.TypeString, value)
+	if value, ok := muo.mutation.IgnoreAccess(); ok {
+		_spec.SetField(menu.FieldIgnoreAccess, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.Authority(); ok {
+		_spec.SetField(menu.FieldAuthority, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 	}
 	if value, ok := muo.mutation.AffixTabOrder(); ok {
-		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt16, value)
 	}
 	if value, ok := muo.mutation.AddedAffixTabOrder(); ok {
-		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt64, value)
+		_spec.AddField(menu.FieldAffixTabOrder, field.TypeInt16, value)
 	}
 	if value, ok := muo.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
@@ -1111,6 +1371,18 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	}
 	if value, ok := muo.mutation.HideChildrenInMenu(); ok {
 		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.FullPathKey(); ok {
+		_spec.SetField(menu.FieldFullPathKey, field.TypeBool, value)
+	}
+	if value, ok := muo.mutation.Badge(); ok {
+		_spec.SetField(menu.FieldBadge, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.BadgeType(); ok {
+		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
+	}
+	if value, ok := muo.mutation.BadgeVariants(); ok {
+		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
 	}
 	_node = &Menu{config: muo.config}
 	_spec.Assign = _node.assignValues
