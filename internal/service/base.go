@@ -12,6 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -45,7 +46,7 @@ func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 	//req.Password = tools.UserPasswdEncrypt(req.Password, "")
 	// 检查是否有这个人
 	uid, err := s.uc.Login(ctx, req)
-	if err != nil || uid == "00000000-0000-0000-0000-000000000000" {
+	if err != nil || uid == uuid.Nil.String() {
 		return nil, err
 	}
 
