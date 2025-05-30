@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package api.base_api.v1;
+import "options/options.proto";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -8,6 +9,15 @@ import "google/protobuf/empty.proto";
 option go_package = "base-server/api/base_api/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.base_api.v1";
+
+enum MenuType {
+	option (options.default_type) = "default";
+	catalog = 0 [(options.menu_type) = "catalog"];			// 目录
+	menu = 1 [(options.menu_type) = "menu"];						// 菜单
+	embedded = 2 [(options.menu_type) = "embedded"];		// 内嵌
+	link = 3 [(options.menu_type) = "link"];						// 外链
+	button = 4 [(options.menu_type) = "button"];				// 按钮
+}
 
 service Base {
 	// 用户登陆
@@ -57,7 +67,7 @@ service Base {
 		};
 	}
 
-	////////////////////////////////////////////////////
+	//////////////////////////////////////////////////// (重新加载casbin权限数据)
 	rpc ReLoadPolicy (google.protobuf.Empty) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/auth/reloadPolicy",
@@ -65,7 +75,7 @@ service Base {
 		};
 	}
 
-	/////////////////////////////////////////////////////
+	///////////////////////////////////////////////////// user
 
 	// 获取账户列表
 	rpc GetAccountList (AccountParams) returns (GetAccountListReply) {
@@ -86,7 +96,6 @@ service Base {
 	rpc DelUser (DeleteUser) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			delete: "/basic-api/system/delUser/{id}"
-			// body: "*"
 		};
 	}
 
@@ -94,6 +103,15 @@ service Base {
 	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/getRoleListByPage"
+		};
+	}
+
+	///////////////////////////////////////////////////// menu
+	// 获取菜单列表
+	rpc GetSysMenuList (MenuParams) returns (GetSysMenuListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/menu/list"
+//			response_body: "items"
 		};
 	}
 
@@ -148,15 +166,6 @@ service Base {
 		option (google.api.http) = {
 			post: "/basic-api/system/updateRole"
 			body: "*"
-		};
-	}
-
-
-	// 获取菜单列表
-	rpc GetSysMenuList (MenuParams) returns (GetSysMenuListReply) {
-		option (google.api.http) = {
-			get: "/basic-api/system/getMenuList"
-			response_body: "items"
 		};
 	}
 
@@ -251,6 +260,7 @@ message RouteItem {
 	repeated string alias = 6;		// 路径的别名
 	string redirect = 7;					// 如果路由直接匹配，则重定向到何处。重定向发生在任何导航保护之前，并触发具有新目标位置的新导航。
 	repeated RouteItem children = 8;	// 嵌套路由的数组
+	int64 pid = 9;					// 父级ID
 }
 
 message RouteMeta {
@@ -336,15 +346,52 @@ message MenuParams {
 }
 
 message SysMenuListItem {
-	string id = 1;					// id
-	string orderNo = 2;			// 排序
-	string icon = 3;				// 图标
-	string menuName = 4;					/// 标题
-	int64 status = 5;				// 状态
-	string createTime = 6;	// 创建时间
-	string component = 7;		// 组件
-	string permission = 8;	//
-	repeated SysMenuListItem children = 9;
+	message Meta {
+		string order = 1;			// 排序
+		string icon = 2;				// 图标
+		string title = 3;				// 菜单标题
+
+		optional string activeIcon = 4;				// 激活时显示的图标
+		optional string activePath = 5;				// 作为路由时，需要激活的菜单的Path
+		optional bool affixTab = 6;				// 固定在标签栏
+		optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
+
+		optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
+		optional int64 badgeType = 9;				// 徽标类型
+		optional int64 badgeVariants = 10;				// 徽标颜色
+
+		optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
+		optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
+		optional bool hideInMenu = 13;				// 在菜单中隐藏
+		optional bool hideInTab = 14;				// 在标签栏中隐藏
+
+		optional string iframeSrc = 15;				// 内嵌Iframe的URL
+		optional string link = 16;						// 外链页面的URL
+		optional bool keepAlive = 17;				// 是否缓存页面
+
+		optional int64 maxNumOfOpenTab = 18;				// 同一个路由最大打开的标签数
+		optional bool noBasicLayout = 19;				// 无需基础布局
+		optional bool openInNewWindow = 20;				// 是否在新窗口打开
+
+//		/** 额外的路由参数 */
+//			query?: Recordable<any>;
+	}
+
+	int64 id = 1;					// 菜单ID
+	string component = 2;		// 组件
+	int64 status = 3;				// 状态
+	string authCode = 4;	// 后端权限标识
+
+	string name = 5;					// 菜单名称
+	string path = 6;					// 路由路径
+	int64 pid = 7;					// 父级ID
+	optional string redirect = 8;		// 重定向
+	MenuType type = 9;
+
+	Meta meta = 10;		// 菜单元数据
+	repeated SysMenuListItem children = 11;		// 子级
+
+	string createTime = 12;	// 创建时间
 }
 
 message GetSysMenuListReply {

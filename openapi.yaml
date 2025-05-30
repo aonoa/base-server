@@ -73,7 +73,7 @@ paths:
         post:
             tags:
                 - Base
-            description: //////////////////////////////////////////////////
+            description: ////////////////////////////////////////////////// (重新加载casbin权限数据)
             operationId: Base_ReLoadPolicy
             requestBody:
                 content:
@@ -302,28 +302,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetDeptListReply'
-    /basic-api/system/getMenuList:
-        get:
-            tags:
-                - Base
-            description: 获取菜单列表
-            operationId: Base_GetSysMenuList
-            parameters:
-                - name: menuName
-                  in: query
-                  schema:
-                    type: string
-                - name: status
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
     /basic-api/system/getRoleListByPage:
         get:
             tags:
@@ -358,6 +336,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetRoleListByPageReply'
+    /basic-api/system/menu/list:
+        get:
+            tags:
+                - Base
+            description: |-
+                /////////////////////////////////////////////////// menu
+                 获取菜单列表
+            operationId: Base_GetSysMenuList
+            parameters:
+                - name: menuName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
     /basic-api/system/setRoleStatus:
         post:
             tags:
@@ -654,6 +656,8 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.RouteItem'
+                pid:
+                    type: string
         api.base_api.v1.RouteMeta:
             type: object
             properties:
@@ -705,24 +709,74 @@ components:
             properties:
                 id:
                     type: string
-                orderNo:
-                    type: string
-                icon:
-                    type: string
-                menuName:
+                component:
                     type: string
                 status:
                     type: string
-                createTime:
+                authCode:
                     type: string
-                component:
+                name:
                     type: string
-                permission:
+                path:
                     type: string
+                pid:
+                    type: string
+                redirect:
+                    type: string
+                type:
+                    type: integer
+                    format: enum
+                meta:
+                    $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem_Meta'
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
+                createTime:
+                    type: string
+        api.base_api.v1.SysMenuListItem_Meta:
+            type: object
+            properties:
+                order:
+                    type: string
+                icon:
+                    type: string
+                title:
+                    type: string
+                activeIcon:
+                    type: string
+                activePath:
+                    type: string
+                affixTab:
+                    type: boolean
+                affixTabOrder:
+                    type: string
+                badge:
+                    type: string
+                badgeType:
+                    type: string
+                badgeVariants:
+                    type: string
+                hideChildrenInMenu:
+                    type: boolean
+                hideInBreadcrumb:
+                    type: boolean
+                hideInMenu:
+                    type: boolean
+                hideInTab:
+                    type: boolean
+                iframeSrc:
+                    type: string
+                link:
+                    type: string
+                keepAlive:
+                    type: boolean
+                maxNumOfOpenTab:
+                    type: string
+                noBasicLayout:
+                    type: boolean
+                openInNewWindow:
+                    type: boolean
         api.base_api.v1.UploadResponse:
             type: object
             properties:

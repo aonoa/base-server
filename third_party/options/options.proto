@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package options;
+
+//option go_package = "github.com/go-kratos/kratos/v2/errors;errors";
+option go_package = "base-server/api/base_api/options;options";
+option java_multiple_files = true;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.EnumOptions {
+  string default_type = 5001;
+}
+
+// 定义一个扩展用于枚举值选项，用于添加字符串信息
+extend google.protobuf.EnumValueOptions {
+  string menu_type = 5002;
+}

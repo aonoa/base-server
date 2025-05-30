@@ -31,6 +31,7 @@ const (
 	Base_AddUser_FullMethodName           = "/api.base_api.v1.Base/AddUser"
 	Base_DelUser_FullMethodName           = "/api.base_api.v1.Base/DelUser"
 	Base_GetRoleListByPage_FullMethodName = "/api.base_api.v1.Base/GetRoleListByPage"
+	Base_GetSysMenuList_FullMethodName    = "/api.base_api.v1.Base/GetSysMenuList"
 	Base_GetDeptList_FullMethodName       = "/api.base_api.v1.Base/GetDeptList"
 	Base_AddDept_FullMethodName           = "/api.base_api.v1.Base/AddDept"
 	Base_UpdateDept_FullMethodName        = "/api.base_api.v1.Base/UpdateDept"
@@ -38,7 +39,6 @@ const (
 	Base_AddRole_FullMethodName           = "/api.base_api.v1.Base/AddRole"
 	Base_DelRole_FullMethodName           = "/api.base_api.v1.Base/DelRole"
 	Base_UpdateRole_FullMethodName        = "/api.base_api.v1.Base/UpdateRole"
-	Base_GetSysMenuList_FullMethodName    = "/api.base_api.v1.Base/GetSysMenuList"
 	Base_GetAllRoleList_FullMethodName    = "/api.base_api.v1.Base/GetAllRoleList"
 	Base_SetRoleStatus_FullMethodName     = "/api.base_api.v1.Base/SetRoleStatus"
 	Base_IsAccountExist_FullMethodName    = "/api.base_api.v1.Base/IsAccountExist"
@@ -61,7 +61,7 @@ type BaseClient interface {
 	GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
-	// //////////////////////////////////////////////////
+	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取账户列表
 	GetAccountList(ctx context.Context, in *AccountParams, opts ...grpc.CallOption) (*GetAccountListReply, error)
@@ -71,6 +71,9 @@ type BaseClient interface {
 	DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取角色列表
 	GetRoleListByPage(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
+	// /////////////////////////////////////////////////// menu
+	// 获取菜单列表
+	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
 	// 获取部门列表
 	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
 	// 新增部门
@@ -85,8 +88,6 @@ type BaseClient interface {
 	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 修改角色
 	UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
-	// 获取菜单列表
-	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
 	// 获取角色信息
 	GetAllRoleList(ctx context.Context, in *RoleParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
 	// 设置角色状态
@@ -215,6 +216,16 @@ func (c *baseClient) GetRoleListByPage(ctx context.Context, in *RolePageParams, 
 	return out, nil
 }
 
+func (c *baseClient) GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSysMenuListReply)
+	err := c.cc.Invoke(ctx, Base_GetSysMenuList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *baseClient) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDeptListReply)
@@ -285,16 +296,6 @@ func (c *baseClient) UpdateRole(ctx context.Context, in *RoleListItem, opts ...g
 	return out, nil
 }
 
-func (c *baseClient) GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSysMenuListReply)
-	err := c.cc.Invoke(ctx, Base_GetSysMenuList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) GetAllRoleList(ctx context.Context, in *RoleParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetRoleListByPageReply)
@@ -351,7 +352,7 @@ type BaseServer interface {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
-	// //////////////////////////////////////////////////
+	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取账户列表
 	GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error)
@@ -361,6 +362,9 @@ type BaseServer interface {
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
 	// 获取角色列表
 	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
+	// /////////////////////////////////////////////////// menu
+	// 获取菜单列表
+	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	// 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	// 新增部门
@@ -375,8 +379,6 @@ type BaseServer interface {
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	// 获取菜单列表
-	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	// 获取角色信息
 	GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error)
 	// 设置角色状态
@@ -428,6 +430,9 @@ func (UnimplementedBaseServer) DelUser(context.Context, *DeleteUser) (*emptypb.E
 func (UnimplementedBaseServer) GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoleListByPage not implemented")
 }
+func (UnimplementedBaseServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
+}
 func (UnimplementedBaseServer) GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeptList not implemented")
 }
@@ -448,9 +453,6 @@ func (UnimplementedBaseServer) DelRole(context.Context, *DeleteRole) (*emptypb.E
 }
 func (UnimplementedBaseServer) UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
-}
-func (UnimplementedBaseServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
 }
 func (UnimplementedBaseServer) GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllRoleList not implemented")
@@ -683,6 +685,24 @@ func _Base_GetRoleListByPage_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_GetSysMenuList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MenuParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetSysMenuList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetSysMenuList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetSysMenuList(ctx, req.(*MenuParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Base_GetDeptList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -805,24 +825,6 @@ func _Base_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServer).UpdateRole(ctx, req.(*RoleListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Base_GetSysMenuList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MenuParams)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).GetSysMenuList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_GetSysMenuList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).GetSysMenuList(ctx, req.(*MenuParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -951,6 +953,10 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_GetRoleListByPage_Handler,
 		},
 		{
+			MethodName: "GetSysMenuList",
+			Handler:    _Base_GetSysMenuList_Handler,
+		},
+		{
 			MethodName: "GetDeptList",
 			Handler:    _Base_GetDeptList_Handler,
 		},
@@ -977,10 +983,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateRole",
 			Handler:    _Base_UpdateRole_Handler,
-		},
-		{
-			MethodName: "GetSysMenuList",
-			Handler:    _Base_GetSysMenuList_Handler,
 		},
 		{
 			MethodName: "GetAllRoleList",

@@ -237,6 +237,7 @@ func menuToRoute(menu *ent.Menu) *pb.RouteItem {
 	RouteItem := pb.RouteItem{Meta: &pb.RouteMeta{}}
 	copier.Copy(&RouteItem, menu)
 	RouteItem.Id = menu.ID
+	RouteItem.Pid = menu.Pid
 
 	RouteItem.Meta.Title = menu.Title
 	RouteItem.Meta.Icon = menu.Icon
@@ -620,12 +621,10 @@ func (uc *BaseUsecase) GetSysMenuList(ctx context.Context) (*pb.GetSysMenuListRe
 
 func ToMenuTree(forest []*pb.RouteItem) []*pb.SysMenuListItem {
 	var items []*pb.SysMenuListItem
-	for i, item := range forest {
+	for _, item := range forest {
 		items = append(items, &pb.SysMenuListItem{
-			Id:       strconv.FormatInt(item.Id, 10),
-			OrderNo:  strconv.Itoa(i),
-			Icon:     item.Meta.Icon,
-			MenuName: item.Name,
+			Id:        item.Id,
+			Component: item.Component,
 			Status: func() int64 {
 				if item.Meta.HideInMenu {
 					return 1
@@ -633,8 +632,34 @@ func ToMenuTree(forest []*pb.RouteItem) []*pb.SysMenuListItem {
 					return 0
 				}
 			}(),
-			// CreateTime: item.CreateTime.Format("2006-01-02 15:04:05"),
-			Component: item.Component,
+			AuthCode: "",
+			Name:     item.Name,
+			Path:     item.Path,
+			Pid:      item.Pid,
+			Redirect: nil,
+			Type:     0,
+			Meta: &pb.SysMenuListItem_Meta{
+				Order:              strconv.FormatInt(item.Meta.Order, 10),
+				Icon:               item.Meta.Icon,
+				Title:              item.Meta.Title,
+				ActiveIcon:         nil,
+				ActivePath:         &item.Meta.ActivePath,
+				AffixTab:           nil,
+				AffixTabOrder:      nil,
+				Badge:              nil,
+				BadgeType:          nil,
+				BadgeVariants:      nil,
+				HideChildrenInMenu: nil,
+				HideInBreadcrumb:   nil,
+				HideInMenu:         nil,
+				HideInTab:          nil,
+				IframeSrc:          nil,
+				Link:               nil,
+				KeepAlive:          nil,
+				MaxNumOfOpenTab:    nil,
+				NoBasicLayout:      nil,
+				OpenInNewWindow:    nil,
+			},
 			Children: func() []*pb.SysMenuListItem {
 				if item.Children == nil {
 					return nil
@@ -642,6 +667,7 @@ func ToMenuTree(forest []*pb.RouteItem) []*pb.SysMenuListItem {
 					return ToMenuTree(item.Children)
 				}
 			}(),
+			CreateTime: "",
 		})
 	}
 

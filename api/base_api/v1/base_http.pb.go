@@ -71,7 +71,8 @@ type BaseHTTPServer interface {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error)
 	// GetRoleListByPage 获取角色列表
 	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
-	// GetSysMenuList 获取菜单列表
+	// GetSysMenuList/////////////////////////////////////////////////// menu
+	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	// GetUserInfo 获取用户信息
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
@@ -81,7 +82,7 @@ type BaseHTTPServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// Logout 注销登陆
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	// ReLoadPolicy//////////////////////////////////////////////////
+	// ReLoadPolicy////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RefreshToken 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
@@ -106,6 +107,7 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getRoleListByPage", _Base_GetRoleListByPage0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/menu/list", _Base_GetSysMenuList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
@@ -113,7 +115,6 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/addRole", _Base_AddRole0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delRole/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateRole", _Base_UpdateRole0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getMenuList", _Base_GetSysMenuList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getAllRoleList", _Base_GetAllRoleList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/accountExist", _Base_IsAccountExist0_HTTP_Handler(srv))
@@ -347,6 +348,25 @@ func _Base_GetRoleListByPage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Con
 	}
 }
 
+func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in MenuParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetSysMenuList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSysMenuList(ctx, req.(*MenuParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSysMenuListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Base_GetDeptList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
@@ -495,25 +515,6 @@ func _Base_UpdateRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) e
 		}
 		reply := out.(*RoleListItem)
 		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in MenuParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseGetSysMenuList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetSysMenuList(ctx, req.(*MenuParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetSysMenuListReply)
-		return ctx.Result(200, reply.Items)
 	}
 }
 
@@ -807,11 +808,11 @@ func (c *BaseHTTPClientImpl) GetRoleListByPage(ctx context.Context, in *RolePage
 
 func (c *BaseHTTPClientImpl) GetSysMenuList(ctx context.Context, in *MenuParams, opts ...http.CallOption) (*GetSysMenuListReply, error) {
 	var out GetSysMenuListReply
-	pattern := "/basic-api/system/getMenuList"
+	pattern := "/basic-api/system/menu/list"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetSysMenuList))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
