@@ -58,7 +58,9 @@ type BaseClient interface {
 	// 注销登陆
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取路由菜单列表
-	GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMenuListReply, error)
+	//
+	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
+	GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
 	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
@@ -146,9 +148,9 @@ func (c *baseClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc
 	return out, nil
 }
 
-func (c *baseClient) GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMenuListReply, error) {
+func (c *baseClient) GetMenuList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSysMenuListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMenuListReply)
+	out := new(GetSysMenuListReply)
 	err := c.cc.Invoke(ctx, Base_GetMenuList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -349,7 +351,9 @@ type BaseServer interface {
 	// 注销登陆
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取路由菜单列表
-	GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error)
+	//
+	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
+	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
 	// 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
@@ -409,7 +413,7 @@ func (UnimplementedBaseServer) GetAccessCodes(context.Context, *emptypb.Empty) (
 func (UnimplementedBaseServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedBaseServer) GetMenuList(context.Context, *emptypb.Empty) (*GetMenuListReply, error) {
+func (UnimplementedBaseServer) GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuList not implemented")
 }
 func (UnimplementedBaseServer) RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error) {

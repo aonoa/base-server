@@ -87,7 +87,9 @@ paths:
         get:
             tags:
                 - Base
-            description: 获取路由菜单列表
+            description: |-
+                获取路由菜单列表
+                	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
             operationId: Base_GetMenuList
             responses:
                 "200":
@@ -95,7 +97,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.base_api.v1.GetMenuListReply'
+                                $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
     /basic-api/system/accountExist:
         post:
             tags:
@@ -538,13 +540,6 @@ components:
                         $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
                 total:
                     type: string
-        api.base_api.v1.GetMenuListReply:
-            type: object
-            properties:
-                menuList:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.base_api.v1.RouteItem'
         api.base_api.v1.GetRoleListByPageReply:
             type: object
             properties:
@@ -603,138 +598,7 @@ components:
                     type: string
                 password:
                     type: string
-        api.base_api.v1.RoleInfo:
-            type: object
-            properties:
-                roleName:
-                    type: string
-                value:
-                    type: string
-        api.base_api.v1.RoleListItem:
-            type: object
-            properties:
-                id:
-                    type: string
-                roleName:
-                    type: string
-                roleValue:
-                    type: string
-                status:
-                    type: string
-                orderNo:
-                    type: string
-                createTime:
-                    type: string
-                remark:
-                    type: string
-                menu:
-                    type: array
-                    items:
-                        type: string
-                dept:
-                    type: string
-        api.base_api.v1.RouteItem:
-            type: object
-            properties:
-                id:
-                    type: string
-                name:
-                    type: string
-                path:
-                    type: string
-                component:
-                    type: string
-                meta:
-                    $ref: '#/components/schemas/api.base_api.v1.RouteMeta'
-                alias:
-                    type: array
-                    items:
-                        type: string
-                redirect:
-                    type: string
-                children:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.base_api.v1.RouteItem'
-                pid:
-                    type: string
-        api.base_api.v1.RouteMeta:
-            type: object
-            properties:
-                title:
-                    type: string
-                icon:
-                    type: string
-                order:
-                    type: string
-                link:
-                    type: string
-                iframeSrc:
-                    type: string
-                ignoreAccess:
-                    type: boolean
-                keepAlive:
-                    type: boolean
-                badge:
-                    type: string
-                badgeType:
-                    type: string
-                badgeVariants:
-                    type: string
-                activePath:
-                    type: string
-                maxNumOfOpenTab:
-                    type: string
-                hideChildrenInMenu:
-                    type: boolean
-                hideInBreadcrumb:
-                    type: boolean
-                hideInMenu:
-                    type: boolean
-                hideInTab:
-                    type: boolean
-                authority:
-                    type: array
-                    items:
-                        type: string
-        api.base_api.v1.SetRoleStatusRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                status:
-                    type: string
-        api.base_api.v1.SysMenuListItem:
-            type: object
-            properties:
-                id:
-                    type: string
-                component:
-                    type: string
-                status:
-                    type: string
-                authCode:
-                    type: string
-                name:
-                    type: string
-                path:
-                    type: string
-                pid:
-                    type: string
-                redirect:
-                    type: string
-                type:
-                    type: integer
-                    format: enum
-                meta:
-                    $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem_Meta'
-                children:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
-                createTime:
-                    type: string
-        api.base_api.v1.SysMenuListItem_Meta:
+        api.base_api.v1.Meta:
             type: object
             properties:
                 order:
@@ -777,6 +641,79 @@ components:
                     type: boolean
                 openInNewWindow:
                     type: boolean
+                ignoreAccess:
+                    type: boolean
+                authority:
+                    type: array
+                    items:
+                        type: string
+        api.base_api.v1.RoleInfo:
+            type: object
+            properties:
+                roleName:
+                    type: string
+                value:
+                    type: string
+        api.base_api.v1.RoleListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                roleName:
+                    type: string
+                roleValue:
+                    type: string
+                status:
+                    type: string
+                orderNo:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                menu:
+                    type: array
+                    items:
+                        type: string
+                dept:
+                    type: string
+        api.base_api.v1.SetRoleStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: string
+        api.base_api.v1.SysMenuListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                component:
+                    type: string
+                status:
+                    type: string
+                authCode:
+                    type: string
+                name:
+                    type: string
+                path:
+                    type: string
+                pid:
+                    type: string
+                redirect:
+                    type: string
+                type:
+                    type: integer
+                    format: enum
+                meta:
+                    $ref: '#/components/schemas/api.base_api.v1.Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
+                createTime:
+                    type: string
         api.base_api.v1.UploadResponse:
             type: object
             properties:

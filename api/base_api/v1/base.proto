@@ -52,10 +52,12 @@ service Base {
 	}
 
 	// 获取路由菜单列表
-	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
+//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
+	rpc GetMenuList (google.protobuf.Empty) returns (GetSysMenuListReply) {
 		option (google.api.http) = {
 			get: "/basic-api/menu/all",
-			response_body: "menuList"
+//			response_body: "menuList"
+			response_body: "items"
 		};
 	}
 
@@ -345,37 +347,74 @@ message MenuParams {
 	string status = 2;
 }
 
+message Meta {
+	int64 order = 1;			// 排序
+	string icon = 2;				// 图标
+	string title = 3;				// 菜单标题
+
+	optional string activeIcon = 4;				// 激活时显示的图标
+	optional string activePath = 5;				// 作为路由时，需要激活的菜单的Path
+	optional bool affixTab = 6;				// 固定在标签栏
+	optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
+
+	optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
+	optional int64 badgeType = 9;				// 徽标类型
+	optional int64 badgeVariants = 10;				// 徽标颜色
+
+	optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
+	optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
+	optional bool hideInMenu = 13;				// 在菜单中隐藏
+	optional bool hideInTab = 14;				// 在标签栏中隐藏
+
+	optional string iframeSrc = 15;				// 内嵌Iframe的URL
+	optional string link = 16;						// 外链页面的URL
+	optional bool keepAlive = 17;				// 是否缓存页面
+
+	optional int64 maxNumOfOpenTab = 18;				// 同一个路由最大打开的标签数
+	optional bool noBasicLayout = 19;				// 无需基础布局
+	optional bool openInNewWindow = 20;				// 是否在新窗口打开
+
+	bool ignoreAccess = 21;					// 是否忽略权限
+	repeated string authority = 22;				// 需要特定的角色标识才可以访问
+
+	//		/** 额外的路由参数 */
+	//			query?: Recordable<any>;
+}
+
 message SysMenuListItem {
-	message Meta {
-		string order = 1;			// 排序
-		string icon = 2;				// 图标
-		string title = 3;				// 菜单标题
-
-		optional string activeIcon = 4;				// 激活时显示的图标
-		optional string activePath = 5;				// 作为路由时，需要激活的菜单的Path
-		optional bool affixTab = 6;				// 固定在标签栏
-		optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
-
-		optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
-		optional int64 badgeType = 9;				// 徽标类型
-		optional int64 badgeVariants = 10;				// 徽标颜色
-
-		optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
-		optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
-		optional bool hideInMenu = 13;				// 在菜单中隐藏
-		optional bool hideInTab = 14;				// 在标签栏中隐藏
-
-		optional string iframeSrc = 15;				// 内嵌Iframe的URL
-		optional string link = 16;						// 外链页面的URL
-		optional bool keepAlive = 17;				// 是否缓存页面
-
-		optional int64 maxNumOfOpenTab = 18;				// 同一个路由最大打开的标签数
-		optional bool noBasicLayout = 19;				// 无需基础布局
-		optional bool openInNewWindow = 20;				// 是否在新窗口打开
-
-//		/** 额外的路由参数 */
-//			query?: Recordable<any>;
-	}
+//	message Meta {
+//		int64 order = 1;			// 排序
+//		string icon = 2;				// 图标
+//		string title = 3;				// 菜单标题
+//
+//		optional string activeIcon = 4;				// 激活时显示的图标
+//		optional string activePath = 5;				// 作为路由时，需要激活的菜单的Path
+//		optional bool affixTab = 6;				// 固定在标签栏
+//		optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
+//
+//		optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
+//		optional int64 badgeType = 9;				// 徽标类型
+//		optional int64 badgeVariants = 10;				// 徽标颜色
+//
+//		optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
+//		optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
+//		optional bool hideInMenu = 13;				// 在菜单中隐藏
+//		optional bool hideInTab = 14;				// 在标签栏中隐藏
+//
+//		optional string iframeSrc = 15;				// 内嵌Iframe的URL
+//		optional string link = 16;						// 外链页面的URL
+//		optional bool keepAlive = 17;				// 是否缓存页面
+//
+//		optional int64 maxNumOfOpenTab = 18;				// 同一个路由最大打开的标签数
+//		optional bool noBasicLayout = 19;				// 无需基础布局
+//		optional bool openInNewWindow = 20;				// 是否在新窗口打开
+//
+//		bool ignoreAccess = 21;					// 是否忽略权限
+//		repeated string authority = 22;				// 需要特定的角色标识才可以访问
+//
+////		/** 额外的路由参数 */
+////			query?: Recordable<any>;
+//	}
 
 	int64 id = 1;					// 菜单ID
 	string component = 2;		// 组件
@@ -387,6 +426,7 @@ message SysMenuListItem {
 	int64 pid = 7;					// 父级ID
 	optional string redirect = 8;		// 重定向
 	MenuType type = 9;
+//	string type = 9;
 
 	Meta meta = 10;		// 菜单元数据
 	repeated SysMenuListItem children = 11;		// 子级

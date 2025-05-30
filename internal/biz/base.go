@@ -130,8 +130,9 @@ func (uc *BaseUsecase) GetUserInfo(ctx context.Context, uuidString string) (*ent
 }
 
 // CreateMenuTree 创建菜单
-func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply, error) {
-	reqs := &pb.GetMenuListReply{MenuList: []*pb.RouteItem{}}
+func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListReply, error) {
+	//reqs := &pb.GetMenuListReply{MenuList: []*pb.RouteItem{}}
+	reqs := &pb.GetSysMenuListReply{Items: []*pb.SysMenuListItem{}}
 	menuList, err := uc.repo.GetMenuList(ctx)
 	if err != nil {
 		return nil, err
@@ -197,20 +198,77 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetMenuListReply
 			menuID, _ := strconv.ParseInt(item, 10, 64)
 			if menuID == menu.ID {
 				if menu.Pid == 0 {
-					reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
+					//reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
+					reqs.Items = append(reqs.Items, menuToMenu(menu))
 					continue
 				}
 
-				key := uc.BuildMenuTree(&reqs.MenuList, menu)
+				//key := uc.BuildMenuTree(&reqs.MenuList, menu)
+				key := uc.BuildMenuTree1(&reqs.Items, menu)
 				if !key {
 					// 如果菜单不属于任何父级，则将其加入顶层列表
-					reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
+					//reqs.Items = append(reqs.Items, menuToRoute(menu))
+					reqs.Items = append(reqs.Items, menuToMenu(menu))
 				}
 			}
 		}
 	}
 
 	return reqs, err
+}
+
+// BuildMenuTree1 构造菜单树
+func (uc *BaseUsecase) BuildMenuTree1(menuList *[]*pb.SysMenuListItem, menu *ent.Menu) bool {
+	for _, item := range *menuList {
+		if item.Children != nil {
+			key := uc.BuildMenuTree1(&item.Children, menu)
+			if key {
+				return key
+			}
+		}
+		if item.Id == menu.Pid {
+			if item.Children == nil {
+				item.Children = []*pb.SysMenuListItem{}
+			}
+			item.Children = append(item.Children, menuToMenu(menu))
+			return true
+		}
+	}
+	return false
+}
+
+func menuToMenu(menu *ent.Menu) *pb.SysMenuListItem {
+	RouteItem := pb.SysMenuListItem{Meta: &pb.Meta{}}
+	copier.Copy(&RouteItem, menu)
+	RouteItem.Id = menu.ID
+	RouteItem.Pid = menu.Pid
+	RouteItem.Status = func(status bool) int64 {
+		if status {
+			return 1
+		} else {
+			return 0
+		}
+	}(menu.Status)
+
+	maxNumOfOpenTab := int64(menu.MaxNumOfOpenTab)
+
+	RouteItem.Meta.Title = menu.Title
+	RouteItem.Meta.Icon = menu.Icon
+	RouteItem.Meta.Order = int64(menu.Order)
+	RouteItem.Meta.Link = &menu.Link
+	RouteItem.Meta.IframeSrc = &menu.IframeSrc
+	RouteItem.Meta.IgnoreAccess = menu.IgnoreAccess
+	RouteItem.Meta.KeepAlive = &menu.Keepalive
+	RouteItem.Meta.ActivePath = &menu.ActivePath
+	RouteItem.Meta.MaxNumOfOpenTab = &maxNumOfOpenTab
+	RouteItem.Meta.HideInMenu = &menu.HideInMenu
+	RouteItem.Meta.HideInTab = &menu.HideInTab
+	RouteItem.Meta.HideInBreadcrumb = &menu.HideInBreadcrumb
+	RouteItem.Meta.HideChildrenInMenu = &menu.HideChildrenInMenu
+
+	RouteItem.Meta.Authority = strings.Split(menu.Authority, ",")
+
+	return &RouteItem
 }
 
 // BuildMenuTree 构造菜单树
@@ -610,40 +668,42 @@ func (uc *BaseUsecase) UpdateRole(ctx context.Context, req *pb.RoleListItem) err
 
 // GetSysMenuList 获取菜单（非路由树）
 func (uc *BaseUsecase) GetSysMenuList(ctx context.Context) (*pb.GetSysMenuListReply, error) {
-	resp := &pb.GetSysMenuListReply{}
-	tree, err := uc.CreateMenuTree(ctx)
-	if err != nil {
-		return nil, err
-	}
-	resp.Items = ToMenuTree(tree.MenuList)
-	return resp, nil
+	//resp := &pb.GetSysMenuListReply{}
+	//tree, err := uc.CreateMenuTree(ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//resp.Items = ToMenuTree(tree.Items)
+	//return tree, nil
+	return uc.CreateMenuTree(ctx)
 }
 
-func ToMenuTree(forest []*pb.RouteItem) []*pb.SysMenuListItem {
+func ToMenuTree(forest []*pb.SysMenuListItem) []*pb.SysMenuListItem {
 	var items []*pb.SysMenuListItem
 	for _, item := range forest {
 		items = append(items, &pb.SysMenuListItem{
 			Id:        item.Id,
 			Component: item.Component,
-			Status: func() int64 {
-				if item.Meta.HideInMenu {
-					return 1
-				} else {
-					return 0
-				}
-			}(),
+			//Status: func() int64 {
+			//	if item.Meta.HideInMenu {
+			//		return 1
+			//	} else {
+			//		return 0
+			//	}
+			//}(),
+			Status:   item.Status,
 			AuthCode: "",
 			Name:     item.Name,
 			Path:     item.Path,
 			Pid:      item.Pid,
 			Redirect: nil,
 			Type:     0,
-			Meta: &pb.SysMenuListItem_Meta{
-				Order:              strconv.FormatInt(item.Meta.Order, 10),
+			Meta: &pb.Meta{
+				Order:              item.Meta.Order,
 				Icon:               item.Meta.Icon,
 				Title:              item.Meta.Title,
 				ActiveIcon:         nil,
-				ActivePath:         &item.Meta.ActivePath,
+				ActivePath:         item.Meta.ActivePath,
 				AffixTab:           nil,
 				AffixTabOrder:      nil,
 				Badge:              nil,

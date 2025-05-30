@@ -84,7 +84,7 @@ func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.
 	// 仅靠jwt无法实现退出功能
 	return &emptypb.Empty{}, nil
 }
-func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetMenuListReply, error) {
+func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetSysMenuListReply, error) { // *pb.GetMenuListReply
 	return s.uc.CreateMenuTree(ctx)
 }
 func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb.LoginReply, error) {
@@ -161,8 +161,13 @@ func (s *BaseService) UpdateRole(ctx context.Context, req *pb.RoleListItem) (*pb
 	return &pb.RoleListItem{}, nil
 }
 func (s *BaseService) GetSysMenuList(ctx context.Context, req *pb.MenuParams) (*pb.GetSysMenuListReply, error) {
-	return s.uc.GetSysMenuList(ctx)
+	//return s.uc.GetSysMenuList(ctx)
+	return s.uc.CreateMenuTree(ctx)
 }
+
+//func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetSysMenuListReply, error) { // *pb.GetMenuListReply
+//	return s.uc.CreateMenuTree(ctx)
+//}
 
 func (s *BaseService) GetAllRoleList(ctx context.Context, req *pb.RoleParams) (*pb.GetRoleListByPageReply, error) {
 	return s.uc.GetAllRoleList(ctx, &pb.RolePageParams{
