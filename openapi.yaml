@@ -42,7 +42,7 @@ paths:
         post:
             tags:
                 - Base
-            description: 注销登陆
+            description: 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
             operationId: Base_Logout
             requestBody:
                 content:
@@ -102,7 +102,7 @@ paths:
         post:
             tags:
                 - Base
-            description: 检查用户是否存在
+            description: 检查用户是否存在 （未实现）
             operationId: Base_IsAccountExist
             requestBody:
                 content:
@@ -308,7 +308,7 @@ paths:
         get:
             tags:
                 - Base
-            description: 获取角色列表
+            description: 获取角色列表 (待重构)
             operationId: Base_GetRoleListByPage
             parameters:
                 - name: page
@@ -338,12 +338,28 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetRoleListByPageReply'
+    /basic-api/system/menu:
+        post:
+            tags:
+                - Base
+            description: 创建菜单 （未实现）
+            operationId: Base_CreateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/system/menu/list:
         get:
             tags:
                 - Base
             description: |-
-                /////////////////////////////////////////////////// menu
+                /////////////////////////////////////////////////// 系统菜单管理
                  获取菜单列表
             operationId: Base_GetSysMenuList
             parameters:
@@ -362,6 +378,87 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
+    /basic-api/system/menu/name-exists:
+        get:
+            tags:
+                - Base
+            description: 菜单名称是否存在
+            operationId: Base_IsMenuNameExists
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.IsMenuNameExistsReply'
+    /basic-api/system/menu/path-exists:
+        get:
+            tags:
+                - Base
+            description: 路由地址是否存在
+            operationId: Base_IsMenuPathExists
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.IsMenuPathExistsReply'
+    /basic-api/system/menu/{id}:
+        put:
+            tags:
+                - Base
+            description: 更新菜单 （未实现）
+            operationId: Base_UpdateMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.SysMenuListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+        delete:
+            tags:
+                - Base
+            description: 删除菜单 （未实现）
+            operationId: Base_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/system/setRoleStatus:
         post:
             tags:
@@ -582,6 +679,16 @@ components:
             properties:
                 account:
                     type: string
+        api.base_api.v1.IsMenuNameExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
+        api.base_api.v1.IsMenuPathExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
         api.base_api.v1.LoginReply:
             type: object
             properties:
@@ -692,7 +799,8 @@ components:
                 component:
                     type: string
                 status:
-                    type: string
+                    type: integer
+                    format: int32
                 authCode:
                     type: string
                 name:

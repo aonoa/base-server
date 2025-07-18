@@ -32,6 +32,11 @@ const (
 	Base_DelUser_FullMethodName           = "/api.base_api.v1.Base/DelUser"
 	Base_GetRoleListByPage_FullMethodName = "/api.base_api.v1.Base/GetRoleListByPage"
 	Base_GetSysMenuList_FullMethodName    = "/api.base_api.v1.Base/GetSysMenuList"
+	Base_IsMenuNameExists_FullMethodName  = "/api.base_api.v1.Base/IsMenuNameExists"
+	Base_IsMenuPathExists_FullMethodName  = "/api.base_api.v1.Base/IsMenuPathExists"
+	Base_CreateMenu_FullMethodName        = "/api.base_api.v1.Base/CreateMenu"
+	Base_UpdateMenu_FullMethodName        = "/api.base_api.v1.Base/UpdateMenu"
+	Base_DeleteMenu_FullMethodName        = "/api.base_api.v1.Base/DeleteMenu"
 	Base_GetDeptList_FullMethodName       = "/api.base_api.v1.Base/GetDeptList"
 	Base_AddDept_FullMethodName           = "/api.base_api.v1.Base/AddDept"
 	Base_UpdateDept_FullMethodName        = "/api.base_api.v1.Base/UpdateDept"
@@ -55,7 +60,7 @@ type BaseClient interface {
 	GetUserInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error)
 	// 获取权限code
 	GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAccessCodesReply, error)
-	// 注销登陆
+	// 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取路由菜单列表
 	//
@@ -71,11 +76,21 @@ type BaseClient interface {
 	AddUser(ctx context.Context, in *AccountListItem, opts ...grpc.CallOption) (*AccountListItem, error)
 	// 删除用户
 	DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 获取角色列表
+	// 获取角色列表 (待重构)
 	GetRoleListByPage(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
-	// /////////////////////////////////////////////////// menu
+	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
+	// 菜单名称是否存在
+	IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...grpc.CallOption) (*IsMenuNameExistsReply, error)
+	// 路由地址是否存在
+	IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...grpc.CallOption) (*IsMenuPathExistsReply, error)
+	// 创建菜单 （未实现）
+	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 更新菜单 （未实现）
+	UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 删除菜单 （未实现）
+	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取部门列表
 	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
 	// 新增部门
@@ -94,7 +109,7 @@ type BaseClient interface {
 	GetAllRoleList(ctx context.Context, in *RoleParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
 	// 设置角色状态
 	SetRoleStatus(ctx context.Context, in *SetRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 检查用户是否存在
+	// 检查用户是否存在 （未实现）
 	IsAccountExist(ctx context.Context, in *IsAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -228,6 +243,56 @@ func (c *baseClient) GetSysMenuList(ctx context.Context, in *MenuParams, opts ..
 	return out, nil
 }
 
+func (c *baseClient) IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...grpc.CallOption) (*IsMenuNameExistsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IsMenuNameExistsReply)
+	err := c.cc.Invoke(ctx, Base_IsMenuNameExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...grpc.CallOption) (*IsMenuPathExistsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IsMenuPathExistsReply)
+	err := c.cc.Invoke(ctx, Base_IsMenuPathExists_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_CreateMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_UpdateMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_DeleteMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *baseClient) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDeptListReply)
@@ -348,7 +413,7 @@ type BaseServer interface {
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	// 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
-	// 注销登陆
+	// 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取路由菜单列表
 	//
@@ -364,11 +429,21 @@ type BaseServer interface {
 	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
 	// 删除用户
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
-	// 获取角色列表
+	// 获取角色列表 (待重构)
 	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
-	// /////////////////////////////////////////////////// menu
+	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
+	// 菜单名称是否存在
+	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
+	// 路由地址是否存在
+	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
+	// 创建菜单 （未实现）
+	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	// 更新菜单 （未实现）
+	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	// 删除菜单 （未实现）
+	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	// 新增部门
@@ -387,7 +462,7 @@ type BaseServer interface {
 	GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error)
 	// 设置角色状态
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
-	// 检查用户是否存在
+	// 检查用户是否存在 （未实现）
 	IsAccountExist(context.Context, *IsAccountRequest) (*emptypb.Empty, error)
 	// 改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
@@ -436,6 +511,21 @@ func (UnimplementedBaseServer) GetRoleListByPage(context.Context, *RolePageParam
 }
 func (UnimplementedBaseServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
+}
+func (UnimplementedBaseServer) IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsMenuNameExists not implemented")
+}
+func (UnimplementedBaseServer) IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsMenuPathExists not implemented")
+}
+func (UnimplementedBaseServer) CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
+}
+func (UnimplementedBaseServer) UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
+}
+func (UnimplementedBaseServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
 func (UnimplementedBaseServer) GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeptList not implemented")
@@ -707,6 +797,96 @@ func _Base_GetSysMenuList_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_IsMenuNameExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsMenuNameExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).IsMenuNameExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_IsMenuNameExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).IsMenuNameExists(ctx, req.(*IsMenuNameExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_IsMenuPathExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsMenuPathExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).IsMenuPathExists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_IsMenuPathExists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).IsMenuPathExists(ctx, req.(*IsMenuPathExistsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_CreateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SysMenuListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).CreateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_CreateMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).CreateMenu(ctx, req.(*SysMenuListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SysMenuListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).UpdateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_UpdateMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).UpdateMenu(ctx, req.(*SysMenuListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).DeleteMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_DeleteMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).DeleteMenu(ctx, req.(*DeleteMenuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Base_GetDeptList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -959,6 +1139,26 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSysMenuList",
 			Handler:    _Base_GetSysMenuList_Handler,
+		},
+		{
+			MethodName: "IsMenuNameExists",
+			Handler:    _Base_IsMenuNameExists_Handler,
+		},
+		{
+			MethodName: "IsMenuPathExists",
+			Handler:    _Base_IsMenuPathExists_Handler,
+		},
+		{
+			MethodName: "CreateMenu",
+			Handler:    _Base_CreateMenu_Handler,
+		},
+		{
+			MethodName: "UpdateMenu",
+			Handler:    _Base_UpdateMenu_Handler,
+		},
+		{
+			MethodName: "DeleteMenu",
+			Handler:    _Base_DeleteMenu_Handler,
 		},
 		{
 			MethodName: "GetDeptList",

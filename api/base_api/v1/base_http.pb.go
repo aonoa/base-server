@@ -24,9 +24,11 @@ const OperationBaseAddDept = "/api.base_api.v1.Base/AddDept"
 const OperationBaseAddRole = "/api.base_api.v1.Base/AddRole"
 const OperationBaseAddUser = "/api.base_api.v1.Base/AddUser"
 const OperationBaseChangePassword = "/api.base_api.v1.Base/ChangePassword"
+const OperationBaseCreateMenu = "/api.base_api.v1.Base/CreateMenu"
 const OperationBaseDelDept = "/api.base_api.v1.Base/DelDept"
 const OperationBaseDelRole = "/api.base_api.v1.Base/DelRole"
 const OperationBaseDelUser = "/api.base_api.v1.Base/DelUser"
+const OperationBaseDeleteMenu = "/api.base_api.v1.Base/DeleteMenu"
 const OperationBaseGetAccessCodes = "/api.base_api.v1.Base/GetAccessCodes"
 const OperationBaseGetAccountList = "/api.base_api.v1.Base/GetAccountList"
 const OperationBaseGetAllRoleList = "/api.base_api.v1.Base/GetAllRoleList"
@@ -36,12 +38,15 @@ const OperationBaseGetRoleListByPage = "/api.base_api.v1.Base/GetRoleListByPage"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseIsAccountExist = "/api.base_api.v1.Base/IsAccountExist"
+const OperationBaseIsMenuNameExists = "/api.base_api.v1.Base/IsMenuNameExists"
+const OperationBaseIsMenuPathExists = "/api.base_api.v1.Base/IsMenuPathExists"
 const OperationBaseLogin = "/api.base_api.v1.Base/Login"
 const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
 const OperationBaseReLoadPolicy = "/api.base_api.v1.Base/ReLoadPolicy"
 const OperationBaseRefreshToken = "/api.base_api.v1.Base/RefreshToken"
 const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
 const OperationBaseUpdateDept = "/api.base_api.v1.Base/UpdateDept"
+const OperationBaseUpdateMenu = "/api.base_api.v1.Base/UpdateMenu"
 const OperationBaseUpdateRole = "/api.base_api.v1.Base/UpdateRole"
 
 type BaseHTTPServer interface {
@@ -53,12 +58,16 @@ type BaseHTTPServer interface {
 	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
 	// ChangePassword 改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
+	// CreateMenu 创建菜单 （未实现）
+	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	// DelDept 删除部门
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
 	// DelRole 删除角色
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// DelUser 删除用户
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
+	// DeleteMenu 删除菜单 （未实现）
+	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
 	// GetAccountList 获取账户列表
@@ -70,18 +79,22 @@ type BaseHTTPServer interface {
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
-	// GetRoleListByPage 获取角色列表
+	// GetRoleListByPage 获取角色列表 (待重构)
 	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
-	// GetSysMenuList/////////////////////////////////////////////////// menu
+	// GetSysMenuList/////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	// GetUserInfo 获取用户信息
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
-	// IsAccountExist 检查用户是否存在
+	// IsAccountExist 检查用户是否存在 （未实现）
 	IsAccountExist(context.Context, *IsAccountRequest) (*emptypb.Empty, error)
+	// IsMenuNameExists 菜单名称是否存在
+	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
+	// IsMenuPathExists 路由地址是否存在
+	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	// Login 用户登陆
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
-	// Logout 注销登陆
+	// Logout 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// ReLoadPolicy////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
@@ -91,6 +104,8 @@ type BaseHTTPServer interface {
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
 	// UpdateDept 修改部门
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
+	// UpdateMenu 更新菜单 （未实现）
+	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	// UpdateRole 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
 }
@@ -109,6 +124,11 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getRoleListByPage", _Base_GetRoleListByPage0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/list", _Base_GetSysMenuList0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/menu/name-exists", _Base_IsMenuNameExists0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/menu/path-exists", _Base_IsMenuPathExists0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/menu", _Base_CreateMenu0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/menu/{id}", _Base_UpdateMenu0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/menu/{id}", _Base_DeleteMenu0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
@@ -368,6 +388,113 @@ func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Base_IsMenuNameExists0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in IsMenuNameExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseIsMenuNameExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsMenuNameExists(ctx, req.(*IsMenuNameExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*IsMenuNameExistsReply)
+		return ctx.Result(200, reply.Data)
+	}
+}
+
+func _Base_IsMenuPathExists0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in IsMenuPathExistsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseIsMenuPathExists)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsMenuPathExists(ctx, req.(*IsMenuPathExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*IsMenuPathExistsReply)
+		return ctx.Result(200, reply.Data)
+	}
+}
+
+func _Base_CreateMenu0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SysMenuListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseCreateMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateMenu(ctx, req.(*SysMenuListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_UpdateMenu0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SysMenuListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseUpdateMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateMenu(ctx, req.(*SysMenuListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_DeleteMenu0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteMenuRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseDeleteMenu)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Base_GetDeptList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
@@ -609,9 +736,11 @@ type BaseHTTPClient interface {
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 	AddUser(ctx context.Context, req *AccountListItem, opts ...http.CallOption) (rsp *AccountListItem, err error)
 	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelUser(ctx context.Context, req *DeleteUser, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
 	GetAccountList(ctx context.Context, req *AccountParams, opts ...http.CallOption) (rsp *GetAccountListReply, err error)
 	GetAllRoleList(ctx context.Context, req *RoleParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
@@ -621,12 +750,15 @@ type BaseHTTPClient interface {
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	IsAccountExist(ctx context.Context, req *IsAccountRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
+	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
 	SetRoleStatus(ctx context.Context, req *SetRoleStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
+	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 }
 
@@ -690,6 +822,19 @@ func (c *BaseHTTPClientImpl) ChangePassword(ctx context.Context, in *ChangePassw
 	return &out, nil
 }
 
+func (c *BaseHTTPClientImpl) CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/system/menu"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseCreateMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/basic-api/system/delDept/{id}"
@@ -721,6 +866,19 @@ func (c *BaseHTTPClientImpl) DelUser(ctx context.Context, in *DeleteUser, opts .
 	pattern := "/basic-api/system/delUser/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseDelUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/system/menu/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseDeleteMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -846,6 +1004,32 @@ func (c *BaseHTTPClientImpl) IsAccountExist(ctx context.Context, in *IsAccountRe
 	return &out, nil
 }
 
+func (c *BaseHTTPClientImpl) IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...http.CallOption) (*IsMenuNameExistsReply, error) {
+	var out IsMenuNameExistsReply
+	pattern := "/basic-api/system/menu/name-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseIsMenuNameExists))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Data, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...http.CallOption) (*IsMenuPathExistsReply, error) {
+	var out IsMenuPathExistsReply
+	pattern := "/basic-api/system/menu/path-exists"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseIsMenuPathExists))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Data, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
 	pattern := "/basic-api/auth/login"
@@ -918,6 +1102,19 @@ func (c *BaseHTTPClientImpl) UpdateDept(ctx context.Context, in *DeptListItem, o
 	opts = append(opts, http.Operation(OperationBaseUpdateDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/system/menu/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseUpdateMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

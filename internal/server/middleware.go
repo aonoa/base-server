@@ -20,6 +20,8 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList["/api.base_api.v1.Base/Login"] = struct{}{}
 	whiteList["/api.base_api.v1.Base/Logout"] = struct{}{}
 	whiteList["/basic-api/v1/server/file/upload"] = struct{}{}
+	whiteList["/api.base_api.v1.Base/IsMenuNameExists"] = struct{}{}
+	whiteList["/api.base_api.v1.Base/IsMenuPathExists"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
 			return false

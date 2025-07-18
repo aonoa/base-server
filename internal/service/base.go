@@ -39,7 +39,7 @@ func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth) *BaseService {
 }
 
 func (s *BaseService) ReLoadPolicy(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+	return nil, s.uc.ReLoadPolicy(ctx)
 }
 
 func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
@@ -84,6 +84,8 @@ func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.
 	// 仅靠jwt无法实现退出功能
 	return &emptypb.Empty{}, nil
 }
+
+// GetMenuList 获取路由菜单
 func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetSysMenuListReply, error) { // *pb.GetMenuListReply
 	return s.uc.CreateMenuTree(ctx)
 }
@@ -160,14 +162,38 @@ func (s *BaseService) UpdateRole(ctx context.Context, req *pb.RoleListItem) (*pb
 	}
 	return &pb.RoleListItem{}, nil
 }
+
+///////////////////////////////////////////////////// 系统菜单管理
+
 func (s *BaseService) GetSysMenuList(ctx context.Context, req *pb.MenuParams) (*pb.GetSysMenuListReply, error) {
-	//return s.uc.GetSysMenuList(ctx)
-	return s.uc.CreateMenuTree(ctx)
+	return s.uc.GetSysMenuList(ctx)
 }
 
-//func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetSysMenuListReply, error) { // *pb.GetMenuListReply
-//	return s.uc.CreateMenuTree(ctx)
-//}
+func (s *BaseService) IsMenuNameExists(ctx context.Context, req *pb.IsMenuNameExistsRequest) (*pb.IsMenuNameExistsReply, error) {
+	res := &pb.IsMenuNameExistsReply{}
+	if ok, err := s.uc.IsMenuNameExists(ctx, req); err == nil {
+		res.Data = ok
+	}
+	return res, nil
+}
+func (s *BaseService) IsMenuPathExists(ctx context.Context, req *pb.IsMenuPathExistsRequest) (*pb.IsMenuPathExistsReply, error) {
+	res := &pb.IsMenuPathExistsReply{}
+	if ok, err := s.uc.IsMenuPathExists(ctx, req); err == nil {
+		res.Data = ok
+	}
+	return res, nil
+}
+func (s *BaseService) CreateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
+	return s.uc.CreateMenu(ctx, req)
+}
+func (s *BaseService) UpdateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
+	return s.uc.UpdateMenu(ctx, req)
+}
+func (s *BaseService) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest) (*emptypb.Empty, error) {
+	return s.uc.DeleteMenu(ctx, req)
+}
+
+/////////////////////////////////////////////////////
 
 func (s *BaseService) GetAllRoleList(ctx context.Context, req *pb.RoleParams) (*pb.GetRoleListByPageReply, error) {
 	return s.uc.GetAllRoleList(ctx, &pb.RolePageParams{

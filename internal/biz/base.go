@@ -14,6 +14,7 @@ import (
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"strconv"
 	"strings"
 	"time"
@@ -48,6 +49,10 @@ type BaseRepo interface {
 	UpdateRole(ctx context.Context, deptId int64, req *pb.RoleListItem) (*ent.Role, error)
 	DelRole(ctx context.Context, id int64) error
 	ChangePassword(ctx context.Context, uid *uuid.UUID, passwordOld, passwordNew string) error
+
+	CreateMenu(ctx context.Context, menu *ent.Menu) (*ent.Menu, error)
+	UpdateMenu(ctx context.Context, id int64, menu *ent.Menu) (*ent.Menu, error)
+	DeleteMenu(ctx context.Context, id int64) error
 }
 
 // BaseUsecase is a Base usecase.
@@ -129,7 +134,7 @@ func (uc *BaseUsecase) GetUserInfo(ctx context.Context, uuidString string) (*ent
 	return uc.repo.FindUserByID(ctx, &uuid)
 }
 
-// CreateMenuTree 创建菜单
+// CreateMenuTree 创建菜单树
 func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListReply, error) {
 	//reqs := &pb.GetMenuListReply{MenuList: []*pb.RouteItem{}}
 	reqs := &pb.GetSysMenuListReply{Items: []*pb.SysMenuListItem{}}
@@ -199,7 +204,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 			if menuID == menu.ID {
 				if menu.Pid == 0 {
 					//reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
-					reqs.Items = append(reqs.Items, menuToMenu(menu))
+					reqs.Items = append(reqs.Items, entMenuToMenu(menu))
 					continue
 				}
 
@@ -208,7 +213,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 				if !key {
 					// 如果菜单不属于任何父级，则将其加入顶层列表
 					//reqs.Items = append(reqs.Items, menuToRoute(menu))
-					reqs.Items = append(reqs.Items, menuToMenu(menu))
+					reqs.Items = append(reqs.Items, entMenuToMenu(menu))
 				}
 			}
 		}
@@ -230,19 +235,19 @@ func (uc *BaseUsecase) BuildMenuTree1(menuList *[]*pb.SysMenuListItem, menu *ent
 			if item.Children == nil {
 				item.Children = []*pb.SysMenuListItem{}
 			}
-			item.Children = append(item.Children, menuToMenu(menu))
+			item.Children = append(item.Children, entMenuToMenu(menu))
 			return true
 		}
 	}
 	return false
 }
 
-func menuToMenu(menu *ent.Menu) *pb.SysMenuListItem {
+func entMenuToMenu(menu *ent.Menu) *pb.SysMenuListItem {
 	RouteItem := pb.SysMenuListItem{Meta: &pb.Meta{}}
 	copier.Copy(&RouteItem, menu)
 	RouteItem.Id = menu.ID
 	RouteItem.Pid = menu.Pid
-	RouteItem.Status = func(status bool) int64 {
+	RouteItem.Status = func(status bool) int32 {
 		if status {
 			return 1
 		} else {
@@ -267,6 +272,61 @@ func menuToMenu(menu *ent.Menu) *pb.SysMenuListItem {
 	RouteItem.Meta.HideChildrenInMenu = &menu.HideChildrenInMenu
 
 	RouteItem.Meta.Authority = strings.Split(menu.Authority, ",")
+
+	return &RouteItem
+}
+
+func menuToEntMenu(menu *pb.SysMenuListItem) *ent.Menu {
+
+	ptrToStr := func(ptr *string) string {
+		if ptr == nil {
+			return ""
+		} else {
+			return *ptr
+		}
+	}
+	ptrToBool := func(ptr *bool) bool {
+		if ptr == nil {
+			return false
+		} else {
+			return *ptr
+		}
+	}
+	ptrToInt := func(ptr *int64) int64 {
+		if ptr == nil {
+			return 0
+		} else {
+			return *ptr
+		}
+	}
+
+	RouteItem := ent.Menu{}
+	copier.Copy(&RouteItem, menu)
+	RouteItem.ID = menu.Id
+	RouteItem.Pid = menu.Pid
+	RouteItem.Status = func(status int32) bool {
+		if status == 1 {
+			return true
+		} else {
+			return false
+		}
+	}(menu.Status)
+
+	RouteItem.Title = menu.Meta.Title
+	RouteItem.Icon = menu.Meta.Icon
+	RouteItem.Order = int32(menu.Meta.Order)
+	RouteItem.Link = ptrToStr(menu.Meta.Link)
+	RouteItem.IframeSrc = ptrToStr(menu.Meta.IframeSrc)
+	RouteItem.IgnoreAccess = menu.Meta.IgnoreAccess
+	RouteItem.Keepalive = ptrToBool(menu.Meta.KeepAlive)
+	RouteItem.ActivePath = ptrToStr(menu.Meta.ActivePath)
+	RouteItem.MaxNumOfOpenTab = int16(ptrToInt(menu.Meta.MaxNumOfOpenTab))
+	RouteItem.HideInMenu = ptrToBool(menu.Meta.HideInMenu)
+	RouteItem.HideInTab = ptrToBool(menu.Meta.HideInTab)
+	RouteItem.HideInBreadcrumb = ptrToBool(menu.Meta.HideInBreadcrumb)
+	RouteItem.HideChildrenInMenu = ptrToBool(menu.Meta.HideChildrenInMenu)
+
+	RouteItem.Authority = strings.Join(menu.Meta.Authority, ",")
 
 	return &RouteItem
 }
@@ -576,6 +636,8 @@ func (uc *BaseUsecase) UpdateDept(ctx context.Context, req *pb.DeptListItem) err
 	return nil
 }
 
+///////////////////////////////////////////////////////////// 系统角色管理
+
 // GetAllRoleList 获取角色列表
 func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
 	// 获取某个域的角色
@@ -666,15 +728,10 @@ func (uc *BaseUsecase) UpdateRole(ctx context.Context, req *pb.RoleListItem) err
 	return nil
 }
 
-// GetSysMenuList 获取菜单（非路由树）
+///////////////////////////////////////////////////////////// 系统菜单管理
+
+// GetSysMenuList 获取菜单（非路由树）(系统菜单管理)
 func (uc *BaseUsecase) GetSysMenuList(ctx context.Context) (*pb.GetSysMenuListReply, error) {
-	//resp := &pb.GetSysMenuListReply{}
-	//tree, err := uc.CreateMenuTree(ctx)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//resp.Items = ToMenuTree(tree.Items)
-	//return tree, nil
 	return uc.CreateMenuTree(ctx)
 }
 
@@ -734,6 +791,47 @@ func ToMenuTree(forest []*pb.SysMenuListItem) []*pb.SysMenuListItem {
 	return items
 }
 
+func (uc *BaseUsecase) IsMenuNameExists(ctx context.Context, req *pb.IsMenuNameExistsRequest) (bool, error) {
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return false, err
+	}
+	for _, menu := range menuList {
+		if req.Name == menu.Name && menu.ID != req.Id {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+func (uc *BaseUsecase) IsMenuPathExists(ctx context.Context, req *pb.IsMenuPathExistsRequest) (bool, error) {
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return false, err
+	}
+	for _, menu := range menuList {
+		if req.Path == menu.Path && menu.ID != req.Id {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+func (uc *BaseUsecase) CreateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
+	menu := menuToEntMenu(req)
+	_, err := uc.repo.CreateMenu(ctx, menu)
+	return nil, err
+}
+func (uc *BaseUsecase) UpdateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
+	_, err := uc.repo.UpdateMenu(ctx, req.Id, menuToEntMenu(req))
+	return nil, err
+}
+func (uc *BaseUsecase) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest) (*emptypb.Empty, error) {
+	err := uc.repo.DeleteMenu(ctx, req.Id)
+	return nil, err
+}
+
+///////////////////////////////////////////////////////////// 系统用户管理
+
+// GetAccountList 获取账户列表 (系统用户管理)
 func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams) (*pb.GetAccountListReply, error) {
 	deptId, _ := tools.DeptStrSplitToInt(req.DeptId)
 
@@ -817,6 +915,8 @@ func (uc *BaseUsecase) DelUser(ctx context.Context, uuidString string) error {
 	//uc.auth.DelUserRoles(uuidString, []string{"default"})
 	return nil
 }
+
+/////////////////////////////////////////////////////////////
 
 // ChangePassword 修改密码
 func (uc *BaseUsecase) ChangePassword(ctx context.Context, uuidString, passwordOld, passwordNew string) error {

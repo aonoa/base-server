@@ -115,11 +115,22 @@ func (r *baseRepo) AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.U
 		Save(ctx)
 }
 
-// 获取用户所有部门
-
 // GetMenuList 获取菜单列表
 func (r *baseRepo) GetMenuList(ctx context.Context) ([]*ent.Menu, error) {
 	return r.data.db.Menu.Query().Order(menu.ByPid(), menu.ByOrder()).All(ctx)
+}
+
+func (r *baseRepo) CreateMenu(ctx context.Context, menu *ent.Menu) (*ent.Menu, error) {
+	defer r.data.db.Menu.Query().All(entcache.Evict(ctx))
+	return r.data.db.Menu.Create().CreateAll(menu).Save(ctx)
+}
+func (r *baseRepo) UpdateMenu(ctx context.Context, id int64, menu *ent.Menu) (*ent.Menu, error) {
+	defer r.data.db.Menu.Query().All(entcache.Evict(ctx))
+	return r.data.db.Menu.UpdateOneID(id).UpdateAll(menu).Save(ctx)
+}
+func (r *baseRepo) DeleteMenu(ctx context.Context, id int64) error {
+	defer r.data.db.Menu.Query().All(entcache.NewContext(ctx))
+	return r.data.db.Menu.DeleteOneID(id).Exec(entcache.Evict(ctx))
 }
 
 // GetDeptList 获取部门列表

@@ -43,7 +43,7 @@ service Base {
 		};
 	}
 
-	// 注销登陆
+	// 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/auth/logout"
@@ -101,23 +101,59 @@ service Base {
 		};
 	}
 
-	// 获取角色列表
+	// 获取角色列表 (待重构)
 	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/getRoleListByPage"
 		};
 	}
 
-	///////////////////////////////////////////////////// menu
+	///////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	rpc GetSysMenuList (MenuParams) returns (GetSysMenuListReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/menu/list"
-//			response_body: "items"
 		};
 	}
 
-	/////////////////////////////////////////////////////
+	// 菜单名称是否存在
+	rpc IsMenuNameExists (IsMenuNameExistsRequest) returns (IsMenuNameExistsReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/menu/name-exists"
+			response_body: "data"
+		};
+	}
+
+	// 路由地址是否存在
+	rpc IsMenuPathExists (IsMenuPathExistsRequest) returns (IsMenuPathExistsReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/menu/path-exists"
+			response_body: "data"
+		};
+	}
+
+	// 创建菜单 （未实现）
+	rpc CreateMenu (SysMenuListItem) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/system/menu"
+			body: "*"
+		};
+	}
+	// 更新菜单 （未实现）
+	rpc UpdateMenu (SysMenuListItem) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			put: "/basic-api/system/menu/{id}"
+			body: "*"
+		};
+	}
+	// 删除菜单 （未实现）
+	rpc DeleteMenu (DeleteMenuRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/menu/{id}"
+		};
+	}
+
+	///////////////////////////////////////////////////// 系统角色管理 (待重构)
 
 	// 获取部门列表
 	rpc GetDeptList (google.protobuf.Empty) returns (GetDeptListReply) {
@@ -148,6 +184,8 @@ service Base {
 			// body: "*"
 		};
 	}
+
+	////////////////////////////////////////////////// 系统角色管理  (待重构)
 
 	// 新增角色
 	rpc AddRole (RoleListItem) returns (RoleListItem) {
@@ -188,7 +226,9 @@ service Base {
 		};
 	}
 
-	// 检查用户是否存在
+	///////////////////////////////////////////////////
+
+	// 检查用户是否存在 （未实现）
 	rpc IsAccountExist (IsAccountRequest) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/system/accountExist"
@@ -418,7 +458,7 @@ message SysMenuListItem {
 
 	int64 id = 1;					// 菜单ID
 	string component = 2;		// 组件
-	int64 status = 3;				// 状态
+	int32 status = 3;				// 状态
 	string authCode = 4;	// 后端权限标识
 
 	string name = 5;					// 菜单名称
@@ -426,7 +466,6 @@ message SysMenuListItem {
 	int64 pid = 7;					// 父级ID
 	optional string redirect = 8;		// 重定向
 	MenuType type = 9;
-//	string type = 9;
 
 	Meta meta = 10;		// 菜单元数据
 	repeated SysMenuListItem children = 11;		// 子级
@@ -482,6 +521,25 @@ message SetRoleStatusRequest {
 
 message IsAccountRequest {
 	string account = 1;
+}
+
+message	IsMenuNameExistsRequest {
+	int64 id = 1;
+	string name = 2;
+}
+message	IsMenuNameExistsReply {
+	bool data = 1;
+}
+message	IsMenuPathExistsRequest {
+	int64 id = 1;
+	string path = 2;
+}
+message	IsMenuPathExistsReply {
+	bool data = 1;
+}
+
+message DeleteMenuRequest {
+	int64 id = 1;
 }
 
 message ChangePasswordRequest {
