@@ -383,27 +383,6 @@ func (uc *BaseUsecase) CreateDeptTree(ctx context.Context) (*pb.GetDeptListReply
 	reqs := &pb.GetDeptListReply{Items: []*pb.DeptListItem{}}
 	var deptList []*ent.Dept
 
-	//uid := tools.GetUserId(ctx)
-	//user, err := uc.GetUserInfo(ctx, uid)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if user.Dom == 0 {
-	//	deptList, err = uc.repo.GetDeptList(ctx)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	reqs.Total = int64(len(deptList))
-	//} else {
-	//	dept, _ := uc.repo.GetDeptById(ctx, user.Dom)
-	//	deptList = append(deptList, dept)
-	//	depts, err := uc.repo.GetDeptChildren(ctx, user.Dom)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	deptList = append(deptList, depts...)
-	//	reqs.Total = int64(len(deptList))
-	//}
 	deptList, err := uc.repo.GetDeptList(ctx)
 	if err != nil {
 		return nil, err
@@ -476,24 +455,24 @@ func (uc *BaseUsecase) BuildDeptTree(forest *[]*Node, dept *ent.Dept, top bool) 
 func ToDeptTree(forest []*Node, strPid string) []*pb.DeptListItem {
 	var items []*pb.DeptListItem
 	for _, item := range forest {
-		id := func() string {
-			if strPid == "" {
-				return strconv.FormatInt(item.Id, 10)
-			} else {
-				return strPid + "-" + strconv.FormatInt(item.Id, 10)
-			}
-		}()
+		//id := func() string {
+		//	if strPid == "" {
+		//		return strconv.FormatInt(item.Id, 10)
+		//	} else {
+		//		return strPid + "-" + strconv.FormatInt(item.Id, 10)
+		//	}
+		//}()
+		id := strconv.FormatInt(item.Id, 10)
 		items = append(items, &pb.DeptListItem{
-			Id:       id,
-			DeptName: item.Value.(*ent.Dept).Name,
-			// OrderNo:  strconv.Itoa(item.Value.(*ent.Dept).Sort),
+			Id:      id,
+			Name:    item.Value.(*ent.Dept).Name,
 			OrderNo: int64(item.Value.(*ent.Dept).Sort),
 			Remark:  item.Value.(*ent.Dept).Desc,
-			Status: func() string {
+			Status: func() int32 {
 				if item.Value.(*ent.Dept).Status {
-					return "1"
+					return 1
 				} else {
-					return "0"
+					return 0
 				}
 			}(),
 			CreateTime: item.Value.(*ent.Dept).CreateTime.Format("2006-01-02 15:04:05"),

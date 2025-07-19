@@ -114,25 +114,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /basic-api/system/addDept:
-        post:
-            tags:
-                - Base
-            description: 新增部门
-            operationId: Base_AddDept
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
     /basic-api/system/addRole:
         post:
             tags:
@@ -187,22 +168,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /basic-api/system/delDept/{id}:
-        delete:
-            tags:
-                - Base
-            description: 删除部门
-            operationId: Base_DelDept
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content: {}
     /basic-api/system/delRole/{id}:
         delete:
             tags:
@@ -225,6 +190,78 @@ paths:
                 - Base
             description: 删除用户
             operationId: Base_DelUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/system/dept:
+        post:
+            tags:
+                - Base
+            description: 新增部门
+            operationId: Base_AddDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+    /basic-api/system/dept/list:
+        get:
+            tags:
+                - Base
+            description: 获取部门列表
+            operationId: Base_GetDeptList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetDeptListReply'
+    /basic-api/system/dept/{id}:
+        put:
+            tags:
+                - Base
+            description: 修改部门
+            operationId: Base_UpdateDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+        delete:
+            tags:
+                - Base
+            description: 删除部门
+            operationId: Base_DelDept
             parameters:
                 - name: id
                   in: path
@@ -291,19 +328,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetRoleListByPageReply'
-    /basic-api/system/getDeptList:
-        get:
-            tags:
-                - Base
-            description: 获取部门列表
-            operationId: Base_GetDeptList
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.GetDeptListReply'
     /basic-api/system/getRoleListByPage:
         get:
             tags:
@@ -475,25 +499,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /basic-api/system/updateDept:
-        post:
-            tags:
-                - Base
-            description: 修改部门
-            operationId: Base_UpdateDept
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
     /basic-api/system/updateRole:
         post:
             tags:
@@ -584,14 +589,17 @@ components:
             properties:
                 id:
                     type: string
-                deptName:
+                pid:
+                    type: string
+                name:
                     type: string
                 orderNo:
                     type: string
                 remark:
                     type: string
                 status:
-                    type: string
+                    type: integer
+                    format: int32
                 createTime:
                     type: string
                 parentDept:

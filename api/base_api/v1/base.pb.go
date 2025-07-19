@@ -825,15 +825,16 @@ func (x *RouteMeta) GetAuthority() []string {
 
 type DeptListItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                 // id 多层之间用'-'拼接如:0-0
-	DeptName      string                 `protobuf:"bytes,2,opt,name=deptName,proto3" json:"deptName,omitempty"`     // 部门名称
-	OrderNo       int64                  `protobuf:"varint,3,opt,name=orderNo,proto3" json:"orderNo,omitempty"`      // 排序
-	Remark        string                 `protobuf:"bytes,4,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
-	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`         // 状态
-	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
-	ParentDept    string                 `protobuf:"bytes,7,opt,name=parentDept,proto3" json:"parentDept,omitempty"` // 父节点id
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                 // id
+	Pid           string                 `protobuf:"bytes,2,opt,name=pid,proto3" json:"pid,omitempty"`               // pid 上级部门的id
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`             // 部门名称
+	OrderNo       int64                  `protobuf:"varint,4,opt,name=orderNo,proto3" json:"orderNo,omitempty"`      // 排序
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`        // 状态
+	CreateTime    string                 `protobuf:"bytes,7,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
+	ParentDept    string                 `protobuf:"bytes,8,opt,name=parentDept,proto3" json:"parentDept,omitempty"` // 父节点id
 	Dom           int64                  `protobuf:"varint,9,opt,name=dom,proto3" json:"dom,omitempty"`              // 域
-	Children      []*DeptListItem        `protobuf:"bytes,8,rep,name=children,proto3" json:"children,omitempty"`
+	Children      []*DeptListItem        `protobuf:"bytes,10,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -875,9 +876,16 @@ func (x *DeptListItem) GetId() string {
 	return ""
 }
 
-func (x *DeptListItem) GetDeptName() string {
+func (x *DeptListItem) GetPid() string {
 	if x != nil {
-		return x.DeptName
+		return x.Pid
+	}
+	return ""
+}
+
+func (x *DeptListItem) GetName() string {
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -896,11 +904,11 @@ func (x *DeptListItem) GetRemark() string {
 	return ""
 }
 
-func (x *DeptListItem) GetStatus() string {
+func (x *DeptListItem) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
-	return ""
+	return 0
 }
 
 func (x *DeptListItem) GetCreateTime() string {
@@ -2555,21 +2563,23 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"hideInMenu\x18\x0f \x01(\bR\n" +
 	"hideInMenu\x12\x1c\n" +
 	"\thideInTab\x18\x10 \x01(\bR\thideInTab\x12\x1c\n" +
-	"\tauthority\x18\x11 \x03(\tR\tauthority\"\x91\x02\n" +
+	"\tauthority\x18\x11 \x03(\tR\tauthority\"\x9b\x02\n" +
 	"\fDeptListItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\bdeptName\x18\x02 \x01(\tR\bdeptName\x12\x18\n" +
-	"\aorderNo\x18\x03 \x01(\x03R\aorderNo\x12\x16\n" +
-	"\x06remark\x18\x04 \x01(\tR\x06remark\x12\x16\n" +
-	"\x06status\x18\x05 \x01(\tR\x06status\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x03pid\x18\x02 \x01(\tR\x03pid\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
+	"\aorderNo\x18\x04 \x01(\x03R\aorderNo\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x1e\n" +
 	"\n" +
-	"createTime\x18\x06 \x01(\tR\n" +
+	"createTime\x18\a \x01(\tR\n" +
 	"createTime\x12\x1e\n" +
 	"\n" +
-	"parentDept\x18\a \x01(\tR\n" +
+	"parentDept\x18\b \x01(\tR\n" +
 	"parentDept\x12\x10\n" +
 	"\x03dom\x18\t \x01(\x03R\x03dom\x129\n" +
-	"\bchildren\x18\b \x03(\v2\x1d.api.base_api.v1.DeptListItemR\bchildren\"\x1c\n" +
+	"\bchildren\x18\n" +
+	" \x03(\v2\x1d.api.base_api.v1.DeptListItemR\bchildren\"\x1c\n" +
 	"\n" +
 	"DeleteDept\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"]\n" +
@@ -2733,7 +2743,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xe4\x19\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xd4\x19\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -2754,12 +2764,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\n" +
 	"UpdateMenu\x12 .api.base_api.v1.SysMenuListItem\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/menu/{id}\x12m\n" +
 	"\n" +
-	"DeleteMenu\x12\".api.base_api.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/menu/{id}\x12v\n" +
-	"\vGetDeptList\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetDeptListReply\",\x82\xd3\xe4\x93\x02&b\x05items\x12\x1d/basic-api/system/getDeptList\x12m\n" +
-	"\aAddDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/system/addDept\x12s\n" +
+	"DeleteMenu\x12\".api.base_api.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/menu/{id}\x12m\n" +
+	"\vGetDeptList\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetDeptListReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/basic-api/system/dept/list\x12j\n" +
+	"\aAddDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/basic-api/system/dept\x12r\n" +
 	"\n" +
-	"UpdateDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/basic-api/system/updateDept\x12f\n" +
-	"\aDelDept\x12\x1b.api.base_api.v1.DeleteDept\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delDept/{id}\x12m\n" +
+	"UpdateDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/dept/{id}\x12c\n" +
+	"\aDelDept\x12\x1b.api.base_api.v1.DeleteDept\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/dept/{id}\x12m\n" +
 	"\aAddRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/system/addRole\x12f\n" +
 	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delRole/{id}\x12s\n" +
 	"\n" +

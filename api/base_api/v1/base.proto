@@ -132,56 +132,55 @@ service Base {
 		};
 	}
 
-	// 创建菜单 （未实现）
+	// 创建菜单
 	rpc CreateMenu (SysMenuListItem) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/system/menu"
 			body: "*"
 		};
 	}
-	// 更新菜单 （未实现）
+	// 更新菜单
 	rpc UpdateMenu (SysMenuListItem) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			put: "/basic-api/system/menu/{id}"
 			body: "*"
 		};
 	}
-	// 删除菜单 （未实现）
+	// 删除菜单
 	rpc DeleteMenu (DeleteMenuRequest) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			delete: "/basic-api/system/menu/{id}"
 		};
 	}
 
-	///////////////////////////////////////////////////// 系统角色管理 (待重构)
+	///////////////////////////////////////////////////// 系统部门管理 (待重构)
 
 	// 获取部门列表
 	rpc GetDeptList (google.protobuf.Empty) returns (GetDeptListReply) {
 		option (google.api.http) = {
-			get: "/basic-api/system/getDeptList"
-			response_body: "items"
+			get: "/basic-api/system/dept/list"
+//			response_body: "items"
 		};
 	}
 
 	// 新增部门
 	rpc AddDept (DeptListItem) returns (DeptListItem) {
 		option (google.api.http) = {
-			post: "/basic-api/system/addDept"
+			post: "/basic-api/system/dept"
 			body: "*"
 		};
 	}
 	// 修改部门
 	rpc UpdateDept (DeptListItem) returns (DeptListItem) {
 		option (google.api.http) = {
-			post: "/basic-api/system/updateDept"
+			put: "/basic-api/system/dept/{id}"
 			body: "*"
 		};
 	}
 	// 删除部门
 	rpc DelDept (DeleteDept) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
-			delete: "/basic-api/system/delDept/{id}"
-			// body: "*"
+			delete: "/basic-api/system/dept/{id}"
 		};
 	}
 
@@ -333,15 +332,16 @@ message RouteMeta {
 ////////////////////////////////////////////////////////////
 
 message DeptListItem {
-	string id = 1;			// id 多层之间用'-'拼接如:0-0
-	string deptName = 2;		// 部门名称
-	int64 orderNo = 3;			// 排序
-	string remark = 4;			// 备注
-	string status = 5;				// 状态
-	string createTime = 6;	// 创建时间
-	string parentDept = 7;	// 父节点id
+	string id = 1;			// id
+	string pid = 2;			// pid 上级部门的id
+	string name = 3;		// 部门名称
+	int64 orderNo = 4;			// 排序
+	string remark = 5;			// 备注
+	int32 status = 6;				// 状态
+	string createTime = 7;	// 创建时间
+	string parentDept = 8;	// 父节点id
 	int64 dom = 9;			// 域
-	repeated DeptListItem children = 8;
+	repeated DeptListItem children = 10;
 }
 
 message DeleteDept {

@@ -135,75 +135,43 @@ func (r *baseRepo) DeleteMenu(ctx context.Context, id int64) error {
 
 // GetDeptList 获取部门列表
 func (r *baseRepo) GetDeptList(ctx context.Context) ([]*ent.Dept, error) {
-	return r.data.db.Dept.Query().Order(dept.BySort()).All(ctx)
+	return r.data.db.Dept.Query().Order(dept.ByPid(func(options *sql.OrderTermOptions) {
+		options.NullsFirst = true
+	})).All(ctx)
 }
 
 // AddDept 添加部门
 func (r *baseRepo) AddDept(ctx context.Context, req *pb.DeptListItem) (*ent.Dept, error) {
-	// 找父节点
-	nodes := strings.Split(req.ParentDept, "-")
-	parent := nodes[len(nodes)-1]
-	intPid, err := strconv.ParseInt(parent, 10, 32)
+	sqlCmd := r.data.db.Dept.Create().
+		SetName(req.Name).
+		SetSort(func() int {
+			intVar := int(req.OrderNo)
+			return intVar
+		}()).
+		SetStatus(func() bool {
+			if req.Status == 0 {
+				return false
+			} else {
+				return true
+			}
+		}()).
+		SetDesc(req.Remark).
+		SetExtension("").
+		SetDom(req.Dom)
+
+	pid, err := strconv.ParseInt(req.Pid, 10, 32)
 	if err != nil {
-		return r.data.db.Dept.Create().
-			SetName(req.DeptName).
-			SetSort(func() int {
-				intVar := int(req.OrderNo)
-				return intVar
-			}()).
-			SetStatus(func() bool {
-				if req.Status == "0" {
-					return false
-				} else {
-					return true
-				}
-			}()).
-			SetDesc(req.Remark).
-			SetExtension("").
-			SetDom(0).
-			Save(ctx)
-	} else {
-		// 有父节点，判断dom是否符合调条件（dom中不能新建dom）
-		// 获取父节点信息
-		root, err := r.data.db.Dept.Get(ctx, intPid)
-		if err != nil {
-			return nil, err
-		}
-
-		// 0: 没有dom，1：当前为dom，n属于某dom
-		if root.Dom > 0 && req.Dom == 1 {
-			// 报错
-			return nil, errors.New(10001, "已在域中", "已在域中")
-		}
-		// 添加域部门的子部门
-		if root.Dom == 1 && req.Dom == 0 {
-			req.Dom = root.ID
-		}
-		// 在域部门的子部门添加部门
-		if root.Dom > 1 && req.Dom == 0 {
-			req.Dom = root.Dom
-		}
-
-		return r.data.db.Dept.Create().
-			//SetID(9).
-			SetName(req.DeptName).
-			SetSort(func() int {
-				intVar := int(req.OrderNo)
-				return intVar
-			}()).
-			SetStatus(func() bool {
-				if req.Status == "0" {
-					return false
-				} else {
-					return true
-				}
-			}()).
-			SetDesc(req.Remark).
-			SetExtension("").
-			SetPid(intPid).
-			SetDom(req.Dom).
-			Save(ctx)
+		pid = 0
 	}
+
+	if pid > 0 {
+		sqlCmd = sqlCmd.SetPid(pid).SetSort(func() int {
+			intVar := int(req.OrderNo)
+			return intVar + 50
+		}())
+	}
+
+	return sqlCmd.Save(ctx)
 }
 
 // DelDept 删除部门
@@ -213,11 +181,8 @@ func (r *baseRepo) DelDept(ctx context.Context, id int64) error {
 
 // UpdateDept 更新部门
 func (r *baseRepo) UpdateDept(ctx context.Context, deptId int64, req *pb.DeptListItem) (*ent.Dept, error) {
-	// 找父节点
-	nodes := strings.Split(req.ParentDept, "-")
-	parent := nodes[len(nodes)-1]
-	return r.data.db.Dept.UpdateOneID(deptId).
-		SetName(req.DeptName).
+	sqlCmd := r.data.db.Dept.UpdateOneID(deptId).
+		SetName(req.Name).
 		SetSort(func() int {
 			intVar := int(req.OrderNo)
 			//intVar, err := strconv.Atoi(req.OrderNo)
@@ -227,21 +192,25 @@ func (r *baseRepo) UpdateDept(ctx context.Context, deptId int64, req *pb.DeptLis
 			return intVar
 		}()).
 		SetStatus(func() bool {
-			if req.Status == "0" {
+			if req.Status == 0 {
 				return false
 			} else {
 				return true
 			}
 		}()).
 		SetDesc(req.Remark).
-		SetExtension("").
-		SetPid(func() int64 {
-			intVar, err := strconv.ParseInt(parent, 10, 32)
-			if err != nil {
-				return 99
-			}
-			return intVar
-		}()).Save(ctx)
+		SetExtension("")
+
+	pid, err := strconv.ParseInt(req.Pid, 10, 32)
+	if err != nil {
+		pid = 0
+	}
+
+	if pid > 0 {
+		sqlCmd = sqlCmd.SetPid(pid)
+	}
+
+	return sqlCmd.Save(ctx)
 }
 
 // GetDeptLeafsChildren 获取部门叶子节点

@@ -74,7 +74,7 @@ func MiddlewareCasbin(e *casbin.Enforcer, logger log.Logger) middleware.Middlewa
 					//ok, err := e.Enforce(uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")
 					if err != nil || !ok {
 						// 拒绝请求，抛出异常
-						return nil, errors.Unauthorized("UNAUTHORIZED", "Authentication failed")
+						return nil, errors.Forbidden("Forbidden", "Authentication failed")
 					}
 				}
 			}

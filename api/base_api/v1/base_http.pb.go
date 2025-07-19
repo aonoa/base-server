@@ -129,10 +129,10 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/menu", _Base_CreateMenu0_HTTP_Handler(srv))
 	r.PUT("/basic-api/system/menu/{id}", _Base_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/menu/{id}", _Base_DeleteMenu0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getDeptList", _Base_GetDeptList0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/addDept", _Base_AddDept0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/updateDept", _Base_UpdateDept0_HTTP_Handler(srv))
-	r.DELETE("/basic-api/system/delDept/{id}", _Base_DelDept0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/dept/list", _Base_GetDeptList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/dept", _Base_AddDept0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/dept/{id}", _Base_UpdateDept0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/dept/{id}", _Base_DelDept0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addRole", _Base_AddRole0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delRole/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/updateRole", _Base_UpdateRole0_HTTP_Handler(srv))
@@ -510,7 +510,7 @@ func _Base_GetDeptList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) 
 			return err
 		}
 		reply := out.(*GetDeptListReply)
-		return ctx.Result(200, reply.Items)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -543,6 +543,9 @@ func _Base_UpdateDept0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) e
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationBaseUpdateDept)
@@ -772,7 +775,7 @@ func NewBaseHTTPClient(client *http.Client) BaseHTTPClient {
 
 func (c *BaseHTTPClientImpl) AddDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
-	pattern := "/basic-api/system/addDept"
+	pattern := "/basic-api/system/dept"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseAddDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -837,7 +840,7 @@ func (c *BaseHTTPClientImpl) CreateMenu(ctx context.Context, in *SysMenuListItem
 
 func (c *BaseHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/basic-api/system/delDept/{id}"
+	pattern := "/basic-api/system/dept/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseDelDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -928,11 +931,11 @@ func (c *BaseHTTPClientImpl) GetAllRoleList(ctx context.Context, in *RoleParams,
 
 func (c *BaseHTTPClientImpl) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDeptListReply, error) {
 	var out GetDeptListReply
-	pattern := "/basic-api/system/getDeptList"
+	pattern := "/basic-api/system/dept/list"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetDeptList))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1097,11 +1100,11 @@ func (c *BaseHTTPClientImpl) SetRoleStatus(ctx context.Context, in *SetRoleStatu
 
 func (c *BaseHTTPClientImpl) UpdateDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
-	pattern := "/basic-api/system/updateDept"
+	pattern := "/basic-api/system/dept/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseUpdateDept))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
