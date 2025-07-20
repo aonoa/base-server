@@ -24,7 +24,7 @@ func (Menu) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
 		field.Int64("pid").Comment("上一级ID"),
-		field.Int8("type").Comment("菜单类型,0-目录,1-菜单,2-按钮"),
+		field.String("type").Comment("菜单类型,catalog-目录，menu-菜单，embedded-内嵌，link-外链，button-按钮"),
 		field.Bool("status").Default(false).Comment("状态,0-禁用，1-启用"),
 
 		field.String("path").Comment("路由path"),

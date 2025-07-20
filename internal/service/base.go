@@ -118,10 +118,6 @@ func (s *BaseService) DelUser(ctx context.Context, req *pb.DeleteUser) (*emptypb
 	return &emptypb.Empty{}, s.uc.DelUser(ctx, req.Id)
 }
 
-func (s *BaseService) GetRoleListByPage(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
-	return s.uc.GetAllRoleList(ctx, req)
-}
-
 ////////////////////////////////////////
 
 func (s *BaseService) GetDeptList(ctx context.Context, req *emptypb.Empty) (*pb.GetDeptListReply, error) {
@@ -195,13 +191,10 @@ func (s *BaseService) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest)
 
 /////////////////////////////////////////////////////
 
-func (s *BaseService) GetAllRoleList(ctx context.Context, req *pb.RoleParams) (*pb.GetRoleListByPageReply, error) {
-	return s.uc.GetAllRoleList(ctx, &pb.RolePageParams{
-		RoleNme: req.RoleName,
-		Status:  req.Status,
-		DeptId:  "",
-	})
+func (s *BaseService) GetRoleList(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
+	return s.uc.GetAllRoleList(ctx, req)
 }
+
 func (s *BaseService) SetRoleStatus(ctx context.Context, req *pb.SetRoleStatusRequest) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }

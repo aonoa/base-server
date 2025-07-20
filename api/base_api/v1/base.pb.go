@@ -828,11 +828,10 @@ type DeptListItem struct {
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                 // id
 	Pid           string                 `protobuf:"bytes,2,opt,name=pid,proto3" json:"pid,omitempty"`               // pid 上级部门的id
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`             // 部门名称
-	OrderNo       int64                  `protobuf:"varint,4,opt,name=orderNo,proto3" json:"orderNo,omitempty"`      // 排序
+	OrderNo       int32                  `protobuf:"varint,4,opt,name=orderNo,proto3" json:"orderNo,omitempty"`      // 排序
 	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
 	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`        // 状态
 	CreateTime    string                 `protobuf:"bytes,7,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
-	ParentDept    string                 `protobuf:"bytes,8,opt,name=parentDept,proto3" json:"parentDept,omitempty"` // 父节点id
 	Dom           int64                  `protobuf:"varint,9,opt,name=dom,proto3" json:"dom,omitempty"`              // 域
 	Children      []*DeptListItem        `protobuf:"bytes,10,rep,name=children,proto3" json:"children,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -890,7 +889,7 @@ func (x *DeptListItem) GetName() string {
 	return ""
 }
 
-func (x *DeptListItem) GetOrderNo() int64 {
+func (x *DeptListItem) GetOrderNo() int32 {
 	if x != nil {
 		return x.OrderNo
 	}
@@ -914,13 +913,6 @@ func (x *DeptListItem) GetStatus() int32 {
 func (x *DeptListItem) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
-	}
-	return ""
-}
-
-func (x *DeptListItem) GetParentDept() string {
-	if x != nil {
-		return x.ParentDept
 	}
 	return ""
 }
@@ -1039,7 +1031,7 @@ type RolePageParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	RoleNme       string                 `protobuf:"bytes,3,opt,name=roleNme,proto3" json:"roleNme,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
 	DeptId        string                 `protobuf:"bytes,5,opt,name=deptId,proto3" json:"deptId,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1090,9 +1082,9 @@ func (x *RolePageParams) GetPageSize() int64 {
 	return 0
 }
 
-func (x *RolePageParams) GetRoleNme() string {
+func (x *RolePageParams) GetName() string {
 	if x != nil {
-		return x.RoleNme
+		return x.Name
 	}
 	return ""
 }
@@ -1113,15 +1105,15 @@ func (x *RolePageParams) GetDeptId() string {
 
 type RoleListItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                 // id
-	RoleName      string                 `protobuf:"bytes,2,opt,name=roleName,proto3" json:"roleName,omitempty"`     // 角色名
-	RoleValue     string                 `protobuf:"bytes,3,opt,name=roleValue,proto3" json:"roleValue,omitempty"`   // 角色值
-	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`        // 状态
-	OrderNo       string                 `protobuf:"bytes,5,opt,name=orderNo,proto3" json:"orderNo,omitempty"`       // 排序
-	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
-	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
-	Menu          []string               `protobuf:"bytes,8,rep,name=menu,proto3" json:"menu,omitempty"`             // 菜单列表
-	Dept          string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`             // 部门
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                           // id
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                       // 角色名
+	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`                     // 角色值
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                  // 状态
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=orderNo,proto3" json:"orderNo,omitempty"`                 // 排序
+	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"`           // 创建时间
+	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`                   // 备注
+	Permissions   []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"` // 菜单列表
+	Dept          string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`                       // 部门
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1163,21 +1155,21 @@ func (x *RoleListItem) GetId() string {
 	return ""
 }
 
-func (x *RoleListItem) GetRoleName() string {
+func (x *RoleListItem) GetName() string {
 	if x != nil {
-		return x.RoleName
+		return x.Name
 	}
 	return ""
 }
 
-func (x *RoleListItem) GetRoleValue() string {
+func (x *RoleListItem) GetValue() string {
 	if x != nil {
-		return x.RoleValue
+		return x.Value
 	}
 	return ""
 }
 
-func (x *RoleListItem) GetStatus() int64 {
+func (x *RoleListItem) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
@@ -1205,9 +1197,9 @@ func (x *RoleListItem) GetRemark() string {
 	return ""
 }
 
-func (x *RoleListItem) GetMenu() []string {
+func (x *RoleListItem) GetPermissions() []int32 {
 	if x != nil {
-		return x.Menu
+		return x.Permissions
 	}
 	return nil
 }
@@ -1589,7 +1581,7 @@ type SysMenuListItem struct {
 	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`               // 路由路径
 	Pid           int64                  `protobuf:"varint,7,opt,name=pid,proto3" json:"pid,omitempty"`                // 父级ID
 	Redirect      *string                `protobuf:"bytes,8,opt,name=redirect,proto3,oneof" json:"redirect,omitempty"` // 重定向
-	Type          MenuType               `protobuf:"varint,9,opt,name=type,proto3,enum=api.base_api.v1.MenuType" json:"type,omitempty"`
+	Type          string                 `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
 	Meta          *Meta                  `protobuf:"bytes,10,opt,name=meta,proto3" json:"meta,omitempty"`             // 菜单元数据
 	Children      []*SysMenuListItem     `protobuf:"bytes,11,rep,name=children,proto3" json:"children,omitempty"`     // 子级
 	CreateTime    string                 `protobuf:"bytes,12,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
@@ -1683,11 +1675,11 @@ func (x *SysMenuListItem) GetRedirect() string {
 	return ""
 }
 
-func (x *SysMenuListItem) GetType() MenuType {
+func (x *SysMenuListItem) GetType() string {
 	if x != nil {
 		return x.Type
 	}
-	return MenuType_catalog
+	return ""
 }
 
 func (x *SysMenuListItem) GetMeta() *Meta {
@@ -1846,7 +1838,7 @@ type AccountListItem struct {
 	Password      string                 `protobuf:"bytes,11,opt,name=password,proto3" json:"password,omitempty"`    // 密码
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`           // 邮箱
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`     // 昵称
-	Role          int64                  `protobuf:"varint,5,opt,name=role,proto3" json:"role,omitempty"`            // 规则
+	Role          int64                  `protobuf:"varint,5,opt,name=role,proto3" json:"role,omitempty"`            // 角色
 	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
 	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
 	Status        int64                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`        // 状态
@@ -2563,20 +2555,17 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"hideInMenu\x18\x0f \x01(\bR\n" +
 	"hideInMenu\x12\x1c\n" +
 	"\thideInTab\x18\x10 \x01(\bR\thideInTab\x12\x1c\n" +
-	"\tauthority\x18\x11 \x03(\tR\tauthority\"\x9b\x02\n" +
+	"\tauthority\x18\x11 \x03(\tR\tauthority\"\xfb\x01\n" +
 	"\fDeptListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03pid\x18\x02 \x01(\tR\x03pid\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
-	"\aorderNo\x18\x04 \x01(\x03R\aorderNo\x12\x16\n" +
+	"\aorderNo\x18\x04 \x01(\x05R\aorderNo\x12\x16\n" +
 	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x16\n" +
 	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\a \x01(\tR\n" +
-	"createTime\x12\x1e\n" +
-	"\n" +
-	"parentDept\x18\b \x01(\tR\n" +
-	"parentDept\x12\x10\n" +
+	"createTime\x12\x10\n" +
 	"\x03dom\x18\t \x01(\x03R\x03dom\x129\n" +
 	"\bchildren\x18\n" +
 	" \x03(\v2\x1d.api.base_api.v1.DeptListItemR\bchildren\"\x1c\n" +
@@ -2585,24 +2574,24 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"]\n" +
 	"\x10GetDeptListReply\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.api.base_api.v1.DeptListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x8a\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x84\x01\n" +
 	"\x0eRolePageParams\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x18\n" +
-	"\aroleNme\x18\x03 \x01(\tR\aroleNme\x12\x16\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x16\n" +
-	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\xea\x01\n" +
+	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\xe8\x01\n" +
 	"\fRoleListItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\broleName\x18\x02 \x01(\tR\broleName\x12\x1c\n" +
-	"\troleValue\x18\x03 \x01(\tR\troleValue\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
+	"\x05value\x18\x03 \x01(\tR\x05value\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x18\n" +
 	"\aorderNo\x18\x05 \x01(\tR\aorderNo\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x06 \x01(\tR\n" +
 	"createTime\x12\x16\n" +
-	"\x06remark\x18\a \x01(\tR\x06remark\x12\x12\n" +
-	"\x04menu\x18\b \x03(\tR\x04menu\x12\x12\n" +
+	"\x06remark\x18\a \x01(\tR\x06remark\x12 \n" +
+	"\vpermissions\x18\b \x03(\x05R\vpermissions\x12\x12\n" +
 	"\x04dept\x18\t \x01(\tR\x04dept\"c\n" +
 	"\x16GetRoleListByPageReply\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.api.base_api.v1.RoleListItemR\x05items\x12\x14\n" +
@@ -2665,7 +2654,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"_keepAliveB\x12\n" +
 	"\x10_maxNumOfOpenTabB\x10\n" +
 	"\x0e_noBasicLayoutB\x12\n" +
-	"\x10_openInNewWindow\"\x93\x03\n" +
+	"\x10_openInNewWindow\"\xf8\x02\n" +
 	"\x0fSysMenuListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
 	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x16\n" +
@@ -2674,8 +2663,8 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
 	"\x04path\x18\x06 \x01(\tR\x04path\x12\x10\n" +
 	"\x03pid\x18\a \x01(\x03R\x03pid\x12\x1f\n" +
-	"\bredirect\x18\b \x01(\tH\x00R\bredirect\x88\x01\x01\x12-\n" +
-	"\x04type\x18\t \x01(\x0e2\x19.api.base_api.v1.MenuTypeR\x04type\x12)\n" +
+	"\bredirect\x18\b \x01(\tH\x00R\bredirect\x88\x01\x01\x12\x12\n" +
+	"\x04type\x18\t \x01(\tR\x04type\x12)\n" +
 	"\x04meta\x18\n" +
 	" \x01(\v2\x15.api.base_api.v1.MetaR\x04meta\x12<\n" +
 	"\bchildren\x18\v \x03(\v2 .api.base_api.v1.SysMenuListItemR\bchildren\x12\x1e\n" +
@@ -2743,7 +2732,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xd4\x19\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xbb\x18\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -2754,9 +2743,8 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\fReLoadPolicy\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/basic-api/auth/reloadPolicy\x12\x80\x01\n" +
 	"\x0eGetAccountList\x12\x1e.api.base_api.v1.AccountParams\x1a$.api.base_api.v1.GetAccountListReply\"(\x82\xd3\xe4\x93\x02\"\x12 /basic-api/system/getAccountList\x12s\n" +
 	"\aAddUser\x12 .api.base_api.v1.AccountListItem\x1a .api.base_api.v1.AccountListItem\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/system/addUser\x12f\n" +
-	"\aDelUser\x12\x1b.api.base_api.v1.DeleteUser\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delUser/{id}\x12\x8a\x01\n" +
-	"\x11GetRoleListByPage\x12\x1f.api.base_api.v1.RolePageParams\x1a'.api.base_api.v1.GetRoleListByPageReply\"+\x82\xd3\xe4\x93\x02%\x12#/basic-api/system/getRoleListByPage\x12x\n" +
-	"\x0eGetSysMenuList\x12\x1b.api.base_api.v1.MenuParams\x1a$.api.base_api.v1.GetSysMenuListReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/basic-api/system/menu/list\x12\x96\x01\n" +
+	"\aDelUser\x12\x1b.api.base_api.v1.DeleteUser\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delUser/{id}\x12\x7f\n" +
+	"\x0eGetSysMenuList\x12\x1b.api.base_api.v1.MenuParams\x1a$.api.base_api.v1.GetSysMenuListReply\"*\x82\xd3\xe4\x93\x02$b\x05items\x12\x1b/basic-api/system/menu/list\x12\x96\x01\n" +
 	"\x10IsMenuNameExists\x12(.api.base_api.v1.IsMenuNameExistsRequest\x1a&.api.base_api.v1.IsMenuNameExistsReply\"0\x82\xd3\xe4\x93\x02*b\x04data\x12\"/basic-api/system/menu/name-exists\x12\x96\x01\n" +
 	"\x10IsMenuPathExists\x12(.api.base_api.v1.IsMenuPathExistsRequest\x1a&.api.base_api.v1.IsMenuPathExistsReply\"0\x82\xd3\xe4\x93\x02*b\x04data\x12\"/basic-api/system/menu/path-exists\x12i\n" +
 	"\n" +
@@ -2769,12 +2757,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\aAddDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/basic-api/system/dept\x12r\n" +
 	"\n" +
 	"UpdateDept\x12\x1d.api.base_api.v1.DeptListItem\x1a\x1d.api.base_api.v1.DeptListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/dept/{id}\x12c\n" +
-	"\aDelDept\x12\x1b.api.base_api.v1.DeleteDept\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/dept/{id}\x12m\n" +
-	"\aAddRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/system/addRole\x12f\n" +
-	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delRole/{id}\x12s\n" +
+	"\aDelDept\x12\x1b.api.base_api.v1.DeleteDept\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/dept/{id}\x12|\n" +
+	"\vGetRoleList\x12\x1f.api.base_api.v1.RolePageParams\x1a'.api.base_api.v1.GetRoleListByPageReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/basic-api/system/role/list\x12j\n" +
+	"\aAddRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/basic-api/system/role\x12r\n" +
 	"\n" +
-	"UpdateRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/basic-api/system/updateRole\x12\x87\x01\n" +
-	"\x0eGetAllRoleList\x12\x1b.api.base_api.v1.RoleParams\x1a'.api.base_api.v1.GetRoleListByPageReply\"/\x82\xd3\xe4\x93\x02)b\x05items\x12 /basic-api/system/getAllRoleList\x12z\n" +
+	"UpdateRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/role/{id}\x12c\n" +
+	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/role/{id}\x12z\n" +
 	"\rSetRoleStatus\x12%.api.base_api.v1.SetRoleStatusRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/basic-api/system/setRoleStatus\x12v\n" +
 	"\x0eIsAccountExist\x12!.api.base_api.v1.IsAccountRequest\x1a\x16.google.protobuf.Empty\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/basic-api/system/accountExist\x12}\n" +
 	"\x0eChangePassword\x12&.api.base_api.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%:\x01*\" /basic-api/system/changePasswordB3\n" +
@@ -2841,72 +2829,69 @@ var file_base_api_v1_base_proto_depIdxs = []int32{
 	11, // 5: api.base_api.v1.DeptListItem.children:type_name -> api.base_api.v1.DeptListItem
 	11, // 6: api.base_api.v1.GetDeptListReply.items:type_name -> api.base_api.v1.DeptListItem
 	15, // 7: api.base_api.v1.GetRoleListByPageReply.items:type_name -> api.base_api.v1.RoleListItem
-	0,  // 8: api.base_api.v1.SysMenuListItem.type:type_name -> api.base_api.v1.MenuType
-	19, // 9: api.base_api.v1.SysMenuListItem.meta:type_name -> api.base_api.v1.Meta
-	20, // 10: api.base_api.v1.SysMenuListItem.children:type_name -> api.base_api.v1.SysMenuListItem
-	20, // 11: api.base_api.v1.GetSysMenuListReply.items:type_name -> api.base_api.v1.SysMenuListItem
-	23, // 12: api.base_api.v1.GetAccountListReply.items:type_name -> api.base_api.v1.AccountListItem
-	1,  // 13: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
-	35, // 14: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
-	35, // 15: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
-	35, // 16: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
-	35, // 17: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
-	35, // 18: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
-	35, // 19: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
-	22, // 20: api.base_api.v1.Base.GetAccountList:input_type -> api.base_api.v1.AccountParams
-	23, // 21: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.AccountListItem
-	25, // 22: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
-	14, // 23: api.base_api.v1.Base.GetRoleListByPage:input_type -> api.base_api.v1.RolePageParams
-	18, // 24: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
-	29, // 25: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
-	31, // 26: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
-	20, // 27: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	20, // 28: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	33, // 29: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
-	35, // 30: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
-	11, // 31: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
-	11, // 32: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
-	12, // 33: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
-	15, // 34: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	19, // 8: api.base_api.v1.SysMenuListItem.meta:type_name -> api.base_api.v1.Meta
+	20, // 9: api.base_api.v1.SysMenuListItem.children:type_name -> api.base_api.v1.SysMenuListItem
+	20, // 10: api.base_api.v1.GetSysMenuListReply.items:type_name -> api.base_api.v1.SysMenuListItem
+	23, // 11: api.base_api.v1.GetAccountListReply.items:type_name -> api.base_api.v1.AccountListItem
+	1,  // 12: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
+	35, // 13: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
+	35, // 14: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
+	35, // 15: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
+	35, // 16: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
+	35, // 17: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
+	35, // 18: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
+	22, // 19: api.base_api.v1.Base.GetAccountList:input_type -> api.base_api.v1.AccountParams
+	23, // 20: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.AccountListItem
+	25, // 21: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
+	18, // 22: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
+	29, // 23: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
+	31, // 24: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
+	20, // 25: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	20, // 26: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	33, // 27: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
+	35, // 28: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
+	11, // 29: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
+	11, // 30: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
+	12, // 31: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
+	14, // 32: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
+	15, // 33: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	15, // 34: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
 	17, // 35: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
-	15, // 36: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
-	26, // 37: api.base_api.v1.Base.GetAllRoleList:input_type -> api.base_api.v1.RoleParams
-	27, // 38: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
-	28, // 39: api.base_api.v1.Base.IsAccountExist:input_type -> api.base_api.v1.IsAccountRequest
-	34, // 40: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
-	2,  // 41: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
-	3,  // 42: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
-	6,  // 43: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
-	35, // 44: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
-	21, // 45: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	2,  // 46: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
-	35, // 47: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
-	24, // 48: api.base_api.v1.Base.GetAccountList:output_type -> api.base_api.v1.GetAccountListReply
-	23, // 49: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.AccountListItem
-	35, // 50: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
-	16, // 51: api.base_api.v1.Base.GetRoleListByPage:output_type -> api.base_api.v1.GetRoleListByPageReply
-	21, // 52: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	30, // 53: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
-	32, // 54: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
-	35, // 55: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
-	35, // 56: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
-	35, // 57: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
-	13, // 58: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
-	11, // 59: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
-	11, // 60: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
-	35, // 61: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
-	15, // 62: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
-	35, // 63: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
-	15, // 64: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
-	16, // 65: api.base_api.v1.Base.GetAllRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
-	35, // 66: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
-	35, // 67: api.base_api.v1.Base.IsAccountExist:output_type -> google.protobuf.Empty
-	35, // 68: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
-	41, // [41:69] is the sub-list for method output_type
-	13, // [13:41] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	27, // 36: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
+	28, // 37: api.base_api.v1.Base.IsAccountExist:input_type -> api.base_api.v1.IsAccountRequest
+	34, // 38: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
+	2,  // 39: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
+	3,  // 40: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
+	6,  // 41: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
+	35, // 42: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
+	21, // 43: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	2,  // 44: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
+	35, // 45: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
+	24, // 46: api.base_api.v1.Base.GetAccountList:output_type -> api.base_api.v1.GetAccountListReply
+	23, // 47: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.AccountListItem
+	35, // 48: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
+	21, // 49: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	30, // 50: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
+	32, // 51: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
+	35, // 52: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
+	35, // 53: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
+	35, // 54: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
+	13, // 55: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
+	11, // 56: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
+	11, // 57: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
+	35, // 58: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
+	16, // 59: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
+	15, // 60: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
+	15, // 61: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
+	35, // 62: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
+	35, // 63: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
+	35, // 64: api.base_api.v1.Base.IsAccountExist:output_type -> google.protobuf.Empty
+	35, // 65: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
+	39, // [39:66] is the sub-list for method output_type
+	12, // [12:39] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_base_api_v1_base_proto_init() }

@@ -18,7 +18,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
 	"strconv"
-	"strings"
 )
 
 type baseRepo struct {
@@ -144,10 +143,7 @@ func (r *baseRepo) GetDeptList(ctx context.Context) ([]*ent.Dept, error) {
 func (r *baseRepo) AddDept(ctx context.Context, req *pb.DeptListItem) (*ent.Dept, error) {
 	sqlCmd := r.data.db.Dept.Create().
 		SetName(req.Name).
-		SetSort(func() int {
-			intVar := int(req.OrderNo)
-			return intVar
-		}()).
+		SetSort(req.OrderNo).
 		SetStatus(func() bool {
 			if req.Status == 0 {
 				return false
@@ -165,10 +161,7 @@ func (r *baseRepo) AddDept(ctx context.Context, req *pb.DeptListItem) (*ent.Dept
 	}
 
 	if pid > 0 {
-		sqlCmd = sqlCmd.SetPid(pid).SetSort(func() int {
-			intVar := int(req.OrderNo)
-			return intVar + 50
-		}())
+		sqlCmd = sqlCmd.SetPid(pid)
 	}
 
 	return sqlCmd.Save(ctx)
@@ -183,14 +176,7 @@ func (r *baseRepo) DelDept(ctx context.Context, id int64) error {
 func (r *baseRepo) UpdateDept(ctx context.Context, deptId int64, req *pb.DeptListItem) (*ent.Dept, error) {
 	sqlCmd := r.data.db.Dept.UpdateOneID(deptId).
 		SetName(req.Name).
-		SetSort(func() int {
-			intVar := int(req.OrderNo)
-			//intVar, err := strconv.Atoi(req.OrderNo)
-			//if err != nil {
-			//	return 99
-			//}
-			return intVar
-		}()).
+		SetSort(req.OrderNo).
 		SetStatus(func() bool {
 			if req.Status == 0 {
 				return false
@@ -257,8 +243,8 @@ func (r *baseRepo) GetUsersByDept(ctx context.Context, id int64) ([]*ent.User, e
 // GetAllRoleList 获取角色列表
 func (r *baseRepo) GetAllRoleList(ctx context.Context, req *pb.RolePageParams) ([]*ent.Role, error) {
 	query := r.data.db.Role.Query()
-	if req.RoleNme != "" {
-		query = query.Where(role.NameEQ(req.RoleNme))
+	if req.Name != "" {
+		query = query.Where(role.NameEQ(req.Name))
 	}
 	if req.Status == 1 {
 		query = query.Where(role.StatusEQ(func() bool {
@@ -282,8 +268,8 @@ func (r *baseRepo) AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role
 	defer r.data.db.Role.Query().All(entcache.Evict(ctx))
 	// 先不考虑关系表
 	return r.data.db.Role.Create().
-		SetName(req.RoleName).
-		SetValue(req.RoleValue).
+		SetName(req.Name).
+		SetValue(req.Value).
 		//SetSort(func() int {
 		//	intVar := int(req.OrderNo)
 		//	//intVar, err := strconv.Atoi(req.OrderNo)
@@ -300,7 +286,7 @@ func (r *baseRepo) AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role
 			}
 		}()).
 		SetDesc(req.Remark).
-		SetMenu(strings.Join(req.Menu, ",")).
+		SetMenus(req.Permissions).
 		Save(entcache.Evict(ctx))
 }
 
@@ -316,8 +302,8 @@ func (r *baseRepo) UpdateRole(ctx context.Context, roleId int64, req *pb.RoleLis
 	//defer r.data.db.Role.Query().All(entcache.Evict(ctx))
 	// 先不考虑关系表
 	return r.data.db.Role.UpdateOneID(roleId).
-		SetName(req.RoleName).
-		SetValue(req.RoleValue).
+		SetName(req.Name).
+		SetValue(req.Value).
 		SetStatus(func() bool {
 			if req.Status == 0 {
 				return false
@@ -326,7 +312,7 @@ func (r *baseRepo) UpdateRole(ctx context.Context, roleId int64, req *pb.RoleLis
 			}
 		}()).
 		SetDesc(req.Remark).
-		SetMenu(strings.Join(req.Menu, ",")).
+		SetMenus(req.Permissions).
 		Save(entcache.NewContext(entcache.Evict(ctx)))
 }
 

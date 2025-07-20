@@ -75,9 +75,9 @@ func (rc *RoleCreate) SetDesc(s string) *RoleCreate {
 	return rc
 }
 
-// SetMenu sets the "menu" field.
-func (rc *RoleCreate) SetMenu(s string) *RoleCreate {
-	rc.mutation.SetMenu(s)
+// SetMenus sets the "menus" field.
+func (rc *RoleCreate) SetMenus(i []int32) *RoleCreate {
+	rc.mutation.SetMenus(i)
 	return rc
 }
 
@@ -182,8 +182,8 @@ func (rc *RoleCreate) check() error {
 	if _, ok := rc.mutation.Desc(); !ok {
 		return &ValidationError{Name: "desc", err: errors.New(`ent: missing required field "Role.desc"`)}
 	}
-	if _, ok := rc.mutation.Menu(); !ok {
-		return &ValidationError{Name: "menu", err: errors.New(`ent: missing required field "Role.menu"`)}
+	if _, ok := rc.mutation.Menus(); !ok {
+		return &ValidationError{Name: "menus", err: errors.New(`ent: missing required field "Role.menus"`)}
 	}
 	return nil
 }
@@ -241,9 +241,9 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldDesc, field.TypeString, value)
 		_node.Desc = value
 	}
-	if value, ok := rc.mutation.Menu(); ok {
-		_spec.SetField(role.FieldMenu, field.TypeString, value)
-		_node.Menu = value
+	if value, ok := rc.mutation.Menus(); ok {
+		_spec.SetField(role.FieldMenus, field.TypeJSON, value)
+		_node.Menus = value
 	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -3,7 +3,6 @@
 package migrate
 
 import (
-	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
@@ -15,7 +14,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "name", Type: field.TypeString, Comment: "部门名称"},
-		{Name: "sort", Type: field.TypeInt, Comment: "排序"},
+		{Name: "sort", Type: field.TypeInt32, Comment: "排序"},
 		{Name: "status", Type: field.TypeBool, Comment: "0-锁定，1-正常"},
 		{Name: "desc", Type: field.TypeString, Comment: "备注"},
 		{Name: "extension", Type: field.TypeString, Comment: "扩展信息"},
@@ -49,7 +48,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "pid", Type: field.TypeInt64, Comment: "上一级ID"},
-		{Name: "type", Type: field.TypeInt8, Comment: "菜单类型,0-目录,1-菜单,2-按钮"},
+		{Name: "type", Type: field.TypeString, Comment: "菜单类型,catalog-目录，menu-菜单，embedded-内嵌，link-外链，button-按钮"},
 		{Name: "status", Type: field.TypeBool, Comment: "状态,0-禁用，1-启用", Default: false},
 		{Name: "path", Type: field.TypeString, Comment: "路由path"},
 		{Name: "redirect", Type: field.TypeString, Comment: "重定向path", Default: ""},
@@ -96,7 +95,7 @@ var (
 		{Name: "value", Type: field.TypeString, Comment: "角色值"},
 		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用"},
 		{Name: "desc", Type: field.TypeString, Comment: "简介"},
-		{Name: "menu", Type: field.TypeString, Comment: "权限菜单ID列表"},
+		{Name: "menus", Type: field.TypeJSON, Comment: "权限菜单ID列表"},
 	}
 	// RolesTable holds the schema information for the "roles" table.
 	RolesTable = &schema.Table{
@@ -208,10 +207,6 @@ var (
 func init() {
 	DeptsTable.ForeignKeys[0].RefTable = RolesTable
 	DeptsTable.ForeignKeys[1].RefTable = DeptsTable
-	DeptsTable.Annotation = &entsql.Annotation{}
-	MenusTable.Annotation = &entsql.Annotation{}
-	RolesTable.Annotation = &entsql.Annotation{}
-	UsersTable.Annotation = &entsql.Annotation{}
 	DeptUsersTable.ForeignKeys[0].RefTable = DeptsTable
 	DeptUsersTable.ForeignKeys[1].RefTable = UsersTable
 	UserRolesTable.ForeignKeys[0].RefTable = UsersTable

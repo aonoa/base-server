@@ -26,8 +26,8 @@ const (
 	FieldStatus = "status"
 	// FieldDesc holds the string denoting the desc field in the database.
 	FieldDesc = "desc"
-	// FieldMenu holds the string denoting the menu field in the database.
-	FieldMenu = "menu"
+	// FieldMenus holds the string denoting the menus field in the database.
+	FieldMenus = "menus"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// EdgeDept holds the string denoting the dept edge name in mutations.
@@ -57,7 +57,7 @@ var Columns = []string{
 	FieldValue,
 	FieldStatus,
 	FieldDesc,
-	FieldMenu,
+	FieldMenus,
 }
 
 var (
@@ -121,11 +121,6 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 // ByDesc orders the results by the desc field.
 func ByDesc(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDesc, opts...).ToFunc()
-}
-
-// ByMenu orders the results by the menu field.
-func ByMenu(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMenu, opts...).ToFunc()
 }
 
 // ByUsersCount orders the results by users count.

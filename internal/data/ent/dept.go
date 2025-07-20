@@ -25,7 +25,7 @@ type Dept struct {
 	// 部门名称
 	Name string `json:"name,omitempty"`
 	// 排序
-	Sort int `json:"sort,omitempty"`
+	Sort int32 `json:"sort,omitempty"`
 	// 0-锁定，1-正常
 	Status bool `json:"status,omitempty"`
 	// 备注
@@ -156,7 +156,7 @@ func (d *Dept) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sort", values[i])
 			} else if value.Valid {
-				d.Sort = int(value.Int64)
+				d.Sort = int32(value.Int64)
 			}
 		case dept.FieldStatus:
 			if value, ok := values[i].(*sql.NullBool); !ok {

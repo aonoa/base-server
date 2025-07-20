@@ -32,7 +32,7 @@ func (Dept) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
 		field.String("name").Comment("部门名称"),
-		field.Int("sort").Comment("排序"),
+		field.Int32("sort").Comment("排序"),
 		field.Bool("status").Comment("0-锁定，1-正常"),
 		field.String("desc").Comment("备注"),
 		field.String("extension").Comment("扩展信息"),

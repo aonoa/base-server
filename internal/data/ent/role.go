@@ -4,6 +4,7 @@ package ent
 
 import (
 	"base-server/internal/data/ent/role"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -30,7 +31,7 @@ type Role struct {
 	// 简介
 	Desc string `json:"desc,omitempty"`
 	// 权限菜单ID列表
-	Menu string `json:"menu,omitempty"`
+	Menus []int32 `json:"menus,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -71,11 +72,13 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case role.FieldMenus:
+			values[i] = new([]byte)
 		case role.FieldStatus:
 			values[i] = new(sql.NullBool)
 		case role.FieldID:
 			values[i] = new(sql.NullInt64)
-		case role.FieldName, role.FieldValue, role.FieldDesc, role.FieldMenu:
+		case role.FieldName, role.FieldValue, role.FieldDesc:
 			values[i] = new(sql.NullString)
 		case role.FieldCreateTime, role.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -136,11 +139,13 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.Desc = value.String
 			}
-		case role.FieldMenu:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field menu", values[i])
-			} else if value.Valid {
-				r.Menu = value.String
+		case role.FieldMenus:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field menus", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Menus); err != nil {
+					return fmt.Errorf("unmarshal field menus: %w", err)
+				}
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -206,8 +211,8 @@ func (r *Role) String() string {
 	builder.WriteString("desc=")
 	builder.WriteString(r.Desc)
 	builder.WriteString(", ")
-	builder.WriteString("menu=")
-	builder.WriteString(r.Menu)
+	builder.WriteString("menus=")
+	builder.WriteString(fmt.Sprintf("%v", r.Menus))
 	builder.WriteByte(')')
 	return builder.String()
 }

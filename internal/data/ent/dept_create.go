@@ -58,7 +58,7 @@ func (dc *DeptCreate) SetName(s string) *DeptCreate {
 }
 
 // SetSort sets the "sort" field.
-func (dc *DeptCreate) SetSort(i int) *DeptCreate {
+func (dc *DeptCreate) SetSort(i int32) *DeptCreate {
 	dc.mutation.SetSort(i)
 	return dc
 }
@@ -291,7 +291,7 @@ func (dc *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := dc.mutation.Sort(); ok {
-		_spec.SetField(dept.FieldSort, field.TypeInt, value)
+		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
 		_node.Sort = value
 	}
 	if value, ok := dc.mutation.Status(); ok {

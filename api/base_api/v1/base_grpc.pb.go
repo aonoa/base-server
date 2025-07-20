@@ -20,34 +20,33 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Base_Login_FullMethodName             = "/api.base_api.v1.Base/Login"
-	Base_GetUserInfo_FullMethodName       = "/api.base_api.v1.Base/GetUserInfo"
-	Base_GetAccessCodes_FullMethodName    = "/api.base_api.v1.Base/GetAccessCodes"
-	Base_Logout_FullMethodName            = "/api.base_api.v1.Base/Logout"
-	Base_GetMenuList_FullMethodName       = "/api.base_api.v1.Base/GetMenuList"
-	Base_RefreshToken_FullMethodName      = "/api.base_api.v1.Base/RefreshToken"
-	Base_ReLoadPolicy_FullMethodName      = "/api.base_api.v1.Base/ReLoadPolicy"
-	Base_GetAccountList_FullMethodName    = "/api.base_api.v1.Base/GetAccountList"
-	Base_AddUser_FullMethodName           = "/api.base_api.v1.Base/AddUser"
-	Base_DelUser_FullMethodName           = "/api.base_api.v1.Base/DelUser"
-	Base_GetRoleListByPage_FullMethodName = "/api.base_api.v1.Base/GetRoleListByPage"
-	Base_GetSysMenuList_FullMethodName    = "/api.base_api.v1.Base/GetSysMenuList"
-	Base_IsMenuNameExists_FullMethodName  = "/api.base_api.v1.Base/IsMenuNameExists"
-	Base_IsMenuPathExists_FullMethodName  = "/api.base_api.v1.Base/IsMenuPathExists"
-	Base_CreateMenu_FullMethodName        = "/api.base_api.v1.Base/CreateMenu"
-	Base_UpdateMenu_FullMethodName        = "/api.base_api.v1.Base/UpdateMenu"
-	Base_DeleteMenu_FullMethodName        = "/api.base_api.v1.Base/DeleteMenu"
-	Base_GetDeptList_FullMethodName       = "/api.base_api.v1.Base/GetDeptList"
-	Base_AddDept_FullMethodName           = "/api.base_api.v1.Base/AddDept"
-	Base_UpdateDept_FullMethodName        = "/api.base_api.v1.Base/UpdateDept"
-	Base_DelDept_FullMethodName           = "/api.base_api.v1.Base/DelDept"
-	Base_AddRole_FullMethodName           = "/api.base_api.v1.Base/AddRole"
-	Base_DelRole_FullMethodName           = "/api.base_api.v1.Base/DelRole"
-	Base_UpdateRole_FullMethodName        = "/api.base_api.v1.Base/UpdateRole"
-	Base_GetAllRoleList_FullMethodName    = "/api.base_api.v1.Base/GetAllRoleList"
-	Base_SetRoleStatus_FullMethodName     = "/api.base_api.v1.Base/SetRoleStatus"
-	Base_IsAccountExist_FullMethodName    = "/api.base_api.v1.Base/IsAccountExist"
-	Base_ChangePassword_FullMethodName    = "/api.base_api.v1.Base/ChangePassword"
+	Base_Login_FullMethodName            = "/api.base_api.v1.Base/Login"
+	Base_GetUserInfo_FullMethodName      = "/api.base_api.v1.Base/GetUserInfo"
+	Base_GetAccessCodes_FullMethodName   = "/api.base_api.v1.Base/GetAccessCodes"
+	Base_Logout_FullMethodName           = "/api.base_api.v1.Base/Logout"
+	Base_GetMenuList_FullMethodName      = "/api.base_api.v1.Base/GetMenuList"
+	Base_RefreshToken_FullMethodName     = "/api.base_api.v1.Base/RefreshToken"
+	Base_ReLoadPolicy_FullMethodName     = "/api.base_api.v1.Base/ReLoadPolicy"
+	Base_GetAccountList_FullMethodName   = "/api.base_api.v1.Base/GetAccountList"
+	Base_AddUser_FullMethodName          = "/api.base_api.v1.Base/AddUser"
+	Base_DelUser_FullMethodName          = "/api.base_api.v1.Base/DelUser"
+	Base_GetSysMenuList_FullMethodName   = "/api.base_api.v1.Base/GetSysMenuList"
+	Base_IsMenuNameExists_FullMethodName = "/api.base_api.v1.Base/IsMenuNameExists"
+	Base_IsMenuPathExists_FullMethodName = "/api.base_api.v1.Base/IsMenuPathExists"
+	Base_CreateMenu_FullMethodName       = "/api.base_api.v1.Base/CreateMenu"
+	Base_UpdateMenu_FullMethodName       = "/api.base_api.v1.Base/UpdateMenu"
+	Base_DeleteMenu_FullMethodName       = "/api.base_api.v1.Base/DeleteMenu"
+	Base_GetDeptList_FullMethodName      = "/api.base_api.v1.Base/GetDeptList"
+	Base_AddDept_FullMethodName          = "/api.base_api.v1.Base/AddDept"
+	Base_UpdateDept_FullMethodName       = "/api.base_api.v1.Base/UpdateDept"
+	Base_DelDept_FullMethodName          = "/api.base_api.v1.Base/DelDept"
+	Base_GetRoleList_FullMethodName      = "/api.base_api.v1.Base/GetRoleList"
+	Base_AddRole_FullMethodName          = "/api.base_api.v1.Base/AddRole"
+	Base_UpdateRole_FullMethodName       = "/api.base_api.v1.Base/UpdateRole"
+	Base_DelRole_FullMethodName          = "/api.base_api.v1.Base/DelRole"
+	Base_SetRoleStatus_FullMethodName    = "/api.base_api.v1.Base/SetRoleStatus"
+	Base_IsAccountExist_FullMethodName   = "/api.base_api.v1.Base/IsAccountExist"
+	Base_ChangePassword_FullMethodName   = "/api.base_api.v1.Base/ChangePassword"
 )
 
 // BaseClient is the client API for Base service.
@@ -76,8 +75,6 @@ type BaseClient interface {
 	AddUser(ctx context.Context, in *AccountListItem, opts ...grpc.CallOption) (*AccountListItem, error)
 	// 删除用户
 	DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 获取角色列表 (待重构)
-	GetRoleListByPage(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
 	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
@@ -85,11 +82,11 @@ type BaseClient interface {
 	IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...grpc.CallOption) (*IsMenuNameExistsReply, error)
 	// 路由地址是否存在
 	IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...grpc.CallOption) (*IsMenuPathExistsReply, error)
-	// 创建菜单 （未实现）
+	// 创建菜单
 	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 更新菜单 （未实现）
+	// 更新菜单
 	UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 删除菜单 （未实现）
+	// 删除菜单
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取部门列表
 	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
@@ -99,14 +96,14 @@ type BaseClient interface {
 	UpdateDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	// 删除部门
 	DelDept(ctx context.Context, in *DeleteDept, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 获取角色列表 (待重构)
+	GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
 	// 新增角色
 	AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
-	// 删除角色
-	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 修改角色
 	UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
-	// 获取角色信息
-	GetAllRoleList(ctx context.Context, in *RoleParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
+	// 删除角色
+	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 设置角色状态
 	SetRoleStatus(ctx context.Context, in *SetRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 检查用户是否存在 （未实现）
@@ -223,16 +220,6 @@ func (c *baseClient) DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.C
 	return out, nil
 }
 
-func (c *baseClient) GetRoleListByPage(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetRoleListByPageReply)
-	err := c.cc.Invoke(ctx, Base_GetRoleListByPage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSysMenuListReply)
@@ -333,20 +320,20 @@ func (c *baseClient) DelDept(ctx context.Context, in *DeleteDept, opts ...grpc.C
 	return out, nil
 }
 
-func (c *baseClient) AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
+func (c *baseClient) GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleListItem)
-	err := c.cc.Invoke(ctx, Base_AddRole_FullMethodName, in, out, cOpts...)
+	out := new(GetRoleListByPageReply)
+	err := c.cc.Invoke(ctx, Base_GetRoleList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *baseClient) DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *baseClient) AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Base_DelRole_FullMethodName, in, out, cOpts...)
+	out := new(RoleListItem)
+	err := c.cc.Invoke(ctx, Base_AddRole_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -363,10 +350,10 @@ func (c *baseClient) UpdateRole(ctx context.Context, in *RoleListItem, opts ...g
 	return out, nil
 }
 
-func (c *baseClient) GetAllRoleList(ctx context.Context, in *RoleParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
+func (c *baseClient) DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetRoleListByPageReply)
-	err := c.cc.Invoke(ctx, Base_GetAllRoleList_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_DelRole_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -429,8 +416,6 @@ type BaseServer interface {
 	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
 	// 删除用户
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
-	// 获取角色列表 (待重构)
-	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
@@ -438,11 +423,11 @@ type BaseServer interface {
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	// 路由地址是否存在
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
-	// 创建菜单 （未实现）
+	// 创建菜单
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
-	// 更新菜单 （未实现）
+	// 更新菜单
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
-	// 删除菜单 （未实现）
+	// 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
@@ -452,14 +437,14 @@ type BaseServer interface {
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	// 删除部门
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
+	// 获取角色列表 (待重构)
+	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// 新增角色
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	// 删除角色
-	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	// 获取角色信息
-	GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error)
+	// 删除角色
+	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// 设置角色状态
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
 	// 检查用户是否存在 （未实现）
@@ -506,9 +491,6 @@ func (UnimplementedBaseServer) AddUser(context.Context, *AccountListItem) (*Acco
 func (UnimplementedBaseServer) DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelUser not implemented")
 }
-func (UnimplementedBaseServer) GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoleListByPage not implemented")
-}
 func (UnimplementedBaseServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
 }
@@ -539,17 +521,17 @@ func (UnimplementedBaseServer) UpdateDept(context.Context, *DeptListItem) (*Dept
 func (UnimplementedBaseServer) DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelDept not implemented")
 }
+func (UnimplementedBaseServer) GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
+}
 func (UnimplementedBaseServer) AddRole(context.Context, *RoleListItem) (*RoleListItem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddRole not implemented")
-}
-func (UnimplementedBaseServer) DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelRole not implemented")
 }
 func (UnimplementedBaseServer) UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
-func (UnimplementedBaseServer) GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllRoleList not implemented")
+func (UnimplementedBaseServer) DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelRole not implemented")
 }
 func (UnimplementedBaseServer) SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetRoleStatus not implemented")
@@ -761,24 +743,6 @@ func _Base_DelUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_GetRoleListByPage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RolePageParams)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).GetRoleListByPage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_GetRoleListByPage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).GetRoleListByPage(ctx, req.(*RolePageParams))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_GetSysMenuList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MenuParams)
 	if err := dec(in); err != nil {
@@ -959,6 +923,24 @@ func _Base_DelDept_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolePageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetRoleList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetRoleList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetRoleList(ctx, req.(*RolePageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Base_AddRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RoleListItem)
 	if err := dec(in); err != nil {
@@ -973,24 +955,6 @@ func _Base_AddRole_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServer).AddRole(ctx, req.(*RoleListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Base_DelRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRole)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).DelRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_DelRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).DelRole(ctx, req.(*DeleteRole))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1013,20 +977,20 @@ func _Base_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_GetAllRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleParams)
+func _Base_DelRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRole)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BaseServer).GetAllRoleList(ctx, in)
+		return srv.(BaseServer).DelRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Base_GetAllRoleList_FullMethodName,
+		FullMethod: Base_DelRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).GetAllRoleList(ctx, req.(*RoleParams))
+		return srv.(BaseServer).DelRole(ctx, req.(*DeleteRole))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1133,10 +1097,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_DelUser_Handler,
 		},
 		{
-			MethodName: "GetRoleListByPage",
-			Handler:    _Base_GetRoleListByPage_Handler,
-		},
-		{
 			MethodName: "GetSysMenuList",
 			Handler:    _Base_GetSysMenuList_Handler,
 		},
@@ -1177,20 +1137,20 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_DelDept_Handler,
 		},
 		{
-			MethodName: "AddRole",
-			Handler:    _Base_AddRole_Handler,
+			MethodName: "GetRoleList",
+			Handler:    _Base_GetRoleList_Handler,
 		},
 		{
-			MethodName: "DelRole",
-			Handler:    _Base_DelRole_Handler,
+			MethodName: "AddRole",
+			Handler:    _Base_AddRole_Handler,
 		},
 		{
 			MethodName: "UpdateRole",
 			Handler:    _Base_UpdateRole_Handler,
 		},
 		{
-			MethodName: "GetAllRoleList",
-			Handler:    _Base_GetAllRoleList_Handler,
+			MethodName: "DelRole",
+			Handler:    _Base_DelRole_Handler,
 		},
 		{
 			MethodName: "SetRoleStatus",

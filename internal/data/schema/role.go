@@ -28,7 +28,7 @@ func (Role) Fields() []ent.Field {
 		field.String("value").Comment("角色值"),
 		field.Bool("status").Comment("0-禁用，1-启用"),
 		field.String("desc").Comment("简介"),
-		field.String("menu").Comment("权限菜单ID列表"),
+		field.JSON("menus", []int32{}).Comment("权限菜单ID列表"),
 	}
 }
 

@@ -14,6 +14,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 )
@@ -93,17 +94,15 @@ func (ru *RoleUpdate) SetNillableDesc(s *string) *RoleUpdate {
 	return ru
 }
 
-// SetMenu sets the "menu" field.
-func (ru *RoleUpdate) SetMenu(s string) *RoleUpdate {
-	ru.mutation.SetMenu(s)
+// SetMenus sets the "menus" field.
+func (ru *RoleUpdate) SetMenus(i []int32) *RoleUpdate {
+	ru.mutation.SetMenus(i)
 	return ru
 }
 
-// SetNillableMenu sets the "menu" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableMenu(s *string) *RoleUpdate {
-	if s != nil {
-		ru.SetMenu(*s)
-	}
+// AppendMenus appends i to the "menus" field.
+func (ru *RoleUpdate) AppendMenus(i []int32) *RoleUpdate {
+	ru.mutation.AppendMenus(i)
 	return ru
 }
 
@@ -244,8 +243,13 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.Desc(); ok {
 		_spec.SetField(role.FieldDesc, field.TypeString, value)
 	}
-	if value, ok := ru.mutation.Menu(); ok {
-		_spec.SetField(role.FieldMenu, field.TypeString, value)
+	if value, ok := ru.mutation.Menus(); ok {
+		_spec.SetField(role.FieldMenus, field.TypeJSON, value)
+	}
+	if value, ok := ru.mutation.AppendedMenus(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, role.FieldMenus, value)
+		})
 	}
 	if ru.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -419,17 +423,15 @@ func (ruo *RoleUpdateOne) SetNillableDesc(s *string) *RoleUpdateOne {
 	return ruo
 }
 
-// SetMenu sets the "menu" field.
-func (ruo *RoleUpdateOne) SetMenu(s string) *RoleUpdateOne {
-	ruo.mutation.SetMenu(s)
+// SetMenus sets the "menus" field.
+func (ruo *RoleUpdateOne) SetMenus(i []int32) *RoleUpdateOne {
+	ruo.mutation.SetMenus(i)
 	return ruo
 }
 
-// SetNillableMenu sets the "menu" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableMenu(s *string) *RoleUpdateOne {
-	if s != nil {
-		ruo.SetMenu(*s)
-	}
+// AppendMenus appends i to the "menus" field.
+func (ruo *RoleUpdateOne) AppendMenus(i []int32) *RoleUpdateOne {
+	ruo.mutation.AppendMenus(i)
 	return ruo
 }
 
@@ -600,8 +602,13 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	if value, ok := ruo.mutation.Desc(); ok {
 		_spec.SetField(role.FieldDesc, field.TypeString, value)
 	}
-	if value, ok := ruo.mutation.Menu(); ok {
-		_spec.SetField(role.FieldMenu, field.TypeString, value)
+	if value, ok := ruo.mutation.Menus(); ok {
+		_spec.SetField(role.FieldMenus, field.TypeJSON, value)
+	}
+	if value, ok := ruo.mutation.AppendedMenus(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, role.FieldMenus, value)
+		})
 	}
 	if ruo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

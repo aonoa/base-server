@@ -101,18 +101,12 @@ service Base {
 		};
 	}
 
-	// 获取角色列表 (待重构)
-	rpc GetRoleListByPage (RolePageParams) returns (GetRoleListByPageReply) {
-		option (google.api.http) = {
-			get: "/basic-api/system/getRoleListByPage"
-		};
-	}
-
 	///////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	rpc GetSysMenuList (MenuParams) returns (GetSysMenuListReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/menu/list"
+			response_body: "items"
 		};
 	}
 
@@ -186,34 +180,31 @@ service Base {
 
 	////////////////////////////////////////////////// 系统角色管理  (待重构)
 
+	// 获取角色列表 (待重构)
+	rpc GetRoleList (RolePageParams) returns (GetRoleListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/role/list"
+		};
+	}
+
 	// 新增角色
 	rpc AddRole (RoleListItem) returns (RoleListItem) {
 		option (google.api.http) = {
-			post: "/basic-api/system/addRole"
+			post: "/basic-api/system/role"
+			body: "*"
+		};
+	}
+	// 修改角色
+	rpc UpdateRole (RoleListItem) returns (RoleListItem) {
+		option (google.api.http) = {
+			put: "/basic-api/system/role/{id}"
 			body: "*"
 		};
 	}
 	// 删除角色
 	rpc DelRole (DeleteRole) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
-			delete: "/basic-api/system/delRole/{id}"
-			// body: "*"
-		};
-	}
-	// 修改角色
-	rpc UpdateRole (RoleListItem) returns (RoleListItem) {
-		option (google.api.http) = {
-			post: "/basic-api/system/updateRole"
-			body: "*"
-		};
-	}
-
-
-	// 获取角色信息
-	rpc GetAllRoleList (RoleParams) returns (GetRoleListByPageReply) {
-		option (google.api.http) = {
-			get: "/basic-api/system/getAllRoleList"
-			response_body: "items"
+			delete: "/basic-api/system/role/{id}"
 		};
 	}
 
@@ -335,11 +326,10 @@ message DeptListItem {
 	string id = 1;			// id
 	string pid = 2;			// pid 上级部门的id
 	string name = 3;		// 部门名称
-	int64 orderNo = 4;			// 排序
+	int32 orderNo = 4;			// 排序
 	string remark = 5;			// 备注
 	int32 status = 6;				// 状态
 	string createTime = 7;	// 创建时间
-	string parentDept = 8;	// 父节点id
 	int64 dom = 9;			// 域
 	repeated DeptListItem children = 10;
 }
@@ -356,20 +346,20 @@ message GetDeptListReply {
 message RolePageParams {
 	int64 page = 1;
 	int64 pageSize = 2;
-	string roleNme = 3;
+	string name = 3;
 	int64 status = 4;
 	string deptId = 5;
 }
 
 message RoleListItem {
 	string id = 1;			// id
-	string roleName = 2;			// 角色名
-	string roleValue = 3;			// 角色值
-	int64 status = 4;				// 状态
+	string name = 2;			// 角色名
+	string value = 3;			// 角色值
+	int32 status = 4;				// 状态
 	string orderNo = 5;			// 排序
 	string createTime = 6;	// 创建时间
 	string remark = 7;			// 备注
-	repeated string menu = 8; // 菜单列表
+	repeated int32 permissions = 8; // 菜单列表
 	string dept = 9;				// 部门
 }
 
@@ -422,40 +412,6 @@ message Meta {
 }
 
 message SysMenuListItem {
-//	message Meta {
-//		int64 order = 1;			// 排序
-//		string icon = 2;				// 图标
-//		string title = 3;				// 菜单标题
-//
-//		optional string activeIcon = 4;				// 激活时显示的图标
-//		optional string activePath = 5;				// 作为路由时，需要激活的菜单的Path
-//		optional bool affixTab = 6;				// 固定在标签栏
-//		optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
-//
-//		optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
-//		optional int64 badgeType = 9;				// 徽标类型
-//		optional int64 badgeVariants = 10;				// 徽标颜色
-//
-//		optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
-//		optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
-//		optional bool hideInMenu = 13;				// 在菜单中隐藏
-//		optional bool hideInTab = 14;				// 在标签栏中隐藏
-//
-//		optional string iframeSrc = 15;				// 内嵌Iframe的URL
-//		optional string link = 16;						// 外链页面的URL
-//		optional bool keepAlive = 17;				// 是否缓存页面
-//
-//		optional int64 maxNumOfOpenTab = 18;				// 同一个路由最大打开的标签数
-//		optional bool noBasicLayout = 19;				// 无需基础布局
-//		optional bool openInNewWindow = 20;				// 是否在新窗口打开
-//
-//		bool ignoreAccess = 21;					// 是否忽略权限
-//		repeated string authority = 22;				// 需要特定的角色标识才可以访问
-//
-////		/** 额外的路由参数 */
-////			query?: Recordable<any>;
-//	}
-
 	int64 id = 1;					// 菜单ID
 	string component = 2;		// 组件
 	int32 status = 3;				// 状态
@@ -465,7 +421,7 @@ message SysMenuListItem {
 	string path = 6;					// 路由路径
 	int64 pid = 7;					// 父级ID
 	optional string redirect = 8;		// 重定向
-	MenuType type = 9;
+	string type = 9;
 
 	Meta meta = 10;		// 菜单元数据
 	repeated SysMenuListItem children = 11;		// 子级
@@ -492,7 +448,7 @@ message AccountListItem {
 	string password = 11;		// 密码
 	string email = 3;				// 邮箱
 	string nickname = 4;		// 昵称
-	int64 role = 5;					// 规则
+	int64 role = 5;					// 角色
 	string createTime = 6;	// 创建时间
 	string remark = 7;			// 备注
 	int64 status = 8;				// 状态

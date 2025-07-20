@@ -85,11 +85,6 @@ func Desc(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldDesc, v))
 }
 
-// Menu applies equality check predicate on the "menu" field. It's identical to MenuEQ.
-func Menu(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldMenu, v))
-}
-
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldCreateTime, v))
@@ -373,71 +368,6 @@ func DescEqualFold(v string) predicate.Role {
 // DescContainsFold applies the ContainsFold predicate on the "desc" field.
 func DescContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldDesc, v))
-}
-
-// MenuEQ applies the EQ predicate on the "menu" field.
-func MenuEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldMenu, v))
-}
-
-// MenuNEQ applies the NEQ predicate on the "menu" field.
-func MenuNEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldMenu, v))
-}
-
-// MenuIn applies the In predicate on the "menu" field.
-func MenuIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldMenu, vs...))
-}
-
-// MenuNotIn applies the NotIn predicate on the "menu" field.
-func MenuNotIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldMenu, vs...))
-}
-
-// MenuGT applies the GT predicate on the "menu" field.
-func MenuGT(v string) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldMenu, v))
-}
-
-// MenuGTE applies the GTE predicate on the "menu" field.
-func MenuGTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldMenu, v))
-}
-
-// MenuLT applies the LT predicate on the "menu" field.
-func MenuLT(v string) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldMenu, v))
-}
-
-// MenuLTE applies the LTE predicate on the "menu" field.
-func MenuLTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldMenu, v))
-}
-
-// MenuContains applies the Contains predicate on the "menu" field.
-func MenuContains(v string) predicate.Role {
-	return predicate.Role(sql.FieldContains(FieldMenu, v))
-}
-
-// MenuHasPrefix applies the HasPrefix predicate on the "menu" field.
-func MenuHasPrefix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasPrefix(FieldMenu, v))
-}
-
-// MenuHasSuffix applies the HasSuffix predicate on the "menu" field.
-func MenuHasSuffix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasSuffix(FieldMenu, v))
-}
-
-// MenuEqualFold applies the EqualFold predicate on the "menu" field.
-func MenuEqualFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldEqualFold(FieldMenu, v))
-}
-
-// MenuContainsFold applies the ContainsFold predicate on the "menu" field.
-func MenuContainsFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldContainsFold(FieldMenu, v))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.

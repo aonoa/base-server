@@ -31,10 +31,9 @@ const OperationBaseDelUser = "/api.base_api.v1.Base/DelUser"
 const OperationBaseDeleteMenu = "/api.base_api.v1.Base/DeleteMenu"
 const OperationBaseGetAccessCodes = "/api.base_api.v1.Base/GetAccessCodes"
 const OperationBaseGetAccountList = "/api.base_api.v1.Base/GetAccountList"
-const OperationBaseGetAllRoleList = "/api.base_api.v1.Base/GetAllRoleList"
 const OperationBaseGetDeptList = "/api.base_api.v1.Base/GetDeptList"
 const OperationBaseGetMenuList = "/api.base_api.v1.Base/GetMenuList"
-const OperationBaseGetRoleListByPage = "/api.base_api.v1.Base/GetRoleListByPage"
+const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseIsAccountExist = "/api.base_api.v1.Base/IsAccountExist"
@@ -58,7 +57,7 @@ type BaseHTTPServer interface {
 	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
 	// ChangePassword 改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
-	// CreateMenu 创建菜单 （未实现）
+	// CreateMenu 创建菜单
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	// DelDept 删除部门
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
@@ -66,21 +65,19 @@ type BaseHTTPServer interface {
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// DelUser 删除用户
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
-	// DeleteMenu 删除菜单 （未实现）
+	// DeleteMenu 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
 	// GetAccountList 获取账户列表
 	GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error)
-	// GetAllRoleList 获取角色信息
-	GetAllRoleList(context.Context, *RoleParams) (*GetRoleListByPageReply, error)
 	// GetDeptList 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
-	// GetRoleListByPage 获取角色列表 (待重构)
-	GetRoleListByPage(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
+	// GetRoleList 获取角色列表 (待重构)
+	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// GetSysMenuList/////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
@@ -104,7 +101,7 @@ type BaseHTTPServer interface {
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
 	// UpdateDept 修改部门
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
-	// UpdateMenu 更新菜单 （未实现）
+	// UpdateMenu 更新菜单
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	// UpdateRole 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
@@ -122,7 +119,6 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.GET("/basic-api/system/getAccountList", _Base_GetAccountList0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getRoleListByPage", _Base_GetRoleListByPage0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/list", _Base_GetSysMenuList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/name-exists", _Base_IsMenuNameExists0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/path-exists", _Base_IsMenuPathExists0_HTTP_Handler(srv))
@@ -133,10 +129,10 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/dept", _Base_AddDept0_HTTP_Handler(srv))
 	r.PUT("/basic-api/system/dept/{id}", _Base_UpdateDept0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/dept/{id}", _Base_DelDept0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/addRole", _Base_AddRole0_HTTP_Handler(srv))
-	r.DELETE("/basic-api/system/delRole/{id}", _Base_DelRole0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/updateRole", _Base_UpdateRole0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getAllRoleList", _Base_GetAllRoleList0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/role/list", _Base_GetRoleList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/role", _Base_AddRole0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/role/{id}", _Base_UpdateRole0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/role/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/accountExist", _Base_IsAccountExist0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/changePassword", _Base_ChangePassword0_HTTP_Handler(srv))
@@ -350,25 +346,6 @@ func _Base_DelUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 	}
 }
 
-func _Base_GetRoleListByPage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RolePageParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseGetRoleListByPage)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetRoleListByPage(ctx, req.(*RolePageParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetRoleListByPageReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in MenuParams
@@ -384,7 +361,7 @@ func _Base_GetSysMenuList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 			return err
 		}
 		reply := out.(*GetSysMenuListReply)
-		return ctx.Result(200, reply)
+		return ctx.Result(200, reply.Items)
 	}
 }
 
@@ -583,6 +560,25 @@ func _Base_DelDept0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 	}
 }
 
+func _Base_GetRoleList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RolePageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetRoleList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetRoleList(ctx, req.(*RolePageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetRoleListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Base_AddRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RoleListItem
@@ -595,6 +591,31 @@ func _Base_AddRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 		http.SetOperation(ctx, OperationBaseAddRole)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.AddRole(ctx, req.(*RoleListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RoleListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_UpdateRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RoleListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseUpdateRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateRole(ctx, req.(*RoleListItem))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -624,47 +645,6 @@ func _Base_DelRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 		}
 		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_UpdateRole0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RoleListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseUpdateRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateRole(ctx, req.(*RoleListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RoleListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Base_GetAllRoleList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RoleParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseGetAllRoleList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAllRoleList(ctx, req.(*RoleParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetRoleListByPageReply)
-		return ctx.Result(200, reply.Items)
 	}
 }
 
@@ -746,10 +726,9 @@ type BaseHTTPClient interface {
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
 	GetAccountList(ctx context.Context, req *AccountParams, opts ...http.CallOption) (rsp *GetAccountListReply, err error)
-	GetAllRoleList(ctx context.Context, req *RoleParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
 	GetMenuList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
-	GetRoleListByPage(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
+	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	IsAccountExist(ctx context.Context, req *IsAccountRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -788,7 +767,7 @@ func (c *BaseHTTPClientImpl) AddDept(ctx context.Context, in *DeptListItem, opts
 
 func (c *BaseHTTPClientImpl) AddRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
 	var out RoleListItem
-	pattern := "/basic-api/system/addRole"
+	pattern := "/basic-api/system/role"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseAddRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -853,7 +832,7 @@ func (c *BaseHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept, opts .
 
 func (c *BaseHTTPClientImpl) DelRole(ctx context.Context, in *DeleteRole, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/basic-api/system/delRole/{id}"
+	pattern := "/basic-api/system/role/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseDelRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -916,19 +895,6 @@ func (c *BaseHTTPClientImpl) GetAccountList(ctx context.Context, in *AccountPara
 	return &out, nil
 }
 
-func (c *BaseHTTPClientImpl) GetAllRoleList(ctx context.Context, in *RoleParams, opts ...http.CallOption) (*GetRoleListByPageReply, error) {
-	var out GetRoleListByPageReply
-	pattern := "/basic-api/system/getAllRoleList"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationBaseGetAllRoleList))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *BaseHTTPClientImpl) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDeptListReply, error) {
 	var out GetDeptListReply
 	pattern := "/basic-api/system/dept/list"
@@ -955,11 +921,11 @@ func (c *BaseHTTPClientImpl) GetMenuList(ctx context.Context, in *emptypb.Empty,
 	return &out, nil
 }
 
-func (c *BaseHTTPClientImpl) GetRoleListByPage(ctx context.Context, in *RolePageParams, opts ...http.CallOption) (*GetRoleListByPageReply, error) {
+func (c *BaseHTTPClientImpl) GetRoleList(ctx context.Context, in *RolePageParams, opts ...http.CallOption) (*GetRoleListByPageReply, error) {
 	var out GetRoleListByPageReply
-	pattern := "/basic-api/system/getRoleListByPage"
+	pattern := "/basic-api/system/role/list"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationBaseGetRoleListByPage))
+	opts = append(opts, http.Operation(OperationBaseGetRoleList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -974,7 +940,7 @@ func (c *BaseHTTPClientImpl) GetSysMenuList(ctx context.Context, in *MenuParams,
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetSysMenuList))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1126,11 +1092,11 @@ func (c *BaseHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenuListItem
 
 func (c *BaseHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
 	var out RoleListItem
-	pattern := "/basic-api/system/updateRole"
+	pattern := "/basic-api/system/role/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseUpdateRole))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

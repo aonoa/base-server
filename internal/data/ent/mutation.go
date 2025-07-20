@@ -45,8 +45,8 @@ type DeptMutation struct {
 	create_time     *time.Time
 	update_time     *time.Time
 	name            *string
-	sort            *int
-	addsort         *int
+	sort            *int32
+	addsort         *int32
 	status          *bool
 	desc            *string
 	extension       *string
@@ -281,13 +281,13 @@ func (m *DeptMutation) ResetName() {
 }
 
 // SetSort sets the "sort" field.
-func (m *DeptMutation) SetSort(i int) {
+func (m *DeptMutation) SetSort(i int32) {
 	m.sort = &i
 	m.addsort = nil
 }
 
 // Sort returns the value of the "sort" field in the mutation.
-func (m *DeptMutation) Sort() (r int, exists bool) {
+func (m *DeptMutation) Sort() (r int32, exists bool) {
 	v := m.sort
 	if v == nil {
 		return
@@ -298,7 +298,7 @@ func (m *DeptMutation) Sort() (r int, exists bool) {
 // OldSort returns the old "sort" field's value of the Dept entity.
 // If the Dept object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DeptMutation) OldSort(ctx context.Context) (v int, err error) {
+func (m *DeptMutation) OldSort(ctx context.Context) (v int32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldSort is only allowed on UpdateOne operations")
 	}
@@ -313,7 +313,7 @@ func (m *DeptMutation) OldSort(ctx context.Context) (v int, err error) {
 }
 
 // AddSort adds i to the "sort" field.
-func (m *DeptMutation) AddSort(i int) {
+func (m *DeptMutation) AddSort(i int32) {
 	if m.addsort != nil {
 		*m.addsort += i
 	} else {
@@ -322,7 +322,7 @@ func (m *DeptMutation) AddSort(i int) {
 }
 
 // AddedSort returns the value that was added to the "sort" field in this mutation.
-func (m *DeptMutation) AddedSort() (r int, exists bool) {
+func (m *DeptMutation) AddedSort() (r int32, exists bool) {
 	v := m.addsort
 	if v == nil {
 		return
@@ -882,7 +882,7 @@ func (m *DeptMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case dept.FieldSort:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -959,7 +959,7 @@ func (m *DeptMutation) AddedField(name string) (ent.Value, bool) {
 func (m *DeptMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case dept.FieldSort:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1195,8 +1195,7 @@ type MenuMutation struct {
 	update_time              *time.Time
 	pid                      *int64
 	addpid                   *int64
-	_type                    *int8
-	add_type                 *int8
+	_type                    *string
 	status                   *bool
 	_path                    *string
 	redirect                 *string
@@ -1469,13 +1468,12 @@ func (m *MenuMutation) ResetPid() {
 }
 
 // SetType sets the "type" field.
-func (m *MenuMutation) SetType(i int8) {
-	m._type = &i
-	m.add_type = nil
+func (m *MenuMutation) SetType(s string) {
+	m._type = &s
 }
 
 // GetType returns the value of the "type" field in the mutation.
-func (m *MenuMutation) GetType() (r int8, exists bool) {
+func (m *MenuMutation) GetType() (r string, exists bool) {
 	v := m._type
 	if v == nil {
 		return
@@ -1486,7 +1484,7 @@ func (m *MenuMutation) GetType() (r int8, exists bool) {
 // OldType returns the old "type" field's value of the Menu entity.
 // If the Menu object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldType(ctx context.Context) (v int8, err error) {
+func (m *MenuMutation) OldType(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldType is only allowed on UpdateOne operations")
 	}
@@ -1500,28 +1498,9 @@ func (m *MenuMutation) OldType(ctx context.Context) (v int8, err error) {
 	return oldValue.Type, nil
 }
 
-// AddType adds i to the "type" field.
-func (m *MenuMutation) AddType(i int8) {
-	if m.add_type != nil {
-		*m.add_type += i
-	} else {
-		m.add_type = &i
-	}
-}
-
-// AddedType returns the value that was added to the "type" field in this mutation.
-func (m *MenuMutation) AddedType() (r int8, exists bool) {
-	v := m.add_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetType resets all changes to the "type" field.
 func (m *MenuMutation) ResetType() {
 	m._type = nil
-	m.add_type = nil
 }
 
 // SetStatus sets the "status" field.
@@ -2985,7 +2964,7 @@ func (m *MenuMutation) SetField(name string, value ent.Value) error {
 		m.SetPid(v)
 		return nil
 	case menu.FieldType:
-		v, ok := value.(int8)
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3212,9 +3191,6 @@ func (m *MenuMutation) AddedFields() []string {
 	if m.addpid != nil {
 		fields = append(fields, menu.FieldPid)
 	}
-	if m.add_type != nil {
-		fields = append(fields, menu.FieldType)
-	}
 	if m.add_order != nil {
 		fields = append(fields, menu.FieldOrder)
 	}
@@ -3234,8 +3210,6 @@ func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case menu.FieldPid:
 		return m.AddedPid()
-	case menu.FieldType:
-		return m.AddedType()
 	case menu.FieldOrder:
 		return m.AddedOrder()
 	case menu.FieldMaxNumOfOpenTab:
@@ -3257,13 +3231,6 @@ func (m *MenuMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddPid(v)
-		return nil
-	case menu.FieldType:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddType(v)
 		return nil
 	case menu.FieldOrder:
 		v, ok := value.(int32)
@@ -3479,7 +3446,8 @@ type RoleMutation struct {
 	value         *string
 	status        *bool
 	desc          *string
-	menu          *string
+	menus         *[]int32
+	appendmenus   []int32
 	clearedFields map[string]struct{}
 	users         map[uuid.UUID]struct{}
 	removedusers  map[uuid.UUID]struct{}
@@ -3812,40 +3780,55 @@ func (m *RoleMutation) ResetDesc() {
 	m.desc = nil
 }
 
-// SetMenu sets the "menu" field.
-func (m *RoleMutation) SetMenu(s string) {
-	m.menu = &s
+// SetMenus sets the "menus" field.
+func (m *RoleMutation) SetMenus(i []int32) {
+	m.menus = &i
+	m.appendmenus = nil
 }
 
-// Menu returns the value of the "menu" field in the mutation.
-func (m *RoleMutation) Menu() (r string, exists bool) {
-	v := m.menu
+// Menus returns the value of the "menus" field in the mutation.
+func (m *RoleMutation) Menus() (r []int32, exists bool) {
+	v := m.menus
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMenu returns the old "menu" field's value of the Role entity.
+// OldMenus returns the old "menus" field's value of the Role entity.
 // If the Role object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoleMutation) OldMenu(ctx context.Context) (v string, err error) {
+func (m *RoleMutation) OldMenus(ctx context.Context) (v []int32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMenu is only allowed on UpdateOne operations")
+		return v, errors.New("OldMenus is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMenu requires an ID field in the mutation")
+		return v, errors.New("OldMenus requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMenu: %w", err)
+		return v, fmt.Errorf("querying old value for OldMenus: %w", err)
 	}
-	return oldValue.Menu, nil
+	return oldValue.Menus, nil
 }
 
-// ResetMenu resets all changes to the "menu" field.
-func (m *RoleMutation) ResetMenu() {
-	m.menu = nil
+// AppendMenus adds i to the "menus" field.
+func (m *RoleMutation) AppendMenus(i []int32) {
+	m.appendmenus = append(m.appendmenus, i...)
+}
+
+// AppendedMenus returns the list of values that were appended to the "menus" field in this mutation.
+func (m *RoleMutation) AppendedMenus() ([]int32, bool) {
+	if len(m.appendmenus) == 0 {
+		return nil, false
+	}
+	return m.appendmenus, true
+}
+
+// ResetMenus resets all changes to the "menus" field.
+func (m *RoleMutation) ResetMenus() {
+	m.menus = nil
+	m.appendmenus = nil
 }
 
 // AddUserIDs adds the "users" edge to the User entity by ids.
@@ -4009,8 +3992,8 @@ func (m *RoleMutation) Fields() []string {
 	if m.desc != nil {
 		fields = append(fields, role.FieldDesc)
 	}
-	if m.menu != nil {
-		fields = append(fields, role.FieldMenu)
+	if m.menus != nil {
+		fields = append(fields, role.FieldMenus)
 	}
 	return fields
 }
@@ -4032,8 +4015,8 @@ func (m *RoleMutation) Field(name string) (ent.Value, bool) {
 		return m.Status()
 	case role.FieldDesc:
 		return m.Desc()
-	case role.FieldMenu:
-		return m.Menu()
+	case role.FieldMenus:
+		return m.Menus()
 	}
 	return nil, false
 }
@@ -4055,8 +4038,8 @@ func (m *RoleMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldStatus(ctx)
 	case role.FieldDesc:
 		return m.OldDesc(ctx)
-	case role.FieldMenu:
-		return m.OldMenu(ctx)
+	case role.FieldMenus:
+		return m.OldMenus(ctx)
 	}
 	return nil, fmt.Errorf("unknown Role field %s", name)
 }
@@ -4108,12 +4091,12 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDesc(v)
 		return nil
-	case role.FieldMenu:
-		v, ok := value.(string)
+	case role.FieldMenus:
+		v, ok := value.([]int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMenu(v)
+		m.SetMenus(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)
@@ -4182,8 +4165,8 @@ func (m *RoleMutation) ResetField(name string) error {
 	case role.FieldDesc:
 		m.ResetDesc()
 		return nil
-	case role.FieldMenu:
-		m.ResetMenu()
+	case role.FieldMenus:
+		m.ResetMenus()
 		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)

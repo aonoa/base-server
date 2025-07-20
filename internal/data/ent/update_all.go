@@ -60,7 +60,7 @@ func (u *RoleUpdateOne) UpdateAll(Role *Role) *RoleUpdateOne {
 	update = update.SetValue(Role.Value)
 	update = update.SetStatus(Role.Status)
 	update = update.SetDesc(Role.Desc)
-	update = update.SetMenu(Role.Menu)
+	update = update.SetMenus(Role.Menus)
 	return update
 }
 

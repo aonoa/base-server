@@ -55,8 +55,8 @@ func (mc *MenuCreate) SetPid(i int64) *MenuCreate {
 }
 
 // SetType sets the "type" field.
-func (mc *MenuCreate) SetType(i int8) *MenuCreate {
-	mc.mutation.SetType(i)
+func (mc *MenuCreate) SetType(s string) *MenuCreate {
+	mc.mutation.SetType(s)
 	return mc
 }
 
@@ -752,7 +752,7 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_node.Pid = value
 	}
 	if value, ok := mc.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeInt8, value)
+		_spec.SetField(menu.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
 	if value, ok := mc.mutation.Status(); ok {

@@ -23,8 +23,8 @@ type Menu struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// 上一级ID
 	Pid int64 `json:"pid,omitempty"`
-	// 菜单类型,0-目录,1-菜单,2-按钮
-	Type int8 `json:"type,omitempty"`
+	// 菜单类型,catalog-目录，menu-菜单，embedded-内嵌，link-外链，button-按钮
+	Type string `json:"type,omitempty"`
 	// 状态,0-禁用，1-启用
 	Status bool `json:"status,omitempty"`
 	// 路由path
@@ -95,9 +95,9 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case menu.FieldStatus, menu.FieldOpenInNewWindow, menu.FieldNoBasicLayout, menu.FieldMenuVisibleWithForbidden, menu.FieldKeepalive, menu.FieldIgnoreAccess, menu.FieldAffixTab, menu.FieldHideInMenu, menu.FieldHideInTab, menu.FieldHideInBreadcrumb, menu.FieldHideChildrenInMenu, menu.FieldFullPathKey:
 			values[i] = new(sql.NullBool)
-		case menu.FieldID, menu.FieldPid, menu.FieldType, menu.FieldOrder, menu.FieldMaxNumOfOpenTab, menu.FieldAffixTabOrder:
+		case menu.FieldID, menu.FieldPid, menu.FieldOrder, menu.FieldMaxNumOfOpenTab, menu.FieldAffixTabOrder:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldPath, menu.FieldRedirect, menu.FieldAlias, menu.FieldName, menu.FieldComponent, menu.FieldIcon, menu.FieldTitle, menu.FieldLink, menu.FieldIframeSrc, menu.FieldActiveIcon, menu.FieldActivePath, menu.FieldAuthority, menu.FieldBadge, menu.FieldBadgeType, menu.FieldBadgeVariants:
+		case menu.FieldType, menu.FieldPath, menu.FieldRedirect, menu.FieldAlias, menu.FieldName, menu.FieldComponent, menu.FieldIcon, menu.FieldTitle, menu.FieldLink, menu.FieldIframeSrc, menu.FieldActiveIcon, menu.FieldActivePath, menu.FieldAuthority, menu.FieldBadge, menu.FieldBadgeType, menu.FieldBadgeVariants:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -141,10 +141,10 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				m.Pid = value.Int64
 			}
 		case menu.FieldType:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				m.Type = int8(value.Int64)
+				m.Type = value.String
 			}
 		case menu.FieldStatus:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -372,7 +372,7 @@ func (m *Menu) String() string {
 	builder.WriteString(fmt.Sprintf("%v", m.Pid))
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(fmt.Sprintf("%v", m.Type))
+	builder.WriteString(m.Type)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", m.Status))

@@ -63,7 +63,7 @@ func (c *RoleCreate) CreateAll(Role *Role) *RoleCreate {
 	builder = builder.SetValue(Role.Value)
 	builder = builder.SetStatus(Role.Status)
 	builder = builder.SetDesc(Role.Desc)
-	builder = builder.SetMenu(Role.Menu)
+	builder = builder.SetMenus(Role.Menus)
 	return builder
 }
 

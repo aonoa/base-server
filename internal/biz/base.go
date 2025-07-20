@@ -5,7 +5,6 @@ import (
 	"base-server/internal/conf"
 	"base-server/internal/data/ent"
 	"base-server/internal/tools"
-	"base-server/internal/types"
 	"context"
 	"encoding/json"
 	"errors"
@@ -143,7 +142,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 		return nil, err
 	}
 
-	var menus []string
+	var menus []int32
 
 	uid := tools.GetUserId(ctx)
 	user, err := uc.GetUserInfo(ctx, uid)
@@ -158,7 +157,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 	}
 	// 取并集
 	for _, role := range roles {
-		menus = append(menus, strings.Split(role.Menu, ",")...)
+		menus = append(menus, role.Menus...)
 	}
 
 	//if user.Dom != 0 {
@@ -200,8 +199,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 			continue
 		}
 		for _, item := range menus {
-			menuID, _ := strconv.ParseInt(item, 10, 64)
-			if menuID == menu.ID {
+			if int64(item) == menu.ID {
 				if menu.Pid == 0 {
 					//reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
 					reqs.Items = append(reqs.Items, entMenuToMenu(menu))
@@ -465,8 +463,9 @@ func ToDeptTree(forest []*Node, strPid string) []*pb.DeptListItem {
 		id := strconv.FormatInt(item.Id, 10)
 		items = append(items, &pb.DeptListItem{
 			Id:      id,
+			Pid:     strPid,
 			Name:    item.Value.(*ent.Dept).Name,
-			OrderNo: int64(item.Value.(*ent.Dept).Sort),
+			OrderNo: item.Value.(*ent.Dept).Sort,
 			Remark:  item.Value.(*ent.Dept).Desc,
 			Status: func() int32 {
 				if item.Value.(*ent.Dept).Status {
@@ -476,7 +475,6 @@ func ToDeptTree(forest []*Node, strPid string) []*pb.DeptListItem {
 				}
 			}(),
 			CreateTime: item.Value.(*ent.Dept).CreateTime.Format("2006-01-02 15:04:05"),
-			ParentDept: strPid,
 			Children: func() []*pb.DeptListItem {
 				if item.Children == nil {
 					return nil
@@ -632,20 +630,20 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 	for i, item := range roleList {
 		id := strconv.FormatInt(item.ID, 10)
 		reqs.Items = append(reqs.Items, &pb.RoleListItem{
-			Id:        id,
-			RoleName:  item.Name,
-			RoleValue: item.Value,
-			Status: func() int64 {
+			Id:    id,
+			Name:  item.Name,
+			Value: item.Value,
+			Status: func() int32 {
 				if item.Status {
 					return 1
 				} else {
 					return 0
 				}
 			}(),
-			OrderNo:    strconv.Itoa(i),
-			CreateTime: item.CreateTime.Format("2006-01-02 15:04:05"),
-			Remark:     item.Desc,
-			Menu:       strings.Split(item.Menu, ","),
+			OrderNo:     strconv.Itoa(i),
+			CreateTime:  item.CreateTime.Format("2006-01-02 15:04:05"),
+			Remark:      item.Desc,
+			Permissions: item.Menus,
 		})
 	}
 
@@ -654,7 +652,7 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 
 // AddRole 添加角色
 func (uc *BaseUsecase) AddRole(ctx context.Context, req *pb.RoleListItem) error {
-	deptId, err := tools.DeptStrSplitToInt(req.Dept)
+	//deptId, err := tools.DeptStrSplitToInt(req.Dept)
 
 	//// 获取所属域
 	//var domId int64
@@ -669,15 +667,15 @@ func (uc *BaseUsecase) AddRole(ctx context.Context, req *pb.RoleListItem) error 
 	//}
 
 	// # 检查是否有这个域添加角色权限
-	if ok, err := uc.auth.EnforcePolicy(tools.GetUserId(ctx), string(types.PolicyType_Role)+":"+strconv.FormatInt(deptId, 10), "add"); ok {
-		fmt.Println("ok ")
-	} else {
-		fmt.Println("err ")
-		return err
-	}
+	//if ok, err := uc.auth.EnforcePolicy(tools.GetUserId(ctx), string(types.PolicyType_Role)+":"+strconv.FormatInt(deptId, 10), "add"); ok {
+	//	fmt.Println("ok ")
+	//} else {
+	//	fmt.Println("err ")
+	//	return err
+	//}
 
 	// 添加到域
-	_, err = uc.repo.AddRole(ctx, req)
+	_, err := uc.repo.AddRole(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -733,7 +731,7 @@ func ToMenuTree(forest []*pb.SysMenuListItem) []*pb.SysMenuListItem {
 			Path:     item.Path,
 			Pid:      item.Pid,
 			Redirect: nil,
-			Type:     0,
+			Type:     item.Type,
 			Meta: &pb.Meta{
 				Order:              item.Meta.Order,
 				Icon:               item.Meta.Icon,

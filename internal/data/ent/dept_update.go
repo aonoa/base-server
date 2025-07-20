@@ -52,14 +52,14 @@ func (du *DeptUpdate) SetNillableName(s *string) *DeptUpdate {
 }
 
 // SetSort sets the "sort" field.
-func (du *DeptUpdate) SetSort(i int) *DeptUpdate {
+func (du *DeptUpdate) SetSort(i int32) *DeptUpdate {
 	du.mutation.ResetSort()
 	du.mutation.SetSort(i)
 	return du
 }
 
 // SetNillableSort sets the "sort" field if the given value is not nil.
-func (du *DeptUpdate) SetNillableSort(i *int) *DeptUpdate {
+func (du *DeptUpdate) SetNillableSort(i *int32) *DeptUpdate {
 	if i != nil {
 		du.SetSort(*i)
 	}
@@ -67,7 +67,7 @@ func (du *DeptUpdate) SetNillableSort(i *int) *DeptUpdate {
 }
 
 // AddSort adds i to the "sort" field.
-func (du *DeptUpdate) AddSort(i int) *DeptUpdate {
+func (du *DeptUpdate) AddSort(i int32) *DeptUpdate {
 	du.mutation.AddSort(i)
 	return du
 }
@@ -334,10 +334,10 @@ func (du *DeptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(dept.FieldName, field.TypeString, value)
 	}
 	if value, ok := du.mutation.Sort(); ok {
-		_spec.SetField(dept.FieldSort, field.TypeInt, value)
+		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
 	}
 	if value, ok := du.mutation.AddedSort(); ok {
-		_spec.AddField(dept.FieldSort, field.TypeInt, value)
+		_spec.AddField(dept.FieldSort, field.TypeInt32, value)
 	}
 	if value, ok := du.mutation.Status(); ok {
 		_spec.SetField(dept.FieldStatus, field.TypeBool, value)
@@ -543,14 +543,14 @@ func (duo *DeptUpdateOne) SetNillableName(s *string) *DeptUpdateOne {
 }
 
 // SetSort sets the "sort" field.
-func (duo *DeptUpdateOne) SetSort(i int) *DeptUpdateOne {
+func (duo *DeptUpdateOne) SetSort(i int32) *DeptUpdateOne {
 	duo.mutation.ResetSort()
 	duo.mutation.SetSort(i)
 	return duo
 }
 
 // SetNillableSort sets the "sort" field if the given value is not nil.
-func (duo *DeptUpdateOne) SetNillableSort(i *int) *DeptUpdateOne {
+func (duo *DeptUpdateOne) SetNillableSort(i *int32) *DeptUpdateOne {
 	if i != nil {
 		duo.SetSort(*i)
 	}
@@ -558,7 +558,7 @@ func (duo *DeptUpdateOne) SetNillableSort(i *int) *DeptUpdateOne {
 }
 
 // AddSort adds i to the "sort" field.
-func (duo *DeptUpdateOne) AddSort(i int) *DeptUpdateOne {
+func (duo *DeptUpdateOne) AddSort(i int32) *DeptUpdateOne {
 	duo.mutation.AddSort(i)
 	return duo
 }
@@ -855,10 +855,10 @@ func (duo *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) 
 		_spec.SetField(dept.FieldName, field.TypeString, value)
 	}
 	if value, ok := duo.mutation.Sort(); ok {
-		_spec.SetField(dept.FieldSort, field.TypeInt, value)
+		_spec.SetField(dept.FieldSort, field.TypeInt32, value)
 	}
 	if value, ok := duo.mutation.AddedSort(); ok {
-		_spec.AddField(dept.FieldSort, field.TypeInt, value)
+		_spec.AddField(dept.FieldSort, field.TypeInt32, value)
 	}
 	if value, ok := duo.mutation.Status(); ok {
 		_spec.SetField(dept.FieldStatus, field.TypeBool, value)
