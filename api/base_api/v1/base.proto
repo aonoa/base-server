@@ -77,19 +77,27 @@ service Base {
 		};
 	}
 
-	///////////////////////////////////////////////////// user
+	///////////////////////////////////////////////////// 系统用户管理
 
 	// 获取账户列表
-	rpc GetAccountList (AccountParams) returns (GetAccountListReply) {
+	rpc GetUserList (GetUserParams) returns (GetUserListReply) {
 		option (google.api.http) = {
-			get: "/basic-api/system/getAccountList"
+			get: "/basic-api/system/user/list"
 		};
 	}
 
 	// 新增用户
-	rpc AddUser (AccountListItem) returns (AccountListItem) {
+	rpc AddUser (UserListItem) returns (UserListItem) {
 		option (google.api.http) = {
-			post: "/basic-api/system/addUser"
+			post: "/basic-api/system/user"
+			body: "*"
+		};
+	}
+
+	// 更新用户
+	rpc UpdateUser (UserListItem) returns (UserListItem) {
+		option (google.api.http) = {
+			put: "/basic-api/system/user/{id}"
 			body: "*"
 		};
 	}
@@ -97,7 +105,15 @@ service Base {
 	// 删除用户
 	rpc DelUser (DeleteUser) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
-			delete: "/basic-api/system/delUser/{id}"
+			delete: "/basic-api/system/user/{id}"
+		};
+	}
+
+	// 检查用户是否存在
+	rpc IsUserExist (IsUserExistsRequest) returns (IsUserExistsReply) {
+		option (google.api.http) = {
+			post: "/basic-api/system/user/user-exists"
+			body: "*"
 		};
 	}
 
@@ -147,13 +163,12 @@ service Base {
 		};
 	}
 
-	///////////////////////////////////////////////////// 系统部门管理 (待重构)
+	///////////////////////////////////////////////////// 系统部门管理
 
 	// 获取部门列表
 	rpc GetDeptList (google.protobuf.Empty) returns (GetDeptListReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/dept/list"
-//			response_body: "items"
 		};
 	}
 
@@ -178,9 +193,9 @@ service Base {
 		};
 	}
 
-	////////////////////////////////////////////////// 系统角色管理  (待重构)
+	////////////////////////////////////////////////// 系统角色管理
 
-	// 获取角色列表 (待重构)
+	// 获取角色列表
 	rpc GetRoleList (RolePageParams) returns (GetRoleListByPageReply) {
 		option (google.api.http) = {
 			get: "/basic-api/system/role/list"
@@ -208,7 +223,7 @@ service Base {
 		};
 	}
 
-	// 设置角色状态
+	// 设置角色状态 (未使用)
 	rpc SetRoleStatus (SetRoleStatusRequest) returns (google.protobuf.Empty) {
 		option (google.api.http) = {
 			post: "/basic-api/system/setRoleStatus"
@@ -217,14 +232,6 @@ service Base {
 	}
 
 	///////////////////////////////////////////////////
-
-	// 检查用户是否存在 （未实现）
-	rpc IsAccountExist (IsAccountRequest) returns (google.protobuf.Empty) {
-		option (google.api.http) = {
-			post: "/basic-api/system/accountExist"
-			body: "*"
-		};
-	}
 
 	// 改密码
 	rpc ChangePassword (ChangePasswordRequest) returns (google.protobuf.Empty) {
@@ -434,30 +441,30 @@ message GetSysMenuListReply {
 	int64	total = 2;
 }
 
-message AccountParams {
+message GetUserParams {
 	int64 page = 1;
 	int64 pageSize = 2;
-	string account = 3;
+	string username = 3;
 	string nickname = 4;
 	string deptId = 5;
 }
 
-message AccountListItem {
+message UserListItem {
 	string id = 1;
-	string account = 2;			// 账号
+	string username = 2;		// 账号
 	string password = 11;		// 密码
 	string email = 3;				// 邮箱
 	string nickname = 4;		// 昵称
 	int64 role = 5;					// 角色
 	string createTime = 6;	// 创建时间
 	string remark = 7;			// 备注
-	int64 status = 8;				// 状态
+	int32 status = 8;				// 状态
 	string dept = 9;				// 部门
 	string avatar = 10;			// 头像
 }
 
-message GetAccountListReply {
-	repeated AccountListItem items = 1;
+message GetUserListReply {
+	repeated UserListItem items = 1;
 	int64	total = 2;
 }
 
@@ -475,8 +482,13 @@ message SetRoleStatusRequest {
 	string status = 2;
 }
 
-message IsAccountRequest {
-	string account = 1;
+message IsUserExistsRequest {
+	string id = 1;
+	string username = 2;
+}
+
+message IsUserExistsReply {
+	bool data = 1;
 }
 
 message	IsMenuNameExistsRequest {

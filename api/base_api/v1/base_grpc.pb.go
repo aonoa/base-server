@@ -27,9 +27,11 @@ const (
 	Base_GetMenuList_FullMethodName      = "/api.base_api.v1.Base/GetMenuList"
 	Base_RefreshToken_FullMethodName     = "/api.base_api.v1.Base/RefreshToken"
 	Base_ReLoadPolicy_FullMethodName     = "/api.base_api.v1.Base/ReLoadPolicy"
-	Base_GetAccountList_FullMethodName   = "/api.base_api.v1.Base/GetAccountList"
+	Base_GetUserList_FullMethodName      = "/api.base_api.v1.Base/GetUserList"
 	Base_AddUser_FullMethodName          = "/api.base_api.v1.Base/AddUser"
+	Base_UpdateUser_FullMethodName       = "/api.base_api.v1.Base/UpdateUser"
 	Base_DelUser_FullMethodName          = "/api.base_api.v1.Base/DelUser"
+	Base_IsUserExist_FullMethodName      = "/api.base_api.v1.Base/IsUserExist"
 	Base_GetSysMenuList_FullMethodName   = "/api.base_api.v1.Base/GetSysMenuList"
 	Base_IsMenuNameExists_FullMethodName = "/api.base_api.v1.Base/IsMenuNameExists"
 	Base_IsMenuPathExists_FullMethodName = "/api.base_api.v1.Base/IsMenuPathExists"
@@ -45,7 +47,6 @@ const (
 	Base_UpdateRole_FullMethodName       = "/api.base_api.v1.Base/UpdateRole"
 	Base_DelRole_FullMethodName          = "/api.base_api.v1.Base/DelRole"
 	Base_SetRoleStatus_FullMethodName    = "/api.base_api.v1.Base/SetRoleStatus"
-	Base_IsAccountExist_FullMethodName   = "/api.base_api.v1.Base/IsAccountExist"
 	Base_ChangePassword_FullMethodName   = "/api.base_api.v1.Base/ChangePassword"
 )
 
@@ -70,11 +71,15 @@ type BaseClient interface {
 	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 获取账户列表
-	GetAccountList(ctx context.Context, in *AccountParams, opts ...grpc.CallOption) (*GetAccountListReply, error)
+	GetUserList(ctx context.Context, in *GetUserParams, opts ...grpc.CallOption) (*GetUserListReply, error)
 	// 新增用户
-	AddUser(ctx context.Context, in *AccountListItem, opts ...grpc.CallOption) (*AccountListItem, error)
+	AddUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error)
+	// 更新用户
+	UpdateUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error)
 	// 删除用户
 	DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 检查用户是否存在
+	IsUserExist(ctx context.Context, in *IsUserExistsRequest, opts ...grpc.CallOption) (*IsUserExistsReply, error)
 	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
@@ -96,7 +101,7 @@ type BaseClient interface {
 	UpdateDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	// 删除部门
 	DelDept(ctx context.Context, in *DeleteDept, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 获取角色列表 (待重构)
+	// 获取角色列表
 	GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
 	// 新增角色
 	AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
@@ -104,10 +109,8 @@ type BaseClient interface {
 	UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
 	// 删除角色
 	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 设置角色状态
+	// 设置角色状态 (未使用)
 	SetRoleStatus(ctx context.Context, in *SetRoleStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 检查用户是否存在 （未实现）
-	IsAccountExist(ctx context.Context, in *IsAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 改密码
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -190,20 +193,30 @@ func (c *baseClient) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
-func (c *baseClient) GetAccountList(ctx context.Context, in *AccountParams, opts ...grpc.CallOption) (*GetAccountListReply, error) {
+func (c *baseClient) GetUserList(ctx context.Context, in *GetUserParams, opts ...grpc.CallOption) (*GetUserListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAccountListReply)
-	err := c.cc.Invoke(ctx, Base_GetAccountList_FullMethodName, in, out, cOpts...)
+	out := new(GetUserListReply)
+	err := c.cc.Invoke(ctx, Base_GetUserList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *baseClient) AddUser(ctx context.Context, in *AccountListItem, opts ...grpc.CallOption) (*AccountListItem, error) {
+func (c *baseClient) AddUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountListItem)
+	out := new(UserListItem)
 	err := c.cc.Invoke(ctx, Base_AddUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) UpdateUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserListItem)
+	err := c.cc.Invoke(ctx, Base_UpdateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -214,6 +227,16 @@ func (c *baseClient) DelUser(ctx context.Context, in *DeleteUser, opts ...grpc.C
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Base_DelUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) IsUserExist(ctx context.Context, in *IsUserExistsRequest, opts ...grpc.CallOption) (*IsUserExistsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IsUserExistsReply)
+	err := c.cc.Invoke(ctx, Base_IsUserExist_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -370,16 +393,6 @@ func (c *baseClient) SetRoleStatus(ctx context.Context, in *SetRoleStatusRequest
 	return out, nil
 }
 
-func (c *baseClient) IsAccountExist(ctx context.Context, in *IsAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Base_IsAccountExist_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *baseClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -411,11 +424,15 @@ type BaseServer interface {
 	// ////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// 获取账户列表
-	GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error)
+	GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error)
 	// 新增用户
-	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
+	AddUser(context.Context, *UserListItem) (*UserListItem, error)
+	// 更新用户
+	UpdateUser(context.Context, *UserListItem) (*UserListItem, error)
 	// 删除用户
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
+	// 检查用户是否存在
+	IsUserExist(context.Context, *IsUserExistsRequest) (*IsUserExistsReply, error)
 	// /////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
@@ -437,7 +454,7 @@ type BaseServer interface {
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	// 删除部门
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
-	// 获取角色列表 (待重构)
+	// 获取角色列表
 	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// 新增角色
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
@@ -445,10 +462,8 @@ type BaseServer interface {
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	// 删除角色
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
-	// 设置角色状态
+	// 设置角色状态 (未使用)
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
-	// 检查用户是否存在 （未实现）
-	IsAccountExist(context.Context, *IsAccountRequest) (*emptypb.Empty, error)
 	// 改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedBaseServer()
@@ -482,14 +497,20 @@ func (UnimplementedBaseServer) RefreshToken(context.Context, *emptypb.Empty) (*L
 func (UnimplementedBaseServer) ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReLoadPolicy not implemented")
 }
-func (UnimplementedBaseServer) GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccountList not implemented")
+func (UnimplementedBaseServer) GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
 }
-func (UnimplementedBaseServer) AddUser(context.Context, *AccountListItem) (*AccountListItem, error) {
+func (UnimplementedBaseServer) AddUser(context.Context, *UserListItem) (*UserListItem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
+}
+func (UnimplementedBaseServer) UpdateUser(context.Context, *UserListItem) (*UserListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedBaseServer) DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelUser not implemented")
+}
+func (UnimplementedBaseServer) IsUserExist(context.Context, *IsUserExistsRequest) (*IsUserExistsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsUserExist not implemented")
 }
 func (UnimplementedBaseServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
@@ -535,9 +556,6 @@ func (UnimplementedBaseServer) DelRole(context.Context, *DeleteRole) (*emptypb.E
 }
 func (UnimplementedBaseServer) SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetRoleStatus not implemented")
-}
-func (UnimplementedBaseServer) IsAccountExist(context.Context, *IsAccountRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsAccountExist not implemented")
 }
 func (UnimplementedBaseServer) ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
@@ -689,26 +707,26 @@ func _Base_ReLoadPolicy_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_GetAccountList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountParams)
+func _Base_GetUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserParams)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BaseServer).GetAccountList(ctx, in)
+		return srv.(BaseServer).GetUserList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Base_GetAccountList_FullMethodName,
+		FullMethod: Base_GetUserList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).GetAccountList(ctx, req.(*AccountParams))
+		return srv.(BaseServer).GetUserList(ctx, req.(*GetUserParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Base_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountListItem)
+	in := new(UserListItem)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -720,7 +738,25 @@ func _Base_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: Base_AddUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).AddUser(ctx, req.(*AccountListItem))
+		return srv.(BaseServer).AddUser(ctx, req.(*UserListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).UpdateUser(ctx, req.(*UserListItem))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -739,6 +775,24 @@ func _Base_DelUser_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BaseServer).DelUser(ctx, req.(*DeleteUser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_IsUserExist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsUserExistsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).IsUserExist(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_IsUserExist_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).IsUserExist(ctx, req.(*IsUserExistsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1013,24 +1067,6 @@ func _Base_SetRoleStatus_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Base_IsAccountExist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsAccountRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BaseServer).IsAccountExist(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Base_IsAccountExist_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BaseServer).IsAccountExist(ctx, req.(*IsAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Base_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ChangePasswordRequest)
 	if err := dec(in); err != nil {
@@ -1085,16 +1121,24 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Base_ReLoadPolicy_Handler,
 		},
 		{
-			MethodName: "GetAccountList",
-			Handler:    _Base_GetAccountList_Handler,
+			MethodName: "GetUserList",
+			Handler:    _Base_GetUserList_Handler,
 		},
 		{
 			MethodName: "AddUser",
 			Handler:    _Base_AddUser_Handler,
 		},
 		{
+			MethodName: "UpdateUser",
+			Handler:    _Base_UpdateUser_Handler,
+		},
+		{
 			MethodName: "DelUser",
 			Handler:    _Base_DelUser_Handler,
+		},
+		{
+			MethodName: "IsUserExist",
+			Handler:    _Base_IsUserExist_Handler,
 		},
 		{
 			MethodName: "GetSysMenuList",
@@ -1155,10 +1199,6 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetRoleStatus",
 			Handler:    _Base_SetRoleStatus_Handler,
-		},
-		{
-			MethodName: "IsAccountExist",
-			Handler:    _Base_IsAccountExist_Handler,
 		},
 		{
 			MethodName: "ChangePassword",

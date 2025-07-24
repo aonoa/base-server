@@ -64,9 +64,9 @@ docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf 
 ```
 
 ## ent
-使用`--template`添加更新全部字段的模板
+使用`--template`添加更新全部字段的模板，`--feature sql/modifier`打开自定义SQL修饰符，`--feature sql/upsert`配置 upsert 和批量 upsert
 ```bash
-base-server/internal/data$ ent generate ./schema --template ./ent/template --target ./ent
+base-server/internal/data$ ent generate ./schema --feature sql/modifier --template ./ent/template --target ./ent
 ```
 
 

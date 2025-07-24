@@ -1755,31 +1755,31 @@ func (x *GetSysMenuListReply) GetTotal() int64 {
 	return 0
 }
 
-type AccountParams struct {
+type GetUserParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	Account       string                 `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
+	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	DeptId        string                 `protobuf:"bytes,5,opt,name=deptId,proto3" json:"deptId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AccountParams) Reset() {
-	*x = AccountParams{}
+func (x *GetUserParams) Reset() {
+	*x = GetUserParams{}
 	mi := &file_base_api_v1_base_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AccountParams) String() string {
+func (x *GetUserParams) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountParams) ProtoMessage() {}
+func (*GetUserParams) ProtoMessage() {}
 
-func (x *AccountParams) ProtoReflect() protoreflect.Message {
+func (x *GetUserParams) ProtoReflect() protoreflect.Message {
 	mi := &file_base_api_v1_base_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1791,77 +1791,77 @@ func (x *AccountParams) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountParams.ProtoReflect.Descriptor instead.
-func (*AccountParams) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserParams.ProtoReflect.Descriptor instead.
+func (*GetUserParams) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *AccountParams) GetPage() int64 {
+func (x *GetUserParams) GetPage() int64 {
 	if x != nil {
 		return x.Page
 	}
 	return 0
 }
 
-func (x *AccountParams) GetPageSize() int64 {
+func (x *GetUserParams) GetPageSize() int64 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-func (x *AccountParams) GetAccount() string {
+func (x *GetUserParams) GetUsername() string {
 	if x != nil {
-		return x.Account
+		return x.Username
 	}
 	return ""
 }
 
-func (x *AccountParams) GetNickname() string {
+func (x *GetUserParams) GetNickname() string {
 	if x != nil {
 		return x.Nickname
 	}
 	return ""
 }
 
-func (x *AccountParams) GetDeptId() string {
+func (x *GetUserParams) GetDeptId() string {
 	if x != nil {
 		return x.DeptId
 	}
 	return ""
 }
 
-type AccountListItem struct {
+type UserListItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Account       string                 `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`       // 账号
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`     // 账号
 	Password      string                 `protobuf:"bytes,11,opt,name=password,proto3" json:"password,omitempty"`    // 密码
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`           // 邮箱
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`     // 昵称
 	Role          int64                  `protobuf:"varint,5,opt,name=role,proto3" json:"role,omitempty"`            // 角色
 	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"` // 创建时间
 	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`         // 备注
-	Status        int64                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`        // 状态
+	Status        int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`        // 状态
 	Dept          string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`             // 部门
 	Avatar        string                 `protobuf:"bytes,10,opt,name=avatar,proto3" json:"avatar,omitempty"`        // 头像
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AccountListItem) Reset() {
-	*x = AccountListItem{}
+func (x *UserListItem) Reset() {
+	*x = UserListItem{}
 	mi := &file_base_api_v1_base_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AccountListItem) String() string {
+func (x *UserListItem) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountListItem) ProtoMessage() {}
+func (*UserListItem) ProtoMessage() {}
 
-func (x *AccountListItem) ProtoReflect() protoreflect.Message {
+func (x *UserListItem) ProtoReflect() protoreflect.Message {
 	mi := &file_base_api_v1_base_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1873,110 +1873,110 @@ func (x *AccountListItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountListItem.ProtoReflect.Descriptor instead.
-func (*AccountListItem) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserListItem.ProtoReflect.Descriptor instead.
+func (*UserListItem) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *AccountListItem) GetId() string {
+func (x *UserListItem) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetAccount() string {
+func (x *UserListItem) GetUsername() string {
 	if x != nil {
-		return x.Account
+		return x.Username
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetPassword() string {
+func (x *UserListItem) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetEmail() string {
+func (x *UserListItem) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetNickname() string {
+func (x *UserListItem) GetNickname() string {
 	if x != nil {
 		return x.Nickname
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetRole() int64 {
+func (x *UserListItem) GetRole() int64 {
 	if x != nil {
 		return x.Role
 	}
 	return 0
 }
 
-func (x *AccountListItem) GetCreateTime() string {
+func (x *UserListItem) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetRemark() string {
+func (x *UserListItem) GetRemark() string {
 	if x != nil {
 		return x.Remark
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetStatus() int64 {
+func (x *UserListItem) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
 	return 0
 }
 
-func (x *AccountListItem) GetDept() string {
+func (x *UserListItem) GetDept() string {
 	if x != nil {
 		return x.Dept
 	}
 	return ""
 }
 
-func (x *AccountListItem) GetAvatar() string {
+func (x *UserListItem) GetAvatar() string {
 	if x != nil {
 		return x.Avatar
 	}
 	return ""
 }
 
-type GetAccountListReply struct {
+type GetUserListReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*AccountListItem     `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items         []*UserListItem        `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetAccountListReply) Reset() {
-	*x = GetAccountListReply{}
+func (x *GetUserListReply) Reset() {
+	*x = GetUserListReply{}
 	mi := &file_base_api_v1_base_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAccountListReply) String() string {
+func (x *GetUserListReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAccountListReply) ProtoMessage() {}
+func (*GetUserListReply) ProtoMessage() {}
 
-func (x *GetAccountListReply) ProtoReflect() protoreflect.Message {
+func (x *GetUserListReply) ProtoReflect() protoreflect.Message {
 	mi := &file_base_api_v1_base_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1988,19 +1988,19 @@ func (x *GetAccountListReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAccountListReply.ProtoReflect.Descriptor instead.
-func (*GetAccountListReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserListReply.ProtoReflect.Descriptor instead.
+func (*GetUserListReply) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *GetAccountListReply) GetItems() []*AccountListItem {
+func (x *GetUserListReply) GetItems() []*UserListItem {
 	if x != nil {
 		return x.Items
 	}
 	return nil
 }
 
-func (x *GetAccountListReply) GetTotal() int64 {
+func (x *GetUserListReply) GetTotal() int64 {
 	if x != nil {
 		return x.Total
 	}
@@ -2155,27 +2155,28 @@ func (x *SetRoleStatusRequest) GetStatus() string {
 	return ""
 }
 
-type IsAccountRequest struct {
+type IsUserExistsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Account       string                 `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *IsAccountRequest) Reset() {
-	*x = IsAccountRequest{}
+func (x *IsUserExistsRequest) Reset() {
+	*x = IsUserExistsRequest{}
 	mi := &file_base_api_v1_base_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *IsAccountRequest) String() string {
+func (x *IsUserExistsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*IsAccountRequest) ProtoMessage() {}
+func (*IsUserExistsRequest) ProtoMessage() {}
 
-func (x *IsAccountRequest) ProtoReflect() protoreflect.Message {
+func (x *IsUserExistsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_base_api_v1_base_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2187,16 +2188,67 @@ func (x *IsAccountRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use IsAccountRequest.ProtoReflect.Descriptor instead.
-func (*IsAccountRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use IsUserExistsRequest.ProtoReflect.Descriptor instead.
+func (*IsUserExistsRequest) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *IsAccountRequest) GetAccount() string {
+func (x *IsUserExistsRequest) GetId() string {
 	if x != nil {
-		return x.Account
+		return x.Id
 	}
 	return ""
+}
+
+func (x *IsUserExistsRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type IsUserExistsReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Data          bool                   `protobuf:"varint,1,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsUserExistsReply) Reset() {
+	*x = IsUserExistsReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsUserExistsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsUserExistsReply) ProtoMessage() {}
+
+func (x *IsUserExistsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsUserExistsReply.ProtoReflect.Descriptor instead.
+func (*IsUserExistsReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *IsUserExistsReply) GetData() bool {
+	if x != nil {
+		return x.Data
+	}
+	return false
 }
 
 type IsMenuNameExistsRequest struct {
@@ -2209,7 +2261,7 @@ type IsMenuNameExistsRequest struct {
 
 func (x *IsMenuNameExistsRequest) Reset() {
 	*x = IsMenuNameExistsRequest{}
-	mi := &file_base_api_v1_base_proto_msgTypes[28]
+	mi := &file_base_api_v1_base_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2221,7 +2273,7 @@ func (x *IsMenuNameExistsRequest) String() string {
 func (*IsMenuNameExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[28]
+	mi := &file_base_api_v1_base_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2234,7 +2286,7 @@ func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsRequest) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{28}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *IsMenuNameExistsRequest) GetId() int64 {
@@ -2260,7 +2312,7 @@ type IsMenuNameExistsReply struct {
 
 func (x *IsMenuNameExistsReply) Reset() {
 	*x = IsMenuNameExistsReply{}
-	mi := &file_base_api_v1_base_proto_msgTypes[29]
+	mi := &file_base_api_v1_base_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2272,7 +2324,7 @@ func (x *IsMenuNameExistsReply) String() string {
 func (*IsMenuNameExistsReply) ProtoMessage() {}
 
 func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[29]
+	mi := &file_base_api_v1_base_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2285,7 +2337,7 @@ func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsReply) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{29}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *IsMenuNameExistsReply) GetData() bool {
@@ -2305,7 +2357,7 @@ type IsMenuPathExistsRequest struct {
 
 func (x *IsMenuPathExistsRequest) Reset() {
 	*x = IsMenuPathExistsRequest{}
-	mi := &file_base_api_v1_base_proto_msgTypes[30]
+	mi := &file_base_api_v1_base_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2317,7 +2369,7 @@ func (x *IsMenuPathExistsRequest) String() string {
 func (*IsMenuPathExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[30]
+	mi := &file_base_api_v1_base_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2330,7 +2382,7 @@ func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsRequest) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{30}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *IsMenuPathExistsRequest) GetId() int64 {
@@ -2356,7 +2408,7 @@ type IsMenuPathExistsReply struct {
 
 func (x *IsMenuPathExistsReply) Reset() {
 	*x = IsMenuPathExistsReply{}
-	mi := &file_base_api_v1_base_proto_msgTypes[31]
+	mi := &file_base_api_v1_base_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2368,7 +2420,7 @@ func (x *IsMenuPathExistsReply) String() string {
 func (*IsMenuPathExistsReply) ProtoMessage() {}
 
 func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[31]
+	mi := &file_base_api_v1_base_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2381,7 +2433,7 @@ func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsReply) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{31}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *IsMenuPathExistsReply) GetData() bool {
@@ -2400,7 +2452,7 @@ type DeleteMenuRequest struct {
 
 func (x *DeleteMenuRequest) Reset() {
 	*x = DeleteMenuRequest{}
-	mi := &file_base_api_v1_base_proto_msgTypes[32]
+	mi := &file_base_api_v1_base_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2412,7 +2464,7 @@ func (x *DeleteMenuRequest) String() string {
 func (*DeleteMenuRequest) ProtoMessage() {}
 
 func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[32]
+	mi := &file_base_api_v1_base_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2425,7 +2477,7 @@ func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMenuRequest) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{32}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *DeleteMenuRequest) GetId() int64 {
@@ -2445,7 +2497,7 @@ type ChangePasswordRequest struct {
 
 func (x *ChangePasswordRequest) Reset() {
 	*x = ChangePasswordRequest{}
-	mi := &file_base_api_v1_base_proto_msgTypes[33]
+	mi := &file_base_api_v1_base_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2457,7 +2509,7 @@ func (x *ChangePasswordRequest) String() string {
 func (*ChangePasswordRequest) ProtoMessage() {}
 
 func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_base_api_v1_base_proto_msgTypes[33]
+	mi := &file_base_api_v1_base_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2470,7 +2522,7 @@ func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_base_api_v1_base_proto_rawDescGZIP(), []int{33}
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ChangePasswordRequest) GetPasswordOld() string {
@@ -2674,16 +2726,16 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\t_redirect\"c\n" +
 	"\x13GetSysMenuListReply\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .api.base_api.v1.SysMenuListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x8d\x01\n" +
-	"\rAccountParams\x12\x12\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x8f\x01\n" +
+	"\rGetUserParams\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x18\n" +
-	"\aaccount\x18\x03 \x01(\tR\aaccount\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x1a\n" +
+	"\busername\x18\x03 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x16\n" +
-	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\x99\x02\n" +
-	"\x0fAccountListItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\aaccount\x18\x02 \x01(\tR\aaccount\x12\x1a\n" +
+	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\x98\x02\n" +
+	"\fUserListItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\v \x01(\tR\bpassword\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
 	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x12\n" +
@@ -2692,12 +2744,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"createTime\x18\x06 \x01(\tR\n" +
 	"createTime\x12\x16\n" +
 	"\x06remark\x18\a \x01(\tR\x06remark\x12\x16\n" +
-	"\x06status\x18\b \x01(\x03R\x06status\x12\x12\n" +
+	"\x06status\x18\b \x01(\x05R\x06status\x12\x12\n" +
 	"\x04dept\x18\t \x01(\tR\x04dept\x12\x16\n" +
 	"\x06avatar\x18\n" +
-	" \x01(\tR\x06avatar\"c\n" +
-	"\x13GetAccountListReply\x126\n" +
-	"\x05items\x18\x01 \x03(\v2 .api.base_api.v1.AccountListItemR\x05items\x12\x14\n" +
+	" \x01(\tR\x06avatar\"]\n" +
+	"\x10GetUserListReply\x123\n" +
+	"\x05items\x18\x01 \x03(\v2\x1d.api.base_api.v1.UserListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1c\n" +
 	"\n" +
 	"DeleteUser\x12\x0e\n" +
@@ -2708,9 +2760,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\x03R\x06status\">\n" +
 	"\x14SetRoleStatusRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\",\n" +
-	"\x10IsAccountRequest\x12\x18\n" +
-	"\aaccount\x18\x01 \x01(\tR\aaccount\"=\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"A\n" +
+	"\x13IsUserExistsRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\"'\n" +
+	"\x11IsUserExistsReply\x12\x12\n" +
+	"\x04data\x18\x01 \x01(\bR\x04data\"=\n" +
 	"\x17IsMenuNameExistsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"+\n" +
@@ -2732,7 +2787,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xbb\x18\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xa8\x19\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -2740,10 +2795,13 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/basic-api/auth/logout\x12o\n" +
 	"\vGetMenuList\x12\x16.google.protobuf.Empty\x1a$.api.base_api.v1.GetSysMenuListReply\"\"\x82\xd3\xe4\x93\x02\x1cb\x05items\x12\x13/basic-api/menu/all\x12g\n" +
 	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x1b.api.base_api.v1.LoginReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/basic-api/auth/refresh\x12g\n" +
-	"\fReLoadPolicy\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/basic-api/auth/reloadPolicy\x12\x80\x01\n" +
-	"\x0eGetAccountList\x12\x1e.api.base_api.v1.AccountParams\x1a$.api.base_api.v1.GetAccountListReply\"(\x82\xd3\xe4\x93\x02\"\x12 /basic-api/system/getAccountList\x12s\n" +
-	"\aAddUser\x12 .api.base_api.v1.AccountListItem\x1a .api.base_api.v1.AccountListItem\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/system/addUser\x12f\n" +
-	"\aDelUser\x12\x1b.api.base_api.v1.DeleteUser\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/basic-api/system/delUser/{id}\x12\x7f\n" +
+	"\fReLoadPolicy\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/basic-api/auth/reloadPolicy\x12u\n" +
+	"\vGetUserList\x12\x1e.api.base_api.v1.GetUserParams\x1a!.api.base_api.v1.GetUserListReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/basic-api/system/user/list\x12j\n" +
+	"\aAddUser\x12\x1d.api.base_api.v1.UserListItem\x1a\x1d.api.base_api.v1.UserListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/basic-api/system/user\x12r\n" +
+	"\n" +
+	"UpdateUser\x12\x1d.api.base_api.v1.UserListItem\x1a\x1d.api.base_api.v1.UserListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/user/{id}\x12c\n" +
+	"\aDelUser\x12\x1b.api.base_api.v1.DeleteUser\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/user/{id}\x12\x86\x01\n" +
+	"\vIsUserExist\x12$.api.base_api.v1.IsUserExistsRequest\x1a\".api.base_api.v1.IsUserExistsReply\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/basic-api/system/user/user-exists\x12\x7f\n" +
 	"\x0eGetSysMenuList\x12\x1b.api.base_api.v1.MenuParams\x1a$.api.base_api.v1.GetSysMenuListReply\"*\x82\xd3\xe4\x93\x02$b\x05items\x12\x1b/basic-api/system/menu/list\x12\x96\x01\n" +
 	"\x10IsMenuNameExists\x12(.api.base_api.v1.IsMenuNameExistsRequest\x1a&.api.base_api.v1.IsMenuNameExistsReply\"0\x82\xd3\xe4\x93\x02*b\x04data\x12\"/basic-api/system/menu/name-exists\x12\x96\x01\n" +
 	"\x10IsMenuPathExists\x12(.api.base_api.v1.IsMenuPathExistsRequest\x1a&.api.base_api.v1.IsMenuPathExistsReply\"0\x82\xd3\xe4\x93\x02*b\x04data\x12\"/basic-api/system/menu/path-exists\x12i\n" +
@@ -2763,8 +2821,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\n" +
 	"UpdateRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/role/{id}\x12c\n" +
 	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/role/{id}\x12z\n" +
-	"\rSetRoleStatus\x12%.api.base_api.v1.SetRoleStatusRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/basic-api/system/setRoleStatus\x12v\n" +
-	"\x0eIsAccountExist\x12!.api.base_api.v1.IsAccountRequest\x1a\x16.google.protobuf.Empty\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/basic-api/system/accountExist\x12}\n" +
+	"\rSetRoleStatus\x12%.api.base_api.v1.SetRoleStatusRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/basic-api/system/setRoleStatus\x12}\n" +
 	"\x0eChangePassword\x12&.api.base_api.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%:\x01*\" /basic-api/system/changePasswordB3\n" +
 	"\x0fapi.base_api.v1P\x01Z\x1ebase-server/api/base_api/v1;v1b\x06proto3"
 
@@ -2781,7 +2838,7 @@ func file_base_api_v1_base_proto_rawDescGZIP() []byte {
 }
 
 var file_base_api_v1_base_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
 var file_base_api_v1_base_proto_goTypes = []any{
 	(MenuType)(0),                   // 0: api.base_api.v1.MenuType
 	(*LoginRequest)(nil),            // 1: api.base_api.v1.LoginRequest
@@ -2805,20 +2862,21 @@ var file_base_api_v1_base_proto_goTypes = []any{
 	(*Meta)(nil),                    // 19: api.base_api.v1.Meta
 	(*SysMenuListItem)(nil),         // 20: api.base_api.v1.SysMenuListItem
 	(*GetSysMenuListReply)(nil),     // 21: api.base_api.v1.GetSysMenuListReply
-	(*AccountParams)(nil),           // 22: api.base_api.v1.AccountParams
-	(*AccountListItem)(nil),         // 23: api.base_api.v1.AccountListItem
-	(*GetAccountListReply)(nil),     // 24: api.base_api.v1.GetAccountListReply
+	(*GetUserParams)(nil),           // 22: api.base_api.v1.GetUserParams
+	(*UserListItem)(nil),            // 23: api.base_api.v1.UserListItem
+	(*GetUserListReply)(nil),        // 24: api.base_api.v1.GetUserListReply
 	(*DeleteUser)(nil),              // 25: api.base_api.v1.DeleteUser
 	(*RoleParams)(nil),              // 26: api.base_api.v1.RoleParams
 	(*SetRoleStatusRequest)(nil),    // 27: api.base_api.v1.SetRoleStatusRequest
-	(*IsAccountRequest)(nil),        // 28: api.base_api.v1.IsAccountRequest
-	(*IsMenuNameExistsRequest)(nil), // 29: api.base_api.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),   // 30: api.base_api.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil), // 31: api.base_api.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),   // 32: api.base_api.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),       // 33: api.base_api.v1.DeleteMenuRequest
-	(*ChangePasswordRequest)(nil),   // 34: api.base_api.v1.ChangePasswordRequest
-	(*emptypb.Empty)(nil),           // 35: google.protobuf.Empty
+	(*IsUserExistsRequest)(nil),     // 28: api.base_api.v1.IsUserExistsRequest
+	(*IsUserExistsReply)(nil),       // 29: api.base_api.v1.IsUserExistsReply
+	(*IsMenuNameExistsRequest)(nil), // 30: api.base_api.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),   // 31: api.base_api.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil), // 32: api.base_api.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),   // 33: api.base_api.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),       // 34: api.base_api.v1.DeleteMenuRequest
+	(*ChangePasswordRequest)(nil),   // 35: api.base_api.v1.ChangePasswordRequest
+	(*emptypb.Empty)(nil),           // 36: google.protobuf.Empty
 }
 var file_base_api_v1_base_proto_depIdxs = []int32{
 	8,  // 0: api.base_api.v1.GetUserInfoReply.roles:type_name -> api.base_api.v1.RoleInfo
@@ -2832,63 +2890,65 @@ var file_base_api_v1_base_proto_depIdxs = []int32{
 	19, // 8: api.base_api.v1.SysMenuListItem.meta:type_name -> api.base_api.v1.Meta
 	20, // 9: api.base_api.v1.SysMenuListItem.children:type_name -> api.base_api.v1.SysMenuListItem
 	20, // 10: api.base_api.v1.GetSysMenuListReply.items:type_name -> api.base_api.v1.SysMenuListItem
-	23, // 11: api.base_api.v1.GetAccountListReply.items:type_name -> api.base_api.v1.AccountListItem
+	23, // 11: api.base_api.v1.GetUserListReply.items:type_name -> api.base_api.v1.UserListItem
 	1,  // 12: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
-	35, // 13: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
-	35, // 14: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
-	35, // 15: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
-	35, // 16: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
-	35, // 17: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
-	35, // 18: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
-	22, // 19: api.base_api.v1.Base.GetAccountList:input_type -> api.base_api.v1.AccountParams
-	23, // 20: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.AccountListItem
-	25, // 21: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
-	18, // 22: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
-	29, // 23: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
-	31, // 24: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
-	20, // 25: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	20, // 26: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	33, // 27: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
-	35, // 28: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
-	11, // 29: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
-	11, // 30: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
-	12, // 31: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
-	14, // 32: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
-	15, // 33: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
-	15, // 34: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
-	17, // 35: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
-	27, // 36: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
-	28, // 37: api.base_api.v1.Base.IsAccountExist:input_type -> api.base_api.v1.IsAccountRequest
-	34, // 38: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
-	2,  // 39: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
-	3,  // 40: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
-	6,  // 41: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
-	35, // 42: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
-	21, // 43: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	2,  // 44: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
-	35, // 45: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
-	24, // 46: api.base_api.v1.Base.GetAccountList:output_type -> api.base_api.v1.GetAccountListReply
-	23, // 47: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.AccountListItem
-	35, // 48: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
-	21, // 49: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	30, // 50: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
-	32, // 51: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
-	35, // 52: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
-	35, // 53: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
-	35, // 54: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
-	13, // 55: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
-	11, // 56: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
-	11, // 57: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
-	35, // 58: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
-	16, // 59: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
-	15, // 60: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
-	15, // 61: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
-	35, // 62: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
-	35, // 63: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
-	35, // 64: api.base_api.v1.Base.IsAccountExist:output_type -> google.protobuf.Empty
-	35, // 65: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
-	39, // [39:66] is the sub-list for method output_type
-	12, // [12:39] is the sub-list for method input_type
+	36, // 13: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
+	36, // 14: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
+	36, // 15: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
+	36, // 16: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
+	36, // 17: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
+	36, // 18: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
+	22, // 19: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
+	23, // 20: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
+	23, // 21: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
+	25, // 22: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
+	28, // 23: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
+	18, // 24: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
+	30, // 25: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
+	32, // 26: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
+	20, // 27: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	20, // 28: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	34, // 29: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
+	36, // 30: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
+	11, // 31: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
+	11, // 32: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
+	12, // 33: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
+	14, // 34: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
+	15, // 35: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	15, // 36: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
+	17, // 37: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
+	27, // 38: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
+	35, // 39: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
+	2,  // 40: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
+	3,  // 41: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
+	6,  // 42: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
+	36, // 43: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
+	21, // 44: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	2,  // 45: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
+	36, // 46: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
+	24, // 47: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
+	23, // 48: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
+	23, // 49: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
+	36, // 50: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
+	29, // 51: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
+	21, // 52: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	31, // 53: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
+	33, // 54: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
+	36, // 55: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
+	36, // 56: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
+	36, // 57: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
+	13, // 58: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
+	11, // 59: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
+	11, // 60: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
+	36, // 61: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
+	16, // 62: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
+	15, // 63: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
+	15, // 64: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
+	36, // 65: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
+	36, // 66: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
+	36, // 67: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
+	40, // [40:68] is the sub-list for method output_type
+	12, // [12:40] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
 	12, // [12:12] is the sub-list for extension extendee
 	0,  // [0:12] is the sub-list for field type_name
@@ -2907,7 +2967,7 @@ func file_base_api_v1_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_base_api_v1_base_proto_rawDesc), len(file_base_api_v1_base_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   34,
+			NumMessages:   35,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -49,17 +49,16 @@ func (r *baseRepo) Login(ctx context.Context, req *pb.LoginRequest) (string, err
 }
 
 // IsUserExistsByUserName 根据用户名检查用户是否存在
-func (r *baseRepo) IsUserExistsByUserName(ctx context.Context, req *pb.LoginRequest) (bool, error) {
-	_, err := r.data.db.User.
+func (r *baseRepo) IsUserExistsByUserName(ctx context.Context, req *pb.IsUserExistsRequest) (*ent.User, error) {
+	data, err := r.data.db.User.
 		Query().
 		Unique(false).
-		//Select(user.FieldID).
 		Where(user.UsernameEQ(req.Username)).
-		FirstID(ctx)
-	if ent.IsNotFound(err) || err != nil {
-		return false, err
+		First(ctx)
+	if ent.IsNotFound(err) {
+		return nil, nil
 	}
-	return true, err
+	return data, err
 }
 
 // FindUserByID 根据用户id查找用户信息
@@ -73,11 +72,11 @@ func (r *baseRepo) DeleteByID(ctx context.Context, id *uuid.UUID) error {
 	return r.data.db.User.DeleteOneID(*id).Exec(entcache.Evict(ctx))
 }
 
-// GetAccountList 获取用户列表
-func (r *baseRepo) GetAccountList(ctx context.Context, deptId int64, req *pb.AccountParams) ([]*ent.User, error) {
+// GetUserList 获取用户列表
+func (r *baseRepo) GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, error) {
 	query := r.data.db.User.Query()
-	if req.Account != "" {
-		query = query.Where(user.UsernameEQ(req.Account))
+	if req.Username != "" {
+		query = query.Where(user.UsernameEQ(req.Username))
 	}
 	if req.Nickname != "" {
 		query = query.Where(user.NicknameEQ(req.Nickname))
@@ -85,12 +84,15 @@ func (r *baseRepo) GetAccountList(ctx context.Context, deptId int64, req *pb.Acc
 	if deptId != 0 {
 		query.Where(user.HasDeptWith(dept.IDEQ(deptId)))
 	}
+	query.WithRoles(func(query *ent.RoleQuery) {
+		query.Select(role.FieldID, role.FieldName, role.FieldValue)
+	})
 	return query.All(ctx)
 	// return r.data.db.User.Query().All(ctx)
 }
 
 // AddUser 新增用户
-func (r *baseRepo) AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.User, error) {
+func (r *baseRepo) AddUser(ctx context.Context, req *pb.UserListItem) (*ent.User, error) {
 	// 添加角色关系、添加部门关系
 	userRole, _ := r.data.db.Role.Get(ctx, req.Role)
 
@@ -103,13 +105,26 @@ func (r *baseRepo) AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.U
 	extensionStr = string(extensionByte)
 
 	return r.data.db.User.Create().
-		SetUsername(req.Account).
-		SetAvatar("https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640").
+		SetUsername(req.Username).
+		SetAvatar("https://cdn.jsdelivr.net/gh/BaiMo-zyc/baimo.images@master/img/user-mini.png").
 		SetPassword(req.Password).
 		SetNickname(req.Nickname).
 		SetStatus(int8(req.Status)).
 		SetDesc(req.Remark).
 		SetExtension(extensionStr).
+		AddRoles(userRole).
+		Save(ctx)
+}
+
+func (r *baseRepo) UpdateUser(ctx context.Context, id *uuid.UUID, req *pb.UserListItem) (*ent.User, error) {
+	defer r.data.db.User.Query().All(entcache.Evict(ctx))
+	userRole, _ := r.data.db.Role.Get(ctx, req.Role)
+	return r.data.db.User.UpdateOneID(*id).
+		SetUsername(req.Username).
+		SetNickname(req.Nickname).
+		SetStatus(int8(req.Status)).
+		SetDesc(req.Remark).
+		ClearRoles(). // 设计的是用户可以有多个角色，这里是为了降低复杂性，让他只能同时拥有一个角色
 		AddRoles(userRole).
 		Save(ctx)
 }

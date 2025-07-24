@@ -106,16 +106,32 @@ func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb
 
 /////////////////////////
 
-func (s *BaseService) GetAccountList(ctx context.Context, req *pb.AccountParams) (*pb.GetAccountListReply, error) {
-	return s.uc.GetAccountList(ctx, req)
+func (s *BaseService) GetUserList(ctx context.Context, req *pb.GetUserParams) (*pb.GetUserListReply, error) {
+	return s.uc.GetUserList(ctx, req)
 }
 
-func (s *BaseService) AddUser(ctx context.Context, req *pb.AccountListItem) (*pb.AccountListItem, error) {
+func (s *BaseService) AddUser(ctx context.Context, req *pb.UserListItem) (*pb.UserListItem, error) {
 	return s.uc.AddUser(ctx, req)
+}
+
+func (s *BaseService) UpdateUser(ctx context.Context, req *pb.UserListItem) (*pb.UserListItem, error) {
+	err := s.uc.UpdateUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UserListItem{}, nil
 }
 
 func (s *BaseService) DelUser(ctx context.Context, req *pb.DeleteUser) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelUser(ctx, req.Id)
+}
+
+func (s *BaseService) IsUserExist(ctx context.Context, req *pb.IsUserExistsRequest) (*pb.IsUserExistsReply, error) {
+	res := &pb.IsUserExistsReply{}
+	if ok, err := s.uc.IsUserExist(ctx, req); err == nil {
+		res.Data = ok
+	}
+	return res, nil
 }
 
 ////////////////////////////////////////
@@ -198,9 +214,7 @@ func (s *BaseService) GetRoleList(ctx context.Context, req *pb.RolePageParams) (
 func (s *BaseService) SetRoleStatus(ctx context.Context, req *pb.SetRoleStatusRequest) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }
-func (s *BaseService) IsAccountExist(ctx context.Context, req *pb.IsAccountRequest) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
-}
+
 func (s *BaseService) ChangePassword(ctx context.Context, req *pb.ChangePasswordRequest) (*emptypb.Empty, error) {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {

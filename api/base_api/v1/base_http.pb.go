@@ -30,15 +30,15 @@ const OperationBaseDelRole = "/api.base_api.v1.Base/DelRole"
 const OperationBaseDelUser = "/api.base_api.v1.Base/DelUser"
 const OperationBaseDeleteMenu = "/api.base_api.v1.Base/DeleteMenu"
 const OperationBaseGetAccessCodes = "/api.base_api.v1.Base/GetAccessCodes"
-const OperationBaseGetAccountList = "/api.base_api.v1.Base/GetAccountList"
 const OperationBaseGetDeptList = "/api.base_api.v1.Base/GetDeptList"
 const OperationBaseGetMenuList = "/api.base_api.v1.Base/GetMenuList"
 const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
-const OperationBaseIsAccountExist = "/api.base_api.v1.Base/IsAccountExist"
+const OperationBaseGetUserList = "/api.base_api.v1.Base/GetUserList"
 const OperationBaseIsMenuNameExists = "/api.base_api.v1.Base/IsMenuNameExists"
 const OperationBaseIsMenuPathExists = "/api.base_api.v1.Base/IsMenuPathExists"
+const OperationBaseIsUserExist = "/api.base_api.v1.Base/IsUserExist"
 const OperationBaseLogin = "/api.base_api.v1.Base/Login"
 const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
 const OperationBaseReLoadPolicy = "/api.base_api.v1.Base/ReLoadPolicy"
@@ -47,6 +47,7 @@ const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
 const OperationBaseUpdateDept = "/api.base_api.v1.Base/UpdateDept"
 const OperationBaseUpdateMenu = "/api.base_api.v1.Base/UpdateMenu"
 const OperationBaseUpdateRole = "/api.base_api.v1.Base/UpdateRole"
+const OperationBaseUpdateUser = "/api.base_api.v1.Base/UpdateUser"
 
 type BaseHTTPServer interface {
 	// AddDept 新增部门
@@ -54,7 +55,7 @@ type BaseHTTPServer interface {
 	// AddRole 新增角色
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	// AddUser 新增用户
-	AddUser(context.Context, *AccountListItem) (*AccountListItem, error)
+	AddUser(context.Context, *UserListItem) (*UserListItem, error)
 	// ChangePassword 改密码
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	// CreateMenu 创建菜单
@@ -69,26 +70,26 @@ type BaseHTTPServer interface {
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
-	// GetAccountList 获取账户列表
-	GetAccountList(context.Context, *AccountParams) (*GetAccountListReply, error)
 	// GetDeptList 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
-	// GetRoleList 获取角色列表 (待重构)
+	// GetRoleList 获取角色列表
 	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// GetSysMenuList/////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	// GetUserInfo 获取用户信息
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
-	// IsAccountExist 检查用户是否存在 （未实现）
-	IsAccountExist(context.Context, *IsAccountRequest) (*emptypb.Empty, error)
+	// GetUserList 获取账户列表
+	GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error)
 	// IsMenuNameExists 菜单名称是否存在
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	// IsMenuPathExists 路由地址是否存在
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
+	// IsUserExist 检查用户是否存在
+	IsUserExist(context.Context, *IsUserExistsRequest) (*IsUserExistsReply, error)
 	// Login 用户登陆
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// Logout 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
@@ -97,7 +98,7 @@ type BaseHTTPServer interface {
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RefreshToken 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
-	// SetRoleStatus 设置角色状态
+	// SetRoleStatus 设置角色状态 (未使用)
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
 	// UpdateDept 修改部门
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
@@ -105,6 +106,8 @@ type BaseHTTPServer interface {
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	// UpdateRole 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
+	// UpdateUser 更新用户
+	UpdateUser(context.Context, *UserListItem) (*UserListItem, error)
 }
 
 func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
@@ -116,9 +119,11 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.GET("/basic-api/menu/all", _Base_GetMenuList0_HTTP_Handler(srv))
 	r.POST("/basic-api/auth/refresh", _Base_RefreshToken0_HTTP_Handler(srv))
 	r.POST("/basic-api/auth/reloadPolicy", _Base_ReLoadPolicy0_HTTP_Handler(srv))
-	r.GET("/basic-api/system/getAccountList", _Base_GetAccountList0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/addUser", _Base_AddUser0_HTTP_Handler(srv))
-	r.DELETE("/basic-api/system/delUser/{id}", _Base_DelUser0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/user/list", _Base_GetUserList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/user", _Base_AddUser0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/user/{id}", _Base_UpdateUser0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/user/{id}", _Base_DelUser0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/user/user-exists", _Base_IsUserExist0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/list", _Base_GetSysMenuList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/name-exists", _Base_IsMenuNameExists0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/menu/path-exists", _Base_IsMenuPathExists0_HTTP_Handler(srv))
@@ -134,7 +139,6 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.PUT("/basic-api/system/role/{id}", _Base_UpdateRole0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/role/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
-	r.POST("/basic-api/system/accountExist", _Base_IsAccountExist0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/changePassword", _Base_ChangePassword0_HTTP_Handler(srv))
 }
 
@@ -283,28 +287,28 @@ func _Base_ReLoadPolicy0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context)
 	}
 }
 
-func _Base_GetAccountList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+func _Base_GetUserList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AccountParams
+		var in GetUserParams
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationBaseGetAccountList)
+		http.SetOperation(ctx, OperationBaseGetUserList)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetAccountList(ctx, req.(*AccountParams))
+			return srv.GetUserList(ctx, req.(*GetUserParams))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetAccountListReply)
+		reply := out.(*GetUserListReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Base_AddUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AccountListItem
+		var in UserListItem
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -313,13 +317,38 @@ func _Base_AddUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 		}
 		http.SetOperation(ctx, OperationBaseAddUser)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddUser(ctx, req.(*AccountListItem))
+			return srv.AddUser(ctx, req.(*UserListItem))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AccountListItem)
+		reply := out.(*UserListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_UpdateUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseUpdateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUser(ctx, req.(*UserListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserListItem)
 		return ctx.Result(200, reply)
 	}
 }
@@ -342,6 +371,28 @@ func _Base_DelUser0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) erro
 			return err
 		}
 		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_IsUserExist0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in IsUserExistsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseIsUserExist)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.IsUserExist(ctx, req.(*IsUserExistsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*IsUserExistsReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -670,28 +721,6 @@ func _Base_SetRoleStatus0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context
 	}
 }
 
-func _Base_IsAccountExist0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in IsAccountRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBaseIsAccountExist)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.IsAccountExist(ctx, req.(*IsAccountRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Base_ChangePassword0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ChangePasswordRequest
@@ -717,7 +746,7 @@ func _Base_ChangePassword0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 type BaseHTTPClient interface {
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
-	AddUser(ctx context.Context, req *AccountListItem, opts ...http.CallOption) (rsp *AccountListItem, err error)
+	AddUser(ctx context.Context, req *UserListItem, opts ...http.CallOption) (rsp *UserListItem, err error)
 	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -725,15 +754,15 @@ type BaseHTTPClient interface {
 	DelUser(ctx context.Context, req *DeleteUser, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
-	GetAccountList(ctx context.Context, req *AccountParams, opts ...http.CallOption) (rsp *GetAccountListReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
 	GetMenuList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
-	IsAccountExist(ctx context.Context, req *IsAccountRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetUserList(ctx context.Context, req *GetUserParams, opts ...http.CallOption) (rsp *GetUserListReply, err error)
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
+	IsUserExist(ctx context.Context, req *IsUserExistsRequest, opts ...http.CallOption) (rsp *IsUserExistsReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -742,6 +771,7 @@ type BaseHTTPClient interface {
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
+	UpdateUser(ctx context.Context, req *UserListItem, opts ...http.CallOption) (rsp *UserListItem, err error)
 }
 
 type BaseHTTPClientImpl struct {
@@ -778,9 +808,9 @@ func (c *BaseHTTPClientImpl) AddRole(ctx context.Context, in *RoleListItem, opts
 	return &out, nil
 }
 
-func (c *BaseHTTPClientImpl) AddUser(ctx context.Context, in *AccountListItem, opts ...http.CallOption) (*AccountListItem, error) {
-	var out AccountListItem
-	pattern := "/basic-api/system/addUser"
+func (c *BaseHTTPClientImpl) AddUser(ctx context.Context, in *UserListItem, opts ...http.CallOption) (*UserListItem, error) {
+	var out UserListItem
+	pattern := "/basic-api/system/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseAddUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -845,7 +875,7 @@ func (c *BaseHTTPClientImpl) DelRole(ctx context.Context, in *DeleteRole, opts .
 
 func (c *BaseHTTPClientImpl) DelUser(ctx context.Context, in *DeleteUser, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/basic-api/system/delUser/{id}"
+	pattern := "/basic-api/system/user/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseDelUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -876,19 +906,6 @@ func (c *BaseHTTPClientImpl) GetAccessCodes(ctx context.Context, in *emptypb.Emp
 	opts = append(opts, http.Operation(OperationBaseGetAccessCodes))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.AccessCodeList, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *BaseHTTPClientImpl) GetAccountList(ctx context.Context, in *AccountParams, opts ...http.CallOption) (*GetAccountListReply, error) {
-	var out GetAccountListReply
-	pattern := "/basic-api/system/getAccountList"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationBaseGetAccountList))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -960,13 +977,13 @@ func (c *BaseHTTPClientImpl) GetUserInfo(ctx context.Context, in *emptypb.Empty,
 	return &out, nil
 }
 
-func (c *BaseHTTPClientImpl) IsAccountExist(ctx context.Context, in *IsAccountRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/basic-api/system/accountExist"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationBaseIsAccountExist))
+func (c *BaseHTTPClientImpl) GetUserList(ctx context.Context, in *GetUserParams, opts ...http.CallOption) (*GetUserListReply, error) {
+	var out GetUserListReply
+	pattern := "/basic-api/system/user/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetUserList))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -993,6 +1010,19 @@ func (c *BaseHTTPClientImpl) IsMenuPathExists(ctx context.Context, in *IsMenuPat
 	opts = append(opts, http.Operation(OperationBaseIsMenuPathExists))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Data, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) IsUserExist(ctx context.Context, in *IsUserExistsRequest, opts ...http.CallOption) (*IsUserExistsReply, error) {
+	var out IsUserExistsReply
+	pattern := "/basic-api/system/user/user-exists"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseIsUserExist))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1095,6 +1125,19 @@ func (c *BaseHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleListItem, o
 	pattern := "/basic-api/system/role/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseUpdateRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) UpdateUser(ctx context.Context, in *UserListItem, opts ...http.CallOption) (*UserListItem, error) {
+	var out UserListItem
+	pattern := "/basic-api/system/user/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseUpdateUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

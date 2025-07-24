@@ -98,41 +98,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
-    /basic-api/system/accountExist:
-        post:
-            tags:
-                - Base
-            description: 检查用户是否存在 （未实现）
-            operationId: Base_IsAccountExist
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.base_api.v1.IsAccountRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-    /basic-api/system/addUser:
-        post:
-            tags:
-                - Base
-            description: 新增用户
-            operationId: Base_AddUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
     /basic-api/system/changePassword:
         post:
             tags:
@@ -145,22 +110,6 @@ paths:
                         schema:
                             $ref: '#/components/schemas/api.base_api.v1.ChangePasswordRequest'
                 required: true
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-    /basic-api/system/delUser/{id}:
-        delete:
-            tags:
-                - Base
-            description: 删除用户
-            operationId: Base_DelUser
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
             responses:
                 "200":
                     description: OK
@@ -237,40 +186,6 @@ paths:
                 "200":
                     description: OK
                     content: {}
-    /basic-api/system/getAccountList:
-        get:
-            tags:
-                - Base
-            description: 获取账户列表
-            operationId: Base_GetAccountList
-            parameters:
-                - name: page
-                  in: query
-                  schema:
-                    type: string
-                - name: pageSize
-                  in: query
-                  schema:
-                    type: string
-                - name: account
-                  in: query
-                  schema:
-                    type: string
-                - name: nickname
-                  in: query
-                  schema:
-                    type: string
-                - name: deptId
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.base_api.v1.GetAccountListReply'
     /basic-api/system/menu:
         post:
             tags:
@@ -415,7 +330,7 @@ paths:
         get:
             tags:
                 - Base
-            description: 获取角色列表 (待重构)
+            description: 获取角色列表
             operationId: Base_GetRoleList
             parameters:
                 - name: page
@@ -489,7 +404,7 @@ paths:
         post:
             tags:
                 - Base
-            description: 设置角色状态
+            description: 设置角色状态 (未使用)
             operationId: Base_SetRoleStatus
             requestBody:
                 content:
@@ -497,6 +412,118 @@ paths:
                         schema:
                             $ref: '#/components/schemas/api.base_api.v1.SetRoleStatusRequest'
                 required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/system/user:
+        post:
+            tags:
+                - Base
+            description: 新增用户
+            operationId: Base_AddUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.UserListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.UserListItem'
+    /basic-api/system/user/list:
+        get:
+            tags:
+                - Base
+            description: 获取账户列表
+            operationId: Base_GetUserList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: nickname
+                  in: query
+                  schema:
+                    type: string
+                - name: deptId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetUserListReply'
+    /basic-api/system/user/user-exists:
+        post:
+            tags:
+                - Base
+            description: 检查用户是否存在
+            operationId: Base_IsUserExist
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.IsUserExistsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.IsUserExistsReply'
+    /basic-api/system/user/{id}:
+        put:
+            tags:
+                - Base
+            description: 更新用户
+            operationId: Base_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.UserListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.UserListItem'
+        delete:
+            tags:
+                - Base
+            description: 删除用户
+            operationId: Base_DelUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -535,31 +562,6 @@ paths:
                                 $ref: '#/components/schemas/api.base_api.v1.UploadResponse'
 components:
     schemas:
-        api.base_api.v1.AccountListItem:
-            type: object
-            properties:
-                id:
-                    type: string
-                account:
-                    type: string
-                password:
-                    type: string
-                email:
-                    type: string
-                nickname:
-                    type: string
-                role:
-                    type: string
-                createTime:
-                    type: string
-                remark:
-                    type: string
-                status:
-                    type: string
-                dept:
-                    type: string
-                avatar:
-                    type: string
         api.base_api.v1.ChangePasswordRequest:
             type: object
             properties:
@@ -609,15 +611,6 @@ components:
                     type: array
                     items:
                         type: string
-        api.base_api.v1.GetAccountListReply:
-            type: object
-            properties:
-                items:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.base_api.v1.AccountListItem'
-                total:
-                    type: string
         api.base_api.v1.GetDeptListReply:
             type: object
             properties:
@@ -664,10 +657,14 @@ components:
                     type: string
                 roles:
                     $ref: '#/components/schemas/api.base_api.v1.RoleInfo'
-        api.base_api.v1.IsAccountRequest:
+        api.base_api.v1.GetUserListReply:
             type: object
             properties:
-                account:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.UserListItem'
+                total:
                     type: string
         api.base_api.v1.IsMenuNameExistsReply:
             type: object
@@ -679,6 +676,18 @@ components:
             properties:
                 data:
                     type: boolean
+        api.base_api.v1.IsUserExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
+        api.base_api.v1.IsUserExistsRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
         api.base_api.v1.LoginReply:
             type: object
             properties:
@@ -821,6 +830,32 @@ components:
                 fullUrl:
                     type: string
                 url:
+                    type: string
+        api.base_api.v1.UserListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                password:
+                    type: string
+                email:
+                    type: string
+                nickname:
+                    type: string
+                role:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                dept:
+                    type: string
+                avatar:
                     type: string
 tags:
     - name: Base

@@ -26,32 +26,39 @@ type Base struct {
 
 // BaseRepo is a Base repo.
 type BaseRepo interface {
-	IsUserExistsByUserName(context.Context, *pb.LoginRequest) (bool, error)
 	Login(context.Context, *pb.LoginRequest) (string, error)
-	GetAccountList(ctx context.Context, deptId int64, req *pb.AccountParams) ([]*ent.User, error)
 	FindUserByID(ctx context.Context, id *uuid.UUID) (*ent.User, error)
-	DeleteByID(ctx context.Context, id *uuid.UUID) error
-	AddUser(ctx context.Context, req *pb.AccountListItem) (*ent.User, error)
-	GetMenuList(ctx context.Context) ([]*ent.Menu, error)
-	GetDeptList(ctx context.Context) ([]*ent.Dept, error)
-	AddDept(ctx context.Context, req *pb.DeptListItem) (*ent.Dept, error)
-	UpdateDept(ctx context.Context, deptId int64, req *pb.DeptListItem) (*ent.Dept, error)
-	DelDept(ctx context.Context, id int64) error
+
 	GetDeptLeafsChildren(ctx context.Context, id int64) ([]*ent.Dept, error)
 	GetDeptChildren(ctx context.Context, id int64) ([]*ent.Dept, error)
 	GetDeptById(ctx context.Context, id int64) (*ent.Dept, error)
 	GetRolesByDept(ctx context.Context, id int64) ([]*ent.Role, error)
 	GetRolesFromUser(ctx context.Context, user1 *ent.User) ([]*ent.Role, error)
 	GetUsersByDept(ctx context.Context, id int64) ([]*ent.User, error)
+
+	ChangePassword(ctx context.Context, uid *uuid.UUID, passwordOld, passwordNew string) error
+
+	GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, error)
+	AddUser(ctx context.Context, req *pb.UserListItem) (*ent.User, error)
+	UpdateUser(ctx context.Context, id *uuid.UUID, req *pb.UserListItem) (*ent.User, error)
+	DeleteByID(ctx context.Context, id *uuid.UUID) error
+
 	GetAllRoleList(ctx context.Context, req *pb.RolePageParams) ([]*ent.Role, error)
 	AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role, error)
 	UpdateRole(ctx context.Context, deptId int64, req *pb.RoleListItem) (*ent.Role, error)
 	DelRole(ctx context.Context, id int64) error
-	ChangePassword(ctx context.Context, uid *uuid.UUID, passwordOld, passwordNew string) error
 
+	GetMenuList(ctx context.Context) ([]*ent.Menu, error)
 	CreateMenu(ctx context.Context, menu *ent.Menu) (*ent.Menu, error)
 	UpdateMenu(ctx context.Context, id int64, menu *ent.Menu) (*ent.Menu, error)
 	DeleteMenu(ctx context.Context, id int64) error
+
+	GetDeptList(ctx context.Context) ([]*ent.Dept, error)
+	AddDept(ctx context.Context, req *pb.DeptListItem) (*ent.Dept, error)
+	UpdateDept(ctx context.Context, deptId int64, req *pb.DeptListItem) (*ent.Dept, error)
+	DelDept(ctx context.Context, id int64) error
+
+	IsUserExistsByUserName(ctx context.Context, req *pb.IsUserExistsRequest) (*ent.User, error)
 }
 
 // BaseUsecase is a Base usecase.
@@ -69,11 +76,6 @@ func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase, conf *c
 
 func (uc *BaseUsecase) ReLoadPolicy(ctx context.Context) error {
 	return uc.auth.ReLoadPolicy()
-}
-
-// IsUserExists 检查用户是否存在，存在返回Id
-func (uc *BaseUsecase) IsUserExists(ctx context.Context, req *pb.LoginRequest) (bool, error) {
-	return uc.repo.IsUserExistsByUserName(ctx, req)
 }
 
 // Login 登陆，存在返回Id
@@ -124,13 +126,13 @@ func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.
 // GetUserInfo 获取用户信息
 func (uc *BaseUsecase) GetUserInfo(ctx context.Context, uuidString string) (*ent.User, error) {
 	// uuidString := "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8"
-	uuid, err := uuid.Parse(uuidString)
+	uid, err := uuid.Parse(uuidString)
 	if err != nil {
 		fmt.Println(err)
 		uc.log.Debug("string to uuid err")
 		return nil, err
 	}
-	return uc.repo.FindUserByID(ctx, &uuid)
+	return uc.repo.FindUserByID(ctx, &uid)
 }
 
 // CreateMenuTree 创建菜单树
@@ -474,7 +476,7 @@ func ToDeptTree(forest []*Node, strPid string) []*pb.DeptListItem {
 					return 0
 				}
 			}(),
-			CreateTime: item.Value.(*ent.Dept).CreateTime.Format("2006-01-02 15:04:05"),
+			CreateTime: item.Value.(*ent.Dept).CreateTime.Format(time.DateTime),
 			Children: func() []*pb.DeptListItem {
 				if item.Children == nil {
 					return nil
@@ -641,7 +643,7 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 				}
 			}(),
 			OrderNo:     strconv.Itoa(i),
-			CreateTime:  item.CreateTime.Format("2006-01-02 15:04:05"),
+			CreateTime:  item.CreateTime.Format(time.DateTime),
 			Remark:      item.Desc,
 			Permissions: item.Menus,
 		})
@@ -808,18 +810,18 @@ func (uc *BaseUsecase) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest
 
 ///////////////////////////////////////////////////////////// 系统用户管理
 
-// GetAccountList 获取账户列表 (系统用户管理)
-func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams) (*pb.GetAccountListReply, error) {
+// GetUserList 获取账户列表 (系统用户管理)
+func (uc *BaseUsecase) GetUserList(ctx context.Context, req *pb.GetUserParams) (*pb.GetUserListReply, error) {
 	deptId, _ := tools.DeptStrSplitToInt(req.DeptId)
 
-	userList, err := uc.repo.GetAccountList(ctx, deptId, req)
+	userList, err := uc.repo.GetUserList(ctx, deptId, req)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetAccountListReply{
+	return &pb.GetUserListReply{
 		Total: int64(len(userList)),
-		Items: func() []*pb.AccountListItem {
-			var items []*pb.AccountListItem
+		Items: func() []*pb.UserListItem {
+			var items []*pb.UserListItem
 			for _, user := range userList {
 				var extension pb.UserExtension
 				// 解析JSON字符串并填充结构体
@@ -829,15 +831,24 @@ func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams
 					fmt.Println("解析错误：", err)
 				}
 				email = extension.Email
-				items = append(items, &pb.AccountListItem{
+
+				role := 0
+				if user.Edges.Roles != nil {
+					if len(user.Edges.Roles) > 0 {
+						role = int(user.Edges.Roles[0].ID)
+					}
+				}
+
+				items = append(items, &pb.UserListItem{
 					Id:         user.ID.String(),
-					Account:    user.Username,
+					Username:   user.Username,
 					Avatar:     user.Avatar,
 					Email:      email,
 					Nickname:   user.Nickname,
 					Remark:     user.Desc,
-					Status:     int64(user.Status),
-					CreateTime: user.CreateTime.Format("2006-01-02 15:04:05"),
+					Status:     int32(user.Status),
+					Role:       int64(role),
+					CreateTime: user.CreateTime.Format(time.DateTime),
 				})
 			}
 			return items
@@ -846,7 +857,7 @@ func (uc *BaseUsecase) GetAccountList(ctx context.Context, req *pb.AccountParams
 }
 
 // AddUser 新增用户
-func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.AccountListItem) (*pb.AccountListItem, error) {
+func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.UserListItem) (*pb.UserListItem, error) {
 	// 往数据库添加用户
 	user, err := uc.repo.AddUser(ctx, req)
 	if err != nil {
@@ -863,27 +874,36 @@ func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.AccountListItem) (*p
 	// 设置用户角色
 	uc.auth.AddUserRoles(user.ID.String(), []string{role})
 
-	return &pb.AccountListItem{
+	return &pb.UserListItem{
 		Id:         user.ID.String(),
-		Account:    user.Username,
+		Username:   user.Username,
 		Email:      user.Extension,
 		Nickname:   user.Nickname,
 		Remark:     user.Desc,
-		Status:     int64(user.Status),
-		CreateTime: user.CreateTime.Format("2006-01-02 15:04:05"),
+		Status:     int32(user.Status),
+		CreateTime: user.CreateTime.Format(time.DateTime),
 	}, nil
+}
+
+// UpdateUser 更新用户
+func (uc *BaseUsecase) UpdateUser(ctx context.Context, req *pb.UserListItem) error {
+	uid, _ := uuid.Parse(req.Id)
+	_, err := uc.repo.UpdateUser(ctx, &uid, req)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // DelUser 删除用户
 func (uc *BaseUsecase) DelUser(ctx context.Context, uuidString string) error {
-	uuid, err := uuid.Parse(uuidString)
+	uid, err := uuid.Parse(uuidString)
 	if err != nil {
-		fmt.Println(err)
-		uc.log.Debug("string to uuid err")
+		uc.log.Debug("string to uid err")
 		return err
 	}
 
-	err = uc.repo.DeleteByID(ctx, &uuid)
+	err = uc.repo.DeleteByID(ctx, &uid)
 	if err != nil {
 		return err
 	}
@@ -891,6 +911,20 @@ func (uc *BaseUsecase) DelUser(ctx context.Context, uuidString string) error {
 	uc.auth.DelUser(uuidString)
 	//uc.auth.DelUserRoles(uuidString, []string{"default"})
 	return nil
+}
+
+// IsUserExist 检查用户是否存在，存在返回Id
+func (uc *BaseUsecase) IsUserExist(ctx context.Context, req *pb.IsUserExistsRequest) (bool, error) {
+	user, err := uc.repo.IsUserExistsByUserName(ctx, req)
+	if err != nil {
+		return true, err
+	}
+	if user != nil {
+		if req.Id != user.ID.String() {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 /////////////////////////////////////////////////////////////
