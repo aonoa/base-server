@@ -47,6 +47,8 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 	basev1.RegisterBaseHTTPServer(srv, base)
 	base_api.RegisterFileServiceHTTPServer(srv, base)
 
+	base.RestServer = srv
+
 	// http://127.0.0.1:8000/docs
 	swaggerUI.RegisterSwaggerUIServerWithOption(
 		srv,

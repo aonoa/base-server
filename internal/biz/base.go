@@ -2,7 +2,6 @@ package biz
 
 import (
 	pb "base-server/api/gen/go/base_api/v1"
-	"base-server/internal/conf"
 	"base-server/internal/data/ent"
 	"base-server/internal/tools"
 	"context"
@@ -66,12 +65,11 @@ type BaseUsecase struct {
 	repo BaseRepo
 	auth *AuthUsecase
 	log  *log.Helper
-	conf *conf.Menus
 }
 
 // NewBaseUsecase new a Base usecase.
-func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase, conf *conf.Menus) *BaseUsecase {
-	return &BaseUsecase{repo: repo, auth: auth, log: log.NewHelper(logger), conf: conf}
+func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase) *BaseUsecase {
+	return &BaseUsecase{repo: repo, auth: auth, log: log.NewHelper(logger)}
 }
 
 func (uc *BaseUsecase) ReLoadPolicy(ctx context.Context) error {

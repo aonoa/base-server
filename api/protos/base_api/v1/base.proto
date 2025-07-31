@@ -239,6 +239,14 @@ service Base {
 			body: "*"
 		};
 	}
+
+	///////////////////////////////////////////////////
+	// 获取系统所有 api
+	rpc GetWalkRoute (google.protobuf.Empty) returns (GetWalkRouteReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/getWalkRoute",
+		};
+	}
 }
 
 
@@ -514,5 +522,12 @@ message ChangePasswordRequest {
 	string passwordNew = 2;
 }
 
+message WalkRouteItem {
+	string url = 1;
+	string method = 2;
+}
 
+message GetWalkRouteReply {
+	repeated WalkRouteItem items = 1;
+}
 

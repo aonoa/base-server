@@ -186,6 +186,21 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /basic-api/system/getWalkRoute:
+        get:
+            tags:
+                - Base
+            description: |-
+                /////////////////////////////////////////////////
+                 获取系统所有 api
+            operationId: Base_GetWalkRoute
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetWalkRouteReply'
     /basic-api/system/menu:
         post:
             tags:
@@ -666,6 +681,13 @@ components:
                         $ref: '#/components/schemas/api.base_api.v1.UserListItem'
                 total:
                     type: string
+        api.base_api.v1.GetWalkRouteReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.WalkRouteItem'
         api.base_api.v1.IsMenuNameExistsReply:
             type: object
             properties:
@@ -856,6 +878,13 @@ components:
                 dept:
                     type: string
                 avatar:
+                    type: string
+        api.base_api.v1.WalkRouteItem:
+            type: object
+            properties:
+                url:
+                    type: string
+                method:
                     type: string
 tags:
     - name: Base

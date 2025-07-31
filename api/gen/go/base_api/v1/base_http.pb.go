@@ -36,6 +36,7 @@ const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseGetUserList = "/api.base_api.v1.Base/GetUserList"
+const OperationBaseGetWalkRoute = "/api.base_api.v1.Base/GetWalkRoute"
 const OperationBaseIsMenuNameExists = "/api.base_api.v1.Base/IsMenuNameExists"
 const OperationBaseIsMenuPathExists = "/api.base_api.v1.Base/IsMenuPathExists"
 const OperationBaseIsUserExist = "/api.base_api.v1.Base/IsUserExist"
@@ -84,6 +85,9 @@ type BaseHTTPServer interface {
 	GetUserInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	// GetUserList 获取账户列表
 	GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error)
+	// GetWalkRoute/////////////////////////////////////////////////
+	// 获取系统所有 api
+	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	// IsMenuNameExists 菜单名称是否存在
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	// IsMenuPathExists 路由地址是否存在
@@ -140,6 +144,7 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.DELETE("/basic-api/system/role/{id}", _Base_DelRole0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/changePassword", _Base_ChangePassword0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/getWalkRoute", _Base_GetWalkRoute0_HTTP_Handler(srv))
 }
 
 func _Base_Login0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
@@ -743,6 +748,25 @@ func _Base_ChangePassword0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Base_GetWalkRoute0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetWalkRoute)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetWalkRoute(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetWalkRouteReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BaseHTTPClient interface {
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
@@ -760,6 +784,7 @@ type BaseHTTPClient interface {
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserList(ctx context.Context, req *GetUserParams, opts ...http.CallOption) (rsp *GetUserListReply, err error)
+	GetWalkRoute(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetWalkRouteReply, err error)
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
 	IsUserExist(ctx context.Context, req *IsUserExistsRequest, opts ...http.CallOption) (rsp *IsUserExistsReply, err error)
@@ -982,6 +1007,19 @@ func (c *BaseHTTPClientImpl) GetUserList(ctx context.Context, in *GetUserParams,
 	pattern := "/basic-api/system/user/list"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetUserList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetWalkRouteReply, error) {
+	var out GetWalkRouteReply
+	pattern := "/basic-api/system/getWalkRoute"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetWalkRoute))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

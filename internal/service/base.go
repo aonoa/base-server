@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
@@ -25,6 +26,8 @@ type BaseService struct {
 	v1.UnimplementedBaseServer
 	uc  *biz.BaseUsecase
 	key string
+
+	RestServer *http.Server
 }
 
 var (
@@ -266,4 +269,30 @@ func (s *BaseService) UploadFileHttp(ctx context.Context, reqFile *v1.File, opts
 		FullUrl:    "aaa",
 		Url:        "https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640",
 	}, nil
+}
+
+func (s *BaseService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+	if s.RestServer == nil {
+		return nil, fmt.Errorf("RestServer is nil")
+	}
+
+	res := &v1.GetWalkRouteReply{
+		Items: []*v1.WalkRouteItem{},
+	}
+
+	var count uint32 = 0
+	if err := s.RestServer.WalkRoute(func(info http.RouteInfo) error {
+		//log.Infof("Path[%s] Method[%s]", info.Path, info.Method)
+		count++
+		res.Items = append(res.Items, &v1.WalkRouteItem{
+			Url:    info.Path,
+			Method: info.Method,
+		})
+
+		return nil
+	}); err != nil {
+		log.Errorf("failed to walk route: %v", err)
+	}
+
+	return res, nil
 }

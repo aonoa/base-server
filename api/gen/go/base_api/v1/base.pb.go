@@ -2539,6 +2539,102 @@ func (x *ChangePasswordRequest) GetPasswordNew() string {
 	return ""
 }
 
+type WalkRouteItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Method        string                 `protobuf:"bytes,2,opt,name=method,proto3" json:"method,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WalkRouteItem) Reset() {
+	*x = WalkRouteItem{}
+	mi := &file_base_api_v1_base_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WalkRouteItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WalkRouteItem) ProtoMessage() {}
+
+func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WalkRouteItem.ProtoReflect.Descriptor instead.
+func (*WalkRouteItem) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *WalkRouteItem) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *WalkRouteItem) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+type GetWalkRouteReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*WalkRouteItem       `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWalkRouteReply) Reset() {
+	*x = GetWalkRouteReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWalkRouteReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWalkRouteReply) ProtoMessage() {}
+
+func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWalkRouteReply.ProtoReflect.Descriptor instead.
+func (*GetWalkRouteReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 var File_base_api_v1_base_proto protoreflect.FileDescriptor
 
 const file_base_api_v1_base_proto_rawDesc = "" +
@@ -2780,14 +2876,19 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"[\n" +
 	"\x15ChangePasswordRequest\x12 \n" +
 	"\vpasswordOld\x18\x01 \x01(\tR\vpasswordOld\x12 \n" +
-	"\vpasswordNew\x18\x02 \x01(\tR\vpasswordNew*\x8d\x01\n" +
+	"\vpasswordNew\x18\x02 \x01(\tR\vpasswordNew\"9\n" +
+	"\rWalkRouteItem\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
+	"\x06method\x18\x02 \x01(\tR\x06method\"I\n" +
+	"\x11GetWalkRouteReply\x124\n" +
+	"\x05items\x18\x01 \x03(\v2\x1e.api.base_api.v1.WalkRouteItemR\x05items*\x8d\x01\n" +
 	"\bMenuType\x12\x18\n" +
 	"\acatalog\x10\x00\x1a\vҸ\x02\acatalog\x12\x12\n" +
 	"\x04menu\x10\x01\x1a\bҸ\x02\x04menu\x12\x1a\n" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xa8\x19\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\x9c\x1a\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -2822,7 +2923,8 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"UpdateRole\x12\x1d.api.base_api.v1.RoleListItem\x1a\x1d.api.base_api.v1.RoleListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/basic-api/system/role/{id}\x12c\n" +
 	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/role/{id}\x12z\n" +
 	"\rSetRoleStatus\x12%.api.base_api.v1.SetRoleStatusRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/basic-api/system/setRoleStatus\x12}\n" +
-	"\x0eChangePassword\x12&.api.base_api.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%:\x01*\" /basic-api/system/changePasswordB3\n" +
+	"\x0eChangePassword\x12&.api.base_api.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%:\x01*\" /basic-api/system/changePassword\x12r\n" +
+	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a\".api.base_api.v1.GetWalkRouteReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/basic-api/system/getWalkRouteB3\n" +
 	"\x0fapi.base_api.v1P\x01Z\x1ebase-server/api/base_api/v1;v1b\x06proto3"
 
 var (
@@ -2838,7 +2940,7 @@ func file_base_api_v1_base_proto_rawDescGZIP() []byte {
 }
 
 var file_base_api_v1_base_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_base_api_v1_base_proto_goTypes = []any{
 	(MenuType)(0),                   // 0: api.base_api.v1.MenuType
 	(*LoginRequest)(nil),            // 1: api.base_api.v1.LoginRequest
@@ -2876,7 +2978,9 @@ var file_base_api_v1_base_proto_goTypes = []any{
 	(*IsMenuPathExistsReply)(nil),   // 33: api.base_api.v1.IsMenuPathExistsReply
 	(*DeleteMenuRequest)(nil),       // 34: api.base_api.v1.DeleteMenuRequest
 	(*ChangePasswordRequest)(nil),   // 35: api.base_api.v1.ChangePasswordRequest
-	(*emptypb.Empty)(nil),           // 36: google.protobuf.Empty
+	(*WalkRouteItem)(nil),           // 36: api.base_api.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),       // 37: api.base_api.v1.GetWalkRouteReply
+	(*emptypb.Empty)(nil),           // 38: google.protobuf.Empty
 }
 var file_base_api_v1_base_proto_depIdxs = []int32{
 	8,  // 0: api.base_api.v1.GetUserInfoReply.roles:type_name -> api.base_api.v1.RoleInfo
@@ -2891,67 +2995,70 @@ var file_base_api_v1_base_proto_depIdxs = []int32{
 	20, // 9: api.base_api.v1.SysMenuListItem.children:type_name -> api.base_api.v1.SysMenuListItem
 	20, // 10: api.base_api.v1.GetSysMenuListReply.items:type_name -> api.base_api.v1.SysMenuListItem
 	23, // 11: api.base_api.v1.GetUserListReply.items:type_name -> api.base_api.v1.UserListItem
-	1,  // 12: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
-	36, // 13: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
-	36, // 14: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
-	36, // 15: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
-	36, // 16: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
-	36, // 17: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
-	36, // 18: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
-	22, // 19: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
-	23, // 20: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
-	23, // 21: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
-	25, // 22: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
-	28, // 23: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
-	18, // 24: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
-	30, // 25: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
-	32, // 26: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
-	20, // 27: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	20, // 28: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	34, // 29: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
-	36, // 30: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
-	11, // 31: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
-	11, // 32: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
-	12, // 33: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
-	14, // 34: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
-	15, // 35: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
-	15, // 36: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
-	17, // 37: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
-	27, // 38: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
-	35, // 39: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
-	2,  // 40: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
-	3,  // 41: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
-	6,  // 42: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
-	36, // 43: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
-	21, // 44: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	2,  // 45: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
-	36, // 46: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
-	24, // 47: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
-	23, // 48: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
-	23, // 49: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
-	36, // 50: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
-	29, // 51: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
-	21, // 52: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	31, // 53: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
-	33, // 54: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
-	36, // 55: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
-	36, // 56: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
-	36, // 57: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
-	13, // 58: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
-	11, // 59: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
-	11, // 60: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
-	36, // 61: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
-	16, // 62: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
-	15, // 63: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
-	15, // 64: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
-	36, // 65: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
-	36, // 66: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
-	36, // 67: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
-	40, // [40:68] is the sub-list for method output_type
-	12, // [12:40] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	36, // 12: api.base_api.v1.GetWalkRouteReply.items:type_name -> api.base_api.v1.WalkRouteItem
+	1,  // 13: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
+	38, // 14: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
+	38, // 15: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
+	38, // 16: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
+	38, // 17: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
+	38, // 18: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
+	38, // 19: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
+	22, // 20: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
+	23, // 21: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
+	23, // 22: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
+	25, // 23: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
+	28, // 24: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
+	18, // 25: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
+	30, // 26: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
+	32, // 27: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
+	20, // 28: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	20, // 29: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	34, // 30: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
+	38, // 31: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
+	11, // 32: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
+	11, // 33: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
+	12, // 34: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
+	14, // 35: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
+	15, // 36: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	15, // 37: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
+	17, // 38: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
+	27, // 39: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
+	35, // 40: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
+	38, // 41: api.base_api.v1.Base.GetWalkRoute:input_type -> google.protobuf.Empty
+	2,  // 42: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
+	3,  // 43: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
+	6,  // 44: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
+	38, // 45: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
+	21, // 46: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	2,  // 47: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
+	38, // 48: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
+	24, // 49: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
+	23, // 50: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
+	23, // 51: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
+	38, // 52: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
+	29, // 53: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
+	21, // 54: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	31, // 55: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
+	33, // 56: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
+	38, // 57: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
+	38, // 58: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
+	38, // 59: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
+	13, // 60: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
+	11, // 61: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
+	11, // 62: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
+	38, // 63: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
+	16, // 64: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
+	15, // 65: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
+	15, // 66: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
+	38, // 67: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
+	38, // 68: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
+	38, // 69: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
+	37, // 70: api.base_api.v1.Base.GetWalkRoute:output_type -> api.base_api.v1.GetWalkRouteReply
+	42, // [42:71] is the sub-list for method output_type
+	13, // [13:42] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_base_api_v1_base_proto_init() }
@@ -2967,7 +3074,7 @@ func file_base_api_v1_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_base_api_v1_base_proto_rawDesc), len(file_base_api_v1_base_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   35,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
