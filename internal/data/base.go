@@ -2,7 +2,7 @@ package data
 
 import (
 	"ariga.io/entcache"
-	pb "base-server/api/base_api/v1"
+	pb "base-server/api/gen/go/base_api/v1"
 	"base-server/internal/biz"
 	"base-server/internal/data/ent"
 	"base-server/internal/data/ent/dept"

@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "base-server/api/base_api/v1"
+	"base-server/api/gen/go/base_api/v1"
 	"base-server/internal/conf"
 	"base-server/internal/service"
 

@@ -36,21 +36,22 @@ config:
 .PHONY: api
 # generate api proto
 api:
-	protoc --proto_path=./api \
+	protoc --proto_path=./api/protos \
 	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./api \
- 	       --go-http_out=paths=source_relative:./api \
- 	       --go-grpc_out=paths=source_relative:./api \
+ 	       --go_out=paths=source_relative:./api/gen/go \
+ 	       --go-http_out=paths=source_relative:./api/gen/go \
+ 	       --go-grpc_out=paths=source_relative:./api/gen/go \
+ 	       --go-errors_out=paths=source_relative:./api/gen/go \
 	       --openapi_out=fq_schema_naming=true,default_response=false:./cmd/base-server/assets \
 	       $(API_PROTO_FILES)
 
 .PHONY: errors
 # generate errors proto
 errors:
-	protoc --proto_path=. \
+	protoc --proto_path=./api/protos \
               --proto_path=./third_party \
-              --go_out=paths=source_relative:. \
-              --go-errors_out=paths=source_relative:. \
+              --go_out=paths=source_relative:./api/gen/go \
+              --go-errors_out=paths=source_relative:./api/gen/go \
               $(API_PROTO_FILES)
 
 .PHONY: openapi

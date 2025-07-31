@@ -1,7 +1,7 @@
 package base_api
 
 import (
-	pb "base-server/api/base_api/v1"
+	pb "base-server/api/gen/go/base_api/v1"
 	"context"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/errors"

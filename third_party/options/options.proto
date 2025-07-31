@@ -3,7 +3,7 @@ syntax = "proto3";
 package options;
 
 //option go_package = "github.com/go-kratos/kratos/v2/errors;errors";
-option go_package = "base-server/api/base_api/options;options";
+option go_package = "base-server/api/gen/go/base_api/options;options";
 option java_multiple_files = true;
 
 import "google/protobuf/descriptor.proto";

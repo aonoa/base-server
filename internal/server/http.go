@@ -1,8 +1,8 @@
 package server
 
 import (
-	"base-server/api/base_api"
-	basev1 "base-server/api/base_api/v1"
+	basev1 "base-server/api/gen/go/base_api/v1"
+	"base-server/api/protos/base_api"
 	"base-server/cmd/base-server/assets"
 	"base-server/internal/conf"
 	"base-server/internal/service"
