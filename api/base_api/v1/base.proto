@@ -56,7 +56,6 @@ service Base {
 	rpc GetMenuList (google.protobuf.Empty) returns (GetSysMenuListReply) {
 		option (google.api.http) = {
 			get: "/basic-api/menu/all",
-//			response_body: "menuList"
 			response_body: "items"
 		};
 	}

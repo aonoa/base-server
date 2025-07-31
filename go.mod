@@ -25,6 +25,7 @@ require (
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/eko/gocache/lib/v4 v4.2.0
 	github.com/eko/gocache/store/ristretto/v4 v4.2.2
+	github.com/tx7do/kratos-swagger-ui v0.0.0-20250528131001-09c0dbdb208d
 	go.uber.org/zap v1.27.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250528174236-200df99c418a
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
@@ -74,6 +75,8 @@ require (
 	github.com/prometheus/common v0.64.0 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect
+	github.com/swaggest/swgui v1.8.4 // indirect
+	github.com/vearutop/statigz v1.5.0 // indirect
 	github.com/zclconf/go-cty v1.16.3 // indirect
 	github.com/zclconf/go-cty-yaml v1.1.0 // indirect
 	go.uber.org/mock v0.5.2 // indirect
