@@ -2,6 +2,18 @@
 
 package ent
 
+// UpdateAll updates all fields of the ApiResources entity (excluding create_time and update_time).
+func (u *ApiResourcesUpdateOne) UpdateAll(ApiResources *ApiResources) *ApiResourcesUpdateOne {
+	update := u
+	update = update.SetDescription(ApiResources.Description)
+	update = update.SetPath(ApiResources.Path)
+	update = update.SetMethod(ApiResources.Method)
+	update = update.SetModule(ApiResources.Module)
+	update = update.SetModuleDescription(ApiResources.ModuleDescription)
+	update = update.SetResourcesGroup(ApiResources.ResourcesGroup)
+	return update
+}
+
 // UpdateAll updates all fields of the Dept entity (excluding create_time and update_time).
 func (u *DeptUpdateOne) UpdateAll(Dept *Dept) *DeptUpdateOne {
 	update := u
@@ -50,6 +62,17 @@ func (u *MenuUpdateOne) UpdateAll(Menu *Menu) *MenuUpdateOne {
 	update = update.SetBadge(Menu.Badge)
 	update = update.SetBadgeType(Menu.BadgeType)
 	update = update.SetBadgeVariants(Menu.BadgeVariants)
+	return update
+}
+
+// UpdateAll updates all fields of the Resource entity (excluding create_time and update_time).
+func (u *ResourceUpdateOne) UpdateAll(Resource *Resource) *ResourceUpdateOne {
+	update := u
+	update = update.SetName(Resource.Name)
+	update = update.SetType(Resource.Type)
+	update = update.SetValue(Resource.Value)
+	update = update.SetMethod(Resource.Method)
+	update = update.SetDescription(Resource.Description)
 	return update
 }
 

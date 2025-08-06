@@ -18,8 +18,9 @@ import (
 // RuleUpdate is the builder for updating Rule entities.
 type RuleUpdate struct {
 	config
-	hooks    []Hook
-	mutation *RuleMutation
+	hooks     []Hook
+	mutation  *RuleMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // Where appends a list predicates to the RuleUpdate builder.
@@ -173,6 +174,12 @@ func (ru *RuleUpdate) defaults() {
 	}
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (ru *RuleUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RuleUpdate {
+	ru.modifiers = append(ru.modifiers, modifiers...)
+	return ru
+}
+
 func (ru *RuleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(rule.Table, rule.Columns, sqlgraph.NewFieldSpec(rule.FieldID, field.TypeInt))
 	if ps := ru.mutation.predicates; len(ps) > 0 {
@@ -206,6 +213,7 @@ func (ru *RuleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.V5(); ok {
 		_spec.SetField(rule.FieldV5, field.TypeString, value)
 	}
+	_spec.AddModifiers(ru.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{rule.Label}
@@ -221,9 +229,10 @@ func (ru *RuleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 // RuleUpdateOne is the builder for updating a single Rule entity.
 type RuleUpdateOne struct {
 	config
-	fields   []string
-	hooks    []Hook
-	mutation *RuleMutation
+	fields    []string
+	hooks     []Hook
+	mutation  *RuleMutation
+	modifiers []func(*sql.UpdateBuilder)
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -384,6 +393,12 @@ func (ruo *RuleUpdateOne) defaults() {
 	}
 }
 
+// Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
+func (ruo *RuleUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RuleUpdateOne {
+	ruo.modifiers = append(ruo.modifiers, modifiers...)
+	return ruo
+}
+
 func (ruo *RuleUpdateOne) sqlSave(ctx context.Context) (_node *Rule, err error) {
 	_spec := sqlgraph.NewUpdateSpec(rule.Table, rule.Columns, sqlgraph.NewFieldSpec(rule.FieldID, field.TypeInt))
 	id, ok := ruo.mutation.ID()
@@ -434,6 +449,7 @@ func (ruo *RuleUpdateOne) sqlSave(ctx context.Context) (_node *Rule, err error) 
 	if value, ok := ruo.mutation.V5(); ok {
 		_spec.SetField(rule.FieldV5, field.TypeString, value)
 	}
+	_spec.AddModifiers(ruo.modifiers...)
 	_node = &Rule{config: ruo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

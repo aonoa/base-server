@@ -20,18 +20,24 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationBaseAddApi = "/api.base_api.v1.Base/AddApi"
 const OperationBaseAddDept = "/api.base_api.v1.Base/AddDept"
+const OperationBaseAddResource = "/api.base_api.v1.Base/AddResource"
 const OperationBaseAddRole = "/api.base_api.v1.Base/AddRole"
 const OperationBaseAddUser = "/api.base_api.v1.Base/AddUser"
 const OperationBaseChangePassword = "/api.base_api.v1.Base/ChangePassword"
 const OperationBaseCreateMenu = "/api.base_api.v1.Base/CreateMenu"
+const OperationBaseDelApi = "/api.base_api.v1.Base/DelApi"
 const OperationBaseDelDept = "/api.base_api.v1.Base/DelDept"
+const OperationBaseDelResource = "/api.base_api.v1.Base/DelResource"
 const OperationBaseDelRole = "/api.base_api.v1.Base/DelRole"
 const OperationBaseDelUser = "/api.base_api.v1.Base/DelUser"
 const OperationBaseDeleteMenu = "/api.base_api.v1.Base/DeleteMenu"
 const OperationBaseGetAccessCodes = "/api.base_api.v1.Base/GetAccessCodes"
+const OperationBaseGetApiList = "/api.base_api.v1.Base/GetApiList"
 const OperationBaseGetDeptList = "/api.base_api.v1.Base/GetDeptList"
 const OperationBaseGetMenuList = "/api.base_api.v1.Base/GetMenuList"
+const OperationBaseGetResourceList = "/api.base_api.v1.Base/GetResourceList"
 const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
@@ -45,14 +51,20 @@ const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
 const OperationBaseReLoadPolicy = "/api.base_api.v1.Base/ReLoadPolicy"
 const OperationBaseRefreshToken = "/api.base_api.v1.Base/RefreshToken"
 const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
+const OperationBaseUpdateApi = "/api.base_api.v1.Base/UpdateApi"
 const OperationBaseUpdateDept = "/api.base_api.v1.Base/UpdateDept"
 const OperationBaseUpdateMenu = "/api.base_api.v1.Base/UpdateMenu"
+const OperationBaseUpdateResource = "/api.base_api.v1.Base/UpdateResource"
 const OperationBaseUpdateRole = "/api.base_api.v1.Base/UpdateRole"
 const OperationBaseUpdateUser = "/api.base_api.v1.Base/UpdateUser"
 
 type BaseHTTPServer interface {
+	// AddApi 添加api资源
+	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	// AddDept 新增部门
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
+	// AddResource 添加resource资源
+	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	// AddRole 新增角色
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	// AddUser 新增用户
@@ -61,8 +73,12 @@ type BaseHTTPServer interface {
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	// CreateMenu 创建菜单
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	// DelApi 删除api资源
+	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
 	// DelDept 删除部门
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
+	// DelResource 删除resource资源
+	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
 	// DelRole 删除角色
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	// DelUser 删除用户
@@ -71,11 +87,17 @@ type BaseHTTPServer interface {
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
+	// GetApiList//////////////////////////////// api资源管理
+	// 获取api资源
+	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
 	// GetDeptList 获取部门列表
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
+	// GetResourceList//////////////////////////////// resource 资源管理
+	// 获取resource资源
+	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
 	// GetRoleList 获取角色列表
 	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	// GetSysMenuList/////////////////////////////////////////////////// 系统菜单管理
@@ -104,10 +126,14 @@ type BaseHTTPServer interface {
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// SetRoleStatus 设置角色状态 (未使用)
 	SetRoleStatus(context.Context, *SetRoleStatusRequest) (*emptypb.Empty, error)
+	// UpdateApi 修改api资源
+	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	// UpdateDept 修改部门
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	// UpdateMenu 更新菜单
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	// UpdateResource 修改resource资源
+	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	// UpdateRole 修改角色
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	// UpdateUser 更新用户
@@ -145,6 +171,14 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/setRoleStatus", _Base_SetRoleStatus0_HTTP_Handler(srv))
 	r.POST("/basic-api/system/changePassword", _Base_ChangePassword0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/getWalkRoute", _Base_GetWalkRoute0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/api/list", _Base_GetApiList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/api", _Base_AddApi0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/api/{id}", _Base_UpdateApi0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/api/{id}", _Base_DelApi0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/resource/list", _Base_GetResourceList0_HTTP_Handler(srv))
+	r.POST("/basic-api/system/resource", _Base_AddResource0_HTTP_Handler(srv))
+	r.PUT("/basic-api/system/resource/{id}", _Base_UpdateResource0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/system/resource/{id}", _Base_DelResource0_HTTP_Handler(srv))
 }
 
 func _Base_Login0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
@@ -767,19 +801,201 @@ func _Base_GetWalkRoute0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Base_GetApiList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetApiPageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetApiList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetApiList(ctx, req.(*GetApiPageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetApiListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_AddApi0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ApiListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseAddApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddApi(ctx, req.(*ApiListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ApiListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_UpdateApi0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ApiListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseUpdateApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateApi(ctx, req.(*ApiListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ApiListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_DelApi0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteApi
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseDelApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelApi(ctx, req.(*DeleteApi))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_GetResourceList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetResourcePageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetResourceList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetResourceList(ctx, req.(*GetResourcePageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetResourceListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_AddResource0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResourceListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseAddResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddResource(ctx, req.(*ResourceListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResourceListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_UpdateResource0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResourceListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseUpdateResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateResource(ctx, req.(*ResourceListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResourceListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_DelResource0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteResource
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseDelResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelResource(ctx, req.(*DeleteResource))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BaseHTTPClient interface {
+	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
+	AddResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 	AddUser(ctx context.Context, req *UserListItem, opts ...http.CallOption) (rsp *UserListItem, err error)
 	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelResource(ctx context.Context, req *DeleteResource, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelUser(ctx context.Context, req *DeleteUser, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
+	GetApiList(ctx context.Context, req *GetApiPageParams, opts ...http.CallOption) (rsp *GetApiListByPageReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
 	GetMenuList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
+	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
 	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
@@ -793,8 +1009,10 @@ type BaseHTTPClient interface {
 	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
 	SetRoleStatus(ctx context.Context, req *SetRoleStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 	UpdateUser(ctx context.Context, req *UserListItem, opts ...http.CallOption) (rsp *UserListItem, err error)
 }
@@ -807,11 +1025,37 @@ func NewBaseHTTPClient(client *http.Client) BaseHTTPClient {
 	return &BaseHTTPClientImpl{client}
 }
 
+func (c *BaseHTTPClientImpl) AddApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
+	var out ApiListItem
+	pattern := "/basic-api/system/api"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseAddApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) AddDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
 	pattern := "/basic-api/system/dept"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseAddDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) AddResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
+	var out ResourceListItem
+	pattern := "/basic-api/system/resource"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseAddResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -872,11 +1116,37 @@ func (c *BaseHTTPClientImpl) CreateMenu(ctx context.Context, in *SysMenuListItem
 	return &out, nil
 }
 
+func (c *BaseHTTPClientImpl) DelApi(ctx context.Context, in *DeleteApi, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/system/api/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseDelApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/basic-api/system/dept/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseDelDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) DelResource(ctx context.Context, in *DeleteResource, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/system/resource/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseDelResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -937,6 +1207,19 @@ func (c *BaseHTTPClientImpl) GetAccessCodes(ctx context.Context, in *emptypb.Emp
 	return &out, nil
 }
 
+func (c *BaseHTTPClientImpl) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...http.CallOption) (*GetApiListByPageReply, error) {
+	var out GetApiListByPageReply
+	pattern := "/basic-api/system/api/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetApiList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDeptListReply, error) {
 	var out GetDeptListReply
 	pattern := "/basic-api/system/dept/list"
@@ -957,6 +1240,19 @@ func (c *BaseHTTPClientImpl) GetMenuList(ctx context.Context, in *emptypb.Empty,
 	opts = append(opts, http.Operation(OperationBaseGetMenuList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...http.CallOption) (*GetResourceListByPageReply, error) {
+	var out GetResourceListByPageReply
+	pattern := "/basic-api/system/resource/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetResourceList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1132,6 +1428,19 @@ func (c *BaseHTTPClientImpl) SetRoleStatus(ctx context.Context, in *SetRoleStatu
 	return &out, nil
 }
 
+func (c *BaseHTTPClientImpl) UpdateApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
+	var out ApiListItem
+	pattern := "/basic-api/system/api/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseUpdateApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *BaseHTTPClientImpl) UpdateDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
 	pattern := "/basic-api/system/dept/{id}"
@@ -1150,6 +1459,19 @@ func (c *BaseHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenuListItem
 	pattern := "/basic-api/system/menu/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseUpdateMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
+	var out ResourceListItem
+	pattern := "/basic-api/system/resource/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseUpdateResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

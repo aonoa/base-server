@@ -3,7 +3,9 @@
 package ent
 
 import (
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/user"
 	"context"
@@ -115,6 +117,36 @@ func (rc *RoleCreate) AddDept(d ...*Dept) *RoleCreate {
 		ids[i] = d[i].ID
 	}
 	return rc.AddDeptIDs(ids...)
+}
+
+// AddAPIIDs adds the "api" edge to the ApiResources entity by IDs.
+func (rc *RoleCreate) AddAPIIDs(ids ...string) *RoleCreate {
+	rc.mutation.AddAPIIDs(ids...)
+	return rc
+}
+
+// AddAPI adds the "api" edges to the ApiResources entity.
+func (rc *RoleCreate) AddAPI(a ...*ApiResources) *RoleCreate {
+	ids := make([]string, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return rc.AddAPIIDs(ids...)
+}
+
+// AddResourceIDs adds the "resource" edge to the Resource entity by IDs.
+func (rc *RoleCreate) AddResourceIDs(ids ...string) *RoleCreate {
+	rc.mutation.AddResourceIDs(ids...)
+	return rc
+}
+
+// AddResource adds the "resource" edges to the Resource entity.
+func (rc *RoleCreate) AddResource(r ...*Resource) *RoleCreate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return rc.AddResourceIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -270,6 +302,38 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(dept.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.APIIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.APITable,
+			Columns: role.APIPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.ResourceIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.ResourceTable,
+			Columns: role.ResourcePrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

@@ -449,7 +449,7 @@ func (x *GetAccessCodesReply) GetAccessCodeList() []string {
 
 type GetMenuListReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MenuList      []*RouteItem           `protobuf:"bytes,1,rep,name=menuList,proto3" json:"menuList,omitempty"`
+	Items         []*RouteItem           `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -484,9 +484,9 @@ func (*GetMenuListReply) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetMenuListReply) GetMenuList() []*RouteItem {
+func (x *GetMenuListReply) GetItems() []*RouteItem {
 	if x != nil {
-		return x.MenuList
+		return x.Items
 	}
 	return nil
 }
@@ -1575,7 +1575,7 @@ type SysMenuListItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                  // 菜单ID
 	Component     string                 `protobuf:"bytes,2,opt,name=component,proto3" json:"component,omitempty"`     // 组件
-	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`          // 状态
+	Status        *int32                 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`    // 状态(这里使用optional是因为默认为0不返回)
 	AuthCode      string                 `protobuf:"bytes,4,opt,name=authCode,proto3" json:"authCode,omitempty"`       // 后端权限标识
 	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`               // 菜单名称
 	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`               // 路由路径
@@ -1634,8 +1634,8 @@ func (x *SysMenuListItem) GetComponent() string {
 }
 
 func (x *SysMenuListItem) GetStatus() int32 {
-	if x != nil {
-		return x.Status
+	if x != nil && x.Status != nil {
+		return *x.Status
 	}
 	return 0
 }
@@ -2635,6 +2635,510 @@ func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
 	return nil
 }
 
+type GetApiPageParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Path          string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`               // api 路径
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // api 描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetApiPageParams) Reset() {
+	*x = GetApiPageParams{}
+	mi := &file_base_api_v1_base_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetApiPageParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetApiPageParams) ProtoMessage() {}
+
+func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetApiPageParams.ProtoReflect.Descriptor instead.
+func (*GetApiPageParams) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *GetApiPageParams) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetApiPageParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetApiPageParams) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *GetApiPageParams) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+type ApiListItem struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Path              string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`                                                    // api 路径
+	Method            string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`                                                // api 方法（GET|PUT|POST|DELETE）
+	Description       string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                                      // api 描述
+	Module            string                 `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`                                                // api 所属模块
+	ModuleDescription string                 `protobuf:"bytes,6,opt,name=module_description,json=moduleDescription,proto3" json:"module_description,omitempty"` // 模块描述
+	ResourcesGroup    string                 `protobuf:"bytes,7,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`          // 资源组
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ApiListItem) Reset() {
+	*x = ApiListItem{}
+	mi := &file_base_api_v1_base_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApiListItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApiListItem) ProtoMessage() {}
+
+func (x *ApiListItem) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApiListItem.ProtoReflect.Descriptor instead.
+func (*ApiListItem) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *ApiListItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetModule() string {
+	if x != nil {
+		return x.Module
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetModuleDescription() string {
+	if x != nil {
+		return x.ModuleDescription
+	}
+	return ""
+}
+
+func (x *ApiListItem) GetResourcesGroup() string {
+	if x != nil {
+		return x.ResourcesGroup
+	}
+	return ""
+}
+
+type GetApiListByPageReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ApiListItem         `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetApiListByPageReply) Reset() {
+	*x = GetApiListByPageReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetApiListByPageReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetApiListByPageReply) ProtoMessage() {}
+
+func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetApiListByPageReply.ProtoReflect.Descriptor instead.
+func (*GetApiListByPageReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *GetApiListByPageReply) GetItems() []*ApiListItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetApiListByPageReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type DeleteApi struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteApi) Reset() {
+	*x = DeleteApi{}
+	mi := &file_base_api_v1_base_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteApi) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteApi) ProtoMessage() {}
+
+func (x *DeleteApi) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteApi.ProtoReflect.Descriptor instead.
+func (*DeleteApi) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *DeleteApi) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetResourcePageParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`               // 资源类型
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // api 描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetResourcePageParams) Reset() {
+	*x = GetResourcePageParams{}
+	mi := &file_base_api_v1_base_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetResourcePageParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetResourcePageParams) ProtoMessage() {}
+
+func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetResourcePageParams.ProtoReflect.Descriptor instead.
+func (*GetResourcePageParams) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{41}
+}
+
+func (x *GetResourcePageParams) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetResourcePageParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetResourcePageParams) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *GetResourcePageParams) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+type ResourceListItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 资源名称
+	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`               // 资源类型
+	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`             // 资源值
+	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`           // 对资源的操作
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 资源的描述
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResourceListItem) Reset() {
+	*x = ResourceListItem{}
+	mi := &file_base_api_v1_base_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResourceListItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResourceListItem) ProtoMessage() {}
+
+func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResourceListItem.ProtoReflect.Descriptor instead.
+func (*ResourceListItem) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *ResourceListItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ResourceListItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ResourceListItem) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *ResourceListItem) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *ResourceListItem) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *ResourceListItem) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+type GetResourceListByPageReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*ResourceListItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetResourceListByPageReply) Reset() {
+	*x = GetResourceListByPageReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetResourceListByPageReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetResourceListByPageReply) ProtoMessage() {}
+
+func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetResourceListByPageReply.ProtoReflect.Descriptor instead.
+func (*GetResourceListByPageReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *GetResourceListByPageReply) GetItems() []*ResourceListItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetResourceListByPageReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type DeleteResource struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteResource) Reset() {
+	*x = DeleteResource{}
+	mi := &file_base_api_v1_base_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteResource) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteResource) ProtoMessage() {}
+
+func (x *DeleteResource) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteResource.ProtoReflect.Descriptor instead.
+func (*DeleteResource) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *DeleteResource) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_base_api_v1_base_proto protoreflect.FileDescriptor
 
 const file_base_api_v1_base_proto_rawDesc = "" +
@@ -2665,9 +3169,9 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\buserRole\x18\x01 \x03(\v2\x19.api.base_api.v1.UserRoleR\buserRole\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\"=\n" +
 	"\x13GetAccessCodesReply\x12&\n" +
-	"\x0eaccessCodeList\x18\x01 \x03(\tR\x0eaccessCodeList\"J\n" +
-	"\x10GetMenuListReply\x126\n" +
-	"\bmenuList\x18\x01 \x03(\v2\x1a.api.base_api.v1.RouteItemR\bmenuList\"<\n" +
+	"\x0eaccessCodeList\x18\x01 \x03(\tR\x0eaccessCodeList\"D\n" +
+	"\x10GetMenuListReply\x120\n" +
+	"\x05items\x18\x01 \x03(\v2\x1a.api.base_api.v1.RouteItemR\x05items\"<\n" +
 	"\bRoleInfo\x12\x1a\n" +
 	"\broleName\x18\x01 \x01(\tR\broleName\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"\x8d\x02\n" +
@@ -2802,23 +3306,24 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"_keepAliveB\x12\n" +
 	"\x10_maxNumOfOpenTabB\x10\n" +
 	"\x0e_noBasicLayoutB\x12\n" +
-	"\x10_openInNewWindow\"\xf8\x02\n" +
+	"\x10_openInNewWindow\"\x88\x03\n" +
 	"\x0fSysMenuListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
-	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\x05R\x06status\x12\x1a\n" +
+	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1a\n" +
 	"\bauthCode\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
 	"\x04path\x18\x06 \x01(\tR\x04path\x12\x10\n" +
 	"\x03pid\x18\a \x01(\x03R\x03pid\x12\x1f\n" +
-	"\bredirect\x18\b \x01(\tH\x00R\bredirect\x88\x01\x01\x12\x12\n" +
+	"\bredirect\x18\b \x01(\tH\x01R\bredirect\x88\x01\x01\x12\x12\n" +
 	"\x04type\x18\t \x01(\tR\x04type\x12)\n" +
 	"\x04meta\x18\n" +
 	" \x01(\v2\x15.api.base_api.v1.MetaR\x04meta\x12<\n" +
 	"\bchildren\x18\v \x03(\v2 .api.base_api.v1.SysMenuListItemR\bchildren\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\f \x01(\tR\n" +
-	"createTimeB\v\n" +
+	"createTimeB\t\n" +
+	"\a_statusB\v\n" +
 	"\t_redirect\"c\n" +
 	"\x13GetSysMenuListReply\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .api.base_api.v1.SysMenuListItemR\x05items\x12\x14\n" +
@@ -2881,14 +3386,49 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\"I\n" +
 	"\x11GetWalkRouteReply\x124\n" +
-	"\x05items\x18\x01 \x03(\v2\x1e.api.base_api.v1.WalkRouteItemR\x05items*\x8d\x01\n" +
+	"\x05items\x18\x01 \x03(\v2\x1e.api.base_api.v1.WalkRouteItemR\x05items\"x\n" +
+	"\x10GetApiPageParams\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
+	"\x04path\x18\x03 \x01(\tR\x04path\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xdb\x01\n" +
+	"\vApiListItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
+	"\x06module\x18\x05 \x01(\tR\x06module\x12-\n" +
+	"\x12module_description\x18\x06 \x01(\tR\x11moduleDescription\x12'\n" +
+	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"a\n" +
+	"\x15GetApiListByPageReply\x122\n" +
+	"\x05items\x18\x01 \x03(\v2\x1c.api.base_api.v1.ApiListItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1b\n" +
+	"\tDeleteApi\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"}\n" +
+	"\x15GetResourcePageParams\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\"\x9a\x01\n" +
+	"\x10ResourceListItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
+	"\x05value\x18\x04 \x01(\tR\x05value\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"k\n" +
+	"\x1aGetResourceListByPageReply\x127\n" +
+	"\x05items\x18\x01 \x03(\v2!.api.base_api.v1.ResourceListItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\" \n" +
+	"\x0eDeleteResource\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id*\x8d\x01\n" +
 	"\bMenuType\x12\x18\n" +
 	"\acatalog\x10\x00\x1a\vҸ\x02\acatalog\x12\x12\n" +
 	"\x04menu\x10\x01\x1a\bҸ\x02\x04menu\x12\x1a\n" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\x9c\x1a\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xd7!\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -2924,7 +3464,16 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\aDelRole\x12\x1b.api.base_api.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/basic-api/system/role/{id}\x12z\n" +
 	"\rSetRoleStatus\x12%.api.base_api.v1.SetRoleStatusRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/basic-api/system/setRoleStatus\x12}\n" +
 	"\x0eChangePassword\x12&.api.base_api.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%:\x01*\" /basic-api/system/changePassword\x12r\n" +
-	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a\".api.base_api.v1.GetWalkRouteReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/basic-api/system/getWalkRouteB3\n" +
+	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a\".api.base_api.v1.GetWalkRouteReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/basic-api/system/getWalkRoute\x12{\n" +
+	"\n" +
+	"GetApiList\x12!.api.base_api.v1.GetApiPageParams\x1a&.api.base_api.v1.GetApiListByPageReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/basic-api/system/api/list\x12f\n" +
+	"\x06AddApi\x12\x1c.api.base_api.v1.ApiListItem\x1a\x1c.api.base_api.v1.ApiListItem\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/system/api\x12n\n" +
+	"\tUpdateApi\x12\x1c.api.base_api.v1.ApiListItem\x1a\x1c.api.base_api.v1.ApiListItem\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\x1a\x1a/basic-api/system/api/{id}\x12`\n" +
+	"\x06DelApi\x12\x1a.api.base_api.v1.DeleteApi\x1a\x16.google.protobuf.Empty\"\"\x82\xd3\xe4\x93\x02\x1c*\x1a/basic-api/system/api/{id}\x12\x8f\x01\n" +
+	"\x0fGetResourceList\x12&.api.base_api.v1.GetResourcePageParams\x1a+.api.base_api.v1.GetResourceListByPageReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/basic-api/system/resource/list\x12z\n" +
+	"\vAddResource\x12!.api.base_api.v1.ResourceListItem\x1a!.api.base_api.v1.ResourceListItem\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/basic-api/system/resource\x12\x82\x01\n" +
+	"\x0eUpdateResource\x12!.api.base_api.v1.ResourceListItem\x1a!.api.base_api.v1.ResourceListItem\"*\x82\xd3\xe4\x93\x02$:\x01*\x1a\x1f/basic-api/system/resource/{id}\x12o\n" +
+	"\vDelResource\x12\x1f.api.base_api.v1.DeleteResource\x1a\x16.google.protobuf.Empty\"'\x82\xd3\xe4\x93\x02!*\x1f/basic-api/system/resource/{id}B3\n" +
 	"\x0fapi.base_api.v1P\x01Z\x1ebase-server/api/base_api/v1;v1b\x06proto3"
 
 var (
@@ -2940,52 +3489,60 @@ func file_base_api_v1_base_proto_rawDescGZIP() []byte {
 }
 
 var file_base_api_v1_base_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
+var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
 var file_base_api_v1_base_proto_goTypes = []any{
-	(MenuType)(0),                   // 0: api.base_api.v1.MenuType
-	(*LoginRequest)(nil),            // 1: api.base_api.v1.LoginRequest
-	(*LoginReply)(nil),              // 2: api.base_api.v1.LoginReply
-	(*GetUserInfoReply)(nil),        // 3: api.base_api.v1.GetUserInfoReply
-	(*UserRole)(nil),                // 4: api.base_api.v1.UserRole
-	(*UserExtension)(nil),           // 5: api.base_api.v1.UserExtension
-	(*GetAccessCodesReply)(nil),     // 6: api.base_api.v1.GetAccessCodesReply
-	(*GetMenuListReply)(nil),        // 7: api.base_api.v1.GetMenuListReply
-	(*RoleInfo)(nil),                // 8: api.base_api.v1.RoleInfo
-	(*RouteItem)(nil),               // 9: api.base_api.v1.RouteItem
-	(*RouteMeta)(nil),               // 10: api.base_api.v1.RouteMeta
-	(*DeptListItem)(nil),            // 11: api.base_api.v1.DeptListItem
-	(*DeleteDept)(nil),              // 12: api.base_api.v1.DeleteDept
-	(*GetDeptListReply)(nil),        // 13: api.base_api.v1.GetDeptListReply
-	(*RolePageParams)(nil),          // 14: api.base_api.v1.RolePageParams
-	(*RoleListItem)(nil),            // 15: api.base_api.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),  // 16: api.base_api.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),              // 17: api.base_api.v1.DeleteRole
-	(*MenuParams)(nil),              // 18: api.base_api.v1.MenuParams
-	(*Meta)(nil),                    // 19: api.base_api.v1.Meta
-	(*SysMenuListItem)(nil),         // 20: api.base_api.v1.SysMenuListItem
-	(*GetSysMenuListReply)(nil),     // 21: api.base_api.v1.GetSysMenuListReply
-	(*GetUserParams)(nil),           // 22: api.base_api.v1.GetUserParams
-	(*UserListItem)(nil),            // 23: api.base_api.v1.UserListItem
-	(*GetUserListReply)(nil),        // 24: api.base_api.v1.GetUserListReply
-	(*DeleteUser)(nil),              // 25: api.base_api.v1.DeleteUser
-	(*RoleParams)(nil),              // 26: api.base_api.v1.RoleParams
-	(*SetRoleStatusRequest)(nil),    // 27: api.base_api.v1.SetRoleStatusRequest
-	(*IsUserExistsRequest)(nil),     // 28: api.base_api.v1.IsUserExistsRequest
-	(*IsUserExistsReply)(nil),       // 29: api.base_api.v1.IsUserExistsReply
-	(*IsMenuNameExistsRequest)(nil), // 30: api.base_api.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),   // 31: api.base_api.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil), // 32: api.base_api.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),   // 33: api.base_api.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),       // 34: api.base_api.v1.DeleteMenuRequest
-	(*ChangePasswordRequest)(nil),   // 35: api.base_api.v1.ChangePasswordRequest
-	(*WalkRouteItem)(nil),           // 36: api.base_api.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),       // 37: api.base_api.v1.GetWalkRouteReply
-	(*emptypb.Empty)(nil),           // 38: google.protobuf.Empty
+	(MenuType)(0),                      // 0: api.base_api.v1.MenuType
+	(*LoginRequest)(nil),               // 1: api.base_api.v1.LoginRequest
+	(*LoginReply)(nil),                 // 2: api.base_api.v1.LoginReply
+	(*GetUserInfoReply)(nil),           // 3: api.base_api.v1.GetUserInfoReply
+	(*UserRole)(nil),                   // 4: api.base_api.v1.UserRole
+	(*UserExtension)(nil),              // 5: api.base_api.v1.UserExtension
+	(*GetAccessCodesReply)(nil),        // 6: api.base_api.v1.GetAccessCodesReply
+	(*GetMenuListReply)(nil),           // 7: api.base_api.v1.GetMenuListReply
+	(*RoleInfo)(nil),                   // 8: api.base_api.v1.RoleInfo
+	(*RouteItem)(nil),                  // 9: api.base_api.v1.RouteItem
+	(*RouteMeta)(nil),                  // 10: api.base_api.v1.RouteMeta
+	(*DeptListItem)(nil),               // 11: api.base_api.v1.DeptListItem
+	(*DeleteDept)(nil),                 // 12: api.base_api.v1.DeleteDept
+	(*GetDeptListReply)(nil),           // 13: api.base_api.v1.GetDeptListReply
+	(*RolePageParams)(nil),             // 14: api.base_api.v1.RolePageParams
+	(*RoleListItem)(nil),               // 15: api.base_api.v1.RoleListItem
+	(*GetRoleListByPageReply)(nil),     // 16: api.base_api.v1.GetRoleListByPageReply
+	(*DeleteRole)(nil),                 // 17: api.base_api.v1.DeleteRole
+	(*MenuParams)(nil),                 // 18: api.base_api.v1.MenuParams
+	(*Meta)(nil),                       // 19: api.base_api.v1.Meta
+	(*SysMenuListItem)(nil),            // 20: api.base_api.v1.SysMenuListItem
+	(*GetSysMenuListReply)(nil),        // 21: api.base_api.v1.GetSysMenuListReply
+	(*GetUserParams)(nil),              // 22: api.base_api.v1.GetUserParams
+	(*UserListItem)(nil),               // 23: api.base_api.v1.UserListItem
+	(*GetUserListReply)(nil),           // 24: api.base_api.v1.GetUserListReply
+	(*DeleteUser)(nil),                 // 25: api.base_api.v1.DeleteUser
+	(*RoleParams)(nil),                 // 26: api.base_api.v1.RoleParams
+	(*SetRoleStatusRequest)(nil),       // 27: api.base_api.v1.SetRoleStatusRequest
+	(*IsUserExistsRequest)(nil),        // 28: api.base_api.v1.IsUserExistsRequest
+	(*IsUserExistsReply)(nil),          // 29: api.base_api.v1.IsUserExistsReply
+	(*IsMenuNameExistsRequest)(nil),    // 30: api.base_api.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),      // 31: api.base_api.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil),    // 32: api.base_api.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),      // 33: api.base_api.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),          // 34: api.base_api.v1.DeleteMenuRequest
+	(*ChangePasswordRequest)(nil),      // 35: api.base_api.v1.ChangePasswordRequest
+	(*WalkRouteItem)(nil),              // 36: api.base_api.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),          // 37: api.base_api.v1.GetWalkRouteReply
+	(*GetApiPageParams)(nil),           // 38: api.base_api.v1.GetApiPageParams
+	(*ApiListItem)(nil),                // 39: api.base_api.v1.ApiListItem
+	(*GetApiListByPageReply)(nil),      // 40: api.base_api.v1.GetApiListByPageReply
+	(*DeleteApi)(nil),                  // 41: api.base_api.v1.DeleteApi
+	(*GetResourcePageParams)(nil),      // 42: api.base_api.v1.GetResourcePageParams
+	(*ResourceListItem)(nil),           // 43: api.base_api.v1.ResourceListItem
+	(*GetResourceListByPageReply)(nil), // 44: api.base_api.v1.GetResourceListByPageReply
+	(*DeleteResource)(nil),             // 45: api.base_api.v1.DeleteResource
+	(*emptypb.Empty)(nil),              // 46: google.protobuf.Empty
 }
 var file_base_api_v1_base_proto_depIdxs = []int32{
 	8,  // 0: api.base_api.v1.GetUserInfoReply.roles:type_name -> api.base_api.v1.RoleInfo
 	4,  // 1: api.base_api.v1.UserExtension.userRole:type_name -> api.base_api.v1.UserRole
-	9,  // 2: api.base_api.v1.GetMenuListReply.menuList:type_name -> api.base_api.v1.RouteItem
+	9,  // 2: api.base_api.v1.GetMenuListReply.items:type_name -> api.base_api.v1.RouteItem
 	10, // 3: api.base_api.v1.RouteItem.meta:type_name -> api.base_api.v1.RouteMeta
 	9,  // 4: api.base_api.v1.RouteItem.children:type_name -> api.base_api.v1.RouteItem
 	11, // 5: api.base_api.v1.DeptListItem.children:type_name -> api.base_api.v1.DeptListItem
@@ -2996,69 +3553,87 @@ var file_base_api_v1_base_proto_depIdxs = []int32{
 	20, // 10: api.base_api.v1.GetSysMenuListReply.items:type_name -> api.base_api.v1.SysMenuListItem
 	23, // 11: api.base_api.v1.GetUserListReply.items:type_name -> api.base_api.v1.UserListItem
 	36, // 12: api.base_api.v1.GetWalkRouteReply.items:type_name -> api.base_api.v1.WalkRouteItem
-	1,  // 13: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
-	38, // 14: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
-	38, // 15: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
-	38, // 16: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
-	38, // 17: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
-	38, // 18: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
-	38, // 19: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
-	22, // 20: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
-	23, // 21: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
-	23, // 22: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
-	25, // 23: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
-	28, // 24: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
-	18, // 25: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
-	30, // 26: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
-	32, // 27: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
-	20, // 28: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	20, // 29: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	34, // 30: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
-	38, // 31: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
-	11, // 32: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
-	11, // 33: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
-	12, // 34: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
-	14, // 35: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
-	15, // 36: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
-	15, // 37: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
-	17, // 38: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
-	27, // 39: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
-	35, // 40: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
-	38, // 41: api.base_api.v1.Base.GetWalkRoute:input_type -> google.protobuf.Empty
-	2,  // 42: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
-	3,  // 43: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
-	6,  // 44: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
-	38, // 45: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
-	21, // 46: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	2,  // 47: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
-	38, // 48: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
-	24, // 49: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
-	23, // 50: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
-	23, // 51: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
-	38, // 52: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
-	29, // 53: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
-	21, // 54: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	31, // 55: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
-	33, // 56: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
-	38, // 57: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
-	38, // 58: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
-	38, // 59: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
-	13, // 60: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
-	11, // 61: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
-	11, // 62: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
-	38, // 63: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
-	16, // 64: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
-	15, // 65: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
-	15, // 66: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
-	38, // 67: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
-	38, // 68: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
-	38, // 69: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
-	37, // 70: api.base_api.v1.Base.GetWalkRoute:output_type -> api.base_api.v1.GetWalkRouteReply
-	42, // [42:71] is the sub-list for method output_type
-	13, // [13:42] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	39, // 13: api.base_api.v1.GetApiListByPageReply.items:type_name -> api.base_api.v1.ApiListItem
+	43, // 14: api.base_api.v1.GetResourceListByPageReply.items:type_name -> api.base_api.v1.ResourceListItem
+	1,  // 15: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
+	46, // 16: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
+	46, // 17: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
+	46, // 18: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
+	46, // 19: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
+	46, // 20: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
+	46, // 21: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
+	22, // 22: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
+	23, // 23: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
+	23, // 24: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
+	25, // 25: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
+	28, // 26: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
+	18, // 27: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
+	30, // 28: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
+	32, // 29: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
+	20, // 30: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	20, // 31: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	34, // 32: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
+	46, // 33: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
+	11, // 34: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
+	11, // 35: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
+	12, // 36: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
+	14, // 37: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
+	15, // 38: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	15, // 39: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
+	17, // 40: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
+	27, // 41: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
+	35, // 42: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
+	46, // 43: api.base_api.v1.Base.GetWalkRoute:input_type -> google.protobuf.Empty
+	38, // 44: api.base_api.v1.Base.GetApiList:input_type -> api.base_api.v1.GetApiPageParams
+	39, // 45: api.base_api.v1.Base.AddApi:input_type -> api.base_api.v1.ApiListItem
+	39, // 46: api.base_api.v1.Base.UpdateApi:input_type -> api.base_api.v1.ApiListItem
+	41, // 47: api.base_api.v1.Base.DelApi:input_type -> api.base_api.v1.DeleteApi
+	42, // 48: api.base_api.v1.Base.GetResourceList:input_type -> api.base_api.v1.GetResourcePageParams
+	43, // 49: api.base_api.v1.Base.AddResource:input_type -> api.base_api.v1.ResourceListItem
+	43, // 50: api.base_api.v1.Base.UpdateResource:input_type -> api.base_api.v1.ResourceListItem
+	45, // 51: api.base_api.v1.Base.DelResource:input_type -> api.base_api.v1.DeleteResource
+	2,  // 52: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
+	3,  // 53: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
+	6,  // 54: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
+	46, // 55: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
+	21, // 56: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	2,  // 57: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
+	46, // 58: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
+	24, // 59: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
+	23, // 60: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
+	23, // 61: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
+	46, // 62: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
+	29, // 63: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
+	21, // 64: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	31, // 65: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
+	33, // 66: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
+	46, // 67: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
+	46, // 68: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
+	46, // 69: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
+	13, // 70: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
+	11, // 71: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
+	11, // 72: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
+	46, // 73: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
+	16, // 74: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
+	15, // 75: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
+	15, // 76: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
+	46, // 77: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
+	46, // 78: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
+	46, // 79: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
+	37, // 80: api.base_api.v1.Base.GetWalkRoute:output_type -> api.base_api.v1.GetWalkRouteReply
+	40, // 81: api.base_api.v1.Base.GetApiList:output_type -> api.base_api.v1.GetApiListByPageReply
+	39, // 82: api.base_api.v1.Base.AddApi:output_type -> api.base_api.v1.ApiListItem
+	39, // 83: api.base_api.v1.Base.UpdateApi:output_type -> api.base_api.v1.ApiListItem
+	46, // 84: api.base_api.v1.Base.DelApi:output_type -> google.protobuf.Empty
+	44, // 85: api.base_api.v1.Base.GetResourceList:output_type -> api.base_api.v1.GetResourceListByPageReply
+	43, // 86: api.base_api.v1.Base.AddResource:output_type -> api.base_api.v1.ResourceListItem
+	43, // 87: api.base_api.v1.Base.UpdateResource:output_type -> api.base_api.v1.ResourceListItem
+	46, // 88: api.base_api.v1.Base.DelResource:output_type -> google.protobuf.Empty
+	52, // [52:89] is the sub-list for method output_type
+	15, // [15:52] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_base_api_v1_base_proto_init() }
@@ -3074,7 +3649,7 @@ func file_base_api_v1_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_base_api_v1_base_proto_rawDesc), len(file_base_api_v1_base_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   37,
+			NumMessages:   45,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

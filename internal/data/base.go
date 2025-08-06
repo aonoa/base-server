@@ -343,6 +343,32 @@ func (r *baseRepo) ChangePassword(ctx context.Context, uid *uuid.UUID, passwordO
 	return errors.New(500, "password err", "password err")
 }
 
+func (r *baseRepo) GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error) {
+	return r.data.db.ApiResources.Query().All(ctx)
+}
+func (r *baseRepo) AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.Create().CreateAll(req).Save(ctx)
+}
+func (r *baseRepo) UpdateApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.UpdateOneID(req.ID).UpdateAll(req).Save(ctx)
+}
+func (r *baseRepo) DelApi(ctx context.Context, id string) error {
+	return r.data.db.ApiResources.DeleteOneID(id).Exec(ctx)
+}
+
+func (r *baseRepo) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error) {
+	return r.data.db.Resource.Query().All(ctx)
+}
+func (r *baseRepo) AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
+	return r.data.db.Resource.Create().CreateAll(req).Save(ctx)
+}
+func (r *baseRepo) UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
+	return r.data.db.Resource.UpdateOneID(req.ID).UpdateAll(req).Save(ctx)
+}
+func (r *baseRepo) DelResource(ctx context.Context, id string) error {
+	return r.data.db.Resource.DeleteOneID(id).Exec(ctx)
+}
+
 func (r *baseRepo) Test(ctx context.Context) {
 	b := sql.Dialect(dialect.Postgres)
 	query, args := b.Select().

@@ -4,8 +4,10 @@ package ent
 
 import (
 	"base-server/internal/data/ent/predicate"
-	"base-server/internal/data/ent/rule"
+	"base-server/internal/data/ent/resource"
+	"base-server/internal/data/ent/role"
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -15,65 +17,88 @@ import (
 	"entgo.io/ent/schema/field"
 )
 
-// RuleQuery is the builder for querying Rule entities.
-type RuleQuery struct {
+// ResourceQuery is the builder for querying Resource entities.
+type ResourceQuery struct {
 	config
 	ctx        *QueryContext
-	order      []rule.OrderOption
+	order      []resource.OrderOption
 	inters     []Interceptor
-	predicates []predicate.Rule
+	predicates []predicate.Resource
+	withRoles  *RoleQuery
 	modifiers  []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
-// Where adds a new predicate for the RuleQuery builder.
-func (rq *RuleQuery) Where(ps ...predicate.Rule) *RuleQuery {
+// Where adds a new predicate for the ResourceQuery builder.
+func (rq *ResourceQuery) Where(ps ...predicate.Resource) *ResourceQuery {
 	rq.predicates = append(rq.predicates, ps...)
 	return rq
 }
 
 // Limit the number of records to be returned by this query.
-func (rq *RuleQuery) Limit(limit int) *RuleQuery {
+func (rq *ResourceQuery) Limit(limit int) *ResourceQuery {
 	rq.ctx.Limit = &limit
 	return rq
 }
 
 // Offset to start from.
-func (rq *RuleQuery) Offset(offset int) *RuleQuery {
+func (rq *ResourceQuery) Offset(offset int) *ResourceQuery {
 	rq.ctx.Offset = &offset
 	return rq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (rq *RuleQuery) Unique(unique bool) *RuleQuery {
+func (rq *ResourceQuery) Unique(unique bool) *ResourceQuery {
 	rq.ctx.Unique = &unique
 	return rq
 }
 
 // Order specifies how the records should be ordered.
-func (rq *RuleQuery) Order(o ...rule.OrderOption) *RuleQuery {
+func (rq *ResourceQuery) Order(o ...resource.OrderOption) *ResourceQuery {
 	rq.order = append(rq.order, o...)
 	return rq
 }
 
-// First returns the first Rule entity from the query.
-// Returns a *NotFoundError when no Rule was found.
-func (rq *RuleQuery) First(ctx context.Context) (*Rule, error) {
+// QueryRoles chains the current query on the "roles" edge.
+func (rq *ResourceQuery) QueryRoles() *RoleQuery {
+	query := (&RoleClient{config: rq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, selector),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, resource.RolesTable, resource.RolesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// First returns the first Resource entity from the query.
+// Returns a *NotFoundError when no Resource was found.
+func (rq *ResourceQuery) First(ctx context.Context) (*Resource, error) {
 	nodes, err := rq.Limit(1).All(setContextOp(ctx, rq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{rule.Label}
+		return nil, &NotFoundError{resource.Label}
 	}
 	return nodes[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (rq *RuleQuery) FirstX(ctx context.Context) *Rule {
+func (rq *ResourceQuery) FirstX(ctx context.Context) *Resource {
 	node, err := rq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -81,22 +106,22 @@ func (rq *RuleQuery) FirstX(ctx context.Context) *Rule {
 	return node
 }
 
-// FirstID returns the first Rule ID from the query.
-// Returns a *NotFoundError when no Rule ID was found.
-func (rq *RuleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+// FirstID returns the first Resource ID from the query.
+// Returns a *NotFoundError when no Resource ID was found.
+func (rq *ResourceQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = rq.Limit(1).IDs(setContextOp(ctx, rq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{rule.Label}
+		err = &NotFoundError{resource.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RuleQuery) FirstIDX(ctx context.Context) int {
+func (rq *ResourceQuery) FirstIDX(ctx context.Context) string {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -104,10 +129,10 @@ func (rq *RuleQuery) FirstIDX(ctx context.Context) int {
 	return id
 }
 
-// Only returns a single Rule entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when more than one Rule entity is found.
-// Returns a *NotFoundError when no Rule entities are found.
-func (rq *RuleQuery) Only(ctx context.Context) (*Rule, error) {
+// Only returns a single Resource entity found by the query, ensuring it only returns one.
+// Returns a *NotSingularError when more than one Resource entity is found.
+// Returns a *NotFoundError when no Resource entities are found.
+func (rq *ResourceQuery) Only(ctx context.Context) (*Resource, error) {
 	nodes, err := rq.Limit(2).All(setContextOp(ctx, rq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
@@ -116,14 +141,14 @@ func (rq *RuleQuery) Only(ctx context.Context) (*Rule, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{rule.Label}
+		return nil, &NotFoundError{resource.Label}
 	default:
-		return nil, &NotSingularError{rule.Label}
+		return nil, &NotSingularError{resource.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (rq *RuleQuery) OnlyX(ctx context.Context) *Rule {
+func (rq *ResourceQuery) OnlyX(ctx context.Context) *Resource {
 	node, err := rq.Only(ctx)
 	if err != nil {
 		panic(err)
@@ -131,11 +156,11 @@ func (rq *RuleQuery) OnlyX(ctx context.Context) *Rule {
 	return node
 }
 
-// OnlyID is like Only, but returns the only Rule ID in the query.
-// Returns a *NotSingularError when more than one Rule ID is found.
+// OnlyID is like Only, but returns the only Resource ID in the query.
+// Returns a *NotSingularError when more than one Resource ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RuleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rq *ResourceQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = rq.Limit(2).IDs(setContextOp(ctx, rq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -143,15 +168,15 @@ func (rq *RuleQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{rule.Label}
+		err = &NotFoundError{resource.Label}
 	default:
-		err = &NotSingularError{rule.Label}
+		err = &NotSingularError{resource.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RuleQuery) OnlyIDX(ctx context.Context) int {
+func (rq *ResourceQuery) OnlyIDX(ctx context.Context) string {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -159,18 +184,18 @@ func (rq *RuleQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Rules.
-func (rq *RuleQuery) All(ctx context.Context) ([]*Rule, error) {
+// All executes the query and returns a list of Resources.
+func (rq *ResourceQuery) All(ctx context.Context) ([]*Resource, error) {
 	ctx = setContextOp(ctx, rq.ctx, ent.OpQueryAll)
 	if err := rq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	qr := querierAll[[]*Rule, *RuleQuery]()
-	return withInterceptors[[]*Rule](ctx, rq, qr, rq.inters)
+	qr := querierAll[[]*Resource, *ResourceQuery]()
+	return withInterceptors[[]*Resource](ctx, rq, qr, rq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (rq *RuleQuery) AllX(ctx context.Context) []*Rule {
+func (rq *ResourceQuery) AllX(ctx context.Context) []*Resource {
 	nodes, err := rq.All(ctx)
 	if err != nil {
 		panic(err)
@@ -178,20 +203,20 @@ func (rq *RuleQuery) AllX(ctx context.Context) []*Rule {
 	return nodes
 }
 
-// IDs executes the query and returns a list of Rule IDs.
-func (rq *RuleQuery) IDs(ctx context.Context) (ids []int, err error) {
+// IDs executes the query and returns a list of Resource IDs.
+func (rq *ResourceQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if rq.ctx.Unique == nil && rq.path != nil {
 		rq.Unique(true)
 	}
 	ctx = setContextOp(ctx, rq.ctx, ent.OpQueryIDs)
-	if err = rq.Select(rule.FieldID).Scan(ctx, &ids); err != nil {
+	if err = rq.Select(resource.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RuleQuery) IDsX(ctx context.Context) []int {
+func (rq *ResourceQuery) IDsX(ctx context.Context) []string {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -200,16 +225,16 @@ func (rq *RuleQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (rq *RuleQuery) Count(ctx context.Context) (int, error) {
+func (rq *ResourceQuery) Count(ctx context.Context) (int, error) {
 	ctx = setContextOp(ctx, rq.ctx, ent.OpQueryCount)
 	if err := rq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, rq, querierCount[*RuleQuery](), rq.inters)
+	return withInterceptors[int](ctx, rq, querierCount[*ResourceQuery](), rq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (rq *RuleQuery) CountX(ctx context.Context) int {
+func (rq *ResourceQuery) CountX(ctx context.Context) int {
 	count, err := rq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -218,7 +243,7 @@ func (rq *RuleQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (rq *RuleQuery) Exist(ctx context.Context) (bool, error) {
+func (rq *ResourceQuery) Exist(ctx context.Context) (bool, error) {
 	ctx = setContextOp(ctx, rq.ctx, ent.OpQueryExist)
 	switch _, err := rq.FirstID(ctx); {
 	case IsNotFound(err):
@@ -231,7 +256,7 @@ func (rq *RuleQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (rq *RuleQuery) ExistX(ctx context.Context) bool {
+func (rq *ResourceQuery) ExistX(ctx context.Context) bool {
 	exist, err := rq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -239,23 +264,35 @@ func (rq *RuleQuery) ExistX(ctx context.Context) bool {
 	return exist
 }
 
-// Clone returns a duplicate of the RuleQuery builder, including all associated steps. It can be
+// Clone returns a duplicate of the ResourceQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (rq *RuleQuery) Clone() *RuleQuery {
+func (rq *ResourceQuery) Clone() *ResourceQuery {
 	if rq == nil {
 		return nil
 	}
-	return &RuleQuery{
+	return &ResourceQuery{
 		config:     rq.config,
 		ctx:        rq.ctx.Clone(),
-		order:      append([]rule.OrderOption{}, rq.order...),
+		order:      append([]resource.OrderOption{}, rq.order...),
 		inters:     append([]Interceptor{}, rq.inters...),
-		predicates: append([]predicate.Rule{}, rq.predicates...),
+		predicates: append([]predicate.Resource{}, rq.predicates...),
+		withRoles:  rq.withRoles.Clone(),
 		// clone intermediate query.
 		sql:       rq.sql.Clone(),
 		path:      rq.path,
 		modifiers: append([]func(*sql.Selector){}, rq.modifiers...),
 	}
+}
+
+// WithRoles tells the query-builder to eager-load the nodes that are connected to
+// the "roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *ResourceQuery) WithRoles(opts ...func(*RoleQuery)) *ResourceQuery {
+	query := (&RoleClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withRoles = query
+	return rq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -268,15 +305,15 @@ func (rq *RuleQuery) Clone() *RuleQuery {
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Rule.Query().
-//		GroupBy(rule.FieldCreateTime).
+//	client.Resource.Query().
+//		GroupBy(resource.FieldCreateTime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (rq *RuleQuery) GroupBy(field string, fields ...string) *RuleGroupBy {
+func (rq *ResourceQuery) GroupBy(field string, fields ...string) *ResourceGroupBy {
 	rq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &RuleGroupBy{build: rq}
+	grbuild := &ResourceGroupBy{build: rq}
 	grbuild.flds = &rq.ctx.Fields
-	grbuild.label = rule.Label
+	grbuild.label = resource.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
 }
@@ -290,23 +327,23 @@ func (rq *RuleQuery) GroupBy(field string, fields ...string) *RuleGroupBy {
 //		CreateTime time.Time `json:"create_time,omitempty"`
 //	}
 //
-//	client.Rule.Query().
-//		Select(rule.FieldCreateTime).
+//	client.Resource.Query().
+//		Select(resource.FieldCreateTime).
 //		Scan(ctx, &v)
-func (rq *RuleQuery) Select(fields ...string) *RuleSelect {
+func (rq *ResourceQuery) Select(fields ...string) *ResourceSelect {
 	rq.ctx.Fields = append(rq.ctx.Fields, fields...)
-	sbuild := &RuleSelect{RuleQuery: rq}
-	sbuild.label = rule.Label
+	sbuild := &ResourceSelect{ResourceQuery: rq}
+	sbuild.label = resource.Label
 	sbuild.flds, sbuild.scan = &rq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
-// Aggregate returns a RuleSelect configured with the given aggregations.
-func (rq *RuleQuery) Aggregate(fns ...AggregateFunc) *RuleSelect {
+// Aggregate returns a ResourceSelect configured with the given aggregations.
+func (rq *ResourceQuery) Aggregate(fns ...AggregateFunc) *ResourceSelect {
 	return rq.Select().Aggregate(fns...)
 }
 
-func (rq *RuleQuery) prepareQuery(ctx context.Context) error {
+func (rq *ResourceQuery) prepareQuery(ctx context.Context) error {
 	for _, inter := range rq.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
@@ -318,7 +355,7 @@ func (rq *RuleQuery) prepareQuery(ctx context.Context) error {
 		}
 	}
 	for _, f := range rq.ctx.Fields {
-		if !rule.ValidColumn(f) {
+		if !resource.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -332,17 +369,21 @@ func (rq *RuleQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (rq *RuleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Rule, error) {
+func (rq *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Resource, error) {
 	var (
-		nodes = []*Rule{}
-		_spec = rq.querySpec()
+		nodes       = []*Resource{}
+		_spec       = rq.querySpec()
+		loadedTypes = [1]bool{
+			rq.withRoles != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
-		return (*Rule).scanValues(nil, columns)
+		return (*Resource).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &Rule{config: rq.config}
+		node := &Resource{config: rq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	if len(rq.modifiers) > 0 {
@@ -357,10 +398,79 @@ func (rq *RuleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Rule, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := rq.withRoles; query != nil {
+		if err := rq.loadRoles(ctx, query, nodes,
+			func(n *Resource) { n.Edges.Roles = []*Role{} },
+			func(n *Resource, e *Role) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
-func (rq *RuleQuery) sqlCount(ctx context.Context) (int, error) {
+func (rq *ResourceQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *Role)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[string]*Resource)
+	nids := make(map[int64]map[*Resource]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(resource.RolesTable)
+		s.Join(joinT).On(s.C(role.FieldID), joinT.C(resource.RolesPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(resource.RolesPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(resource.RolesPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullString)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullInt64).Int64
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Resource]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Role](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "roles" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+
+func (rq *ResourceQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := rq.querySpec()
 	if len(rq.modifiers) > 0 {
 		_spec.Modifiers = rq.modifiers
@@ -372,8 +482,8 @@ func (rq *RuleQuery) sqlCount(ctx context.Context) (int, error) {
 	return sqlgraph.CountNodes(ctx, rq.driver, _spec)
 }
 
-func (rq *RuleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(rule.Table, rule.Columns, sqlgraph.NewFieldSpec(rule.FieldID, field.TypeInt))
+func (rq *ResourceQuery) querySpec() *sqlgraph.QuerySpec {
+	_spec := sqlgraph.NewQuerySpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
 	_spec.From = rq.sql
 	if unique := rq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -382,9 +492,9 @@ func (rq *RuleQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := rq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, rule.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, resource.FieldID)
 		for i := range fields {
-			if fields[i] != rule.FieldID {
+			if fields[i] != resource.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -412,12 +522,12 @@ func (rq *RuleQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (rq *RuleQuery) sqlQuery(ctx context.Context) *sql.Selector {
+func (rq *ResourceQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(rq.driver.Dialect())
-	t1 := builder.Table(rule.Table)
+	t1 := builder.Table(resource.Table)
 	columns := rq.ctx.Fields
 	if len(columns) == 0 {
-		columns = rule.Columns
+		columns = resource.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if rq.sql != nil {
@@ -448,33 +558,33 @@ func (rq *RuleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (rq *RuleQuery) Modify(modifiers ...func(s *sql.Selector)) *RuleSelect {
+func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSelect {
 	rq.modifiers = append(rq.modifiers, modifiers...)
 	return rq.Select()
 }
 
-// RuleGroupBy is the group-by builder for Rule entities.
-type RuleGroupBy struct {
+// ResourceGroupBy is the group-by builder for Resource entities.
+type ResourceGroupBy struct {
 	selector
-	build *RuleQuery
+	build *ResourceQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (rgb *RuleGroupBy) Aggregate(fns ...AggregateFunc) *RuleGroupBy {
+func (rgb *ResourceGroupBy) Aggregate(fns ...AggregateFunc) *ResourceGroupBy {
 	rgb.fns = append(rgb.fns, fns...)
 	return rgb
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (rgb *RuleGroupBy) Scan(ctx context.Context, v any) error {
+func (rgb *ResourceGroupBy) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, rgb.build.ctx, ent.OpQueryGroupBy)
 	if err := rgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*RuleQuery, *RuleGroupBy](ctx, rgb.build, rgb, rgb.build.inters, v)
+	return scanWithInterceptors[*ResourceQuery, *ResourceGroupBy](ctx, rgb.build, rgb, rgb.build.inters, v)
 }
 
-func (rgb *RuleGroupBy) sqlScan(ctx context.Context, root *RuleQuery, v any) error {
+func (rgb *ResourceGroupBy) sqlScan(ctx context.Context, root *ResourceQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
 	aggregation := make([]string, 0, len(rgb.fns))
 	for _, fn := range rgb.fns {
@@ -501,28 +611,28 @@ func (rgb *RuleGroupBy) sqlScan(ctx context.Context, root *RuleQuery, v any) err
 	return sql.ScanSlice(rows, v)
 }
 
-// RuleSelect is the builder for selecting fields of Rule entities.
-type RuleSelect struct {
-	*RuleQuery
+// ResourceSelect is the builder for selecting fields of Resource entities.
+type ResourceSelect struct {
+	*ResourceQuery
 	selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (rs *RuleSelect) Aggregate(fns ...AggregateFunc) *RuleSelect {
+func (rs *ResourceSelect) Aggregate(fns ...AggregateFunc) *ResourceSelect {
 	rs.fns = append(rs.fns, fns...)
 	return rs
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (rs *RuleSelect) Scan(ctx context.Context, v any) error {
+func (rs *ResourceSelect) Scan(ctx context.Context, v any) error {
 	ctx = setContextOp(ctx, rs.ctx, ent.OpQuerySelect)
 	if err := rs.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*RuleQuery, *RuleSelect](ctx, rs.RuleQuery, rs, rs.inters, v)
+	return scanWithInterceptors[*ResourceQuery, *ResourceSelect](ctx, rs.ResourceQuery, rs, rs.inters, v)
 }
 
-func (rs *RuleSelect) sqlScan(ctx context.Context, root *RuleQuery, v any) error {
+func (rs *ResourceSelect) sqlScan(ctx context.Context, root *ResourceQuery, v any) error {
 	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(rs.fns))
 	for _, fn := range rs.fns {
@@ -544,7 +654,7 @@ func (rs *RuleSelect) sqlScan(ctx context.Context, root *RuleQuery, v any) error
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (rs *RuleSelect) Modify(modifiers ...func(s *sql.Selector)) *RuleSelect {
+func (rs *ResourceSelect) Modify(modifiers ...func(s *sql.Selector)) *ResourceSelect {
 	rs.modifiers = append(rs.modifiers, modifiers...)
 	return rs
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"base-server/internal/biz"
 	"base-server/internal/conf"
 	"context"
 	"github.com/casbin/casbin/v2"
@@ -48,7 +49,7 @@ func MiddlewareAuth(ac *conf.Auth, e *casbin.Enforcer, logger log.Logger) middle
 
 func MiddlewareCasbin(e *casbin.Enforcer, logger log.Logger) middleware.Middleware {
 	log := log.NewHelper(logger)
-	enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
+	//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			uid := ""
@@ -70,7 +71,7 @@ func MiddlewareCasbin(e *casbin.Enforcer, logger log.Logger) middleware.Middlewa
 					//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m1"}
 					log.Infof("uid:%s, %s", uid, ht.Request().Method+":"+ht.Request().RequestURI)
 					//ok, err := e.Enforce(enforceContext, uid, ht.Request().Method+":"+ht.Request().RequestURI)
-					ok, err := e.Enforce(enforceContext, uid, ht.Request().RequestURI, ht.Request().Method)
+					ok, err := e.Enforce(biz.RoleToApiEnforceContext, uid, ht.Request().RequestURI, ht.Request().Method)
 					//ok, err := e.Enforce(uid, ht.Request().Method+":"+ht.Request().RequestURI, "dom:default")
 					if err != nil || !ok {
 						// 拒绝请求，抛出异常

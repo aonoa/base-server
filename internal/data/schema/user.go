@@ -21,7 +21,7 @@ func (User) Annotations() []schema.Annotation {
 		// Adding this annotation to the schema enables
 		// comments for the table and all its fields.
 		entsql.WithComments(true),
-		schema.Comment("Comment that appears in both the schema and the generated code"),
+		schema.Comment("用户信息表"),
 	}
 }
 

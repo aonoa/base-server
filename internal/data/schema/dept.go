@@ -24,6 +24,7 @@ func (Dept) Mixin() []ent.Mixin {
 func (Dept) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
+		schema.Comment("部门表"),
 	}
 }
 

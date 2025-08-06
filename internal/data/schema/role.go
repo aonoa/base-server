@@ -17,6 +17,7 @@ type Role struct {
 func (Role) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
+		schema.Comment("角色表"),
 	}
 }
 
@@ -45,6 +46,10 @@ func (Role) Edges() []ent.Edge {
 		edge.From("users", User.Type).
 			Ref("roles"),
 		edge.From("dept", Dept.Type).
+			Ref("roles"),
+		edge.From("api", ApiResources.Type).
+			Ref("roles"),
+		edge.From("resource", Resource.Type).
 			Ref("roles"),
 	}
 }

@@ -1,7 +1,9 @@
 package biz
 
 import (
+	pb "base-server/api/gen/go/base_api/v1"
 	"base-server/internal/conf"
+	"context"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
@@ -18,6 +20,9 @@ var (
 	UserToRole                   = "g"
 	ApiToGroup                   = "g2"
 	ResourceToGroup              = "g3"
+	PolicyUserToData             = "p"
+	PolicyUserToApi              = "p2"
+	PolicyApiToData              = "p3"
 )
 
 var textModel string = `
@@ -53,14 +58,16 @@ m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || r.su
 
 // AuthUsecase is an Auth usecase.
 type AuthUsecase struct {
-	e   *casbin.Enforcer
-	log *log.Helper
+	repo BaseRepo
+	e    *casbin.Enforcer
+	log  *log.Helper
 }
 
-func NewAuthUsecase(e *casbin.Enforcer, logger log.Logger) *AuthUsecase {
+func NewAuthUsecase(repo BaseRepo, e *casbin.Enforcer, logger log.Logger) *AuthUsecase {
 	return &AuthUsecase{
-		e:   e,
-		log: log.NewHelper(logger),
+		repo: repo,
+		e:    e,
+		log:  log.NewHelper(logger),
 	}
 }
 
@@ -187,6 +194,87 @@ func (uc *AuthUsecase) DelUser(user string) {
 	//if err != nil {
 	//	println(err)
 	//}
+}
+
+////////////////////////////////////////////////////////
+// 添加资源到资源组
+// 从资源组中删除资源
+
+func (uc *AuthUsecase) AddDataToGroup(data, dataGroup string) {
+	_, err := uc.e.AddNamedGroupingPolicy(ResourceToGroup, data, "data:"+dataGroup)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+func (uc *AuthUsecase) DelDataToGroup(data, dataGroup string) {
+	_, err := uc.e.RemoveNamedGroupingPolicy(ResourceToGroup, data, "data:"+dataGroup)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+func (uc *AuthUsecase) AddApiToGroup(api, apiGroup string) {
+	_, err := uc.e.AddNamedGroupingPolicy(ApiToGroup, api, "api:"+apiGroup)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+func (uc *AuthUsecase) DelApiToGroup(api, apiGroup string) {
+	_, err := uc.e.RemoveNamedGroupingPolicy(ApiToGroup, api, "api:"+apiGroup)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+// 为用户添加角色
+// 删除用户角色
+
+// 添加角色对api资源的权限
+// 删除角色对api资源的权限
+
+func (uc *AuthUsecase) AddApiPolicy(role, apiGroup, method string) {
+	_, err := uc.e.AddNamedPolicy(PolicyUserToApi, "role:"+role, "api:"+apiGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+func (uc *AuthUsecase) DelApiPolicy(role, apiGroup, method string) {
+	_, err := uc.e.RemoveNamedPolicy(PolicyUserToApi, "role:"+role, "api:"+apiGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+func (uc *AuthUsecase) AddDataPolicy(role, dataGroup, method string) {
+	_, err := uc.e.AddNamedPolicy(PolicyUserToData, "role:"+role, "data:"+dataGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+func (uc *AuthUsecase) DelDataPolicy(role, dataGroup, method string) {
+	_, err := uc.e.RemoveNamedPolicy(PolicyUserToData, "role:"+role, "data:"+dataGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+// 生成权限
+// 将api关系生成api组
+// 将其他资源生成资源组
+// 将用户关系生成角色
+// 将角色和资源绑定成权限
+func (uc *AuthUsecase) generateAuthPolicy() {
+	// 获取api资源数据
+	ctx := context.Background()
+	apiList, err := uc.repo.GetApiList(ctx, &pb.GetApiPageParams{})
+	if err != nil {
+		uc.log.Error(err)
+	}
+	for _, api := range apiList {
+		uc.AddApiToGroup(api.Path, api.ResourcesGroup)
+	}
 }
 
 ////////////////////////////////////////////////////////

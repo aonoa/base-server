@@ -416,6 +416,52 @@ func HasDeptWith(preds ...predicate.Dept) predicate.Role {
 	})
 }
 
+// HasAPI applies the HasEdge predicate on the "api" edge.
+func HasAPI() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, APITable, APIPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAPIWith applies the HasEdge predicate on the "api" edge with a given conditions (other predicates).
+func HasAPIWith(preds ...predicate.ApiResources) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newAPIStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasResource applies the HasEdge predicate on the "resource" edge.
+func HasResource() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, ResourceTable, ResourcePrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasResourceWith applies the HasEdge predicate on the "resource" edge with a given conditions (other predicates).
+func HasResourceWith(preds ...predicate.Resource) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newResourceStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Role) predicate.Role {
 	return predicate.Role(sql.AndPredicates(predicates...))

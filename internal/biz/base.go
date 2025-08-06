@@ -58,6 +58,16 @@ type BaseRepo interface {
 	DelDept(ctx context.Context, id int64) error
 
 	IsUserExistsByUserName(ctx context.Context, req *pb.IsUserExistsRequest) (*ent.User, error)
+
+	GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error)
+	AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
+	UpdateApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
+	DelApi(ctx context.Context, id string) error
+
+	GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error)
+	AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
+	UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
+	DelResource(ctx context.Context, id string) error
 }
 
 // BaseUsecase is a Base usecase.
@@ -133,10 +143,27 @@ func (uc *BaseUsecase) GetUserInfo(ctx context.Context, uuidString string) (*ent
 	return uc.repo.FindUserByID(ctx, &uid)
 }
 
-// CreateMenuTree 创建菜单树
-func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListReply, error) {
-	//reqs := &pb.GetMenuListReply{MenuList: []*pb.RouteItem{}}
-	reqs := &pb.GetSysMenuListReply{Items: []*pb.SysMenuListItem{}}
+func (uc *BaseUsecase) CreateMenuTree(menuList []*ent.Menu) []*pb.SysMenuListItem {
+	items := make([]*pb.SysMenuListItem, 0)
+	for _, menu := range menuList {
+		if menu.Pid == 0 {
+			items = append(items, entMenuToMenu(menu))
+			continue
+		}
+
+		//key := uc.BuildMenuTree(&reqs.MenuList, menu)
+		key := uc.BuildMenuTree1(&items, menu)
+		if !key {
+			// 如果菜单不属于任何父级，则将其加入顶层列表
+			items = append(items, entMenuToMenu(menu))
+		}
+	}
+	return items
+}
+
+// CreateRouteMenuTree 创建菜单树
+func (uc *BaseUsecase) CreateRouteMenuTree(ctx context.Context) (*pb.GetSysMenuListReply, error) {
+	res := &pb.GetSysMenuListReply{Items: []*pb.SysMenuListItem{}}
 	menuList, err := uc.repo.GetMenuList(ctx)
 	if err != nil {
 		return nil, err
@@ -187,12 +214,7 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 	//	}
 	//}
 
-	//for _, menu := range menuList {
-	//	//if !menu.Status {
-	//	//	continue
-	//	//}
-	//	menus = append(menus, strconv.FormatInt(menu.ID, 10))
-	//}
+	items := make([]*ent.Menu, 0)
 
 	for _, menu := range menuList {
 		if !menu.Status {
@@ -200,24 +222,29 @@ func (uc *BaseUsecase) CreateMenuTree(ctx context.Context) (*pb.GetSysMenuListRe
 		}
 		for _, item := range menus {
 			if int64(item) == menu.ID {
-				if menu.Pid == 0 {
-					//reqs.MenuList = append(reqs.MenuList, menuToRoute(menu))
-					reqs.Items = append(reqs.Items, entMenuToMenu(menu))
-					continue
-				}
+				items = append(items, menu)
 
-				//key := uc.BuildMenuTree(&reqs.MenuList, menu)
-				key := uc.BuildMenuTree1(&reqs.Items, menu)
-				if !key {
-					// 如果菜单不属于任何父级，则将其加入顶层列表
-					//reqs.Items = append(reqs.Items, menuToRoute(menu))
-					reqs.Items = append(reqs.Items, entMenuToMenu(menu))
-				}
+				//for _, menu := range menuList {
+				//	if menu.Pid == 0 {
+				//		res.Items = append(res.Items, menuToRoute(menu))
+				//		continue
+				//	}
+				//
+				//	key := uc.BuildMenuTree(&res.Items, menu)
+				//	//key := uc.BuildMenuTree1(&items, menu)
+				//	if !key {
+				//		// 如果菜单不属于任何父级，则将其加入顶层列表
+				//		res.Items = append(res.Items, menuToRoute(menu))
+				//	}
+				//}
+
 			}
 		}
 	}
 
-	return reqs, err
+	res.Items = uc.CreateMenuTree(items)
+
+	return res, err
 }
 
 // BuildMenuTree1 构造菜单树
@@ -245,13 +272,21 @@ func entMenuToMenu(menu *ent.Menu) *pb.SysMenuListItem {
 	copier.Copy(&RouteItem, menu)
 	RouteItem.Id = menu.ID
 	RouteItem.Pid = menu.Pid
-	RouteItem.Status = func(status bool) int32 {
-		if status {
-			return 1
-		} else {
-			return 0
-		}
-	}(menu.Status)
+	//RouteItem.Status = func(status bool) int64 {
+	//	if status {
+	//		tmp := int64(1)
+	//		return tmp
+	//	} else {
+	//		tmp := int64(0)
+	//		return tmp
+	//	}
+	//}(menu.Status)
+
+	tmpStatus := int32(0)
+	if menu.Status {
+		tmpStatus = 1
+	}
+	RouteItem.Status = &tmpStatus
 
 	maxNumOfOpenTab := int64(menu.MaxNumOfOpenTab)
 
@@ -302,8 +337,8 @@ func menuToEntMenu(menu *pb.SysMenuListItem) *ent.Menu {
 	copier.Copy(&RouteItem, menu)
 	RouteItem.ID = menu.Id
 	RouteItem.Pid = menu.Pid
-	RouteItem.Status = func(status int32) bool {
-		if status == 1 {
+	RouteItem.Status = func(status *int32) bool {
+		if *status == 1 {
 			return true
 		} else {
 			return false
@@ -709,7 +744,15 @@ func (uc *BaseUsecase) UpdateRole(ctx context.Context, req *pb.RoleListItem) err
 
 // GetSysMenuList 获取菜单（非路由树）(系统菜单管理)
 func (uc *BaseUsecase) GetSysMenuList(ctx context.Context) (*pb.GetSysMenuListReply, error) {
-	return uc.CreateMenuTree(ctx)
+	res := &pb.GetSysMenuListReply{
+		Items: make([]*pb.SysMenuListItem, 0),
+	}
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res.Items = uc.CreateMenuTree(menuList)
+	return res, nil
 }
 
 func ToMenuTree(forest []*pb.SysMenuListItem) []*pb.SysMenuListItem {
@@ -945,3 +988,89 @@ func (uc *BaseUsecase) ChangePassword(ctx context.Context, uuidString, passwordO
 //	}
 //	return user.Dom
 //}
+
+////////////////////////////////////////////////////////////////////
+
+func (uc *BaseUsecase) GetApiList(ctx context.Context, req *pb.GetApiPageParams) (*pb.GetApiListByPageReply, error) {
+	res := &pb.GetApiListByPageReply{
+		Items: []*pb.ApiListItem{},
+	}
+	list, err := uc.repo.GetApiList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	for _, api := range list {
+		tmp := &pb.ApiListItem{}
+		copier.Copy(tmp, api)
+
+		res.Items = append(res.Items, tmp)
+	}
+	res.Total = int64(len(res.Items))
+	return res, nil
+}
+
+func (uc *BaseUsecase) AddApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
+	api := &ent.ApiResources{}
+	copier.Copy(api, req)
+	_, err := uc.repo.AddApi(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (uc *BaseUsecase) UpdateApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
+	api := &ent.ApiResources{}
+	copier.Copy(api, req)
+	_, err := uc.repo.UpdateApi(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ApiListItem{}, nil
+}
+
+func (uc *BaseUsecase) DelApi(ctx context.Context, req *pb.DeleteApi) error {
+	return uc.repo.DelApi(ctx, req.Id)
+}
+
+func (uc *BaseUsecase) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) (*pb.GetResourceListByPageReply, error) {
+	res := &pb.GetResourceListByPageReply{
+		Items: []*pb.ResourceListItem{},
+	}
+	list, err := uc.repo.GetResourceList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	for _, api := range list {
+		tmp := &pb.ResourceListItem{}
+		copier.Copy(tmp, api)
+
+		res.Items = append(res.Items, tmp)
+	}
+	res.Total = int64(len(res.Items))
+	return res, nil
+}
+
+func (uc *BaseUsecase) AddResource(ctx context.Context, req *pb.ResourceListItem) (*pb.ResourceListItem, error) {
+	api := &ent.Resource{}
+	copier.Copy(api, req)
+	_, err := uc.repo.AddResource(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (uc *BaseUsecase) UpdateResource(ctx context.Context, req *pb.ResourceListItem) (*pb.ResourceListItem, error) {
+	api := &ent.Resource{}
+	copier.Copy(api, req)
+	_, err := uc.repo.UpdateResource(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ResourceListItem{}, nil
+}
+
+func (uc *BaseUsecase) DelResource(ctx context.Context, req *pb.DeleteResource) error {
+	return uc.repo.DelApi(ctx, req.Id)
+}

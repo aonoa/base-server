@@ -8,6 +8,24 @@ import (
 )
 
 var (
+	// APIResourcesColumns holds the columns for the "api_resources" table.
+	APIResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "description", Type: field.TypeString, Comment: "描述"},
+		{Name: "path", Type: field.TypeString, Comment: "路径"},
+		{Name: "method", Type: field.TypeString, Comment: "方法"},
+		{Name: "module", Type: field.TypeString, Comment: "模块"},
+		{Name: "module_description", Type: field.TypeString, Comment: "模块描述"},
+		{Name: "resources_group", Type: field.TypeString, Comment: "资源组"},
+	}
+	// APIResourcesTable holds the schema information for the "api_resources" table.
+	APIResourcesTable = &schema.Table{
+		Name:       "api_resources",
+		Columns:    APIResourcesColumns,
+		PrimaryKey: []*schema.Column{APIResourcesColumns[0]},
+	}
 	// DeptsColumns holds the columns for the "depts" table.
 	DeptsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
@@ -25,6 +43,7 @@ var (
 	// DeptsTable holds the schema information for the "depts" table.
 	DeptsTable = &schema.Table{
 		Name:       "depts",
+		Comment:    "部门表",
 		Columns:    DeptsColumns,
 		PrimaryKey: []*schema.Column{DeptsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -83,8 +102,27 @@ var (
 	// MenusTable holds the schema information for the "menus" table.
 	MenusTable = &schema.Table{
 		Name:       "menus",
+		Comment:    "菜单表",
 		Columns:    MenusColumns,
 		PrimaryKey: []*schema.Column{MenusColumns[0]},
+	}
+	// ResourcesColumns holds the columns for the "resources" table.
+	ResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Comment: "资源名称"},
+		{Name: "type", Type: field.TypeString, Comment: "资源类型"},
+		{Name: "value", Type: field.TypeString, Comment: "资源值"},
+		{Name: "method", Type: field.TypeString, Comment: "对资源的操作"},
+		{Name: "description", Type: field.TypeString, Comment: "资源的描述"},
+	}
+	// ResourcesTable holds the schema information for the "resources" table.
+	ResourcesTable = &schema.Table{
+		Name:       "resources",
+		Comment:    "资源表",
+		Columns:    ResourcesColumns,
+		PrimaryKey: []*schema.Column{ResourcesColumns[0]},
 	}
 	// RolesColumns holds the columns for the "roles" table.
 	RolesColumns = []*schema.Column{
@@ -100,6 +138,7 @@ var (
 	// RolesTable holds the schema information for the "roles" table.
 	RolesTable = &schema.Table{
 		Name:       "roles",
+		Comment:    "角色表",
 		Columns:    RolesColumns,
 		PrimaryKey: []*schema.Column{RolesColumns[0]},
 	}
@@ -138,9 +177,34 @@ var (
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
 		Name:       "users",
-		Comment:    "Comment that appears in both the schema and the generated code",
+		Comment:    "用户信息表",
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
+	}
+	// APIResourcesRolesColumns holds the columns for the "api_resources_roles" table.
+	APIResourcesRolesColumns = []*schema.Column{
+		{Name: "api_resources_id", Type: field.TypeString},
+		{Name: "role_id", Type: field.TypeInt64},
+	}
+	// APIResourcesRolesTable holds the schema information for the "api_resources_roles" table.
+	APIResourcesRolesTable = &schema.Table{
+		Name:       "api_resources_roles",
+		Columns:    APIResourcesRolesColumns,
+		PrimaryKey: []*schema.Column{APIResourcesRolesColumns[0], APIResourcesRolesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "api_resources_roles_api_resources_id",
+				Columns:    []*schema.Column{APIResourcesRolesColumns[0]},
+				RefColumns: []*schema.Column{APIResourcesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "api_resources_roles_role_id",
+				Columns:    []*schema.Column{APIResourcesRolesColumns[1]},
+				RefColumns: []*schema.Column{RolesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
 	}
 	// DeptUsersColumns holds the columns for the "dept_users" table.
 	DeptUsersColumns = []*schema.Column{
@@ -163,6 +227,31 @@ var (
 				Symbol:     "dept_users_user_id",
 				Columns:    []*schema.Column{DeptUsersColumns[1]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// ResourceRolesColumns holds the columns for the "resource_roles" table.
+	ResourceRolesColumns = []*schema.Column{
+		{Name: "resource_id", Type: field.TypeString},
+		{Name: "role_id", Type: field.TypeInt64},
+	}
+	// ResourceRolesTable holds the schema information for the "resource_roles" table.
+	ResourceRolesTable = &schema.Table{
+		Name:       "resource_roles",
+		Columns:    ResourceRolesColumns,
+		PrimaryKey: []*schema.Column{ResourceRolesColumns[0], ResourceRolesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "resource_roles_resource_id",
+				Columns:    []*schema.Column{ResourceRolesColumns[0]},
+				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "resource_roles_role_id",
+				Columns:    []*schema.Column{ResourceRolesColumns[1]},
+				RefColumns: []*schema.Column{RolesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -194,12 +283,16 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		APIResourcesTable,
 		DeptsTable,
 		MenusTable,
+		ResourcesTable,
 		RolesTable,
 		RulesTable,
 		UsersTable,
+		APIResourcesRolesTable,
 		DeptUsersTable,
+		ResourceRolesTable,
 		UserRolesTable,
 	}
 )
@@ -207,8 +300,12 @@ var (
 func init() {
 	DeptsTable.ForeignKeys[0].RefTable = RolesTable
 	DeptsTable.ForeignKeys[1].RefTable = DeptsTable
+	APIResourcesRolesTable.ForeignKeys[0].RefTable = APIResourcesTable
+	APIResourcesRolesTable.ForeignKeys[1].RefTable = RolesTable
 	DeptUsersTable.ForeignKeys[0].RefTable = DeptsTable
 	DeptUsersTable.ForeignKeys[1].RefTable = UsersTable
+	ResourceRolesTable.ForeignKeys[0].RefTable = ResourcesTable
+	ResourceRolesTable.ForeignKeys[1].RefTable = RolesTable
 	UserRolesTable.ForeignKeys[0].RefTable = UsersTable
 	UserRolesTable.ForeignKeys[1].RefTable = RolesTable
 }

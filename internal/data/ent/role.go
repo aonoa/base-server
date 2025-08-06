@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Role is the model entity for the Role schema.
+// 角色表
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -44,9 +44,13 @@ type RoleEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Dept holds the value of the dept edge.
 	Dept []*Dept `json:"dept,omitempty"`
+	// API holds the value of the api edge.
+	API []*ApiResources `json:"api,omitempty"`
+	// Resource holds the value of the resource edge.
+	Resource []*Resource `json:"resource,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [4]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -65,6 +69,24 @@ func (e RoleEdges) DeptOrErr() ([]*Dept, error) {
 		return e.Dept, nil
 	}
 	return nil, &NotLoadedError{edge: "dept"}
+}
+
+// APIOrErr returns the API value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) APIOrErr() ([]*ApiResources, error) {
+	if e.loadedTypes[2] {
+		return e.API, nil
+	}
+	return nil, &NotLoadedError{edge: "api"}
+}
+
+// ResourceOrErr returns the Resource value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) ResourceOrErr() ([]*Resource, error) {
+	if e.loadedTypes[3] {
+		return e.Resource, nil
+	}
+	return nil, &NotLoadedError{edge: "resource"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -168,6 +190,16 @@ func (r *Role) QueryUsers() *UserQuery {
 // QueryDept queries the "dept" edge of the Role entity.
 func (r *Role) QueryDept() *DeptQuery {
 	return NewRoleClient(r.config).QueryDept(r)
+}
+
+// QueryAPI queries the "api" edge of the Role entity.
+func (r *Role) QueryAPI() *ApiResourcesQuery {
+	return NewRoleClient(r.config).QueryAPI(r)
+}
+
+// QueryResource queries the "resource" edge of the Role entity.
+func (r *Role) QueryResource() *ResourceQuery {
+	return NewRoleClient(r.config).QueryResource(r)
 }
 
 // Update returns a builder for updating this Role.

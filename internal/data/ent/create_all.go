@@ -2,6 +2,19 @@
 
 package ent
 
+// CreateAll creates a new ApiResources entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *ApiResourcesCreate) CreateAll(ApiResources *ApiResources) *ApiResourcesCreate {
+	builder := c
+	builder = builder.SetDescription(ApiResources.Description)
+	builder = builder.SetPath(ApiResources.Path)
+	builder = builder.SetMethod(ApiResources.Method)
+	builder = builder.SetModule(ApiResources.Module)
+	builder = builder.SetModuleDescription(ApiResources.ModuleDescription)
+	builder = builder.SetResourcesGroup(ApiResources.ResourcesGroup)
+	return builder
+}
+
 // CreateAll creates a new Dept entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *DeptCreate) CreateAll(Dept *Dept) *DeptCreate {
@@ -52,6 +65,18 @@ func (c *MenuCreate) CreateAll(Menu *Menu) *MenuCreate {
 	builder = builder.SetBadge(Menu.Badge)
 	builder = builder.SetBadgeType(Menu.BadgeType)
 	builder = builder.SetBadgeVariants(Menu.BadgeVariants)
+	return builder
+}
+
+// CreateAll creates a new Resource entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *ResourceCreate) CreateAll(Resource *Resource) *ResourceCreate {
+	builder := c
+	builder = builder.SetName(Resource.Name)
+	builder = builder.SetType(Resource.Type)
+	builder = builder.SetValue(Resource.Value)
+	builder = builder.SetMethod(Resource.Method)
+	builder = builder.SetDescription(Resource.Description)
 	return builder
 }
 

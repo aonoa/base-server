@@ -3,8 +3,10 @@
 package ent
 
 import (
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/menu"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/rule"
 	"base-server/internal/data/ent/user"
@@ -18,6 +20,25 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	apiresourcesMixin := schema.ApiResources{}.Mixin()
+	apiresourcesMixinFields0 := apiresourcesMixin[0].Fields()
+	_ = apiresourcesMixinFields0
+	apiresourcesFields := schema.ApiResources{}.Fields()
+	_ = apiresourcesFields
+	// apiresourcesDescCreateTime is the schema descriptor for create_time field.
+	apiresourcesDescCreateTime := apiresourcesMixinFields0[0].Descriptor()
+	// apiresources.DefaultCreateTime holds the default value on creation for the create_time field.
+	apiresources.DefaultCreateTime = apiresourcesDescCreateTime.Default.(func() time.Time)
+	// apiresourcesDescUpdateTime is the schema descriptor for update_time field.
+	apiresourcesDescUpdateTime := apiresourcesMixinFields0[1].Descriptor()
+	// apiresources.DefaultUpdateTime holds the default value on creation for the update_time field.
+	apiresources.DefaultUpdateTime = apiresourcesDescUpdateTime.Default.(func() time.Time)
+	// apiresources.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	apiresources.UpdateDefaultUpdateTime = apiresourcesDescUpdateTime.UpdateDefault.(func() time.Time)
+	// apiresourcesDescID is the schema descriptor for id field.
+	apiresourcesDescID := apiresourcesFields[0].Descriptor()
+	// apiresources.DefaultID holds the default value on creation for the id field.
+	apiresources.DefaultID = apiresourcesDescID.Default.(func() string)
 	deptMixin := schema.Dept{}.Mixin()
 	deptMixinFields0 := deptMixin[0].Fields()
 	_ = deptMixinFields0
@@ -152,6 +173,25 @@ func init() {
 	menuDescBadgeVariants := menuFields[32].Descriptor()
 	// menu.DefaultBadgeVariants holds the default value on creation for the badgeVariants field.
 	menu.DefaultBadgeVariants = menuDescBadgeVariants.Default.(string)
+	resourceMixin := schema.Resource{}.Mixin()
+	resourceMixinFields0 := resourceMixin[0].Fields()
+	_ = resourceMixinFields0
+	resourceFields := schema.Resource{}.Fields()
+	_ = resourceFields
+	// resourceDescCreateTime is the schema descriptor for create_time field.
+	resourceDescCreateTime := resourceMixinFields0[0].Descriptor()
+	// resource.DefaultCreateTime holds the default value on creation for the create_time field.
+	resource.DefaultCreateTime = resourceDescCreateTime.Default.(func() time.Time)
+	// resourceDescUpdateTime is the schema descriptor for update_time field.
+	resourceDescUpdateTime := resourceMixinFields0[1].Descriptor()
+	// resource.DefaultUpdateTime holds the default value on creation for the update_time field.
+	resource.DefaultUpdateTime = resourceDescUpdateTime.Default.(func() time.Time)
+	// resource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	resource.UpdateDefaultUpdateTime = resourceDescUpdateTime.UpdateDefault.(func() time.Time)
+	// resourceDescID is the schema descriptor for id field.
+	resourceDescID := resourceFields[0].Descriptor()
+	// resource.DefaultID holds the default value on creation for the id field.
+	resource.DefaultID = resourceDescID.Default.(func() string)
 	roleMixin := schema.Role{}.Mixin()
 	roleMixinFields0 := roleMixin[0].Fields()
 	_ = roleMixinFields0

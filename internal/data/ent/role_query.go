@@ -3,8 +3,10 @@
 package ent
 
 import (
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/predicate"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/user"
 	"context"
@@ -22,12 +24,15 @@ import (
 // RoleQuery is the builder for querying Role entities.
 type RoleQuery struct {
 	config
-	ctx        *QueryContext
-	order      []role.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Role
-	withUsers  *UserQuery
-	withDept   *DeptQuery
+	ctx          *QueryContext
+	order        []role.OrderOption
+	inters       []Interceptor
+	predicates   []predicate.Role
+	withUsers    *UserQuery
+	withDept     *DeptQuery
+	withAPI      *ApiResourcesQuery
+	withResource *ResourceQuery
+	modifiers    []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -101,6 +106,50 @@ func (rq *RoleQuery) QueryDept() *DeptQuery {
 			sqlgraph.From(role.Table, role.FieldID, selector),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, role.DeptTable, role.DeptColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAPI chains the current query on the "api" edge.
+func (rq *RoleQuery) QueryAPI() *ApiResourcesQuery {
+	query := (&ApiResourcesClient{config: rq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, selector),
+			sqlgraph.To(apiresources.Table, apiresources.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, role.APITable, role.APIPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryResource chains the current query on the "resource" edge.
+func (rq *RoleQuery) QueryResource() *ResourceQuery {
+	query := (&ResourceClient{config: rq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, selector),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, role.ResourceTable, role.ResourcePrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,16 +344,19 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		return nil
 	}
 	return &RoleQuery{
-		config:     rq.config,
-		ctx:        rq.ctx.Clone(),
-		order:      append([]role.OrderOption{}, rq.order...),
-		inters:     append([]Interceptor{}, rq.inters...),
-		predicates: append([]predicate.Role{}, rq.predicates...),
-		withUsers:  rq.withUsers.Clone(),
-		withDept:   rq.withDept.Clone(),
+		config:       rq.config,
+		ctx:          rq.ctx.Clone(),
+		order:        append([]role.OrderOption{}, rq.order...),
+		inters:       append([]Interceptor{}, rq.inters...),
+		predicates:   append([]predicate.Role{}, rq.predicates...),
+		withUsers:    rq.withUsers.Clone(),
+		withDept:     rq.withDept.Clone(),
+		withAPI:      rq.withAPI.Clone(),
+		withResource: rq.withResource.Clone(),
 		// clone intermediate query.
-		sql:  rq.sql.Clone(),
-		path: rq.path,
+		sql:       rq.sql.Clone(),
+		path:      rq.path,
+		modifiers: append([]func(*sql.Selector){}, rq.modifiers...),
 	}
 }
 
@@ -327,6 +379,28 @@ func (rq *RoleQuery) WithDept(opts ...func(*DeptQuery)) *RoleQuery {
 		opt(query)
 	}
 	rq.withDept = query
+	return rq
+}
+
+// WithAPI tells the query-builder to eager-load the nodes that are connected to
+// the "api" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithAPI(opts ...func(*ApiResourcesQuery)) *RoleQuery {
+	query := (&ApiResourcesClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withAPI = query
+	return rq
+}
+
+// WithResource tells the query-builder to eager-load the nodes that are connected to
+// the "resource" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithResource(opts ...func(*ResourceQuery)) *RoleQuery {
+	query := (&ResourceClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withResource = query
 	return rq
 }
 
@@ -408,9 +482,11 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	var (
 		nodes       = []*Role{}
 		_spec       = rq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [4]bool{
 			rq.withUsers != nil,
 			rq.withDept != nil,
+			rq.withAPI != nil,
+			rq.withResource != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -421,6 +497,9 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
+	}
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
 	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
@@ -442,6 +521,20 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 		if err := rq.loadDept(ctx, query, nodes,
 			func(n *Role) { n.Edges.Dept = []*Dept{} },
 			func(n *Role, e *Dept) { n.Edges.Dept = append(n.Edges.Dept, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := rq.withAPI; query != nil {
+		if err := rq.loadAPI(ctx, query, nodes,
+			func(n *Role) { n.Edges.API = []*ApiResources{} },
+			func(n *Role, e *ApiResources) { n.Edges.API = append(n.Edges.API, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := rq.withResource; query != nil {
+		if err := rq.loadResource(ctx, query, nodes,
+			func(n *Role) { n.Edges.Resource = []*Resource{} },
+			func(n *Role, e *Resource) { n.Edges.Resource = append(n.Edges.Resource, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -540,9 +633,134 @@ func (rq *RoleQuery) loadDept(ctx context.Context, query *DeptQuery, nodes []*Ro
 	}
 	return nil
 }
+func (rq *RoleQuery) loadAPI(ctx context.Context, query *ApiResourcesQuery, nodes []*Role, init func(*Role), assign func(*Role, *ApiResources)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int64]*Role)
+	nids := make(map[string]map[*Role]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(role.APITable)
+		s.Join(joinT).On(s.C(apiresources.FieldID), joinT.C(role.APIPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(role.APIPrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(role.APIPrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullInt64).Int64
+				inValue := values[1].(*sql.NullString).String
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*ApiResources](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "api" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (rq *RoleQuery) loadResource(ctx context.Context, query *ResourceQuery, nodes []*Role, init func(*Role), assign func(*Role, *Resource)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int64]*Role)
+	nids := make(map[string]map[*Role]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(role.ResourceTable)
+		s.Join(joinT).On(s.C(resource.FieldID), joinT.C(role.ResourcePrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(role.ResourcePrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(role.ResourcePrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullInt64).Int64
+				inValue := values[1].(*sql.NullString).String
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Resource](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "resource" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
 
 func (rq *RoleQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := rq.querySpec()
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
+	}
 	_spec.Node.Columns = rq.ctx.Fields
 	if len(rq.ctx.Fields) > 0 {
 		_spec.Unique = rq.ctx.Unique != nil && *rq.ctx.Unique
@@ -605,6 +823,9 @@ func (rq *RoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	if rq.ctx.Unique != nil && *rq.ctx.Unique {
 		selector.Distinct()
 	}
+	for _, m := range rq.modifiers {
+		m(selector)
+	}
 	for _, p := range rq.predicates {
 		p(selector)
 	}
@@ -620,6 +841,12 @@ func (rq *RoleQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (rq *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
+	rq.modifiers = append(rq.modifiers, modifiers...)
+	return rq.Select()
 }
 
 // RoleGroupBy is the group-by builder for Role entities.
@@ -710,4 +937,10 @@ func (rs *RoleSelect) sqlScan(ctx context.Context, root *RoleQuery, v any) error
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (rs *RoleSelect) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
+	rs.modifiers = append(rs.modifiers, modifiers...)
+	return rs
 }

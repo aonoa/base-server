@@ -98,6 +98,97 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
+    /basic-api/system/api:
+        post:
+            tags:
+                - Base
+            description: 添加api资源
+            operationId: Base_AddApi
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.ApiListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.ApiListItem'
+    /basic-api/system/api/list:
+        get:
+            tags:
+                - Base
+            description: |-
+                //////////////////////////////// api资源管理
+                 获取api资源
+            operationId: Base_GetApiList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetApiListByPageReply'
+    /basic-api/system/api/{id}:
+        put:
+            tags:
+                - Base
+            description: 修改api资源
+            operationId: Base_UpdateApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.ApiListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.ApiListItem'
+        delete:
+            tags:
+                - Base
+            description: 删除api资源
+            operationId: Base_DelApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/system/changePassword:
         post:
             tags:
@@ -312,6 +403,97 @@ paths:
                 - Base
             description: 删除菜单
             operationId: Base_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/system/resource:
+        post:
+            tags:
+                - Base
+            description: 添加resource资源
+            operationId: Base_AddResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.ResourceListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.ResourceListItem'
+    /basic-api/system/resource/list:
+        get:
+            tags:
+                - Base
+            description: |-
+                //////////////////////////////// resource 资源管理
+                 获取resource资源
+            operationId: Base_GetResourceList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetResourceListByPageReply'
+    /basic-api/system/resource/{id}:
+        put:
+            tags:
+                - Base
+            description: 修改resource资源
+            operationId: Base_UpdateResource
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.ResourceListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.ResourceListItem'
+        delete:
+            tags:
+                - Base
+            description: 删除resource资源
+            operationId: Base_DelResource
             parameters:
                 - name: id
                   in: path
@@ -577,6 +759,23 @@ paths:
                                 $ref: '#/components/schemas/api.base_api.v1.UploadResponse'
 components:
     schemas:
+        api.base_api.v1.ApiListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                path:
+                    type: string
+                method:
+                    type: string
+                description:
+                    type: string
+                module:
+                    type: string
+                moduleDescription:
+                    type: string
+                resourcesGroup:
+                    type: string
         api.base_api.v1.ChangePasswordRequest:
             type: object
             properties:
@@ -626,6 +825,15 @@ components:
                     type: array
                     items:
                         type: string
+        api.base_api.v1.GetApiListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.ApiListItem'
+                total:
+                    type: string
         api.base_api.v1.GetDeptListReply:
             type: object
             properties:
@@ -633,6 +841,15 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+                total:
+                    type: string
+        api.base_api.v1.GetResourceListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.ResourceListItem'
                 total:
                     type: string
         api.base_api.v1.GetRoleListByPageReply:
@@ -775,6 +992,21 @@ components:
                     type: array
                     items:
                         type: string
+        api.base_api.v1.ResourceListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                type:
+                    type: string
+                value:
+                    type: string
+                method:
+                    type: string
+                description:
+                    type: string
         api.base_api.v1.RoleInfo:
             type: object
             properties:

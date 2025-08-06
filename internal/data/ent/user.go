@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Comment that appears in both the schema and the generated code
+// 用户信息表
 type User struct {
 	config `json:"-"`
 	// ID of the ent.

@@ -8,6 +8,18 @@ import (
 	"fmt"
 )
 
+// The ApiResourcesFunc type is an adapter to allow the use of ordinary
+// function as ApiResources mutator.
+type ApiResourcesFunc func(context.Context, *ent.ApiResourcesMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ApiResourcesFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ApiResourcesMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ApiResourcesMutation", m)
+}
+
 // The DeptFunc type is an adapter to allow the use of ordinary
 // function as Dept mutator.
 type DeptFunc func(context.Context, *ent.DeptMutation) (ent.Value, error)
@@ -30,6 +42,18 @@ func (f MenuFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MenuMutation", m)
+}
+
+// The ResourceFunc type is an adapter to allow the use of ordinary
+// function as Resource mutator.
+type ResourceFunc func(context.Context, *ent.ResourceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ResourceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ResourceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ResourceMutation", m)
 }
 
 // The RoleFunc type is an adapter to allow the use of ordinary

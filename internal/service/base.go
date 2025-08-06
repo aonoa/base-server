@@ -1,7 +1,7 @@
 package service
 
 import (
-	"base-server/api/gen/go/base_api/v1"
+	pb "base-server/api/gen/go/base_api/v1"
 	"base-server/internal/biz"
 	"base-server/internal/conf"
 	"base-server/internal/tools"
@@ -23,7 +23,7 @@ import (
 )
 
 type BaseService struct {
-	v1.UnimplementedBaseServer
+	pb.UnimplementedBaseServer
 	uc  *biz.BaseUsecase
 	key string
 
@@ -45,7 +45,7 @@ func (s *BaseService) ReLoadPolicy(ctx context.Context, req *emptypb.Empty) (*em
 	return nil, s.uc.ReLoadPolicy(ctx)
 }
 
-func (s *BaseService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginReply, error) {
+func (s *BaseService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginReply, error) {
 	//req.Password = tools.UserPasswdEncrypt(req.Password, "")
 	// 检查是否有这个人
 	uid, err := s.uc.Login(ctx, req)
@@ -55,7 +55,7 @@ func (s *BaseService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 
 	return s.uc.GenerateToken(ctx, uid, s.key)
 }
-func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*v1.GetUserInfoReply, error) {
+func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.GetUserInfoReply, error) {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
 		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
@@ -64,24 +64,24 @@ func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*v1.
 	if err != nil {
 		return nil, err
 	}
-	var res v1.GetUserInfoReply
+	var res pb.GetUserInfoReply
 	copier.Copy(&res, user)
 	res.UserId = user.ID.String()
 	//res.HomePath = "Dashboard"
 	// /pages
 	return &res, nil
 }
-func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*v1.GetAccessCodesReply, error) {
+func (s *BaseService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*pb.GetAccessCodesReply, error) {
 	uid := tools.GetUserId(ctx)
 	user, err := s.uc.GetUserInfo(ctx, uid)
 	if err != nil {
 		return nil, err
 	}
-	var res v1.GetUserInfoReply
+	var res pb.GetUserInfoReply
 	copier.Copy(&res, user)
 	res.UserId = user.ID.String()
 	accessCodeList := strings.Split(user.Extension, ",")
-	return &v1.GetAccessCodesReply{AccessCodeList: accessCodeList}, nil
+	return &pb.GetAccessCodesReply{AccessCodeList: accessCodeList}, nil
 }
 func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	// 仅靠jwt无法实现退出功能
@@ -89,10 +89,10 @@ func (s *BaseService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.
 }
 
 // GetMenuList 获取路由菜单
-func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*v1.GetSysMenuListReply, error) { // *pb.GetMenuListReply
-	return s.uc.CreateMenuTree(ctx)
+func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.GetSysMenuListReply, error) { // *pb.GetMenuListReply
+	return s.uc.CreateRouteMenuTree(ctx)
 }
-func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*v1.LoginReply, error) {
+func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb.LoginReply, error) {
 	uid := ""
 	aud := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
@@ -104,33 +104,33 @@ func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*v1
 		return s.uc.GenerateToken(ctx, uid, s.key)
 	}
 
-	return &v1.LoginReply{}, nil
+	return &pb.LoginReply{}, nil
 }
 
 /////////////////////////
 
-func (s *BaseService) GetUserList(ctx context.Context, req *v1.GetUserParams) (*v1.GetUserListReply, error) {
+func (s *BaseService) GetUserList(ctx context.Context, req *pb.GetUserParams) (*pb.GetUserListReply, error) {
 	return s.uc.GetUserList(ctx, req)
 }
 
-func (s *BaseService) AddUser(ctx context.Context, req *v1.UserListItem) (*v1.UserListItem, error) {
+func (s *BaseService) AddUser(ctx context.Context, req *pb.UserListItem) (*pb.UserListItem, error) {
 	return s.uc.AddUser(ctx, req)
 }
 
-func (s *BaseService) UpdateUser(ctx context.Context, req *v1.UserListItem) (*v1.UserListItem, error) {
+func (s *BaseService) UpdateUser(ctx context.Context, req *pb.UserListItem) (*pb.UserListItem, error) {
 	err := s.uc.UpdateUser(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.UserListItem{}, nil
+	return &pb.UserListItem{}, nil
 }
 
-func (s *BaseService) DelUser(ctx context.Context, req *v1.DeleteUser) (*emptypb.Empty, error) {
+func (s *BaseService) DelUser(ctx context.Context, req *pb.DeleteUser) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelUser(ctx, req.Id)
 }
 
-func (s *BaseService) IsUserExist(ctx context.Context, req *v1.IsUserExistsRequest) (*v1.IsUserExistsReply, error) {
-	res := &v1.IsUserExistsReply{}
+func (s *BaseService) IsUserExist(ctx context.Context, req *pb.IsUserExistsRequest) (*pb.IsUserExistsReply, error) {
+	res := &pb.IsUserExistsReply{}
 	if ok, err := s.uc.IsUserExist(ctx, req); err == nil {
 		res.Data = ok
 	}
@@ -139,86 +139,86 @@ func (s *BaseService) IsUserExist(ctx context.Context, req *v1.IsUserExistsReque
 
 ////////////////////////////////////////
 
-func (s *BaseService) GetDeptList(ctx context.Context, req *emptypb.Empty) (*v1.GetDeptListReply, error) {
+func (s *BaseService) GetDeptList(ctx context.Context, req *emptypb.Empty) (*pb.GetDeptListReply, error) {
 	return s.uc.CreateDeptTree(ctx)
 }
-func (s *BaseService) AddDept(ctx context.Context, req *v1.DeptListItem) (*v1.DeptListItem, error) {
+func (s *BaseService) AddDept(ctx context.Context, req *pb.DeptListItem) (*pb.DeptListItem, error) {
 	err := s.uc.AddDept(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.DeptListItem{}, nil
+	return &pb.DeptListItem{}, nil
 }
-func (s *BaseService) UpdateDept(ctx context.Context, req *v1.DeptListItem) (*v1.DeptListItem, error) {
+func (s *BaseService) UpdateDept(ctx context.Context, req *pb.DeptListItem) (*pb.DeptListItem, error) {
 	err := s.uc.UpdateDept(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.DeptListItem{}, nil
+	return &pb.DeptListItem{}, nil
 }
-func (s *BaseService) DelDept(ctx context.Context, req *v1.DeleteDept) (*emptypb.Empty, error) {
+func (s *BaseService) DelDept(ctx context.Context, req *pb.DeleteDept) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelDept(ctx, req.Id)
 }
 
-func (s *BaseService) AddRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
+func (s *BaseService) AddRole(ctx context.Context, req *pb.RoleListItem) (*pb.RoleListItem, error) {
 	err := s.uc.AddRole(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.RoleListItem{}, nil
+	return &pb.RoleListItem{}, nil
 }
-func (s *BaseService) DelRole(ctx context.Context, req *v1.DeleteRole) (*emptypb.Empty, error) {
+func (s *BaseService) DelRole(ctx context.Context, req *pb.DeleteRole) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelRole(ctx, req.Id)
 }
-func (s *BaseService) UpdateRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
+func (s *BaseService) UpdateRole(ctx context.Context, req *pb.RoleListItem) (*pb.RoleListItem, error) {
 	err := s.uc.UpdateRole(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.RoleListItem{}, nil
+	return &pb.RoleListItem{}, nil
 }
 
 ///////////////////////////////////////////////////// 系统菜单管理
 
-func (s *BaseService) GetSysMenuList(ctx context.Context, req *v1.MenuParams) (*v1.GetSysMenuListReply, error) {
+func (s *BaseService) GetSysMenuList(ctx context.Context, req *pb.MenuParams) (*pb.GetSysMenuListReply, error) {
 	return s.uc.GetSysMenuList(ctx)
 }
 
-func (s *BaseService) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (*v1.IsMenuNameExistsReply, error) {
-	res := &v1.IsMenuNameExistsReply{}
+func (s *BaseService) IsMenuNameExists(ctx context.Context, req *pb.IsMenuNameExistsRequest) (*pb.IsMenuNameExistsReply, error) {
+	res := &pb.IsMenuNameExistsReply{}
 	if ok, err := s.uc.IsMenuNameExists(ctx, req); err == nil {
 		res.Data = ok
 	}
 	return res, nil
 }
-func (s *BaseService) IsMenuPathExists(ctx context.Context, req *v1.IsMenuPathExistsRequest) (*v1.IsMenuPathExistsReply, error) {
-	res := &v1.IsMenuPathExistsReply{}
+func (s *BaseService) IsMenuPathExists(ctx context.Context, req *pb.IsMenuPathExistsRequest) (*pb.IsMenuPathExistsReply, error) {
+	res := &pb.IsMenuPathExistsReply{}
 	if ok, err := s.uc.IsMenuPathExists(ctx, req); err == nil {
 		res.Data = ok
 	}
 	return res, nil
 }
-func (s *BaseService) CreateMenu(ctx context.Context, req *v1.SysMenuListItem) (*emptypb.Empty, error) {
+func (s *BaseService) CreateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
 	return s.uc.CreateMenu(ctx, req)
 }
-func (s *BaseService) UpdateMenu(ctx context.Context, req *v1.SysMenuListItem) (*emptypb.Empty, error) {
+func (s *BaseService) UpdateMenu(ctx context.Context, req *pb.SysMenuListItem) (*emptypb.Empty, error) {
 	return s.uc.UpdateMenu(ctx, req)
 }
-func (s *BaseService) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
+func (s *BaseService) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest) (*emptypb.Empty, error) {
 	return s.uc.DeleteMenu(ctx, req)
 }
 
 /////////////////////////////////////////////////////
 
-func (s *BaseService) GetRoleList(ctx context.Context, req *v1.RolePageParams) (*v1.GetRoleListByPageReply, error) {
+func (s *BaseService) GetRoleList(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
 	return s.uc.GetAllRoleList(ctx, req)
 }
 
-func (s *BaseService) SetRoleStatus(ctx context.Context, req *v1.SetRoleStatusRequest) (*emptypb.Empty, error) {
+func (s *BaseService) SetRoleStatus(ctx context.Context, req *pb.SetRoleStatusRequest) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }
 
-func (s *BaseService) ChangePassword(ctx context.Context, req *v1.ChangePasswordRequest) (*emptypb.Empty, error) {
+func (s *BaseService) ChangePassword(ctx context.Context, req *pb.ChangePasswordRequest) (*emptypb.Empty, error) {
 	uid := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
 		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
@@ -226,7 +226,7 @@ func (s *BaseService) ChangePassword(ctx context.Context, req *v1.ChangePassword
 	return &emptypb.Empty{}, s.uc.ChangePassword(ctx, uid, req.PasswordOld, req.PasswordNew)
 }
 
-func (s *BaseService) UploadFileHttp(ctx context.Context, reqFile *v1.File, opts ...grpc.CallOption) (*v1.UploadResponse, error) {
+func (s *BaseService) UploadFileHttp(ctx context.Context, reqFile *pb.File, opts ...grpc.CallOption) (*pb.UploadResponse, error) {
 	log.Infof("文件:%s,大小:%d", reqFile.FileName, reqFile.FileSize)
 	if reqFile.FileSize <= 0 {
 		reqFile.FileSize = int64(len(reqFile.File))
@@ -264,27 +264,29 @@ func (s *BaseService) UploadFileHttp(ctx context.Context, reqFile *v1.File, opts
 	// 文件写入成功
 	log.Infof("File '%s' saved successfully.", fileName)
 
-	return &v1.UploadResponse{
+	return &pb.UploadResponse{
 		FileInfoId: "456465",
 		FullUrl:    "aaa",
 		Url:        "https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640",
 	}, nil
 }
 
-func (s *BaseService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+//////////////////////////////////////////////////
+
+func (s *BaseService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*pb.GetWalkRouteReply, error) {
 	if s.RestServer == nil {
 		return nil, fmt.Errorf("RestServer is nil")
 	}
 
-	res := &v1.GetWalkRouteReply{
-		Items: []*v1.WalkRouteItem{},
+	res := &pb.GetWalkRouteReply{
+		Items: []*pb.WalkRouteItem{},
 	}
 
 	var count uint32 = 0
 	if err := s.RestServer.WalkRoute(func(info http.RouteInfo) error {
 		//log.Infof("Path[%s] Method[%s]", info.Path, info.Method)
 		count++
-		res.Items = append(res.Items, &v1.WalkRouteItem{
+		res.Items = append(res.Items, &pb.WalkRouteItem{
 			Url:    info.Path,
 			Method: info.Method,
 		})
@@ -295,4 +297,44 @@ func (s *BaseService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1
 	}
 
 	return res, nil
+}
+
+func (s *BaseService) GetApiList(ctx context.Context, req *pb.GetApiPageParams) (*pb.GetApiListByPageReply, error) {
+	return s.uc.GetApiList(ctx, req)
+}
+
+func (s *BaseService) AddApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
+	return s.uc.AddApi(ctx, req)
+}
+
+func (s *BaseService) UpdateApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
+	_, err := s.uc.UpdateApi(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ApiListItem{}, nil
+}
+
+func (s *BaseService) DelApi(ctx context.Context, req *pb.DeleteApi) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DelApi(ctx, req)
+}
+
+func (s *BaseService) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) (*pb.GetResourceListByPageReply, error) {
+	return s.uc.GetResourceList(ctx, req)
+}
+
+func (s *BaseService) AddResource(ctx context.Context, req *pb.ResourceListItem) (*pb.ResourceListItem, error) {
+	return s.uc.AddResource(ctx, req)
+}
+
+func (s *BaseService) UpdateResource(ctx context.Context, req *pb.ResourceListItem) (*pb.ResourceListItem, error) {
+	_, err := s.uc.UpdateResource(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ResourceListItem{}, nil
+}
+
+func (s *BaseService) DelResource(ctx context.Context, req *pb.DeleteResource) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DelResource(ctx, req)
 }

@@ -49,6 +49,14 @@ const (
 	Base_SetRoleStatus_FullMethodName    = "/api.base_api.v1.Base/SetRoleStatus"
 	Base_ChangePassword_FullMethodName   = "/api.base_api.v1.Base/ChangePassword"
 	Base_GetWalkRoute_FullMethodName     = "/api.base_api.v1.Base/GetWalkRoute"
+	Base_GetApiList_FullMethodName       = "/api.base_api.v1.Base/GetApiList"
+	Base_AddApi_FullMethodName           = "/api.base_api.v1.Base/AddApi"
+	Base_UpdateApi_FullMethodName        = "/api.base_api.v1.Base/UpdateApi"
+	Base_DelApi_FullMethodName           = "/api.base_api.v1.Base/DelApi"
+	Base_GetResourceList_FullMethodName  = "/api.base_api.v1.Base/GetResourceList"
+	Base_AddResource_FullMethodName      = "/api.base_api.v1.Base/AddResource"
+	Base_UpdateResource_FullMethodName   = "/api.base_api.v1.Base/UpdateResource"
+	Base_DelResource_FullMethodName      = "/api.base_api.v1.Base/DelResource"
 )
 
 // BaseClient is the client API for Base service.
@@ -117,6 +125,24 @@ type BaseClient interface {
 	// /////////////////////////////////////////////////
 	// 获取系统所有 api
 	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
+	// //////////////////////////////// api资源管理
+	// 获取api资源
+	GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error)
+	// 添加api资源
+	AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
+	// 修改api资源
+	UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
+	// 删除api资源
+	DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// //////////////////////////////// resource 资源管理
+	// 获取resource资源
+	GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error)
+	// 添加resource资源
+	AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
+	// 修改resource资源
+	UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
+	// 删除resource资源
+	DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type baseClient struct {
@@ -417,6 +443,86 @@ func (c *baseClient) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts .
 	return out, nil
 }
 
+func (c *baseClient) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetApiListByPageReply)
+	err := c.cc.Invoke(ctx, Base_GetApiList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ApiListItem)
+	err := c.cc.Invoke(ctx, Base_AddApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ApiListItem)
+	err := c.cc.Invoke(ctx, Base_UpdateApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_DelApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetResourceListByPageReply)
+	err := c.cc.Invoke(ctx, Base_GetResourceList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResourceListItem)
+	err := c.cc.Invoke(ctx, Base_AddResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResourceListItem)
+	err := c.cc.Invoke(ctx, Base_UpdateResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_DelResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServer is the server API for Base service.
 // All implementations must embed UnimplementedBaseServer
 // for forward compatibility.
@@ -483,6 +589,24 @@ type BaseServer interface {
 	// /////////////////////////////////////////////////
 	// 获取系统所有 api
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
+	// //////////////////////////////// api资源管理
+	// 获取api资源
+	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
+	// 添加api资源
+	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
+	// 修改api资源
+	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
+	// 删除api资源
+	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
+	// //////////////////////////////// resource 资源管理
+	// 获取resource资源
+	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
+	// 添加resource资源
+	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	// 修改resource资源
+	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	// 删除resource资源
+	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
 	mustEmbedUnimplementedBaseServer()
 }
 
@@ -579,6 +703,30 @@ func (UnimplementedBaseServer) ChangePassword(context.Context, *ChangePasswordRe
 }
 func (UnimplementedBaseServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
+}
+func (UnimplementedBaseServer) GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetApiList not implemented")
+}
+func (UnimplementedBaseServer) AddApi(context.Context, *ApiListItem) (*ApiListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddApi not implemented")
+}
+func (UnimplementedBaseServer) UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApi not implemented")
+}
+func (UnimplementedBaseServer) DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelApi not implemented")
+}
+func (UnimplementedBaseServer) GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResourceList not implemented")
+}
+func (UnimplementedBaseServer) AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddResource not implemented")
+}
+func (UnimplementedBaseServer) UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
+}
+func (UnimplementedBaseServer) DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelResource not implemented")
 }
 func (UnimplementedBaseServer) mustEmbedUnimplementedBaseServer() {}
 func (UnimplementedBaseServer) testEmbeddedByValue()              {}
@@ -1123,6 +1271,150 @@ func _Base_GetWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_GetApiList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetApiPageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetApiList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetApiList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetApiList(ctx, req.(*GetApiPageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_AddApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).AddApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_AddApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).AddApi(ctx, req.(*ApiListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_UpdateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).UpdateApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_UpdateApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).UpdateApi(ctx, req.(*ApiListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_DelApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteApi)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).DelApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_DelApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).DelApi(ctx, req.(*DeleteApi))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_GetResourceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourcePageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetResourceList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetResourceList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetResourceList(ctx, req.(*GetResourcePageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_AddResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourceListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).AddResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_AddResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).AddResource(ctx, req.(*ResourceListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourceListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).UpdateResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_UpdateResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).UpdateResource(ctx, req.(*ResourceListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_DelResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteResource)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).DelResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_DelResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).DelResource(ctx, req.(*DeleteResource))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Base_ServiceDesc is the grpc.ServiceDesc for Base service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1245,6 +1537,38 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWalkRoute",
 			Handler:    _Base_GetWalkRoute_Handler,
+		},
+		{
+			MethodName: "GetApiList",
+			Handler:    _Base_GetApiList_Handler,
+		},
+		{
+			MethodName: "AddApi",
+			Handler:    _Base_AddApi_Handler,
+		},
+		{
+			MethodName: "UpdateApi",
+			Handler:    _Base_UpdateApi_Handler,
+		},
+		{
+			MethodName: "DelApi",
+			Handler:    _Base_DelApi_Handler,
+		},
+		{
+			MethodName: "GetResourceList",
+			Handler:    _Base_GetResourceList_Handler,
+		},
+		{
+			MethodName: "AddResource",
+			Handler:    _Base_AddResource_Handler,
+		},
+		{
+			MethodName: "UpdateResource",
+			Handler:    _Base_UpdateResource_Handler,
+		},
+		{
+			MethodName: "DelResource",
+			Handler:    _Base_DelResource_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -12,10 +12,14 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// ApiResources is the client for interacting with the ApiResources builders.
+	ApiResources *ApiResourcesClient
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// Resource is the client for interacting with the Resource builders.
+	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// Rule is the client for interacting with the Rule builders.
@@ -153,8 +157,10 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.ApiResources = NewApiResourcesClient(tx.config)
 	tx.Dept = NewDeptClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.Rule = NewRuleClient(tx.config)
 	tx.User = NewUserClient(tx.config)
@@ -167,7 +173,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Dept.QueryXXX(), the query will be executed
+// applies a query, for example: ApiResources.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

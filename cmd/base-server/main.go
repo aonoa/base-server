@@ -5,6 +5,8 @@ import (
 	"base-server/internal/server"
 	"flag"
 	"fmt"
+	"github.com/go-kratos/kratos/v2/encoding/json"
+	"google.golang.org/protobuf/encoding/protojson"
 	"os"
 
 	"base-server/internal/conf"
@@ -34,6 +36,11 @@ var (
 
 func init() {
 	flag.StringVar(&flagconf, "conf", "./configs", "config path, eg: -conf config.yaml")
+	json.MarshalOptions = protojson.MarshalOptions{
+		EmitUnpopulated: true, //默认值不忽略
+		UseProtoNames:   true, //使用proto name返回http字段
+		//UseEnumNumbers: true, // 枚举输出数字而非字符串
+	}
 }
 
 func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, js *server.CronWorker) *kratos.App {

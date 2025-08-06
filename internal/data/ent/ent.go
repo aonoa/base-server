@@ -3,8 +3,10 @@
 package ent
 
 import (
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/menu"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/rule"
 	"base-server/internal/data/ent/user"
@@ -77,11 +79,13 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			dept.Table: dept.ValidColumn,
-			menu.Table: menu.ValidColumn,
-			role.Table: role.ValidColumn,
-			rule.Table: rule.ValidColumn,
-			user.Table: user.ValidColumn,
+			apiresources.Table: apiresources.ValidColumn,
+			dept.Table:         dept.ValidColumn,
+			menu.Table:         menu.ValidColumn,
+			resource.Table:     resource.ValidColumn,
+			role.Table:         role.ValidColumn,
+			rule.Table:         rule.ValidColumn,
+			user.Table:         user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

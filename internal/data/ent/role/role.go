@@ -32,6 +32,10 @@ const (
 	EdgeUsers = "users"
 	// EdgeDept holds the string denoting the dept edge name in mutations.
 	EdgeDept = "dept"
+	// EdgeAPI holds the string denoting the api edge name in mutations.
+	EdgeAPI = "api"
+	// EdgeResource holds the string denoting the resource edge name in mutations.
+	EdgeResource = "resource"
 	// Table holds the table name of the role in the database.
 	Table = "roles"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
@@ -46,6 +50,16 @@ const (
 	DeptInverseTable = "depts"
 	// DeptColumn is the table column denoting the dept relation/edge.
 	DeptColumn = "dept_roles"
+	// APITable is the table that holds the api relation/edge. The primary key declared below.
+	APITable = "api_resources_roles"
+	// APIInverseTable is the table name for the ApiResources entity.
+	// It exists in this package in order to avoid circular dependency with the "apiresources" package.
+	APIInverseTable = "api_resources"
+	// ResourceTable is the table that holds the resource relation/edge. The primary key declared below.
+	ResourceTable = "resource_roles"
+	// ResourceInverseTable is the table name for the Resource entity.
+	// It exists in this package in order to avoid circular dependency with the "resource" package.
+	ResourceInverseTable = "resources"
 )
 
 // Columns holds all SQL columns for role fields.
@@ -64,6 +78,12 @@ var (
 	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
 	// primary key for the users relation (M2M).
 	UsersPrimaryKey = []string{"user_id", "role_id"}
+	// APIPrimaryKey and APIColumn2 are the table columns denoting the
+	// primary key for the api relation (M2M).
+	APIPrimaryKey = []string{"api_resources_id", "role_id"}
+	// ResourcePrimaryKey and ResourceColumn2 are the table columns denoting the
+	// primary key for the resource relation (M2M).
+	ResourcePrimaryKey = []string{"resource_id", "role_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -150,6 +170,34 @@ func ByDept(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newDeptStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByAPICount orders the results by api count.
+func ByAPICount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAPIStep(), opts...)
+	}
+}
+
+// ByAPI orders the results by api terms.
+func ByAPI(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAPIStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByResourceCount orders the results by resource count.
+func ByResourceCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newResourceStep(), opts...)
+	}
+}
+
+// ByResource orders the results by resource terms.
+func ByResource(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newResourceStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newUsersStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -162,5 +210,19 @@ func newDeptStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(DeptInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, DeptTable, DeptColumn),
+	)
+}
+func newAPIStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(APIInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, APITable, APIPrimaryKey...),
+	)
+}
+func newResourceStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ResourceInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, ResourceTable, ResourcePrimaryKey...),
 	)
 }

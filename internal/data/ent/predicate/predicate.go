@@ -6,11 +6,17 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// ApiResources is the predicate function for apiresources builders.
+type ApiResources func(*sql.Selector)
+
 // Dept is the predicate function for dept builders.
 type Dept func(*sql.Selector)
 
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
+
+// Resource is the predicate function for resource builders.
+type Resource func(*sql.Selector)
 
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)

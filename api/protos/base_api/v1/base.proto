@@ -247,6 +247,64 @@ service Base {
 			get: "/basic-api/system/getWalkRoute",
 		};
 	}
+
+	////////////////////////////////// api资源管理
+	// 获取api资源
+	rpc GetApiList (GetApiPageParams) returns (GetApiListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/api/list"
+		};
+	}
+
+	// 添加api资源
+	rpc AddApi (ApiListItem) returns (ApiListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/api"
+			body: "*"
+		};
+	}
+	// 修改api资源
+	rpc UpdateApi (ApiListItem) returns (ApiListItem) {
+		option (google.api.http) = {
+			put: "/basic-api/system/api/{id}"
+			body: "*"
+		};
+	}
+	// 删除api资源
+	rpc DelApi (DeleteApi) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/api/{id}"
+		};
+	}
+
+	////////////////////////////////// resource 资源管理
+	// 获取resource资源
+	rpc GetResourceList (GetResourcePageParams) returns (GetResourceListByPageReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/resource/list"
+		};
+	}
+
+	// 添加resource资源
+	rpc AddResource (ResourceListItem) returns (ResourceListItem) {
+		option (google.api.http) = {
+			post: "/basic-api/system/resource"
+			body: "*"
+		};
+	}
+	// 修改resource资源
+	rpc UpdateResource (ResourceListItem) returns (ResourceListItem) {
+		option (google.api.http) = {
+			put: "/basic-api/system/resource/{id}"
+			body: "*"
+		};
+	}
+	// 删除resource资源
+	rpc DelResource (DeleteResource) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/system/resource/{id}"
+		};
+	}
 }
 
 
@@ -287,7 +345,7 @@ message GetAccessCodesReply {
 }
 
 message GetMenuListReply {
-	repeated RouteItem menuList = 1;
+	repeated RouteItem items = 1;
 }
 
 
@@ -428,7 +486,7 @@ message Meta {
 message SysMenuListItem {
 	int64 id = 1;					// 菜单ID
 	string component = 2;		// 组件
-	int32 status = 3;				// 状态
+	optional int32 status = 3;				// 状态(这里使用optional是因为默认为0不返回)
 	string authCode = 4;	// 后端权限标识
 
 	string name = 5;					// 菜单名称
@@ -529,5 +587,56 @@ message WalkRouteItem {
 
 message GetWalkRouteReply {
 	repeated WalkRouteItem items = 1;
+}
+
+message GetApiPageParams {
+	int64 page = 1;
+	int64 pageSize = 2;
+	string path = 3;	// api 路径
+	string description = 4; // api 描述
+}
+
+message ApiListItem {
+	string id = 1;
+	string path = 2;	// api 路径
+	string method = 3;	// api 方法（GET|PUT|POST|DELETE）
+	string description = 4; // api 描述
+	string module = 5; // api 所属模块
+	string module_description = 6; // 模块描述
+	string resources_group = 7; // 资源组
+}
+
+message GetApiListByPageReply {
+	repeated ApiListItem items = 1;
+	int64 total = 2;
+}
+
+message DeleteApi {
+	string id = 1;
+}
+
+message GetResourcePageParams {
+	int64 page = 1;
+	int64 pageSize = 2;
+	string type = 3;	// 资源类型
+	string description = 4; // api 描述
+}
+
+message ResourceListItem {
+	string id = 1;
+	string name = 2;	// 资源名称
+	string type = 3; // 资源类型
+	string value = 4; // 资源值
+	string method = 5;	// 对资源的操作
+	string description = 6; // 资源的描述
+}
+
+message GetResourceListByPageReply {
+	repeated ResourceListItem items = 1;
+	int64 total = 2;
+}
+
+message DeleteResource {
+	string id = 1;
 }
 

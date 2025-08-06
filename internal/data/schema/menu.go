@@ -16,6 +16,7 @@ type Menu struct {
 func (Menu) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
+		schema.Comment("菜单表"),
 	}
 }
 

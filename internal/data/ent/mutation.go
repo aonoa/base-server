@@ -3,9 +3,11 @@
 package ent
 
 import (
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/predicate"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/rule"
 	"base-server/internal/data/ent/user"
@@ -29,12 +31,817 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeDept = "Dept"
-	TypeMenu = "Menu"
-	TypeRole = "Role"
-	TypeRule = "Rule"
-	TypeUser = "User"
+	TypeApiResources = "ApiResources"
+	TypeDept         = "Dept"
+	TypeMenu         = "Menu"
+	TypeResource     = "Resource"
+	TypeRole         = "Role"
+	TypeRule         = "Rule"
+	TypeUser         = "User"
 )
+
+// ApiResourcesMutation represents an operation that mutates the ApiResources nodes in the graph.
+type ApiResourcesMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *string
+	create_time        *time.Time
+	update_time        *time.Time
+	description        *string
+	_path              *string
+	method             *string
+	module             *string
+	module_description *string
+	resources_group    *string
+	clearedFields      map[string]struct{}
+	roles              map[int64]struct{}
+	removedroles       map[int64]struct{}
+	clearedroles       bool
+	done               bool
+	oldValue           func(context.Context) (*ApiResources, error)
+	predicates         []predicate.ApiResources
+}
+
+var _ ent.Mutation = (*ApiResourcesMutation)(nil)
+
+// apiresourcesOption allows management of the mutation configuration using functional options.
+type apiresourcesOption func(*ApiResourcesMutation)
+
+// newApiResourcesMutation creates new mutation for the ApiResources entity.
+func newApiResourcesMutation(c config, op Op, opts ...apiresourcesOption) *ApiResourcesMutation {
+	m := &ApiResourcesMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeApiResources,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withApiResourcesID sets the ID field of the mutation.
+func withApiResourcesID(id string) apiresourcesOption {
+	return func(m *ApiResourcesMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ApiResources
+		)
+		m.oldValue = func(ctx context.Context) (*ApiResources, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ApiResources.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withApiResources sets the old ApiResources of the mutation.
+func withApiResources(node *ApiResources) apiresourcesOption {
+	return func(m *ApiResourcesMutation) {
+		m.oldValue = func(context.Context) (*ApiResources, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ApiResourcesMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ApiResourcesMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ApiResources entities.
+func (m *ApiResourcesMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ApiResourcesMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ApiResourcesMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ApiResources.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *ApiResourcesMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *ApiResourcesMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *ApiResourcesMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *ApiResourcesMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *ApiResourcesMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *ApiResourcesMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *ApiResourcesMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ApiResourcesMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ApiResourcesMutation) ResetDescription() {
+	m.description = nil
+}
+
+// SetPath sets the "path" field.
+func (m *ApiResourcesMutation) SetPath(s string) {
+	m._path = &s
+}
+
+// Path returns the value of the "path" field in the mutation.
+func (m *ApiResourcesMutation) Path() (r string, exists bool) {
+	v := m._path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPath returns the old "path" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldPath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
+	}
+	return oldValue.Path, nil
+}
+
+// ResetPath resets all changes to the "path" field.
+func (m *ApiResourcesMutation) ResetPath() {
+	m._path = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *ApiResourcesMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *ApiResourcesMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *ApiResourcesMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetModule sets the "module" field.
+func (m *ApiResourcesMutation) SetModule(s string) {
+	m.module = &s
+}
+
+// Module returns the value of the "module" field in the mutation.
+func (m *ApiResourcesMutation) Module() (r string, exists bool) {
+	v := m.module
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModule returns the old "module" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldModule(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModule is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModule requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModule: %w", err)
+	}
+	return oldValue.Module, nil
+}
+
+// ResetModule resets all changes to the "module" field.
+func (m *ApiResourcesMutation) ResetModule() {
+	m.module = nil
+}
+
+// SetModuleDescription sets the "module_description" field.
+func (m *ApiResourcesMutation) SetModuleDescription(s string) {
+	m.module_description = &s
+}
+
+// ModuleDescription returns the value of the "module_description" field in the mutation.
+func (m *ApiResourcesMutation) ModuleDescription() (r string, exists bool) {
+	v := m.module_description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldModuleDescription returns the old "module_description" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldModuleDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldModuleDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldModuleDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldModuleDescription: %w", err)
+	}
+	return oldValue.ModuleDescription, nil
+}
+
+// ResetModuleDescription resets all changes to the "module_description" field.
+func (m *ApiResourcesMutation) ResetModuleDescription() {
+	m.module_description = nil
+}
+
+// SetResourcesGroup sets the "resources_group" field.
+func (m *ApiResourcesMutation) SetResourcesGroup(s string) {
+	m.resources_group = &s
+}
+
+// ResourcesGroup returns the value of the "resources_group" field in the mutation.
+func (m *ApiResourcesMutation) ResourcesGroup() (r string, exists bool) {
+	v := m.resources_group
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResourcesGroup returns the old "resources_group" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldResourcesGroup(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldResourcesGroup is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldResourcesGroup requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResourcesGroup: %w", err)
+	}
+	return oldValue.ResourcesGroup, nil
+}
+
+// ResetResourcesGroup resets all changes to the "resources_group" field.
+func (m *ApiResourcesMutation) ResetResourcesGroup() {
+	m.resources_group = nil
+}
+
+// AddRoleIDs adds the "roles" edge to the Role entity by ids.
+func (m *ApiResourcesMutation) AddRoleIDs(ids ...int64) {
+	if m.roles == nil {
+		m.roles = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.roles[ids[i]] = struct{}{}
+	}
+}
+
+// ClearRoles clears the "roles" edge to the Role entity.
+func (m *ApiResourcesMutation) ClearRoles() {
+	m.clearedroles = true
+}
+
+// RolesCleared reports if the "roles" edge to the Role entity was cleared.
+func (m *ApiResourcesMutation) RolesCleared() bool {
+	return m.clearedroles
+}
+
+// RemoveRoleIDs removes the "roles" edge to the Role entity by IDs.
+func (m *ApiResourcesMutation) RemoveRoleIDs(ids ...int64) {
+	if m.removedroles == nil {
+		m.removedroles = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.roles, ids[i])
+		m.removedroles[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoles returns the removed IDs of the "roles" edge to the Role entity.
+func (m *ApiResourcesMutation) RemovedRolesIDs() (ids []int64) {
+	for id := range m.removedroles {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RolesIDs returns the "roles" edge IDs in the mutation.
+func (m *ApiResourcesMutation) RolesIDs() (ids []int64) {
+	for id := range m.roles {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoles resets all changes to the "roles" edge.
+func (m *ApiResourcesMutation) ResetRoles() {
+	m.roles = nil
+	m.clearedroles = false
+	m.removedroles = nil
+}
+
+// Where appends a list predicates to the ApiResourcesMutation builder.
+func (m *ApiResourcesMutation) Where(ps ...predicate.ApiResources) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ApiResourcesMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ApiResourcesMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ApiResources, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ApiResourcesMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ApiResourcesMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ApiResources).
+func (m *ApiResourcesMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ApiResourcesMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.create_time != nil {
+		fields = append(fields, apiresources.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, apiresources.FieldUpdateTime)
+	}
+	if m.description != nil {
+		fields = append(fields, apiresources.FieldDescription)
+	}
+	if m._path != nil {
+		fields = append(fields, apiresources.FieldPath)
+	}
+	if m.method != nil {
+		fields = append(fields, apiresources.FieldMethod)
+	}
+	if m.module != nil {
+		fields = append(fields, apiresources.FieldModule)
+	}
+	if m.module_description != nil {
+		fields = append(fields, apiresources.FieldModuleDescription)
+	}
+	if m.resources_group != nil {
+		fields = append(fields, apiresources.FieldResourcesGroup)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ApiResourcesMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case apiresources.FieldCreateTime:
+		return m.CreateTime()
+	case apiresources.FieldUpdateTime:
+		return m.UpdateTime()
+	case apiresources.FieldDescription:
+		return m.Description()
+	case apiresources.FieldPath:
+		return m.Path()
+	case apiresources.FieldMethod:
+		return m.Method()
+	case apiresources.FieldModule:
+		return m.Module()
+	case apiresources.FieldModuleDescription:
+		return m.ModuleDescription()
+	case apiresources.FieldResourcesGroup:
+		return m.ResourcesGroup()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ApiResourcesMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case apiresources.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case apiresources.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case apiresources.FieldDescription:
+		return m.OldDescription(ctx)
+	case apiresources.FieldPath:
+		return m.OldPath(ctx)
+	case apiresources.FieldMethod:
+		return m.OldMethod(ctx)
+	case apiresources.FieldModule:
+		return m.OldModule(ctx)
+	case apiresources.FieldModuleDescription:
+		return m.OldModuleDescription(ctx)
+	case apiresources.FieldResourcesGroup:
+		return m.OldResourcesGroup(ctx)
+	}
+	return nil, fmt.Errorf("unknown ApiResources field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiResourcesMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case apiresources.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case apiresources.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case apiresources.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case apiresources.FieldPath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPath(v)
+		return nil
+	case apiresources.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case apiresources.FieldModule:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModule(v)
+		return nil
+	case apiresources.FieldModuleDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetModuleDescription(v)
+		return nil
+	case apiresources.FieldResourcesGroup:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResourcesGroup(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ApiResources field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ApiResourcesMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ApiResourcesMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ApiResourcesMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ApiResources numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ApiResourcesMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ApiResourcesMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ApiResourcesMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ApiResources nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ApiResourcesMutation) ResetField(name string) error {
+	switch name {
+	case apiresources.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case apiresources.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case apiresources.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case apiresources.FieldPath:
+		m.ResetPath()
+		return nil
+	case apiresources.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case apiresources.FieldModule:
+		m.ResetModule()
+		return nil
+	case apiresources.FieldModuleDescription:
+		m.ResetModuleDescription()
+		return nil
+	case apiresources.FieldResourcesGroup:
+		m.ResetResourcesGroup()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiResources field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ApiResourcesMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roles != nil {
+		edges = append(edges, apiresources.EdgeRoles)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ApiResourcesMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case apiresources.EdgeRoles:
+		ids := make([]ent.Value, 0, len(m.roles))
+		for id := range m.roles {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ApiResourcesMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedroles != nil {
+		edges = append(edges, apiresources.EdgeRoles)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ApiResourcesMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case apiresources.EdgeRoles:
+		ids := make([]ent.Value, 0, len(m.removedroles))
+		for id := range m.removedroles {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ApiResourcesMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedroles {
+		edges = append(edges, apiresources.EdgeRoles)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ApiResourcesMutation) EdgeCleared(name string) bool {
+	switch name {
+	case apiresources.EdgeRoles:
+		return m.clearedroles
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ApiResourcesMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ApiResources unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ApiResourcesMutation) ResetEdge(name string) error {
+	switch name {
+	case apiresources.EdgeRoles:
+		m.ResetRoles()
+		return nil
+	}
+	return fmt.Errorf("unknown ApiResources edge %s", name)
+}
 
 // DeptMutation represents an operation that mutates the Dept nodes in the graph.
 type DeptMutation struct {
@@ -3434,30 +4241,785 @@ func (m *MenuMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Menu edge %s", name)
 }
 
-// RoleMutation represents an operation that mutates the Role nodes in the graph.
-type RoleMutation struct {
+// ResourceMutation represents an operation that mutates the Resource nodes in the graph.
+type ResourceMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int64
+	id            *string
 	create_time   *time.Time
 	update_time   *time.Time
 	name          *string
+	_type         *string
 	value         *string
-	status        *bool
-	desc          *string
-	menus         *[]int32
-	appendmenus   []int32
+	method        *string
+	description   *string
 	clearedFields map[string]struct{}
-	users         map[uuid.UUID]struct{}
-	removedusers  map[uuid.UUID]struct{}
-	clearedusers  bool
-	dept          map[int64]struct{}
-	removeddept   map[int64]struct{}
-	cleareddept   bool
+	roles         map[int64]struct{}
+	removedroles  map[int64]struct{}
+	clearedroles  bool
 	done          bool
-	oldValue      func(context.Context) (*Role, error)
-	predicates    []predicate.Role
+	oldValue      func(context.Context) (*Resource, error)
+	predicates    []predicate.Resource
+}
+
+var _ ent.Mutation = (*ResourceMutation)(nil)
+
+// resourceOption allows management of the mutation configuration using functional options.
+type resourceOption func(*ResourceMutation)
+
+// newResourceMutation creates new mutation for the Resource entity.
+func newResourceMutation(c config, op Op, opts ...resourceOption) *ResourceMutation {
+	m := &ResourceMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeResource,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withResourceID sets the ID field of the mutation.
+func withResourceID(id string) resourceOption {
+	return func(m *ResourceMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Resource
+		)
+		m.oldValue = func(ctx context.Context) (*Resource, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Resource.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withResource sets the old Resource of the mutation.
+func withResource(node *Resource) resourceOption {
+	return func(m *ResourceMutation) {
+		m.oldValue = func(context.Context) (*Resource, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ResourceMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ResourceMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Resource entities.
+func (m *ResourceMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ResourceMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ResourceMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Resource.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *ResourceMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *ResourceMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *ResourceMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *ResourceMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *ResourceMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *ResourceMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetName sets the "name" field.
+func (m *ResourceMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *ResourceMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *ResourceMutation) ResetName() {
+	m.name = nil
+}
+
+// SetType sets the "type" field.
+func (m *ResourceMutation) SetType(s string) {
+	m._type = &s
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *ResourceMutation) GetType() (r string, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *ResourceMutation) ResetType() {
+	m._type = nil
+}
+
+// SetValue sets the "value" field.
+func (m *ResourceMutation) SetValue(s string) {
+	m.value = &s
+}
+
+// Value returns the value of the "value" field in the mutation.
+func (m *ResourceMutation) Value() (r string, exists bool) {
+	v := m.value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldValue returns the old "value" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldValue(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldValue: %w", err)
+	}
+	return oldValue.Value, nil
+}
+
+// ResetValue resets all changes to the "value" field.
+func (m *ResourceMutation) ResetValue() {
+	m.value = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *ResourceMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *ResourceMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *ResourceMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *ResourceMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ResourceMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ResourceMutation) ResetDescription() {
+	m.description = nil
+}
+
+// AddRoleIDs adds the "roles" edge to the Role entity by ids.
+func (m *ResourceMutation) AddRoleIDs(ids ...int64) {
+	if m.roles == nil {
+		m.roles = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.roles[ids[i]] = struct{}{}
+	}
+}
+
+// ClearRoles clears the "roles" edge to the Role entity.
+func (m *ResourceMutation) ClearRoles() {
+	m.clearedroles = true
+}
+
+// RolesCleared reports if the "roles" edge to the Role entity was cleared.
+func (m *ResourceMutation) RolesCleared() bool {
+	return m.clearedroles
+}
+
+// RemoveRoleIDs removes the "roles" edge to the Role entity by IDs.
+func (m *ResourceMutation) RemoveRoleIDs(ids ...int64) {
+	if m.removedroles == nil {
+		m.removedroles = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.roles, ids[i])
+		m.removedroles[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoles returns the removed IDs of the "roles" edge to the Role entity.
+func (m *ResourceMutation) RemovedRolesIDs() (ids []int64) {
+	for id := range m.removedroles {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RolesIDs returns the "roles" edge IDs in the mutation.
+func (m *ResourceMutation) RolesIDs() (ids []int64) {
+	for id := range m.roles {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoles resets all changes to the "roles" edge.
+func (m *ResourceMutation) ResetRoles() {
+	m.roles = nil
+	m.clearedroles = false
+	m.removedroles = nil
+}
+
+// Where appends a list predicates to the ResourceMutation builder.
+func (m *ResourceMutation) Where(ps ...predicate.Resource) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ResourceMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ResourceMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Resource, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ResourceMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ResourceMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Resource).
+func (m *ResourceMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ResourceMutation) Fields() []string {
+	fields := make([]string, 0, 7)
+	if m.create_time != nil {
+		fields = append(fields, resource.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, resource.FieldUpdateTime)
+	}
+	if m.name != nil {
+		fields = append(fields, resource.FieldName)
+	}
+	if m._type != nil {
+		fields = append(fields, resource.FieldType)
+	}
+	if m.value != nil {
+		fields = append(fields, resource.FieldValue)
+	}
+	if m.method != nil {
+		fields = append(fields, resource.FieldMethod)
+	}
+	if m.description != nil {
+		fields = append(fields, resource.FieldDescription)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ResourceMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case resource.FieldCreateTime:
+		return m.CreateTime()
+	case resource.FieldUpdateTime:
+		return m.UpdateTime()
+	case resource.FieldName:
+		return m.Name()
+	case resource.FieldType:
+		return m.GetType()
+	case resource.FieldValue:
+		return m.Value()
+	case resource.FieldMethod:
+		return m.Method()
+	case resource.FieldDescription:
+		return m.Description()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ResourceMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case resource.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case resource.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case resource.FieldName:
+		return m.OldName(ctx)
+	case resource.FieldType:
+		return m.OldType(ctx)
+	case resource.FieldValue:
+		return m.OldValue(ctx)
+	case resource.FieldMethod:
+		return m.OldMethod(ctx)
+	case resource.FieldDescription:
+		return m.OldDescription(ctx)
+	}
+	return nil, fmt.Errorf("unknown Resource field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ResourceMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case resource.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case resource.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case resource.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case resource.FieldType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case resource.FieldValue:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetValue(v)
+		return nil
+	case resource.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case resource.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Resource field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ResourceMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ResourceMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Resource numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ResourceMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ResourceMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ResourceMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Resource nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ResourceMutation) ResetField(name string) error {
+	switch name {
+	case resource.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case resource.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case resource.FieldName:
+		m.ResetName()
+		return nil
+	case resource.FieldType:
+		m.ResetType()
+		return nil
+	case resource.FieldValue:
+		m.ResetValue()
+		return nil
+	case resource.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case resource.FieldDescription:
+		m.ResetDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown Resource field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ResourceMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roles != nil {
+		edges = append(edges, resource.EdgeRoles)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case resource.EdgeRoles:
+		ids := make([]ent.Value, 0, len(m.roles))
+		for id := range m.roles {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ResourceMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedroles != nil {
+		edges = append(edges, resource.EdgeRoles)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case resource.EdgeRoles:
+		ids := make([]ent.Value, 0, len(m.removedroles))
+		for id := range m.removedroles {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ResourceMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedroles {
+		edges = append(edges, resource.EdgeRoles)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ResourceMutation) EdgeCleared(name string) bool {
+	switch name {
+	case resource.EdgeRoles:
+		return m.clearedroles
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ResourceMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Resource unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ResourceMutation) ResetEdge(name string) error {
+	switch name {
+	case resource.EdgeRoles:
+		m.ResetRoles()
+		return nil
+	}
+	return fmt.Errorf("unknown Resource edge %s", name)
+}
+
+// RoleMutation represents an operation that mutates the Role nodes in the graph.
+type RoleMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int64
+	create_time     *time.Time
+	update_time     *time.Time
+	name            *string
+	value           *string
+	status          *bool
+	desc            *string
+	menus           *[]int32
+	appendmenus     []int32
+	clearedFields   map[string]struct{}
+	users           map[uuid.UUID]struct{}
+	removedusers    map[uuid.UUID]struct{}
+	clearedusers    bool
+	dept            map[int64]struct{}
+	removeddept     map[int64]struct{}
+	cleareddept     bool
+	api             map[string]struct{}
+	removedapi      map[string]struct{}
+	clearedapi      bool
+	resource        map[string]struct{}
+	removedresource map[string]struct{}
+	clearedresource bool
+	done            bool
+	oldValue        func(context.Context) (*Role, error)
+	predicates      []predicate.Role
 }
 
 var _ ent.Mutation = (*RoleMutation)(nil)
@@ -3939,6 +5501,114 @@ func (m *RoleMutation) ResetDept() {
 	m.removeddept = nil
 }
 
+// AddAPIIDs adds the "api" edge to the ApiResources entity by ids.
+func (m *RoleMutation) AddAPIIDs(ids ...string) {
+	if m.api == nil {
+		m.api = make(map[string]struct{})
+	}
+	for i := range ids {
+		m.api[ids[i]] = struct{}{}
+	}
+}
+
+// ClearAPI clears the "api" edge to the ApiResources entity.
+func (m *RoleMutation) ClearAPI() {
+	m.clearedapi = true
+}
+
+// APICleared reports if the "api" edge to the ApiResources entity was cleared.
+func (m *RoleMutation) APICleared() bool {
+	return m.clearedapi
+}
+
+// RemoveAPIIDs removes the "api" edge to the ApiResources entity by IDs.
+func (m *RoleMutation) RemoveAPIIDs(ids ...string) {
+	if m.removedapi == nil {
+		m.removedapi = make(map[string]struct{})
+	}
+	for i := range ids {
+		delete(m.api, ids[i])
+		m.removedapi[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedAPI returns the removed IDs of the "api" edge to the ApiResources entity.
+func (m *RoleMutation) RemovedAPIIDs() (ids []string) {
+	for id := range m.removedapi {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// APIIDs returns the "api" edge IDs in the mutation.
+func (m *RoleMutation) APIIDs() (ids []string) {
+	for id := range m.api {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetAPI resets all changes to the "api" edge.
+func (m *RoleMutation) ResetAPI() {
+	m.api = nil
+	m.clearedapi = false
+	m.removedapi = nil
+}
+
+// AddResourceIDs adds the "resource" edge to the Resource entity by ids.
+func (m *RoleMutation) AddResourceIDs(ids ...string) {
+	if m.resource == nil {
+		m.resource = make(map[string]struct{})
+	}
+	for i := range ids {
+		m.resource[ids[i]] = struct{}{}
+	}
+}
+
+// ClearResource clears the "resource" edge to the Resource entity.
+func (m *RoleMutation) ClearResource() {
+	m.clearedresource = true
+}
+
+// ResourceCleared reports if the "resource" edge to the Resource entity was cleared.
+func (m *RoleMutation) ResourceCleared() bool {
+	return m.clearedresource
+}
+
+// RemoveResourceIDs removes the "resource" edge to the Resource entity by IDs.
+func (m *RoleMutation) RemoveResourceIDs(ids ...string) {
+	if m.removedresource == nil {
+		m.removedresource = make(map[string]struct{})
+	}
+	for i := range ids {
+		delete(m.resource, ids[i])
+		m.removedresource[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedResource returns the removed IDs of the "resource" edge to the Resource entity.
+func (m *RoleMutation) RemovedResourceIDs() (ids []string) {
+	for id := range m.removedresource {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResourceIDs returns the "resource" edge IDs in the mutation.
+func (m *RoleMutation) ResourceIDs() (ids []string) {
+	for id := range m.resource {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetResource resets all changes to the "resource" edge.
+func (m *RoleMutation) ResetResource() {
+	m.resource = nil
+	m.clearedresource = false
+	m.removedresource = nil
+}
+
 // Where appends a list predicates to the RoleMutation builder.
 func (m *RoleMutation) Where(ps ...predicate.Role) {
 	m.predicates = append(m.predicates, ps...)
@@ -4174,12 +5844,18 @@ func (m *RoleMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *RoleMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
 	if m.users != nil {
 		edges = append(edges, role.EdgeUsers)
 	}
 	if m.dept != nil {
 		edges = append(edges, role.EdgeDept)
+	}
+	if m.api != nil {
+		edges = append(edges, role.EdgeAPI)
+	}
+	if m.resource != nil {
+		edges = append(edges, role.EdgeResource)
 	}
 	return edges
 }
@@ -4200,18 +5876,36 @@ func (m *RoleMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case role.EdgeAPI:
+		ids := make([]ent.Value, 0, len(m.api))
+		for id := range m.api {
+			ids = append(ids, id)
+		}
+		return ids
+	case role.EdgeResource:
+		ids := make([]ent.Value, 0, len(m.resource))
+		for id := range m.resource {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *RoleMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
 	if m.removedusers != nil {
 		edges = append(edges, role.EdgeUsers)
 	}
 	if m.removeddept != nil {
 		edges = append(edges, role.EdgeDept)
+	}
+	if m.removedapi != nil {
+		edges = append(edges, role.EdgeAPI)
+	}
+	if m.removedresource != nil {
+		edges = append(edges, role.EdgeResource)
 	}
 	return edges
 }
@@ -4232,18 +5926,36 @@ func (m *RoleMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case role.EdgeAPI:
+		ids := make([]ent.Value, 0, len(m.removedapi))
+		for id := range m.removedapi {
+			ids = append(ids, id)
+		}
+		return ids
+	case role.EdgeResource:
+		ids := make([]ent.Value, 0, len(m.removedresource))
+		for id := range m.removedresource {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *RoleMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
 	if m.clearedusers {
 		edges = append(edges, role.EdgeUsers)
 	}
 	if m.cleareddept {
 		edges = append(edges, role.EdgeDept)
+	}
+	if m.clearedapi {
+		edges = append(edges, role.EdgeAPI)
+	}
+	if m.clearedresource {
+		edges = append(edges, role.EdgeResource)
 	}
 	return edges
 }
@@ -4256,6 +5968,10 @@ func (m *RoleMutation) EdgeCleared(name string) bool {
 		return m.clearedusers
 	case role.EdgeDept:
 		return m.cleareddept
+	case role.EdgeAPI:
+		return m.clearedapi
+	case role.EdgeResource:
+		return m.clearedresource
 	}
 	return false
 }
@@ -4277,6 +5993,12 @@ func (m *RoleMutation) ResetEdge(name string) error {
 		return nil
 	case role.EdgeDept:
 		m.ResetDept()
+		return nil
+	case role.EdgeAPI:
+		m.ResetAPI()
+		return nil
+	case role.EdgeResource:
+		m.ResetResource()
 		return nil
 	}
 	return fmt.Errorf("unknown Role edge %s", name)
