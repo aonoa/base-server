@@ -64,11 +64,13 @@ type AuthUsecase struct {
 }
 
 func NewAuthUsecase(repo BaseRepo, e *casbin.Enforcer, logger log.Logger) *AuthUsecase {
-	return &AuthUsecase{
+	res := &AuthUsecase{
 		repo: repo,
 		e:    e,
 		log:  log.NewHelper(logger),
 	}
+	res.generateAuthPolicy()
+	return res
 }
 
 func KeyMatch6(key1 string, key2 string) bool {
@@ -136,6 +138,7 @@ func NewEnforcer(confData *conf.Data) *casbin.Enforcer {
 	//if err != nil {
 	//	fmt.Println(err)
 	//}
+
 	return e
 }
 
@@ -260,11 +263,27 @@ func (uc *AuthUsecase) DelDataPolicy(role, dataGroup, method string) {
 	}
 }
 
+func (uc *AuthUsecase) AddPolicy(role, typeStr, dataGroup, method string) {
+	_, err := uc.e.AddNamedPolicy(PolicyUserToData, "role:"+role, typeStr+dataGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+func (uc *AuthUsecase) DelPolicy(role, typeStr, dataGroup, method string) {
+	_, err := uc.e.RemoveNamedPolicy(PolicyUserToData, "role:"+role, typeStr+dataGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
 // 生成权限
 // 将api关系生成api组
 // 将其他资源生成资源组
 // 将用户关系生成角色
 // 将角色和资源绑定成权限
+
+// generateAuthPolicy 重新生成 casbin 权限
 func (uc *AuthUsecase) generateAuthPolicy() {
 	// 获取api资源数据
 	ctx := context.Background()
@@ -274,6 +293,50 @@ func (uc *AuthUsecase) generateAuthPolicy() {
 	}
 	for _, api := range apiList {
 		uc.AddApiToGroup(api.Path, api.ResourcesGroup)
+	}
+
+	// 获取所有的资源生成资源组（暂无）
+
+	// 为所有用户生成角色
+	// 获取所有用户及其用户拥有的角色
+	userList, err := uc.repo.GetUserList(ctx, 0, &pb.GetUserParams{
+		Page:     0,
+		PageSize: 1000000,
+	})
+	if err != nil {
+		uc.log.Error(err)
+	}
+	for _, user := range userList {
+		if user.Edges.Roles != nil {
+			if len(user.Edges.Roles) > 0 {
+				role := user.Edges.Roles[0].Value
+				uc.AddUserRoles(user.ID.String(), []string{role})
+			}
+		} else {
+			uc.AddUserRoles(user.ID.String(), []string{"default"})
+		}
+	}
+
+	// 将角色和资源绑定成权限
+	// 获取所有的角色以及角色绑的资源信息
+	roleList, err := uc.repo.GetAllRoleList(ctx, &pb.RolePageParams{
+		Page:     0,
+		PageSize: 1000000,
+		Status:   1,
+	})
+	if err != nil {
+		uc.log.Error(err)
+	}
+	for _, role := range roleList {
+		if role.Edges.Resource != nil {
+			for _, resource := range role.Edges.Resource {
+				if resource.Type == "api" {
+					uc.AddApiPolicy(role.Value, resource.Value, resource.Method)
+				} else {
+					uc.AddPolicy(role.Value, resource.Type, resource.Value, resource.Method)
+				}
+			}
+		}
 	}
 }
 

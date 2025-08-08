@@ -653,7 +653,7 @@ func (uc *BaseUsecase) UpdateDept(ctx context.Context, req *pb.DeptListItem) err
 // GetAllRoleList 获取角色列表
 func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParams) (*pb.GetRoleListByPageReply, error) {
 	// 获取某个域的角色
-	reqs := &pb.GetRoleListByPageReply{Items: []*pb.RoleListItem{}}
+	res := &pb.GetRoleListByPageReply{Items: []*pb.RoleListItem{}}
 
 	// # 权限验证
 
@@ -661,10 +661,10 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 	if err != nil {
 		return nil, err
 	}
-	reqs.Total = int64(len(roleList))
+	res.Total = int64(len(roleList))
 	for i, item := range roleList {
 		id := strconv.FormatInt(item.ID, 10)
-		reqs.Items = append(reqs.Items, &pb.RoleListItem{
+		res.Items = append(res.Items, &pb.RoleListItem{
 			Id:    id,
 			Name:  item.Name,
 			Value: item.Value,
@@ -679,10 +679,21 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 			CreateTime:  item.CreateTime.Format(time.DateTime),
 			Remark:      item.Desc,
 			Permissions: item.Menus,
+			ApiPermissions: func(item *ent.Role) []string {
+				tmp := make([]string, 0)
+				if item.Edges.Resource != nil {
+					for _, resource := range item.Edges.Resource {
+						if resource.Type == "api" {
+							tmp = append(tmp, resource.ID)
+						}
+					}
+				}
+				return tmp
+			}(item),
 		})
 	}
 
-	return reqs, nil
+	return res, nil
 }
 
 // AddRole 添加角色

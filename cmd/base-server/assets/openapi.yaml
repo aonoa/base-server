@@ -1039,6 +1039,10 @@ components:
                         format: int32
                 dept:
                     type: string
+                apiPermissions:
+                    type: array
+                    items:
+                        type: string
         api.base_api.v1.SetRoleStatusRequest:
             type: object
             properties:

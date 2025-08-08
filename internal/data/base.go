@@ -7,6 +7,7 @@ import (
 	"base-server/internal/data/ent"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/menu"
+	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/user"
 	"context"
@@ -270,6 +271,9 @@ func (r *baseRepo) GetAllRoleList(ctx context.Context, req *pb.RolePageParams) (
 			}
 		}()))
 	}
+	query.WithResource(func(query *ent.ResourceQuery) {
+		query.Select(resource.FieldID, resource.FieldType, resource.FieldValue, resource.FieldMethod)
+	})
 	return query.All(ctx)
 }
 
@@ -302,6 +306,7 @@ func (r *baseRepo) AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role
 		}()).
 		SetDesc(req.Remark).
 		SetMenus(req.Permissions).
+		AddResourceIDs(req.ApiPermissions...).
 		Save(entcache.Evict(ctx))
 }
 
@@ -328,6 +333,7 @@ func (r *baseRepo) UpdateRole(ctx context.Context, roleId int64, req *pb.RoleLis
 		}()).
 		SetDesc(req.Remark).
 		SetMenus(req.Permissions).
+		AddResourceIDs(req.ApiPermissions...).
 		Save(entcache.NewContext(entcache.Evict(ctx)))
 }
 

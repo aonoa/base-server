@@ -1104,18 +1104,19 @@ func (x *RolePageParams) GetDeptId() string {
 }
 
 type RoleListItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                           // id
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                       // 角色名
-	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`                     // 角色值
-	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                  // 状态
-	OrderNo       string                 `protobuf:"bytes,5,opt,name=orderNo,proto3" json:"orderNo,omitempty"`                 // 排序
-	CreateTime    string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"`           // 创建时间
-	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`                   // 备注
-	Permissions   []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"` // 菜单列表
-	Dept          string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`                       // 部门
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                // id
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                            // 角色名
+	Value          string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`                                          // 角色值
+	Status         int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                                       // 状态
+	OrderNo        string                 `protobuf:"bytes,5,opt,name=orderNo,proto3" json:"orderNo,omitempty"`                                      // 排序
+	CreateTime     string                 `protobuf:"bytes,6,opt,name=createTime,proto3" json:"createTime,omitempty"`                                // 创建时间
+	Remark         string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`                                        // 备注
+	Permissions    []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"`                      // 菜单列表
+	Dept           string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`                                            // 部门
+	ApiPermissions []string               `protobuf:"bytes,10,rep,name=api_permissions,json=apiPermissions,proto3" json:"api_permissions,omitempty"` // api资源权限
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *RoleListItem) Reset() {
@@ -1209,6 +1210,13 @@ func (x *RoleListItem) GetDept() string {
 		return x.Dept
 	}
 	return ""
+}
+
+func (x *RoleListItem) GetApiPermissions() []string {
+	if x != nil {
+		return x.ApiPermissions
+	}
+	return nil
 }
 
 type GetRoleListByPageReply struct {
@@ -1369,8 +1377,8 @@ type Meta struct {
 	AffixTab           *bool                  `protobuf:"varint,6,opt,name=affixTab,proto3,oneof" json:"affixTab,omitempty"`                      // 固定在标签栏
 	AffixTabOrder      *int64                 `protobuf:"varint,7,opt,name=affixTabOrder,proto3,oneof" json:"affixTabOrder,omitempty"`            // 在标签栏固定的顺序
 	Badge              *string                `protobuf:"bytes,8,opt,name=badge,proto3,oneof" json:"badge,omitempty"`                             // 徽标内容(当徽标类型为normal时有效)
-	BadgeType          *int64                 `protobuf:"varint,9,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`                    // 徽标类型
-	BadgeVariants      *int64                 `protobuf:"varint,10,opt,name=badgeVariants,proto3,oneof" json:"badgeVariants,omitempty"`           // 徽标颜色
+	BadgeType          *string                `protobuf:"bytes,9,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`                     // 徽标类型
+	BadgeVariants      *string                `protobuf:"bytes,10,opt,name=badgeVariants,proto3,oneof" json:"badgeVariants,omitempty"`            // 徽标颜色
 	HideChildrenInMenu *bool                  `protobuf:"varint,11,opt,name=hideChildrenInMenu,proto3,oneof" json:"hideChildrenInMenu,omitempty"` // 在菜单中隐藏下级
 	HideInBreadcrumb   *bool                  `protobuf:"varint,12,opt,name=hideInBreadcrumb,proto3,oneof" json:"hideInBreadcrumb,omitempty"`     // 在面包屑中隐藏
 	HideInMenu         *bool                  `protobuf:"varint,13,opt,name=hideInMenu,proto3,oneof" json:"hideInMenu,omitempty"`                 // 在菜单中隐藏
@@ -1473,18 +1481,18 @@ func (x *Meta) GetBadge() string {
 	return ""
 }
 
-func (x *Meta) GetBadgeType() int64 {
+func (x *Meta) GetBadgeType() string {
 	if x != nil && x.BadgeType != nil {
 		return *x.BadgeType
 	}
-	return 0
+	return ""
 }
 
-func (x *Meta) GetBadgeVariants() int64 {
+func (x *Meta) GetBadgeVariants() string {
 	if x != nil && x.BadgeVariants != nil {
 		return *x.BadgeVariants
 	}
-	return 0
+	return ""
 }
 
 func (x *Meta) GetHideChildrenInMenu() bool {
@@ -3232,7 +3240,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x16\n" +
-	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\xe8\x01\n" +
+	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\x91\x02\n" +
 	"\fRoleListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
@@ -3244,7 +3252,9 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"createTime\x12\x16\n" +
 	"\x06remark\x18\a \x01(\tR\x06remark\x12 \n" +
 	"\vpermissions\x18\b \x03(\x05R\vpermissions\x12\x12\n" +
-	"\x04dept\x18\t \x01(\tR\x04dept\"c\n" +
+	"\x04dept\x18\t \x01(\tR\x04dept\x12'\n" +
+	"\x0fapi_permissions\x18\n" +
+	" \x03(\tR\x0eapiPermissions\"c\n" +
 	"\x16GetRoleListByPageReply\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.api.base_api.v1.RoleListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1c\n" +
@@ -3268,9 +3278,9 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\baffixTab\x18\x06 \x01(\bH\x02R\baffixTab\x88\x01\x01\x12)\n" +
 	"\raffixTabOrder\x18\a \x01(\x03H\x03R\raffixTabOrder\x88\x01\x01\x12\x19\n" +
 	"\x05badge\x18\b \x01(\tH\x04R\x05badge\x88\x01\x01\x12!\n" +
-	"\tbadgeType\x18\t \x01(\x03H\x05R\tbadgeType\x88\x01\x01\x12)\n" +
+	"\tbadgeType\x18\t \x01(\tH\x05R\tbadgeType\x88\x01\x01\x12)\n" +
 	"\rbadgeVariants\x18\n" +
-	" \x01(\x03H\x06R\rbadgeVariants\x88\x01\x01\x123\n" +
+	" \x01(\tH\x06R\rbadgeVariants\x88\x01\x01\x123\n" +
 	"\x12hideChildrenInMenu\x18\v \x01(\bH\aR\x12hideChildrenInMenu\x88\x01\x01\x12/\n" +
 	"\x10hideInBreadcrumb\x18\f \x01(\bH\bR\x10hideInBreadcrumb\x88\x01\x01\x12#\n" +
 	"\n" +

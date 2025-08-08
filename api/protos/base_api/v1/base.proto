@@ -433,6 +433,7 @@ message RoleListItem {
 	string remark = 7;			// 备注
 	repeated int32 permissions = 8; // 菜单列表
 	string dept = 9;				// 部门
+	repeated string api_permissions = 10; // api资源权限
 }
 
 message GetRoleListByPageReply {
@@ -460,8 +461,8 @@ message Meta {
 	optional int64 affixTabOrder = 7;				// 在标签栏固定的顺序
 
 	optional string badge = 8;				// 徽标内容(当徽标类型为normal时有效)
-	optional int64 badgeType = 9;				// 徽标类型
-	optional int64 badgeVariants = 10;				// 徽标颜色
+	optional string badgeType = 9;				// 徽标类型
+	optional string badgeVariants = 10;				// 徽标颜色
 
 	optional bool hideChildrenInMenu = 11;				// 在菜单中隐藏下级
 	optional bool hideInBreadcrumb = 12;				// 在面包屑中隐藏
