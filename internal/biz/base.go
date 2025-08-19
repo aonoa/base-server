@@ -43,6 +43,7 @@ type BaseRepo interface {
 	DeleteByID(ctx context.Context, id *uuid.UUID) error
 
 	GetAllRoleList(ctx context.Context, req *pb.RolePageParams) ([]*ent.Role, error)
+	GetRole(ctx context.Context, id int64) (*ent.Role, error)
 	AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role, error)
 	UpdateRole(ctx context.Context, deptId int64, req *pb.RoleListItem) (*ent.Role, error)
 	DelRole(ctx context.Context, id int64) error
@@ -60,12 +61,14 @@ type BaseRepo interface {
 	IsUserExistsByUserName(ctx context.Context, req *pb.IsUserExistsRequest) (*ent.User, error)
 
 	GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error)
+	GetApi(ctx context.Context, id string) (*ent.ApiResources, error)
 	AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
 	UpdateApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
 	DelApi(ctx context.Context, id string) error
 
 	GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error)
 	AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
+	GetResource(ctx context.Context, id string) (*ent.Resource, error)
 	UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
 	DelResource(ctx context.Context, id string) error
 }
@@ -698,44 +701,50 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 
 // AddRole 添加角色
 func (uc *BaseUsecase) AddRole(ctx context.Context, req *pb.RoleListItem) error {
-	//deptId, err := tools.DeptStrSplitToInt(req.Dept)
-
-	//// 获取所属域
-	//var domId int64
-	//if err != nil {
-	//	domId = uc.GetDom(ctx)
-	//} else {
-	//	dept, err := uc.repo.GetDeptById(ctx, deptId)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	domId = dept.Dom
-	//}
-
-	// # 检查是否有这个域添加角色权限
-	//if ok, err := uc.auth.EnforcePolicy(tools.GetUserId(ctx), string(types.PolicyType_Role)+":"+strconv.FormatInt(deptId, 10), "add"); ok {
-	//	fmt.Println("ok ")
-	//} else {
-	//	fmt.Println("err ")
-	//	return err
-	//}
-
-	// 添加到域
-	_, err := uc.repo.AddRole(ctx, req)
+	role, err := uc.repo.AddRole(ctx, req)
 	if err != nil {
 		return err
 	}
-	// # 获取角色绑定的菜单，将菜单绑定的权限添加到对应角色
+
+	allResource, err := role.QueryResource().All(ctx)
+	if err != nil {
+		return err
+	}
+	// # 获取角色绑定的菜单，将菜单绑定的权限添加到对应角色（这里可以分类，然后分批插入提高性能）
+	rulesMap := map[string][][]string{}
+	for _, resource := range allResource {
+		rulesMap[resource.Type] = append(rulesMap[resource.Type], []string{
+			"role:" + role.Value,
+			resource.Type + ":" + resource.Value,
+			resource.Method,
+		})
+		//uc.auth.AddPolicy(role.Value, resource.Type, resource.Value, resource.Method)
+	}
+	for key, value := range rulesMap {
+		uc.auth.AddPolicies(key, value)
+	}
 
 	return nil
 }
 
 // DelRole 删除角色
 func (uc *BaseUsecase) DelRole(ctx context.Context, roleId string) error {
-	// #删除角色权限
-	//uc.auth.DelUserRole(strconv.FormatInt(uc.GetDom(ctx), 10), roleId)
 	id, _ := strconv.ParseInt(roleId, 10, 32)
-	return uc.repo.DelRole(ctx, id)
+
+	role, err := uc.repo.GetRole(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	err = uc.repo.DelRole(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	// 更新casbin权限
+	uc.auth.DelRole(role.Value)
+
+	return nil
 }
 
 // UpdateRole 更新角色
@@ -744,10 +753,48 @@ func (uc *BaseUsecase) UpdateRole(ctx context.Context, req *pb.RoleListItem) err
 	if err != nil {
 		return err
 	}
-	_, err = uc.repo.UpdateRole(ctx, roleId, req)
+
+	oldRole, err := uc.repo.GetRole(ctx, roleId)
 	if err != nil {
 		return err
 	}
+	//oldAllResource, err := oldRole.QueryResource().All(ctx)
+	//if err != nil {
+	//	return err
+	//}
+
+	newRole, err := uc.repo.UpdateRole(ctx, roleId, req)
+	if err != nil {
+		return err
+	}
+
+	// 删除旧资源权限
+	uc.auth.DelRoleData(oldRole.Value)
+
+	// 更新casbin权限
+	if oldRole.Value != newRole.Value {
+		uc.auth.UpdateRole(oldRole.Value, newRole.Value)
+	}
+
+	// 不止是角色值变化，还有角色关联的资源的变化
+	allResource, err := newRole.QueryResource().All(ctx)
+	if err != nil {
+		return err
+	}
+	// # 获取角色绑定的菜单，将菜单绑定的权限添加到对应角色（这里可以分类，然后分批插入提高性能）
+	rulesMap := map[string][][]string{}
+	for _, resource := range allResource {
+		rulesMap[resource.Type] = append(rulesMap[resource.Type], []string{
+			"role:" + newRole.Value,
+			resource.Type + ":" + resource.Value,
+			resource.Method,
+		})
+		//uc.auth.AddPolicy(role.Value, resource.Type, resource.Value, resource.Method)
+	}
+	for key, value := range rulesMap {
+		uc.auth.AddPolicies(key, value)
+	}
+
 	return nil
 }
 
@@ -916,15 +963,16 @@ func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.UserListItem) (*pb.U
 		return nil, err
 	}
 
-	role := "default"
-	if req.Role == 0 {
-		role = "default"
-	} else if req.Role == 2 {
-		role = "admin"
+	roleList, err := user.QueryRoles().All(ctx)
+	if err != nil {
+		return nil, err
 	}
-
-	// 设置用户角色
-	uc.auth.AddUserRoles(user.ID.String(), []string{role})
+	// 更新 casbin 权限
+	var roles []string
+	for _, role := range roleList {
+		roles = append(roles, role.Value)
+	}
+	uc.auth.AddUserRoles(user.ID.String(), roles)
 
 	return &pb.UserListItem{
 		Id:         user.ID.String(),
@@ -940,10 +988,21 @@ func (uc *BaseUsecase) AddUser(ctx context.Context, req *pb.UserListItem) (*pb.U
 // UpdateUser 更新用户
 func (uc *BaseUsecase) UpdateUser(ctx context.Context, req *pb.UserListItem) error {
 	uid, _ := uuid.Parse(req.Id)
-	_, err := uc.repo.UpdateUser(ctx, &uid, req)
+	user, err := uc.repo.UpdateUser(ctx, &uid, req)
 	if err != nil {
 		return err
 	}
+	roleList, err := user.QueryRoles().All(ctx)
+	if err != nil {
+		return err
+	}
+	// 更新 casbin 权限
+	uc.auth.DelUser(uid.String())
+	var roles []string
+	for _, role := range roleList {
+		roles = append(roles, role.Value)
+	}
+	uc.auth.AddUserRoles(uid.String(), roles)
 	return nil
 }
 
@@ -961,7 +1020,6 @@ func (uc *BaseUsecase) DelUser(ctx context.Context, uuidString string) error {
 	}
 	// 删除用户
 	uc.auth.DelUser(uuidString)
-	//uc.auth.DelUserRoles(uuidString, []string{"default"})
 	return nil
 }
 
@@ -1023,25 +1081,49 @@ func (uc *BaseUsecase) GetApiList(ctx context.Context, req *pb.GetApiPageParams)
 func (uc *BaseUsecase) AddApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
 	api := &ent.ApiResources{}
 	copier.Copy(api, req)
-	_, err := uc.repo.AddApi(ctx, api)
+	entApi, err := uc.repo.AddApi(ctx, api)
 	if err != nil {
 		return nil, err
 	}
+
+	// 更新casbin权限
+	uc.auth.AddApiToGroup(entApi.Path, entApi.ResourcesGroup)
 	return nil, nil
 }
 
 func (uc *BaseUsecase) UpdateApi(ctx context.Context, req *pb.ApiListItem) (*pb.ApiListItem, error) {
-	api := &ent.ApiResources{}
-	copier.Copy(api, req)
-	_, err := uc.repo.UpdateApi(ctx, api)
+	oldApi, err := uc.repo.GetApi(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
+
+	api := &ent.ApiResources{}
+	copier.Copy(api, req)
+	newApi, err := uc.repo.UpdateApi(ctx, api)
+	if err != nil {
+		return nil, err
+	}
+
+	// 更新casbin权限
+	uc.auth.UpdateApiToGroup([]string{oldApi.Path, oldApi.ResourcesGroup}, []string{newApi.Path, newApi.ResourcesGroup})
+
 	return &pb.ApiListItem{}, nil
 }
 
 func (uc *BaseUsecase) DelApi(ctx context.Context, req *pb.DeleteApi) error {
-	return uc.repo.DelApi(ctx, req.Id)
+	api, err := uc.repo.GetApi(ctx, req.Id)
+	if err != nil {
+		return err
+	}
+	err = uc.repo.DelApi(ctx, req.Id)
+	if err != nil {
+		return err
+	}
+
+	// 更新casbin权限
+	uc.auth.DelApiToGroup(api.Path, api.ResourcesGroup)
+
+	return nil
 }
 
 func (uc *BaseUsecase) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) (*pb.GetResourceListByPageReply, error) {
@@ -1069,19 +1151,36 @@ func (uc *BaseUsecase) AddResource(ctx context.Context, req *pb.ResourceListItem
 	if err != nil {
 		return nil, err
 	}
+
+	// 添加资源，资源无所属关系，不需要修改casbin权限
 	return nil, nil
 }
 
 func (uc *BaseUsecase) UpdateResource(ctx context.Context, req *pb.ResourceListItem) (*pb.ResourceListItem, error) {
-	api := &ent.Resource{}
-	copier.Copy(api, req)
-	_, err := uc.repo.UpdateResource(ctx, api)
+	data := &ent.Resource{}
+	copier.Copy(data, req)
+	_, err := uc.repo.UpdateResource(ctx, data)
 	if err != nil {
 		return nil, err
 	}
+
+	//uc.auth.UpdateDataPolicy([]string{}, []string{})
+
 	return &pb.ResourceListItem{}, nil
 }
 
 func (uc *BaseUsecase) DelResource(ctx context.Context, req *pb.DeleteResource) error {
-	return uc.repo.DelApi(ctx, req.Id)
+	data, err := uc.repo.GetResource(ctx, req.Id)
+	if err != nil {
+		return err
+	}
+
+	err = uc.repo.DelResource(ctx, req.Id)
+	if err != nil {
+		return err
+	}
+
+	// 更新casbin权限
+	uc.auth.DelDataPolicy(data.Type, data.Value, data.Method)
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
 	adapter "github.com/casbin/ent-adapter"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"regexp"
 	"strings"
@@ -53,7 +54,7 @@ m = g(r.sub, p.sub) && g3(r.obj, p.obj) && regexMatch(r.act, p.act) || r.sub == 
 # 角色对api的权限 匹配key1:/diagnoseClass/1/diagnoseRow/aa?2  key2:/diagnoseClass/{id}/diagnoseRow/*
 # 支持{id},?参数和*通配符，当api为刷新token时，直接通过
 m2 = r.obj == "/basic-api/auth/refresh" || g(r.sub, p2.sub) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act) || r.sub == "root"
-m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || r.sub == "root"  # api对资源组的权限（公共资源）
+m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || r.sub == "root"  # api对资源组的权限（公共资源）（目前未使用）
 `
 
 // AuthUsecase is an Auth usecase.
@@ -156,11 +157,10 @@ func (uc *AuthUsecase) HasRoleForUser(user, role string, domain string) bool {
 	return ok
 }
 
-// EnforcePolicy 纯权限
+// EnforcePolicy 纯权限（未使用）
 // id、资源、操作
 func (uc *AuthUsecase) EnforcePolicy(rvals ...interface{}) (bool, error) {
-	enforceContext := casbin.EnforceContext{RType: "r", PType: "p3", EType: "e", MType: "m2"}
-	return uc.e.Enforce(enforceContext, rvals[0], rvals[1], rvals[2])
+	return uc.e.Enforce(ApiToResourceEnforceContext, rvals[0], rvals[1], rvals[2])
 }
 
 // AddUserRoles 用户添加角色
@@ -183,7 +183,7 @@ func (uc *AuthUsecase) DelUserRoles(user string, roles []string) {
 	}
 }
 
-// DelUser 删除用户
+// DelUser 删除用户（同时删除用户关联的所有角色）
 func (uc *AuthUsecase) DelUser(user string) {
 	// 获取用户的所有角色
 	namedGroupingPolicy, _ := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 0, user)
@@ -197,6 +197,81 @@ func (uc *AuthUsecase) DelUser(user string) {
 	//if err != nil {
 	//	println(err)
 	//}
+}
+
+// UpdateRole 修改角色（继承关系的角色名称需要修改，角色关联的资源权限需要修改）
+func (uc *AuthUsecase) UpdateRole(oldRole, newRole string) {
+	namedGroupingPolicy, err := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 1, "role:"+oldRole)
+	rules := [][]string{}
+	for _, policy := range namedGroupingPolicy {
+		println(policy)
+		rules = append(rules, []string{
+			policy[0],
+			"role:" + newRole,
+		})
+	}
+	_, err = uc.e.UpdateNamedGroupingPolicies(UserToRole, namedGroupingPolicy, rules)
+	if err != nil {
+		return
+	}
+	policyList, err := uc.e.GetFilteredNamedPolicy(PolicyUserToData, 0, "role:"+oldRole)
+	if err != nil {
+		return
+	}
+	rules = [][]string{}
+	for _, policy := range policyList {
+		println(policy)
+		rules = append(rules, []string{
+			"role:" + newRole,
+			policy[1],
+			policy[2],
+		})
+	}
+	_, err = uc.e.UpdateNamedPolicies(PolicyUserToData, policyList, rules)
+	if err != nil {
+		return
+	}
+	apiPolicyList, err := uc.e.GetFilteredNamedPolicy(PolicyUserToApi, 0, "role:"+oldRole)
+	if err != nil {
+		return
+	}
+	rules = [][]string{}
+	for _, policy := range apiPolicyList {
+		println(policy)
+		rules = append(rules, []string{
+			"role:" + newRole,
+			policy[1],
+			policy[2],
+		})
+	}
+	_, err = uc.e.UpdateNamedPolicies(PolicyUserToApi, apiPolicyList, rules)
+	if err != nil {
+		return
+	}
+}
+
+// DelRoleData 删除角色上的资源
+func (uc *AuthUsecase) DelRoleData(role string) {
+	// 角色资源权限
+	_, err := uc.e.RemoveFilteredNamedPolicy(PolicyUserToData, 0, "role:"+role)
+	// 角色api权限
+	_, err = uc.e.RemoveFilteredNamedPolicy(PolicyUserToApi, 0, "role:"+role)
+	if err != nil {
+		return
+	}
+}
+
+// DelRole 删除角色
+func (uc *AuthUsecase) DelRole(role string) {
+	// 角色继承关系
+	_, err := uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 0, "role:"+role)
+	// 用户角色关联
+	_, err = uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 1, "role:"+role)
+	// 角色资源权限
+	uc.DelRoleData(role)
+	if err != nil {
+		return
+	}
 }
 
 ////////////////////////////////////////////////////////
@@ -222,6 +297,17 @@ func (uc *AuthUsecase) AddApiToGroup(api, apiGroup string) {
 		uc.log.Error(err)
 	}
 }
+func (uc *AuthUsecase) UpdateApiToGroup(oldApi, newApi []string) {
+	if len(newApi) != 2 || len(oldApi) != 2 {
+		uc.log.Error(errors.New(40000, "auth api update length error", "auth api update length error"))
+	}
+	oldApi[1] = "api:" + oldApi[1]
+	newApi[1] = "api:" + newApi[1]
+	_, err := uc.e.UpdateNamedGroupingPolicy(ApiToGroup, oldApi, newApi)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
 func (uc *AuthUsecase) DelApiToGroup(api, apiGroup string) {
 	_, err := uc.e.RemoveNamedGroupingPolicy(ApiToGroup, api, "api:"+apiGroup)
 	if err != nil {
@@ -232,50 +318,112 @@ func (uc *AuthUsecase) DelApiToGroup(api, apiGroup string) {
 // 为用户添加角色
 // 删除用户角色
 
-// 添加角色对api资源的权限
-// 删除角色对api资源的权限
-
-func (uc *AuthUsecase) AddApiPolicy(role, apiGroup, method string) {
-	_, err := uc.e.AddNamedPolicy(PolicyUserToApi, "role:"+role, "api:"+apiGroup, method)
-	if err != nil {
-		uc.log.Error(err)
-	}
-}
-
-func (uc *AuthUsecase) DelApiPolicy(role, apiGroup, method string) {
-	_, err := uc.e.RemoveNamedPolicy(PolicyUserToApi, "role:"+role, "api:"+apiGroup, method)
-	if err != nil {
-		uc.log.Error(err)
-	}
-}
-
-func (uc *AuthUsecase) AddDataPolicy(role, dataGroup, method string) {
-	_, err := uc.e.AddNamedPolicy(PolicyUserToData, "role:"+role, "data:"+dataGroup, method)
-	if err != nil {
-		uc.log.Error(err)
-	}
-}
-
-func (uc *AuthUsecase) DelDataPolicy(role, dataGroup, method string) {
-	_, err := uc.e.RemoveNamedPolicy(PolicyUserToData, "role:"+role, "data:"+dataGroup, method)
-	if err != nil {
-		uc.log.Error(err)
-	}
-}
-
+// AddPolicy 添加单条权限
 func (uc *AuthUsecase) AddPolicy(role, typeStr, dataGroup, method string) {
-	_, err := uc.e.AddNamedPolicy(PolicyUserToData, "role:"+role, typeStr+dataGroup, method)
+	policyType := PolicyUserToData
+	if typeStr == "api" {
+		policyType = PolicyUserToApi
+	}
+	_, err := uc.e.AddNamedPolicy(policyType, "role:"+role, typeStr+":"+dataGroup, method)
 	if err != nil {
 		uc.log.Error(err)
 	}
 }
 
-func (uc *AuthUsecase) DelPolicy(role, typeStr, dataGroup, method string) {
-	_, err := uc.e.RemoveNamedPolicy(PolicyUserToData, "role:"+role, typeStr+dataGroup, method)
+// UpdatePolicy 更新单条权限（含类型，旧[角色，资源，操作]，新[角色，资源，操作]）
+func (uc *AuthUsecase) UpdatePolicy(typeStr string, oldPolicy, newPolicy []string) {
+	if len(oldPolicy) != 3 || len(newPolicy) != 3 {
+		uc.log.Error(errors.New(40000, "auth policy update length error", "auth policy update length error"))
+	}
+	policyType := PolicyUserToData
+	if typeStr == "api" {
+		policyType = PolicyUserToApi
+	}
+	oldPolicy[1] = "role:" + oldPolicy[1]
+	oldPolicy[2] = typeStr + ":" + oldPolicy[2]
+	newPolicy[1] = "role:" + newPolicy[1]
+	newPolicy[2] = typeStr + ":" + newPolicy[2]
+	_, err := uc.e.UpdateNamedPolicy(policyType, oldPolicy, newPolicy)
 	if err != nil {
 		uc.log.Error(err)
 	}
 }
+
+// DelPolicy 删除单条权限
+func (uc *AuthUsecase) DelPolicy(role, typeStr, dataGroup, method string) {
+	policyType := PolicyUserToData
+	if typeStr == "api" {
+		policyType = PolicyUserToApi
+	}
+	_, err := uc.e.RemoveNamedPolicy(policyType, "role:"+role, typeStr+":"+dataGroup, method)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+// AddPolicies 添加多条权限
+func (uc *AuthUsecase) AddPolicies(typeStr string, rules [][]string) {
+	policyType := PolicyUserToData
+	if typeStr == "api" {
+		policyType = PolicyUserToApi
+	}
+	_, err := uc.e.AddNamedPolicies(policyType, rules)
+	if err != nil {
+		uc.log.Error(err)
+	}
+}
+
+// UpdateDataPolicy 更新资源的关联的权限（类型，值，操作）
+func (uc *AuthUsecase) UpdateDataPolicy(oldPolicy, newPolicy []string) {
+	if len(oldPolicy) != 3 || len(newPolicy) != 3 {
+		uc.log.Error(errors.New(40000, "auth policy update length error", "auth policy update length error"))
+	}
+	policyType := PolicyUserToData
+	if oldPolicy[0] == "api" {
+		policyType = PolicyUserToApi
+	}
+
+	policy, err := uc.e.GetFilteredNamedPolicy(policyType, 1, oldPolicy[0]+":"+oldPolicy[1], oldPolicy[2])
+	if err != nil {
+		return
+	}
+
+	if newPolicy[0] == "api" {
+		policyType = PolicyUserToApi
+	} else {
+		policyType = PolicyUserToData
+	}
+	rules := [][]string{}
+	for _, v := range policy {
+		println(v)
+		rules = append(rules, []string{
+			v[0],
+			newPolicy[0] + ":" + newPolicy[1],
+			newPolicy[2],
+		})
+		//uc.e.AddNamedPolicy(policyType, v[0], newPolicy[0]+":"+newPolicy[1], newPolicy[2])
+	}
+	_, err = uc.e.AddNamedPolicies(policyType, rules)
+	if err != nil {
+		return
+	}
+}
+
+// DelDataPolicy 删除资源关联的权限
+func (uc *AuthUsecase) DelDataPolicy(typeStr, dataGroup, method string) {
+	policyType := PolicyUserToData
+	if typeStr == "api" {
+		policyType = PolicyUserToApi
+	}
+
+	// 这里过滤直接删
+	_, err := uc.e.RemoveFilteredNamedPolicy(policyType, 1, typeStr+":"+dataGroup, method)
+	if err != nil {
+		return
+	}
+}
+
+// 更新角色的权限变化
 
 // 生成权限
 // 将api关系生成api组
@@ -330,11 +478,7 @@ func (uc *AuthUsecase) generateAuthPolicy() {
 	for _, role := range roleList {
 		if role.Edges.Resource != nil {
 			for _, resource := range role.Edges.Resource {
-				if resource.Type == "api" {
-					uc.AddApiPolicy(role.Value, resource.Value, resource.Method)
-				} else {
-					uc.AddPolicy(role.Value, resource.Type, resource.Value, resource.Method)
-				}
+				uc.AddPolicy(role.Value, resource.Type, resource.Value, resource.Method)
 			}
 		}
 	}

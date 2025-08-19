@@ -44,6 +44,10 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 		conf.Database.Source,
 	)
 
+	if err != nil {
+		panic(err)
+	}
+
 	db.SetMaxIdleConns(maxIdleConns)
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetConnMaxLifetime(0)

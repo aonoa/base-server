@@ -5,6 +5,7 @@ import (
 	pb "base-server/api/gen/go/base_api/v1"
 	"base-server/internal/biz"
 	"base-server/internal/data/ent"
+	"base-server/internal/data/ent/apiresources"
 	"base-server/internal/data/ent/dept"
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
@@ -310,6 +311,10 @@ func (r *baseRepo) AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role
 		Save(entcache.Evict(ctx))
 }
 
+func (r *baseRepo) GetRole(ctx context.Context, id int64) (*ent.Role, error) {
+	return r.data.db.Role.Query().Where(role.IDEQ(id)).First(ctx)
+}
+
 // DelRole 删除角色
 func (r *baseRepo) DelRole(ctx context.Context, id int64) error {
 	defer r.data.db.Role.Query().All(entcache.Evict(ctx))
@@ -320,7 +325,6 @@ func (r *baseRepo) DelRole(ctx context.Context, id int64) error {
 // UpdateRole 更新角色
 func (r *baseRepo) UpdateRole(ctx context.Context, roleId int64, req *pb.RoleListItem) (*ent.Role, error) {
 	//defer r.data.db.Role.Query().All(entcache.Evict(ctx))
-	// 先不考虑关系表
 	return r.data.db.Role.UpdateOneID(roleId).
 		SetName(req.Name).
 		SetValue(req.Value).
@@ -333,6 +337,7 @@ func (r *baseRepo) UpdateRole(ctx context.Context, roleId int64, req *pb.RoleLis
 		}()).
 		SetDesc(req.Remark).
 		SetMenus(req.Permissions).
+		ClearResource().
 		AddResourceIDs(req.ApiPermissions...).
 		Save(entcache.NewContext(entcache.Evict(ctx)))
 }
@@ -352,6 +357,9 @@ func (r *baseRepo) ChangePassword(ctx context.Context, uid *uuid.UUID, passwordO
 func (r *baseRepo) GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error) {
 	return r.data.db.ApiResources.Query().All(ctx)
 }
+func (r *baseRepo) GetApi(ctx context.Context, id string) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.Query().Where(apiresources.IDEQ(id)).First(ctx)
+}
 func (r *baseRepo) AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error) {
 	return r.data.db.ApiResources.Create().CreateAll(req).Save(ctx)
 }
@@ -364,6 +372,9 @@ func (r *baseRepo) DelApi(ctx context.Context, id string) error {
 
 func (r *baseRepo) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error) {
 	return r.data.db.Resource.Query().All(ctx)
+}
+func (r *baseRepo) GetResource(ctx context.Context, id string) (*ent.Resource, error) {
+	return r.data.db.Resource.Query().Where(resource.IDEQ(id)).First(ctx)
 }
 func (r *baseRepo) AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
 	return r.data.db.Resource.Create().CreateAll(req).Save(ctx)
