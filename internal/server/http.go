@@ -5,6 +5,7 @@ import (
 	"base-server/api/protos/base_api"
 	"base-server/cmd/base-server/assets"
 	"base-server/internal/conf"
+	"base-server/internal/server/middleware"
 	"base-server/internal/service"
 	"github.com/casbin/casbin/v2"
 	swaggerUI "github.com/tx7do/kratos-swagger-ui"
@@ -28,7 +29,8 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 		http.Middleware(
 			recovery.Recovery(),
 			//MiddlewareDemo(),
-			MiddlewareAuth(ac, e, logger),
+			middleware.MiddlewareOperateLog(),
+			middleware.MiddlewareAuth(ac, e, logger),
 		),
 		// 重定义返回结构
 		http.ResponseEncoder(DefaultResponseEncoder),
