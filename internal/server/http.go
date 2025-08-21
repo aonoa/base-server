@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/gorilla/handlers"
@@ -28,8 +29,10 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 		)),
 		http.Middleware(
 			recovery.Recovery(),
-			//MiddlewareDemo(),
+			logging.Server(logger),
+			//middleware.MiddlewareHttpLog(),
 			middleware.MiddlewareOperateLog(),
+			//MiddlewareDemo(),
 			middleware.MiddlewareAuth(ac, e, logger),
 		),
 		// 重定义返回结构

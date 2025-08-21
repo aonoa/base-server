@@ -50,11 +50,11 @@ g3 = _, _
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g(r.sub, p.sub) && g3(r.obj, p.obj) && regexMatch(r.act, p.act) || r.sub == "root"   # 角色对普通资源组权限
+m = g(r.sub, p.sub) && g3(r.obj, p.obj) && regexMatch(r.act, p.act) || g(r.sub, "role:root")   # 角色对普通资源组权限
 # 角色对api的权限 匹配key1:/diagnoseClass/1/diagnoseRow/aa?2  key2:/diagnoseClass/{id}/diagnoseRow/*
 # 支持{id},?参数和*通配符，当api为刷新token时，直接通过
-m2 = r.obj == "/basic-api/auth/refresh" || g(r.sub, p2.sub) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act) || r.sub == "root"
-m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || r.sub == "root"  # api对资源组的权限（公共资源）（目前未使用）
+m2 = r.obj == "/basic-api/auth/refresh" || g(r.sub, p2.sub) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act) || g(r.sub, "role:root")
+m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || g(r.sub, "role:root")  # api对资源组的权限（公共资源）（目前未使用）
 `
 
 // AuthUsecase is an Auth usecase.
@@ -99,46 +99,10 @@ func NewEnforcer(confData *conf.Data) *casbin.Enforcer {
 	if err != nil {
 		panic(err)
 	}
-	//a.AddPolicy("", "p", []string{"d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getUserInfo", "GET"})
-	//a.AddPolicy("", "p", []string{"d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getMenuList", "GET"})
-	//a.AddPolicy("", "p", []string{"d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getPermCode", "GET"})
 	e, _ := casbin.NewEnforcer(m, a)
-	//
 	e.EnableAutoSave(true)
-	//// 从存储中重新加载策略规则
-	//err := e.LoadPolicy()
-	//if err != nil {
-	//	return nil
-	//}
-	//e.AddNamedMatchingFunc("g", "KeyMatch6", KeyMatch6)
-
-	////e.AddPolicies([][]string{
-	////	{"user_group", "/basic-api/getUserInfo", "GET"},
-	////	{"user_group", "/basic-api/getMenuList", "GET"},
-	////	{"user_group", "/basic-api/getPermCode", "GET"},
-	////})
-	////
-	////e.AddNamedPolicy("p2", "user_group", "data_group", "(read)|(write)")
-	////e.AddNamedGroupingPolicy("g", "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "user_group")
-	////
-	////e.AddNamedGroupingPolicies("g2", [][]string{
-	////	{"data1", "data_group"},
-	////	{"data2", "data_group"},
-	////})
 
 	e.AddNamedMatchingFunc("g2", "KeyMatch6", KeyMatch6)
-	//e.AddNamedMatchingFunc("g2", "KeyMatch5", util.KeyMatch5)
-	//e.AddNamedDomainMatchingFunc("g2", "KeyMatch6", KeyMatch6)
-
-	// 测试
-	//// ok, err := e.Enforce("d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/basic-api/getUserInfo/1", "GET")
-	//enforceContext := casbin.EnforceContext{RType: "r", PType: "p2", EType: "e", MType: "m2"}
-	////ok, err := e.Enforce(enforceContext, "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8", "/diagnoseClass/1/diagnoseRow/aa?2", "GET")
-	//ok, err := e.Enforce(enforceContext, "a0bb672a-a4b1-4ec9-807a-ba11e000d2a4", "/basic-api/user/info", "GET")
-	//fmt.Println(ok)
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
 
 	return e
 }

@@ -37,9 +37,9 @@ func MiddlewareOperateLog() middleware2.Middleware {
 
 func MiddlewareHttpLog() middleware2.Middleware {
 	return func(handler middleware2.Handler) middleware2.Handler {
-		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+		return func(ctx context.Context, req interface{}) (reply interface{}, handlerErr error) {
 			startTime := time.Now()
-			reply, err = handler(ctx, req)
+			reply, handlerErr = handler(ctx, req)
 			if tr, ok := transport.FromServerContext(ctx); ok {
 				defer func() {
 					if ht, ok := tr.(*http.Transport); ok {
@@ -66,16 +66,36 @@ func MiddlewareHttpLog() middleware2.Middleware {
 						fmt.Printf("Get参数%v\n", request.URL.Query())
 
 						fmt.Printf("Post参数%s\n", string(data))
-						//defer request.Body.Close()
 
 						/////// 返回值
 						// 获取错误码和是否成功
-						statusCode, reason, success := utils.GetStatusCode(err)
+						statusCode, reason, success := utils.GetStatusCode(handlerErr)
 						fmt.Printf("响应状态码:%d, 原因:%s, 请求状态:%v\n", statusCode, reason, success)
+						level, stack := extractError(handlerErr)
+						fmt.Printf("日志等级:%s, 错误堆栈:%s\n", level, stack)
 					}
 				}()
 			}
 			return
 		}
 	}
+}
+
+//// extractArgs returns the string of the req
+//func extractArgs(req any) string {
+//	if redacter, ok := req.(Redacter); ok {
+//		return redacter.Redact()
+//	}
+//	if stringer, ok := req.(fmt.Stringer); ok {
+//		return stringer.String()
+//	}
+//	return fmt.Sprintf("%+v", req)
+//}
+
+// extractError returns the string of the error
+func extractError(err error) (log.Level, string) {
+	if err != nil {
+		return log.LevelError, fmt.Sprintf("%+v", err)
+	}
+	return log.LevelInfo, ""
 }
