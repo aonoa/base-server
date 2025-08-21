@@ -92,20 +92,6 @@ func (c *RoleCreate) CreateAll(Role *Role) *RoleCreate {
 	return builder
 }
 
-// CreateAll creates a new Rule entity with all fields set
-// (excluding auto-generated fields like ID, create_time, update_time).
-func (c *RuleCreate) CreateAll(Rule *Rule) *RuleCreate {
-	builder := c
-	builder = builder.SetPtype(Rule.Ptype)
-	builder = builder.SetV0(Rule.V0)
-	builder = builder.SetV1(Rule.V1)
-	builder = builder.SetV2(Rule.V2)
-	builder = builder.SetV3(Rule.V3)
-	builder = builder.SetV4(Rule.V4)
-	builder = builder.SetV5(Rule.V5)
-	return builder
-}
-
 // CreateAll creates a new User entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *UserCreate) CreateAll(User *User) *UserCreate {

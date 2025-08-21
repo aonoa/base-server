@@ -22,6 +22,9 @@ func (User) Annotations() []schema.Annotation {
 		// comments for the table and all its fields.
 		entsql.WithComments(true),
 		schema.Comment("用户信息表"),
+		entsql.Annotation{
+			Table: "sys_user",
+		},
 	}
 }
 

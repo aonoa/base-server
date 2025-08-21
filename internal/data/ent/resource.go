@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// 资源表
+// 系统资源表
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.

@@ -17,7 +17,10 @@ type ApiResources struct {
 func (ApiResources) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
-		schema.Comment(""),
+		schema.Comment("系统API表"),
+		entsql.Annotation{
+			Table: "sys_api_resources",
+		},
 	}
 }
 

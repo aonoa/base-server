@@ -57,10 +57,23 @@ errors:
 .PHONY: openapi
 # generate openapi proto
 openapi:
-	protoc --proto_path=. \
-            --proto_path=./third_party \
-            --openapi_out=fq_schema_naming=true,default_response=false:. \
-            $(API_PROTO_FILES)
+	protoc --proto_path=./api/protos \
+	       --proto_path=./third_party \
+	       --openapi_out=fq_schema_naming=true,default_response=false:./cmd/base-server/assets \
+	       $(API_PROTO_FILES)
+
+.PHONY: wire
+# wire generate code
+wire:
+	go generate ./...
+
+.PHONY: database
+# generate database code
+database:
+	ent generate ./internal/data/schema \
+			--template ./internal/data/template \
+			--feature sql/modifier \
+			--target ./internal/data/ent
 
 .PHONY: build
 # build
@@ -88,7 +101,7 @@ help:
 	@echo ' make [target]'
 	@echo ''
 	@echo 'Targets:'
-	@awk '/^[a-zA-Z\-\_0-9]+:/ { \
+	@awk '/^[a-zA-Z\-_0-9]+:/ { \
 	helpMessage = match(lastLine, /^# (.*)/); \
 		if (helpMessage) { \
 			helpCommand = substr($$1, 0, index($$1, ":")); \

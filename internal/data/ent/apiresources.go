@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// ApiResources is the model entity for the ApiResources schema.
+// 系统API表
 type ApiResources struct {
 	config `json:"-"`
 	// ID of the ent.

@@ -25,6 +25,9 @@ func (Dept) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
 		schema.Comment("部门表"),
+		entsql.Annotation{
+			Table: "sys_dept",
+		},
 	}
 }
 

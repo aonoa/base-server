@@ -19,7 +19,10 @@ type Resource struct {
 func (Resource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
-		schema.Comment("资源表"),
+		schema.Comment("系统资源表"),
+		entsql.Annotation{
+			Table: "sys_resources",
+		},
 	}
 }
 

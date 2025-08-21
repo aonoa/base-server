@@ -82,7 +82,7 @@ const (
 	// FieldBadgeVariants holds the string denoting the badgevariants field in the database.
 	FieldBadgeVariants = "badge_variants"
 	// Table holds the table name of the menu in the database.
-	Table = "menus"
+	Table = "sys_menu"
 )
 
 // Columns holds all SQL columns for menu fields.

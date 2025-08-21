@@ -37,29 +37,29 @@ const (
 	// EdgeResource holds the string denoting the resource edge name in mutations.
 	EdgeResource = "resource"
 	// Table holds the table name of the role in the database.
-	Table = "roles"
+	Table = "sys_role"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
 	UsersTable = "user_roles"
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
-	UsersInverseTable = "users"
+	UsersInverseTable = "sys_user"
 	// DeptTable is the table that holds the dept relation/edge.
-	DeptTable = "depts"
+	DeptTable = "sys_dept"
 	// DeptInverseTable is the table name for the Dept entity.
 	// It exists in this package in order to avoid circular dependency with the "dept" package.
-	DeptInverseTable = "depts"
+	DeptInverseTable = "sys_dept"
 	// DeptColumn is the table column denoting the dept relation/edge.
 	DeptColumn = "dept_roles"
 	// APITable is the table that holds the api relation/edge. The primary key declared below.
 	APITable = "api_resources_roles"
 	// APIInverseTable is the table name for the ApiResources entity.
 	// It exists in this package in order to avoid circular dependency with the "apiresources" package.
-	APIInverseTable = "api_resources"
+	APIInverseTable = "sys_api_resources"
 	// ResourceTable is the table that holds the resource relation/edge. The primary key declared below.
 	ResourceTable = "resource_roles"
 	// ResourceInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
-	ResourceInverseTable = "resources"
+	ResourceInverseTable = "sys_resources"
 )
 
 // Columns holds all SQL columns for role fields.

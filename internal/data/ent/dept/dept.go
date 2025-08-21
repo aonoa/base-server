@@ -41,25 +41,25 @@ const (
 	// EdgeChildren holds the string denoting the children edge name in mutations.
 	EdgeChildren = "children"
 	// Table holds the table name of the dept in the database.
-	Table = "depts"
+	Table = "sys_dept"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
 	UsersTable = "dept_users"
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
-	UsersInverseTable = "users"
+	UsersInverseTable = "sys_user"
 	// RolesTable is the table that holds the roles relation/edge.
-	RolesTable = "depts"
+	RolesTable = "sys_dept"
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
-	RolesInverseTable = "roles"
+	RolesInverseTable = "sys_role"
 	// RolesColumn is the table column denoting the roles relation/edge.
 	RolesColumn = "dept_roles"
 	// ParentTable is the table that holds the parent relation/edge.
-	ParentTable = "depts"
+	ParentTable = "sys_dept"
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "pid"
 	// ChildrenTable is the table that holds the children relation/edge.
-	ChildrenTable = "depts"
+	ChildrenTable = "sys_dept"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "pid"
 )
@@ -78,7 +78,7 @@ var Columns = []string{
 	FieldPid,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "depts"
+// ForeignKeys holds the SQL foreign-keys that are owned by the "sys_dept"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"dept_roles",

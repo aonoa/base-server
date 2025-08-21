@@ -8,7 +8,6 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
-	"base-server/internal/data/ent/rule"
 	"base-server/internal/data/ent/user"
 	"base-server/internal/data/schema"
 	"time"
@@ -207,21 +206,6 @@ func init() {
 	role.DefaultUpdateTime = roleDescUpdateTime.Default.(func() time.Time)
 	// role.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	role.UpdateDefaultUpdateTime = roleDescUpdateTime.UpdateDefault.(func() time.Time)
-	ruleMixin := schema.Rule{}.Mixin()
-	ruleMixinFields0 := ruleMixin[0].Fields()
-	_ = ruleMixinFields0
-	ruleFields := schema.Rule{}.Fields()
-	_ = ruleFields
-	// ruleDescCreateTime is the schema descriptor for create_time field.
-	ruleDescCreateTime := ruleMixinFields0[0].Descriptor()
-	// rule.DefaultCreateTime holds the default value on creation for the create_time field.
-	rule.DefaultCreateTime = ruleDescCreateTime.Default.(func() time.Time)
-	// ruleDescUpdateTime is the schema descriptor for update_time field.
-	ruleDescUpdateTime := ruleMixinFields0[1].Descriptor()
-	// rule.DefaultUpdateTime holds the default value on creation for the update_time field.
-	rule.DefaultUpdateTime = ruleDescUpdateTime.Default.(func() time.Time)
-	// rule.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
-	rule.UpdateDefaultUpdateTime = ruleDescUpdateTime.UpdateDefault.(func() time.Time)
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0

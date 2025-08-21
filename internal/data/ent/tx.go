@@ -22,8 +22,6 @@ type Tx struct {
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
-	// Rule is the client for interacting with the Rule builders.
-	Rule *RuleClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -162,7 +160,6 @@ func (tx *Tx) init() {
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
-	tx.Rule = NewRuleClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

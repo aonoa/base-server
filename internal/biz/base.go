@@ -136,7 +136,6 @@ func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.
 
 // GetUserInfo 获取用户信息
 func (uc *BaseUsecase) GetUserInfo(ctx context.Context, uuidString string) (*ent.User, error) {
-	// uuidString := "d1f7b7c1-c0b6-4707-aa17-5055b09b3ae8"
 	uid, err := uuid.Parse(uuidString)
 	if err != nil {
 		fmt.Println(err)
@@ -187,35 +186,15 @@ func (uc *BaseUsecase) CreateRouteMenuTree(ctx context.Context) (*pb.GetSysMenuL
 	}
 	// 取并集
 	for _, role := range roles {
+		// 单独判断root角色权限
+		if role.Value == "root" {
+			for _, menu := range menuList {
+				menus = append(menus, int32(menu.ID))
+			}
+			break
+		}
 		menus = append(menus, role.Menus...)
 	}
-
-	//if user.Dom != 0 {
-	//	// 获取用户本身所在域的角色
-	//	roles, err := uc.repo.GetRolesFromUser(ctx, user)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	// 取并集
-	//
-	//	for _, role := range roles {
-	//		menus = append(menus, strings.Split(role.Menu, ",")...)
-	//	}
-	//	if len(roles) == 0 {
-	//		if uc.auth.HasRoleForUser(uid, "role:default", "dom:"+strconv.FormatInt(user.Dom, 10)) {
-	//			menus = append(menus, strings.Split(uc.conf.DefaultMenus, ",")...)
-	//		}
-	//	}
-	//} else {
-	//	// 确定用户是否有角色
-	//	if uc.auth.HasRoleForUser(uid, "role:admin", "dom:default") {
-	//		for _, menu := range menuList {
-	//			menus = append(menus, strconv.FormatInt(menu.ID, 10))
-	//		}
-	//	} else if uc.auth.HasRoleForUser(uid, "role:default", "dom:default") {
-	//		menus = append(menus, strings.Split(uc.conf.DefaultMenus, ",")...)
-	//	}
-	//}
 
 	items := make([]*ent.Menu, 0)
 

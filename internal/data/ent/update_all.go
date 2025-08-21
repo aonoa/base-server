@@ -87,19 +87,6 @@ func (u *RoleUpdateOne) UpdateAll(Role *Role) *RoleUpdateOne {
 	return update
 }
 
-// UpdateAll updates all fields of the Rule entity (excluding create_time and update_time).
-func (u *RuleUpdateOne) UpdateAll(Rule *Rule) *RuleUpdateOne {
-	update := u
-	update = update.SetPtype(Rule.Ptype)
-	update = update.SetV0(Rule.V0)
-	update = update.SetV1(Rule.V1)
-	update = update.SetV2(Rule.V2)
-	update = update.SetV3(Rule.V3)
-	update = update.SetV4(Rule.V4)
-	update = update.SetV5(Rule.V5)
-	return update
-}
-
 // UpdateAll updates all fields of the User entity (excluding create_time and update_time).
 func (u *UserUpdateOne) UpdateAll(User *User) *UserUpdateOne {
 	update := u

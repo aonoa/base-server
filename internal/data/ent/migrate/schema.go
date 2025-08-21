@@ -3,13 +3,14 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
 
 var (
-	// APIResourcesColumns holds the columns for the "api_resources" table.
-	APIResourcesColumns = []*schema.Column{
+	// SysAPIResourcesColumns holds the columns for the "sys_api_resources" table.
+	SysAPIResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -20,14 +21,15 @@ var (
 		{Name: "module_description", Type: field.TypeString, Comment: "模块描述"},
 		{Name: "resources_group", Type: field.TypeString, Comment: "资源组"},
 	}
-	// APIResourcesTable holds the schema information for the "api_resources" table.
-	APIResourcesTable = &schema.Table{
-		Name:       "api_resources",
-		Columns:    APIResourcesColumns,
-		PrimaryKey: []*schema.Column{APIResourcesColumns[0]},
+	// SysAPIResourcesTable holds the schema information for the "sys_api_resources" table.
+	SysAPIResourcesTable = &schema.Table{
+		Name:       "sys_api_resources",
+		Comment:    "系统API表",
+		Columns:    SysAPIResourcesColumns,
+		PrimaryKey: []*schema.Column{SysAPIResourcesColumns[0]},
 	}
-	// DeptsColumns holds the columns for the "depts" table.
-	DeptsColumns = []*schema.Column{
+	// SysDeptColumns holds the columns for the "sys_dept" table.
+	SysDeptColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -40,29 +42,29 @@ var (
 		{Name: "dept_roles", Type: field.TypeInt64, Nullable: true},
 		{Name: "pid", Type: field.TypeInt64, Nullable: true, Comment: "父节点id"},
 	}
-	// DeptsTable holds the schema information for the "depts" table.
-	DeptsTable = &schema.Table{
-		Name:       "depts",
+	// SysDeptTable holds the schema information for the "sys_dept" table.
+	SysDeptTable = &schema.Table{
+		Name:       "sys_dept",
 		Comment:    "部门表",
-		Columns:    DeptsColumns,
-		PrimaryKey: []*schema.Column{DeptsColumns[0]},
+		Columns:    SysDeptColumns,
+		PrimaryKey: []*schema.Column{SysDeptColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "depts_roles_roles",
-				Columns:    []*schema.Column{DeptsColumns[9]},
-				RefColumns: []*schema.Column{RolesColumns[0]},
+				Symbol:     "sys_dept_sys_role_roles",
+				Columns:    []*schema.Column{SysDeptColumns[9]},
+				RefColumns: []*schema.Column{SysRoleColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "depts_depts_children",
-				Columns:    []*schema.Column{DeptsColumns[10]},
-				RefColumns: []*schema.Column{DeptsColumns[0]},
+				Symbol:     "sys_dept_sys_dept_children",
+				Columns:    []*schema.Column{SysDeptColumns[10]},
+				RefColumns: []*schema.Column{SysDeptColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
-	// MenusColumns holds the columns for the "menus" table.
-	MenusColumns = []*schema.Column{
+	// SysMenuColumns holds the columns for the "sys_menu" table.
+	SysMenuColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -99,15 +101,15 @@ var (
 		{Name: "badge_type", Type: field.TypeString, Comment: "用于配置页面的徽标类型，dot 为小红点，normal 为文本", Default: "normal"},
 		{Name: "badge_variants", Type: field.TypeString, Comment: "用于配置页面的徽标颜色。类型：'default' | 'destructive' | 'primary' | 'success' | 'warning' | string", Default: "success"},
 	}
-	// MenusTable holds the schema information for the "menus" table.
-	MenusTable = &schema.Table{
-		Name:       "menus",
+	// SysMenuTable holds the schema information for the "sys_menu" table.
+	SysMenuTable = &schema.Table{
+		Name:       "sys_menu",
 		Comment:    "菜单表",
-		Columns:    MenusColumns,
-		PrimaryKey: []*schema.Column{MenusColumns[0]},
+		Columns:    SysMenuColumns,
+		PrimaryKey: []*schema.Column{SysMenuColumns[0]},
 	}
-	// ResourcesColumns holds the columns for the "resources" table.
-	ResourcesColumns = []*schema.Column{
+	// SysResourcesColumns holds the columns for the "sys_resources" table.
+	SysResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -117,15 +119,15 @@ var (
 		{Name: "method", Type: field.TypeString, Comment: "对资源的操作"},
 		{Name: "description", Type: field.TypeString, Comment: "资源的描述"},
 	}
-	// ResourcesTable holds the schema information for the "resources" table.
-	ResourcesTable = &schema.Table{
-		Name:       "resources",
-		Comment:    "资源表",
-		Columns:    ResourcesColumns,
-		PrimaryKey: []*schema.Column{ResourcesColumns[0]},
+	// SysResourcesTable holds the schema information for the "sys_resources" table.
+	SysResourcesTable = &schema.Table{
+		Name:       "sys_resources",
+		Comment:    "系统资源表",
+		Columns:    SysResourcesColumns,
+		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
 	}
-	// RolesColumns holds the columns for the "roles" table.
-	RolesColumns = []*schema.Column{
+	// SysRoleColumns holds the columns for the "sys_role" table.
+	SysRoleColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -135,34 +137,15 @@ var (
 		{Name: "desc", Type: field.TypeString, Comment: "简介"},
 		{Name: "menus", Type: field.TypeJSON, Comment: "权限菜单ID列表"},
 	}
-	// RolesTable holds the schema information for the "roles" table.
-	RolesTable = &schema.Table{
-		Name:       "roles",
+	// SysRoleTable holds the schema information for the "sys_role" table.
+	SysRoleTable = &schema.Table{
+		Name:       "sys_role",
 		Comment:    "角色表",
-		Columns:    RolesColumns,
-		PrimaryKey: []*schema.Column{RolesColumns[0]},
+		Columns:    SysRoleColumns,
+		PrimaryKey: []*schema.Column{SysRoleColumns[0]},
 	}
-	// RulesColumns holds the columns for the "rules" table.
-	RulesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
-		{Name: "ptype", Type: field.TypeString},
-		{Name: "v0", Type: field.TypeString},
-		{Name: "v1", Type: field.TypeString},
-		{Name: "v2", Type: field.TypeString},
-		{Name: "v3", Type: field.TypeString},
-		{Name: "v4", Type: field.TypeString},
-		{Name: "v5", Type: field.TypeString},
-	}
-	// RulesTable holds the schema information for the "rules" table.
-	RulesTable = &schema.Table{
-		Name:       "rules",
-		Columns:    RulesColumns,
-		PrimaryKey: []*schema.Column{RulesColumns[0]},
-	}
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
+	// SysUserColumns holds the columns for the "sys_user" table.
+	SysUserColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -174,12 +157,12 @@ var (
 		{Name: "desc", Type: field.TypeString, Comment: "备注"},
 		{Name: "extension", Type: field.TypeString, Comment: "扩展信息"},
 	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:       "users",
+	// SysUserTable holds the schema information for the "sys_user" table.
+	SysUserTable = &schema.Table{
+		Name:       "sys_user",
 		Comment:    "用户信息表",
-		Columns:    UsersColumns,
-		PrimaryKey: []*schema.Column{UsersColumns[0]},
+		Columns:    SysUserColumns,
+		PrimaryKey: []*schema.Column{SysUserColumns[0]},
 	}
 	// APIResourcesRolesColumns holds the columns for the "api_resources_roles" table.
 	APIResourcesRolesColumns = []*schema.Column{
@@ -195,13 +178,13 @@ var (
 			{
 				Symbol:     "api_resources_roles_api_resources_id",
 				Columns:    []*schema.Column{APIResourcesRolesColumns[0]},
-				RefColumns: []*schema.Column{APIResourcesColumns[0]},
+				RefColumns: []*schema.Column{SysAPIResourcesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "api_resources_roles_role_id",
 				Columns:    []*schema.Column{APIResourcesRolesColumns[1]},
-				RefColumns: []*schema.Column{RolesColumns[0]},
+				RefColumns: []*schema.Column{SysRoleColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -220,13 +203,13 @@ var (
 			{
 				Symbol:     "dept_users_dept_id",
 				Columns:    []*schema.Column{DeptUsersColumns[0]},
-				RefColumns: []*schema.Column{DeptsColumns[0]},
+				RefColumns: []*schema.Column{SysDeptColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "dept_users_user_id",
 				Columns:    []*schema.Column{DeptUsersColumns[1]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{SysUserColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -245,13 +228,13 @@ var (
 			{
 				Symbol:     "resource_roles_resource_id",
 				Columns:    []*schema.Column{ResourceRolesColumns[0]},
-				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "resource_roles_role_id",
 				Columns:    []*schema.Column{ResourceRolesColumns[1]},
-				RefColumns: []*schema.Column{RolesColumns[0]},
+				RefColumns: []*schema.Column{SysRoleColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -270,26 +253,25 @@ var (
 			{
 				Symbol:     "user_roles_user_id",
 				Columns:    []*schema.Column{UserRolesColumns[0]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{SysUserColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "user_roles_role_id",
 				Columns:    []*schema.Column{UserRolesColumns[1]},
-				RefColumns: []*schema.Column{RolesColumns[0]},
+				RefColumns: []*schema.Column{SysRoleColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		APIResourcesTable,
-		DeptsTable,
-		MenusTable,
-		ResourcesTable,
-		RolesTable,
-		RulesTable,
-		UsersTable,
+		SysAPIResourcesTable,
+		SysDeptTable,
+		SysMenuTable,
+		SysResourcesTable,
+		SysRoleTable,
+		SysUserTable,
 		APIResourcesRolesTable,
 		DeptUsersTable,
 		ResourceRolesTable,
@@ -298,14 +280,32 @@ var (
 )
 
 func init() {
-	DeptsTable.ForeignKeys[0].RefTable = RolesTable
-	DeptsTable.ForeignKeys[1].RefTable = DeptsTable
-	APIResourcesRolesTable.ForeignKeys[0].RefTable = APIResourcesTable
-	APIResourcesRolesTable.ForeignKeys[1].RefTable = RolesTable
-	DeptUsersTable.ForeignKeys[0].RefTable = DeptsTable
-	DeptUsersTable.ForeignKeys[1].RefTable = UsersTable
-	ResourceRolesTable.ForeignKeys[0].RefTable = ResourcesTable
-	ResourceRolesTable.ForeignKeys[1].RefTable = RolesTable
-	UserRolesTable.ForeignKeys[0].RefTable = UsersTable
-	UserRolesTable.ForeignKeys[1].RefTable = RolesTable
+	SysAPIResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_api_resources",
+	}
+	SysDeptTable.ForeignKeys[0].RefTable = SysRoleTable
+	SysDeptTable.ForeignKeys[1].RefTable = SysDeptTable
+	SysDeptTable.Annotation = &entsql.Annotation{
+		Table: "sys_dept",
+	}
+	SysMenuTable.Annotation = &entsql.Annotation{
+		Table: "sys_menu",
+	}
+	SysResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_resources",
+	}
+	SysRoleTable.Annotation = &entsql.Annotation{
+		Table: "sys_role",
+	}
+	SysUserTable.Annotation = &entsql.Annotation{
+		Table: "sys_user",
+	}
+	APIResourcesRolesTable.ForeignKeys[0].RefTable = SysAPIResourcesTable
+	APIResourcesRolesTable.ForeignKeys[1].RefTable = SysRoleTable
+	DeptUsersTable.ForeignKeys[0].RefTable = SysDeptTable
+	DeptUsersTable.ForeignKeys[1].RefTable = SysUserTable
+	ResourceRolesTable.ForeignKeys[0].RefTable = SysResourcesTable
+	ResourceRolesTable.ForeignKeys[1].RefTable = SysRoleTable
+	UserRolesTable.ForeignKeys[0].RefTable = SysUserTable
+	UserRolesTable.ForeignKeys[1].RefTable = SysRoleTable
 }

@@ -38,17 +38,17 @@ const (
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// Table holds the table name of the user in the database.
-	Table = "users"
+	Table = "sys_user"
 	// DeptTable is the table that holds the dept relation/edge. The primary key declared below.
 	DeptTable = "dept_users"
 	// DeptInverseTable is the table name for the Dept entity.
 	// It exists in this package in order to avoid circular dependency with the "dept" package.
-	DeptInverseTable = "depts"
+	DeptInverseTable = "sys_dept"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
 	RolesTable = "user_roles"
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
-	RolesInverseTable = "roles"
+	RolesInverseTable = "sys_role"
 )
 
 // Columns holds all SQL columns for user fields.

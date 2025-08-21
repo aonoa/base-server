@@ -18,6 +18,9 @@ func (Role) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
 		schema.Comment("角色表"),
+		entsql.Annotation{
+			Table: "sys_role",
+		},
 	}
 }
 

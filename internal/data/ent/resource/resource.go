@@ -31,12 +31,12 @@ const (
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// Table holds the table name of the resource in the database.
-	Table = "resources"
+	Table = "sys_resources"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
 	RolesTable = "resource_roles"
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
-	RolesInverseTable = "roles"
+	RolesInverseTable = "sys_role"
 )
 
 // Columns holds all SQL columns for resource fields.
