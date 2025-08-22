@@ -11,6 +11,7 @@ import (
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
 	"base-server/internal/data/ent/user"
+	"base-server/internal/tools"
 	"context"
 	"encoding/json"
 	"entgo.io/ent/dialect"
@@ -74,23 +75,52 @@ func (r *baseRepo) DeleteByID(ctx context.Context, id *uuid.UUID) error {
 	return r.data.db.User.DeleteOneID(*id).Exec(entcache.Evict(ctx))
 }
 
+func getUserListQuery(params *pb.GetUserParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Username != "" {
+			s.Where(sql.EQ(user.FieldUsername, params.Username))
+		}
+		if params.Nickname != "" {
+			s.Where(sql.EQ(user.FieldNickname, params.Nickname))
+		}
+		if params.Status == 1 {
+			s.Where(sql.EQ(user.FieldStatus, params.Status))
+		} else if params.Status == 2 {
+			s.Where(sql.EQ(user.FieldStatus, 0))
+		}
+		if isPage {
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
 // GetUserList 获取用户列表
-func (r *baseRepo) GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, error) {
+func (r *baseRepo) GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, int64, error) {
 	query := r.data.db.User.Query()
-	if req.Username != "" {
-		query = query.Where(user.UsernameEQ(req.Username))
+	if req.Role != -1 {
+		query.Where(user.HasRolesWith(role.IDEQ(req.Role)))
 	}
-	if req.Nickname != "" {
-		query = query.Where(user.NicknameEQ(req.Nickname))
-	}
-	if deptId != 0 {
-		query.Where(user.HasDeptWith(dept.IDEQ(deptId)))
-	}
+	query.Modify(getUserListQuery(req, true))
 	query.WithRoles(func(query *ent.RoleQuery) {
 		query.Select(role.FieldID, role.FieldName, role.FieldValue)
 	})
-	return query.All(ctx)
-	// return r.data.db.User.Query().All(ctx)
+	res, err := query.All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	queryCount := r.data.db.User.Query()
+	if req.Role != -1 {
+		queryCount.Where(user.HasRolesWith(role.IDEQ(req.Role)))
+	}
+	count, err := queryCount.Modify(getUserListQuery(req, false)).Count(ctx)
+
+	return res, int64(count), nil
 }
 
 // AddUser 新增用户
@@ -354,8 +384,41 @@ func (r *baseRepo) ChangePassword(ctx context.Context, uid *uuid.UUID, passwordO
 	return errors.New(500, "password err", "password err")
 }
 
-func (r *baseRepo) GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error) {
-	return r.data.db.ApiResources.Query().All(ctx)
+func getApiListQuery(params *pb.GetApiPageParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Path != "" {
+			s.Where(sql.EQ(apiresources.FieldPath, params.Path))
+		}
+		if params.ResourcesGroup != "" {
+			s.Where(sql.EQ(apiresources.FieldResourcesGroup, params.ResourcesGroup))
+		}
+		if params.Method != "" {
+			s.Where(sql.EQ(apiresources.FieldMethod, params.Method))
+		}
+		if params.Description != "" {
+			s.Where(sql.Like(apiresources.FieldDescription, "%"+params.Description+"%"))
+		}
+		if isPage {
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+func (r *baseRepo) GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, int64, error) {
+	res, err := r.data.db.ApiResources.Query().Modify(
+		getApiListQuery(req, true),
+	).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.ApiResources.Query().Modify(
+		getApiListQuery(req, false),
+	).Count(ctx)
+	return res, int64(count), nil
 }
 func (r *baseRepo) GetApi(ctx context.Context, id string) (*ent.ApiResources, error) {
 	return r.data.db.ApiResources.Query().Where(apiresources.IDEQ(id)).First(ctx)
@@ -370,8 +433,45 @@ func (r *baseRepo) DelApi(ctx context.Context, id string) error {
 	return r.data.db.ApiResources.DeleteOneID(id).Exec(ctx)
 }
 
-func (r *baseRepo) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error) {
-	return r.data.db.Resource.Query().All(ctx)
+func getResourceListQuery(params *pb.GetResourcePageParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Name != "" {
+			s.Where(sql.Like(resource.FieldName, "%"+params.Name+"%"))
+		}
+		if params.Type != "" {
+			s.Where(sql.EQ(resource.FieldType, params.Type))
+		}
+		if params.Value != "" {
+			s.Where(sql.EQ(resource.FieldValue, params.Value))
+		}
+		if params.Method != "" {
+			s.Where(sql.Like(resource.FieldMethod, "%"+params.Method+"%"))
+		}
+		if params.Description != "" {
+			s.Where(sql.Like(resource.FieldDescription, "%"+params.Description+"%"))
+		}
+		if isPage {
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *baseRepo) GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, int64, error) {
+	res, err := r.data.db.Resource.Query().Modify(
+		getResourceListQuery(req, true),
+	).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.Resource.Query().Modify(
+		getResourceListQuery(req, false),
+	).Count(ctx)
+	return res, int64(count), nil
 }
 func (r *baseRepo) GetResource(ctx context.Context, id string) (*ent.Resource, error) {
 	return r.data.db.Resource.Query().Where(resource.IDEQ(id)).First(ctx)

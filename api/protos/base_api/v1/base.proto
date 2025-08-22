@@ -416,7 +416,7 @@ message GetDeptListReply {
 }
 
 message RolePageParams {
-	int64 page = 1;
+	int64 currentPage = 1;
 	int64 pageSize = 2;
 	string name = 3;
 	int64 status = 4;
@@ -508,11 +508,13 @@ message GetSysMenuListReply {
 }
 
 message GetUserParams {
-	int64 page = 1;
+	int64 currentPage = 1;
 	int64 pageSize = 2;
 	string username = 3;
 	string nickname = 4;
 	string deptId = 5;
+	int64 role = 6;
+	int32 status = 7;
 }
 
 message UserListItem {
@@ -591,10 +593,12 @@ message GetWalkRouteReply {
 }
 
 message GetApiPageParams {
-	int64 page = 1;
+	int64 currentPage = 1;
 	int64 pageSize = 2;
 	string path = 3;	// api 路径
 	string description = 4; // api 描述
+	string method = 5;	// api 方法（GET|PUT|POST|DELETE）
+	string resources_group = 6; // 资源组
 }
 
 message ApiListItem {
@@ -617,10 +621,13 @@ message DeleteApi {
 }
 
 message GetResourcePageParams {
-	int64 page = 1;
-	int64 pageSize = 2;
-	string type = 3;	// 资源类型
-	string description = 4; // api 描述
+	int64 currentPage = 7;
+	int64 pageSize = 8;
+	string name = 2;	// 资源名称
+	string type = 3; // 资源类型
+	string value = 4; // 资源值
+	string method = 5;	// 对资源的操作
+	string description = 6; // 资源的描述
 }
 
 message ResourceListItem {

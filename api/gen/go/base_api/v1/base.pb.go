@@ -1029,7 +1029,7 @@ func (x *GetDeptListReply) GetTotal() int64 {
 
 type RolePageParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
 	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
@@ -1068,9 +1068,9 @@ func (*RolePageParams) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *RolePageParams) GetPage() int64 {
+func (x *RolePageParams) GetCurrentPage() int64 {
 	if x != nil {
-		return x.Page
+		return x.CurrentPage
 	}
 	return 0
 }
@@ -1765,11 +1765,13 @@ func (x *GetSysMenuListReply) GetTotal() int64 {
 
 type GetUserParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
 	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
 	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	DeptId        string                 `protobuf:"bytes,5,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	Role          int64                  `protobuf:"varint,6,opt,name=role,proto3" json:"role,omitempty"`
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1804,9 +1806,9 @@ func (*GetUserParams) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *GetUserParams) GetPage() int64 {
+func (x *GetUserParams) GetCurrentPage() int64 {
 	if x != nil {
-		return x.Page
+		return x.CurrentPage
 	}
 	return 0
 }
@@ -1837,6 +1839,20 @@ func (x *GetUserParams) GetDeptId() string {
 		return x.DeptId
 	}
 	return ""
+}
+
+func (x *GetUserParams) GetRole() int64 {
+	if x != nil {
+		return x.Role
+	}
+	return 0
+}
+
+func (x *GetUserParams) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
 }
 
 type UserListItem struct {
@@ -2644,13 +2660,15 @@ func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
 }
 
 type GetApiPageParams struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	Path          string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`               // api 路径
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // api 描述
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage    int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize       int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Path           string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`                                           // api 路径
+	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`                             // api 描述
+	Method         string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`                                       // api 方法（GET|PUT|POST|DELETE）
+	ResourcesGroup string                 `protobuf:"bytes,6,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"` // 资源组
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetApiPageParams) Reset() {
@@ -2683,9 +2701,9 @@ func (*GetApiPageParams) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *GetApiPageParams) GetPage() int64 {
+func (x *GetApiPageParams) GetCurrentPage() int64 {
 	if x != nil {
-		return x.Page
+		return x.CurrentPage
 	}
 	return 0
 }
@@ -2707,6 +2725,20 @@ func (x *GetApiPageParams) GetPath() string {
 func (x *GetApiPageParams) GetDescription() string {
 	if x != nil {
 		return x.Description
+	}
+	return ""
+}
+
+func (x *GetApiPageParams) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *GetApiPageParams) GetResourcesGroup() string {
+	if x != nil {
+		return x.ResourcesGroup
 	}
 	return ""
 }
@@ -2901,10 +2933,13 @@ func (x *DeleteApi) GetId() string {
 
 type GetResourcePageParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	CurrentPage   int64                  `protobuf:"varint,7,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,8,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`               // 资源名称
 	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`               // 资源类型
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"` // api 描述
+	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`             // 资源值
+	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`           // 对资源的操作
+	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"` // 资源的描述
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2939,9 +2974,9 @@ func (*GetResourcePageParams) Descriptor() ([]byte, []int) {
 	return file_base_api_v1_base_proto_rawDescGZIP(), []int{41}
 }
 
-func (x *GetResourcePageParams) GetPage() int64 {
+func (x *GetResourcePageParams) GetCurrentPage() int64 {
 	if x != nil {
-		return x.Page
+		return x.CurrentPage
 	}
 	return 0
 }
@@ -2953,9 +2988,30 @@ func (x *GetResourcePageParams) GetPageSize() int64 {
 	return 0
 }
 
+func (x *GetResourcePageParams) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 func (x *GetResourcePageParams) GetType() string {
 	if x != nil {
 		return x.Type
+	}
+	return ""
+}
+
+func (x *GetResourcePageParams) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *GetResourcePageParams) GetMethod() string {
+	if x != nil {
+		return x.Method
 	}
 	return ""
 }
@@ -3234,9 +3290,9 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"]\n" +
 	"\x10GetDeptListReply\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.api.base_api.v1.DeptListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x84\x01\n" +
-	"\x0eRolePageParams\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x92\x01\n" +
+	"\x0eRolePageParams\x12 \n" +
+	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x16\n" +
@@ -3337,13 +3393,15 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\t_redirect\"c\n" +
 	"\x13GetSysMenuListReply\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .api.base_api.v1.SysMenuListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x8f\x01\n" +
-	"\rGetUserParams\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xc9\x01\n" +
+	"\rGetUserParams\x12 \n" +
+	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x1a\n" +
 	"\busername\x18\x03 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x16\n" +
-	"\x06deptId\x18\x05 \x01(\tR\x06deptId\"\x98\x02\n" +
+	"\x06deptId\x18\x05 \x01(\tR\x06deptId\x12\x12\n" +
+	"\x04role\x18\x06 \x01(\x03R\x04role\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\"\x98\x02\n" +
 	"\fUserListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -3396,12 +3454,14 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\"I\n" +
 	"\x11GetWalkRouteReply\x124\n" +
-	"\x05items\x18\x01 \x03(\v2\x1e.api.base_api.v1.WalkRouteItemR\x05items\"x\n" +
-	"\x10GetApiPageParams\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
+	"\x05items\x18\x01 \x03(\v2\x1e.api.base_api.v1.WalkRouteItemR\x05items\"\xc7\x01\n" +
+	"\x10GetApiPageParams\x12 \n" +
+	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
 	"\x04path\x18\x03 \x01(\tR\x04path\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xdb\x01\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\x12'\n" +
+	"\x0fresources_group\x18\x06 \x01(\tR\x0eresourcesGroup\"\xdb\x01\n" +
 	"\vApiListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
@@ -3414,12 +3474,15 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x05items\x18\x01 \x03(\v2\x1c.api.base_api.v1.ApiListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1b\n" +
 	"\tDeleteApi\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"}\n" +
-	"\x15GetResourcePageParams\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"\x9a\x01\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xcd\x01\n" +
+	"\x15GetResourcePageParams\x12 \n" +
+	"\vcurrentPage\x18\a \x01(\x03R\vcurrentPage\x12\x1a\n" +
+	"\bpageSize\x18\b \x01(\x03R\bpageSize\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
+	"\x05value\x18\x04 \x01(\tR\x05value\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\"\x9a\x01\n" +
 	"\x10ResourceListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +

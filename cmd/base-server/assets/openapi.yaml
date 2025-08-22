@@ -126,7 +126,7 @@ paths:
                  获取api资源
             operationId: Base_GetApiList
             parameters:
-                - name: page
+                - name: currentPage
                   in: query
                   schema:
                     type: string
@@ -139,6 +139,14 @@ paths:
                   schema:
                     type: string
                 - name: description
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: resourcesGroup
                   in: query
                   schema:
                     type: string
@@ -441,7 +449,7 @@ paths:
                  获取resource资源
             operationId: Base_GetResourceList
             parameters:
-                - name: page
+                - name: currentPage
                   in: query
                   schema:
                     type: string
@@ -449,7 +457,19 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
                 - name: type
+                  in: query
+                  schema:
+                    type: string
+                - name: value
+                  in: query
+                  schema:
+                    type: string
+                - name: method
                   in: query
                   schema:
                     type: string
@@ -530,7 +550,7 @@ paths:
             description: 获取角色列表
             operationId: Base_GetRoleList
             parameters:
-                - name: page
+                - name: currentPage
                   in: query
                   schema:
                     type: string
@@ -639,7 +659,7 @@ paths:
             description: 获取账户列表
             operationId: Base_GetUserList
             parameters:
-                - name: page
+                - name: currentPage
                   in: query
                   schema:
                     type: string
@@ -659,6 +679,15 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: role
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK

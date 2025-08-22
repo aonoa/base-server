@@ -37,7 +37,7 @@ type BaseRepo interface {
 
 	ChangePassword(ctx context.Context, uid *uuid.UUID, passwordOld, passwordNew string) error
 
-	GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, error)
+	GetUserList(ctx context.Context, deptId int64, req *pb.GetUserParams) ([]*ent.User, int64, error)
 	AddUser(ctx context.Context, req *pb.UserListItem) (*ent.User, error)
 	UpdateUser(ctx context.Context, id *uuid.UUID, req *pb.UserListItem) (*ent.User, error)
 	DeleteByID(ctx context.Context, id *uuid.UUID) error
@@ -60,13 +60,13 @@ type BaseRepo interface {
 
 	IsUserExistsByUserName(ctx context.Context, req *pb.IsUserExistsRequest) (*ent.User, error)
 
-	GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, error)
+	GetApiList(ctx context.Context, req *pb.GetApiPageParams) ([]*ent.ApiResources, int64, error)
 	GetApi(ctx context.Context, id string) (*ent.ApiResources, error)
 	AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
 	UpdateApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error)
 	DelApi(ctx context.Context, id string) error
 
-	GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, error)
+	GetResourceList(ctx context.Context, req *pb.GetResourcePageParams) ([]*ent.Resource, int64, error)
 	AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
 	GetResource(ctx context.Context, id string) (*ent.Resource, error)
 	UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
@@ -892,12 +892,12 @@ func (uc *BaseUsecase) DeleteMenu(ctx context.Context, req *pb.DeleteMenuRequest
 func (uc *BaseUsecase) GetUserList(ctx context.Context, req *pb.GetUserParams) (*pb.GetUserListReply, error) {
 	deptId, _ := tools.DeptStrSplitToInt(req.DeptId)
 
-	userList, err := uc.repo.GetUserList(ctx, deptId, req)
+	userList, count, err := uc.repo.GetUserList(ctx, deptId, req)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.GetUserListReply{
-		Total: int64(len(userList)),
+		Total: count,
 		Items: func() []*pb.UserListItem {
 			var items []*pb.UserListItem
 			for _, user := range userList {
@@ -1043,7 +1043,7 @@ func (uc *BaseUsecase) GetApiList(ctx context.Context, req *pb.GetApiPageParams)
 	res := &pb.GetApiListByPageReply{
 		Items: []*pb.ApiListItem{},
 	}
-	list, err := uc.repo.GetApiList(ctx, req)
+	list, count, err := uc.repo.GetApiList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -1053,7 +1053,7 @@ func (uc *BaseUsecase) GetApiList(ctx context.Context, req *pb.GetApiPageParams)
 
 		res.Items = append(res.Items, tmp)
 	}
-	res.Total = int64(len(res.Items))
+	res.Total = count
 	return res, nil
 }
 
@@ -1109,7 +1109,7 @@ func (uc *BaseUsecase) GetResourceList(ctx context.Context, req *pb.GetResourceP
 	res := &pb.GetResourceListByPageReply{
 		Items: []*pb.ResourceListItem{},
 	}
-	list, err := uc.repo.GetResourceList(ctx, req)
+	list, count, err := uc.repo.GetResourceList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -1119,7 +1119,7 @@ func (uc *BaseUsecase) GetResourceList(ctx context.Context, req *pb.GetResourceP
 
 		res.Items = append(res.Items, tmp)
 	}
-	res.Total = int64(len(res.Items))
+	res.Total = count
 	return res, nil
 }
 

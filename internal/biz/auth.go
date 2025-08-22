@@ -399,7 +399,7 @@ func (uc *AuthUsecase) DelDataPolicy(typeStr, dataGroup, method string) {
 func (uc *AuthUsecase) generateAuthPolicy() {
 	// 获取api资源数据
 	ctx := context.Background()
-	apiList, err := uc.repo.GetApiList(ctx, &pb.GetApiPageParams{})
+	apiList, _, err := uc.repo.GetApiList(ctx, &pb.GetApiPageParams{})
 	if err != nil {
 		uc.log.Error(err)
 	}
@@ -411,10 +411,7 @@ func (uc *AuthUsecase) generateAuthPolicy() {
 
 	// 为所有用户生成角色
 	// 获取所有用户及其用户拥有的角色
-	userList, err := uc.repo.GetUserList(ctx, 0, &pb.GetUserParams{
-		Page:     0,
-		PageSize: 1000000,
-	})
+	userList, _, err := uc.repo.GetUserList(ctx, 0, &pb.GetUserParams{})
 	if err != nil {
 		uc.log.Error(err)
 	}
@@ -431,11 +428,7 @@ func (uc *AuthUsecase) generateAuthPolicy() {
 
 	// 将角色和资源绑定成权限
 	// 获取所有的角色以及角色绑的资源信息
-	roleList, err := uc.repo.GetAllRoleList(ctx, &pb.RolePageParams{
-		Page:     0,
-		PageSize: 1000000,
-		Status:   1,
-	})
+	roleList, err := uc.repo.GetAllRoleList(ctx, &pb.RolePageParams{Status: 1})
 	if err != nil {
 		uc.log.Error(err)
 	}
