@@ -4,6 +4,7 @@ import (
 	basev1 "base-server/api/gen/go/base_api/v1"
 	"base-server/api/protos/base_api"
 	"base-server/cmd/base-server/assets"
+	"base-server/internal/biz"
 	"base-server/internal/conf"
 	"base-server/internal/server/middleware"
 	"base-server/internal/service"
@@ -20,6 +21,7 @@ import (
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
+	repo biz.BaseRepo,
 	base *service.BaseService,
 	logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
@@ -31,7 +33,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 			recovery.Recovery(),
 			logging.Server(logger),
 			//middleware.MiddlewareHttpLog(),
-			middleware.MiddlewareOperateLog(),
+			middleware.MiddlewareOperateLog(repo, ac),
 			//MiddlewareDemo(),
 			middleware.MiddlewareAuth(ac, e, logger),
 		),

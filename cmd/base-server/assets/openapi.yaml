@@ -300,6 +300,94 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetWalkRouteReply'
+    /basic-api/system/log/list:
+        get:
+            tags:
+                - Base
+            description: |-
+                ////////////////////////////////////////////// 日志
+                 获取系统日志列表
+            operationId: Base_GetSysLogList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+                - name: userName
+                  in: query
+                  schema:
+                    type: string
+                - name: isLogin
+                  in: query
+                  schema:
+                    type: boolean
+                - name: sessionId
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: requestTime
+                  in: query
+                  schema:
+                    type: string
+                - name: ipAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: latency
+                  in: query
+                  schema:
+                    type: string
+                - name: resCode
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: resStatus
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetSysLogListReply'
+    /basic-api/system/log/{id}:
+        get:
+            tags:
+                - Base
+            description: 获取单条日志详情
+            operationId: Base_GetSysLogInfo
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetSysLogInfoReply'
     /basic-api/system/menu:
         post:
             tags:
@@ -890,6 +978,63 @@ components:
                         $ref: '#/components/schemas/api.base_api.v1.RoleListItem'
                 total:
                     type: string
+        api.base_api.v1.GetSysLogInfoReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                userName:
+                    type: string
+                isLogin:
+                    type: boolean
+                sessionId:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                requestTime:
+                    type: string
+                ipAddress:
+                    type: string
+                ipLocation:
+                    type: string
+                latency:
+                    type: string
+                os:
+                    type: string
+                browser:
+                    type: string
+                userAgent:
+                    type: string
+                header:
+                    type: string
+                getParams:
+                    type: string
+                postData:
+                    type: string
+                resCode:
+                    type: integer
+                    format: int32
+                reason:
+                    type: string
+                resStatus:
+                    type: boolean
+                stack:
+                    type: string
+                createTime:
+                    type: string
+        api.base_api.v1.GetSysLogListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.SysLogItem'
+                total:
+                    type: string
         api.base_api.v1.GetSysMenuListReply:
             type: object
             properties:
@@ -1079,6 +1224,36 @@ components:
                     type: string
                 status:
                     type: string
+        api.base_api.v1.SysLogItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                userName:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                requestTime:
+                    type: string
+                ipAddress:
+                    type: string
+                ipLocation:
+                    type: string
+                latency:
+                    type: string
+                os:
+                    type: string
+                browser:
+                    type: string
+                resCode:
+                    type: integer
+                    format: int32
+                resStatus:
+                    type: boolean
         api.base_api.v1.SysMenuListItem:
             type: object
             properties:

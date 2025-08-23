@@ -8,6 +8,7 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"context"
 	"errors"
@@ -83,6 +84,7 @@ func checkColumn(table, column string) error {
 			menu.Table:         menu.ValidColumn,
 			resource.Table:     resource.ValidColumn,
 			role.Table:         role.ValidColumn,
+			syslogrecord.Table: syslogrecord.ValidColumn,
 			user.Table:         user.ValidColumn,
 		})
 	})

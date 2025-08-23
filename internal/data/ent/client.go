@@ -16,6 +16,7 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 
 	"entgo.io/ent"
@@ -40,6 +41,8 @@ type Client struct {
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// SysLogRecord is the client for interacting with the SysLogRecord builders.
+	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -58,6 +61,7 @@ func (c *Client) init() {
 	c.Menu = NewMenuClient(c.config)
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
+	c.SysLogRecord = NewSysLogRecordClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -156,6 +160,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Menu:         NewMenuClient(cfg),
 		Resource:     NewResourceClient(cfg),
 		Role:         NewRoleClient(cfg),
+		SysLogRecord: NewSysLogRecordClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
 }
@@ -181,6 +186,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Menu:         NewMenuClient(cfg),
 		Resource:     NewResourceClient(cfg),
 		Role:         NewRoleClient(cfg),
+		SysLogRecord: NewSysLogRecordClient(cfg),
 		User:         NewUserClient(cfg),
 	}, nil
 }
@@ -211,7 +217,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.User,
+		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -221,7 +227,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.User,
+		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -240,6 +246,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Resource.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
+	case *SysLogRecordMutation:
+		return c.SysLogRecord.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
@@ -1072,6 +1080,139 @@ func (c *RoleClient) mutate(ctx context.Context, m *RoleMutation) (Value, error)
 	}
 }
 
+// SysLogRecordClient is a client for the SysLogRecord schema.
+type SysLogRecordClient struct {
+	config
+}
+
+// NewSysLogRecordClient returns a client for the SysLogRecord from the given config.
+func NewSysLogRecordClient(c config) *SysLogRecordClient {
+	return &SysLogRecordClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `syslogrecord.Hooks(f(g(h())))`.
+func (c *SysLogRecordClient) Use(hooks ...Hook) {
+	c.hooks.SysLogRecord = append(c.hooks.SysLogRecord, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `syslogrecord.Intercept(f(g(h())))`.
+func (c *SysLogRecordClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SysLogRecord = append(c.inters.SysLogRecord, interceptors...)
+}
+
+// Create returns a builder for creating a SysLogRecord entity.
+func (c *SysLogRecordClient) Create() *SysLogRecordCreate {
+	mutation := newSysLogRecordMutation(c.config, OpCreate)
+	return &SysLogRecordCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SysLogRecord entities.
+func (c *SysLogRecordClient) CreateBulk(builders ...*SysLogRecordCreate) *SysLogRecordCreateBulk {
+	return &SysLogRecordCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SysLogRecordClient) MapCreateBulk(slice any, setFunc func(*SysLogRecordCreate, int)) *SysLogRecordCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SysLogRecordCreateBulk{err: fmt.Errorf("calling to SysLogRecordClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SysLogRecordCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SysLogRecordCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SysLogRecord.
+func (c *SysLogRecordClient) Update() *SysLogRecordUpdate {
+	mutation := newSysLogRecordMutation(c.config, OpUpdate)
+	return &SysLogRecordUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SysLogRecordClient) UpdateOne(slr *SysLogRecord) *SysLogRecordUpdateOne {
+	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecord(slr))
+	return &SysLogRecordUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SysLogRecordClient) UpdateOneID(id string) *SysLogRecordUpdateOne {
+	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecordID(id))
+	return &SysLogRecordUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SysLogRecord.
+func (c *SysLogRecordClient) Delete() *SysLogRecordDelete {
+	mutation := newSysLogRecordMutation(c.config, OpDelete)
+	return &SysLogRecordDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SysLogRecordClient) DeleteOne(slr *SysLogRecord) *SysLogRecordDeleteOne {
+	return c.DeleteOneID(slr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SysLogRecordClient) DeleteOneID(id string) *SysLogRecordDeleteOne {
+	builder := c.Delete().Where(syslogrecord.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SysLogRecordDeleteOne{builder}
+}
+
+// Query returns a query builder for SysLogRecord.
+func (c *SysLogRecordClient) Query() *SysLogRecordQuery {
+	return &SysLogRecordQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSysLogRecord},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SysLogRecord entity by its id.
+func (c *SysLogRecordClient) Get(ctx context.Context, id string) (*SysLogRecord, error) {
+	return c.Query().Where(syslogrecord.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SysLogRecordClient) GetX(ctx context.Context, id string) *SysLogRecord {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SysLogRecordClient) Hooks() []Hook {
+	return c.hooks.SysLogRecord
+}
+
+// Interceptors returns the client interceptors.
+func (c *SysLogRecordClient) Interceptors() []Interceptor {
+	return c.inters.SysLogRecord
+}
+
+func (c *SysLogRecordClient) mutate(ctx context.Context, m *SysLogRecordMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SysLogRecordCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SysLogRecordUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SysLogRecordUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SysLogRecordDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SysLogRecord mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -1240,9 +1381,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ApiResources, Dept, Menu, Resource, Role, User []ent.Hook
+		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Hook
 	}
 	inters struct {
-		ApiResources, Dept, Menu, Resource, Role, User []ent.Interceptor
+		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Interceptor
 	}
 )

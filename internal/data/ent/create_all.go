@@ -92,6 +92,33 @@ func (c *RoleCreate) CreateAll(Role *Role) *RoleCreate {
 	return builder
 }
 
+// CreateAll creates a new SysLogRecord entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *SysLogRecordCreate) CreateAll(SysLogRecord *SysLogRecord) *SysLogRecordCreate {
+	builder := c
+	builder = builder.SetUserID(SysLogRecord.UserID)
+	builder = builder.SetUserName(SysLogRecord.UserName)
+	builder = builder.SetIsLogin(SysLogRecord.IsLogin)
+	builder = builder.SetSessionID(SysLogRecord.SessionID)
+	builder = builder.SetMethod(SysLogRecord.Method)
+	builder = builder.SetPath(SysLogRecord.Path)
+	builder = builder.SetRequestTime(SysLogRecord.RequestTime)
+	builder = builder.SetIPAddress(SysLogRecord.IPAddress)
+	builder = builder.SetIPLocation(SysLogRecord.IPLocation)
+	builder = builder.SetLatency(SysLogRecord.Latency)
+	builder = builder.SetOs(SysLogRecord.Os)
+	builder = builder.SetBrowser(SysLogRecord.Browser)
+	builder = builder.SetUserAgent(SysLogRecord.UserAgent)
+	builder = builder.SetHeader(SysLogRecord.Header)
+	builder = builder.SetGetParams(SysLogRecord.GetParams)
+	builder = builder.SetPostData(SysLogRecord.PostData)
+	builder = builder.SetResCode(SysLogRecord.ResCode)
+	builder = builder.SetReason(SysLogRecord.Reason)
+	builder = builder.SetResStatus(SysLogRecord.ResStatus)
+	builder = builder.SetStack(SysLogRecord.Stack)
+	return builder
+}
+
 // CreateAll creates a new User entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *UserCreate) CreateAll(User *User) *UserCreate {

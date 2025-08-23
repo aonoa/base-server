@@ -144,6 +144,102 @@ var (
 		Columns:    SysRoleColumns,
 		PrimaryKey: []*schema.Column{SysRoleColumns[0]},
 	}
+	// SysLogColumns holds the columns for the "sys_log" table.
+	SysLogColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
+		{Name: "user_id", Type: field.TypeString, Comment: "用户id"},
+		{Name: "user_name", Type: field.TypeString, Comment: "用户名"},
+		{Name: "is_login", Type: field.TypeBool, Comment: "是否登录日志"},
+		{Name: "session_id", Type: field.TypeString, Comment: "会话ID"},
+		{Name: "method", Type: field.TypeString, Comment: "请求方式GET|POST|PUT|DELETE|OPTIONS..."},
+		{Name: "path", Type: field.TypeString, Comment: "请求地址"},
+		{Name: "request_time", Type: field.TypeTime, Comment: "请求时间"},
+		{Name: "ip_address", Type: field.TypeString, Comment: "IP地址"},
+		{Name: "ip_location", Type: field.TypeString, Comment: "IP归属地"},
+		{Name: "latency", Type: field.TypeInt64, Comment: "响应耗时ms"},
+		{Name: "os", Type: field.TypeString, Comment: "平台"},
+		{Name: "browser", Type: field.TypeString, Comment: "浏览器"},
+		{Name: "user_agent", Type: field.TypeString, Comment: "访问代理"},
+		{Name: "header", Type: field.TypeString, Comment: "请求头"},
+		{Name: "get_params", Type: field.TypeString, Comment: "Get参数"},
+		{Name: "post_data", Type: field.TypeString, Comment: "Post数据"},
+		{Name: "res_code", Type: field.TypeInt32, Comment: "响应状态码"},
+		{Name: "reason", Type: field.TypeString, Comment: "错误原因"},
+		{Name: "res_status", Type: field.TypeBool, Comment: "请求状态"},
+		{Name: "stack", Type: field.TypeString, Comment: "错误堆栈"},
+		{Name: "create_time", Type: field.TypeTime},
+	}
+	// SysLogTable holds the schema information for the "sys_log" table.
+	SysLogTable = &schema.Table{
+		Name:       "sys_log",
+		Comment:    "系统日志表",
+		Columns:    SysLogColumns,
+		PrimaryKey: []*schema.Column{SysLogColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "syslogrecord_session_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[4]},
+			},
+			{
+				Name:    "syslogrecord_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[1]},
+			},
+			{
+				Name:    "syslogrecord_path",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[6]},
+			},
+			{
+				Name:    "syslogrecord_request_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[7]},
+			},
+			{
+				Name:    "syslogrecord_ip_address",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[8]},
+			},
+			{
+				Name:    "syslogrecord_latency",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[10]},
+			},
+			{
+				Name:    "syslogrecord_is_login",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[3]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "is_login = true",
+				},
+			},
+			{
+				Name:    "syslogrecord_is_login_user_name",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[3], SysLogColumns[2]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "is_login = true",
+				},
+			},
+			{
+				Name:    "syslogrecord_res_code",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[17]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "res_code != 200",
+				},
+			},
+			{
+				Name:    "syslogrecord_res_status",
+				Unique:  false,
+				Columns: []*schema.Column{SysLogColumns[19]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "res_status = false",
+				},
+			},
+		},
+	}
 	// SysUserColumns holds the columns for the "sys_user" table.
 	SysUserColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
@@ -271,6 +367,7 @@ var (
 		SysMenuTable,
 		SysResourcesTable,
 		SysRoleTable,
+		SysLogTable,
 		SysUserTable,
 		APIResourcesRolesTable,
 		DeptUsersTable,
@@ -296,6 +393,9 @@ func init() {
 	}
 	SysRoleTable.Annotation = &entsql.Annotation{
 		Table: "sys_role",
+	}
+	SysLogTable.Annotation = &entsql.Annotation{
+		Table: "sys_log",
 	}
 	SysUserTable.Annotation = &entsql.Annotation{
 		Table: "sys_user",

@@ -71,6 +71,10 @@ type BaseRepo interface {
 	GetResource(ctx context.Context, id string) (*ent.Resource, error)
 	UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error)
 	DelResource(ctx context.Context, id string) error
+
+	CreateSysLog(ctx context.Context, req *ent.SysLogRecord) error
+	GetSysLogList(ctx context.Context, req *pb.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error)
+	GetSysLogInfo(ctx context.Context, id string) (*ent.SysLogRecord, error)
 }
 
 // BaseUsecase is a Base usecase.
@@ -1162,4 +1166,35 @@ func (uc *BaseUsecase) DelResource(ctx context.Context, req *pb.DeleteResource) 
 	// 更新casbin权限
 	uc.auth.DelDataPolicy(data.Type, data.Value, data.Method)
 	return nil
+}
+
+func (uc *BaseUsecase) GetSysLogList(ctx context.Context, req *pb.GetSysLogListParams) (*pb.GetSysLogListReply, error) {
+	res := &pb.GetSysLogListReply{
+		Items: make([]*pb.SysLogItem, 0),
+	}
+	list, count, err := uc.repo.GetSysLogList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	res.Total = count
+	for _, info := range list {
+		tmp := &pb.SysLogItem{}
+		copier.Copy(tmp, info)
+		tmp.RequestTime = info.RequestTime.Format(time.DateTime)
+
+		res.Items = append(res.Items, tmp)
+	}
+	return res, nil
+}
+
+func (uc *BaseUsecase) GetSysLogInfo(ctx context.Context, req *pb.GetSysLogInfoParams) (*pb.GetSysLogInfoReply, error) {
+	res := &pb.GetSysLogInfoReply{}
+	info, err := uc.repo.GetSysLogInfo(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	copier.Copy(res, info)
+	res.RequestTime = info.RequestTime.Format(time.DateTime)
+	res.CreateTime = info.CreateTime.Format(time.DateTime)
+	return res, nil
 }

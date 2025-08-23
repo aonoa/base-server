@@ -10,6 +10,7 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"base-server/internal/tools"
 	"context"
@@ -504,4 +505,70 @@ func (r *baseRepo) Test(ctx context.Context) {
 	//	return
 	//}
 
+}
+
+func (r *baseRepo) CreateSysLog(ctx context.Context, req *ent.SysLogRecord) error {
+	return r.data.db.SysLogRecord.Create().CreateAll(req).Exec(ctx)
+}
+
+func getSysLogListQuery(params *pb.GetSysLogListParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.IsLogin == true {
+			s.Where(sql.EQ(syslogrecord.FieldIsLogin, true))
+		}
+		if params.UserName != "" {
+			s.Where(sql.EQ(syslogrecord.FieldUserName, params.UserName))
+		}
+		if params.IpAddress != "" {
+			s.Where(sql.Like(syslogrecord.FieldIPAddress, params.IpAddress+"%"))
+		}
+
+		if params.SessionId != "" {
+			s.Where(sql.EQ(syslogrecord.FieldSessionID, params.SessionId))
+		}
+
+		// 这个可能需要更复杂的匹配
+		//if params.Path != "" {
+		//	s.Where(sql.Like(syslogrecord.FieldPath, params.Path))
+		//}
+
+		if params.Method != "" {
+			s.Where(sql.EQ(syslogrecord.FieldMethod, params.Method))
+		}
+
+		if params.Latency != 0 {
+			if params.Latency > 1000 {
+				s.Where(sql.GTE(syslogrecord.FieldLatency, params.Latency))
+			} else {
+				s.Where(sql.LTE(syslogrecord.FieldLatency, params.Latency))
+			}
+		}
+
+		if isPage {
+			s.OrderBy(sql.Desc(syslogrecord.FieldCreateTime))
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *baseRepo) GetSysLogList(ctx context.Context, req *pb.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error) {
+	res, err := r.data.db.SysLogRecord.Query().Modify(
+		getSysLogListQuery(req, true),
+	).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.SysLogRecord.Query().Modify(
+		getSysLogListQuery(req, false),
+	).Count(ctx)
+	return res, int64(count), nil
+}
+
+func (r *baseRepo) GetSysLogInfo(ctx context.Context, id string) (*ent.SysLogRecord, error) {
+	return r.data.db.SysLogRecord.Query().Where(syslogrecord.IDEQ(id)).First(ctx)
 }

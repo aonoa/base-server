@@ -67,9 +67,9 @@ openapi:
 wire:
 	go generate ./...
 
-.PHONY: database
+.PHONY: ent
 # generate database code
-database:
+ent:
 	ent generate ./internal/data/schema \
 			--template ./internal/data/template \
 			--feature sql/modifier \

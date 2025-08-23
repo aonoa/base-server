@@ -39,6 +39,8 @@ const OperationBaseGetDeptList = "/api.base_api.v1.Base/GetDeptList"
 const OperationBaseGetMenuList = "/api.base_api.v1.Base/GetMenuList"
 const OperationBaseGetResourceList = "/api.base_api.v1.Base/GetResourceList"
 const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
+const OperationBaseGetSysLogInfo = "/api.base_api.v1.Base/GetSysLogInfo"
+const OperationBaseGetSysLogList = "/api.base_api.v1.Base/GetSysLogList"
 const OperationBaseGetSysMenuList = "/api.base_api.v1.Base/GetSysMenuList"
 const OperationBaseGetUserInfo = "/api.base_api.v1.Base/GetUserInfo"
 const OperationBaseGetUserList = "/api.base_api.v1.Base/GetUserList"
@@ -100,6 +102,11 @@ type BaseHTTPServer interface {
 	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
 	// GetRoleList 获取角色列表
 	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
+	// GetSysLogInfo 获取单条日志详情
+	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
+	// GetSysLogList////////////////////////////////////////////// 日志
+	// 获取系统日志列表
+	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	// GetSysMenuList/////////////////////////////////////////////////// 系统菜单管理
 	// 获取菜单列表
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
@@ -179,6 +186,8 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.POST("/basic-api/system/resource", _Base_AddResource0_HTTP_Handler(srv))
 	r.PUT("/basic-api/system/resource/{id}", _Base_UpdateResource0_HTTP_Handler(srv))
 	r.DELETE("/basic-api/system/resource/{id}", _Base_DelResource0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/log/list", _Base_GetSysLogList0_HTTP_Handler(srv))
+	r.GET("/basic-api/system/log/{id}", _Base_GetSysLogInfo0_HTTP_Handler(srv))
 }
 
 func _Base_Login0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
@@ -977,6 +986,47 @@ func _Base_DelResource0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) 
 	}
 }
 
+func _Base_GetSysLogList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSysLogListParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetSysLogList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSysLogList(ctx, req.(*GetSysLogListParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSysLogListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_GetSysLogInfo0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSysLogInfoParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetSysLogInfo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSysLogInfo(ctx, req.(*GetSysLogInfoParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSysLogInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BaseHTTPClient interface {
 	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
@@ -997,6 +1047,8 @@ type BaseHTTPClient interface {
 	GetMenuList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
 	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
+	GetSysLogInfo(ctx context.Context, req *GetSysLogInfoParams, opts ...http.CallOption) (rsp *GetSysLogInfoReply, err error)
+	GetSysLogList(ctx context.Context, req *GetSysLogListParams, opts ...http.CallOption) (rsp *GetSysLogListReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetUserInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserList(ctx context.Context, req *GetUserParams, opts ...http.CallOption) (rsp *GetUserListReply, err error)
@@ -1264,6 +1316,32 @@ func (c *BaseHTTPClientImpl) GetRoleList(ctx context.Context, in *RolePageParams
 	pattern := "/basic-api/system/role/list"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBaseGetRoleList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...http.CallOption) (*GetSysLogInfoReply, error) {
+	var out GetSysLogInfoReply
+	pattern := "/basic-api/system/log/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetSysLogInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *BaseHTTPClientImpl) GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...http.CallOption) (*GetSysLogListReply, error) {
+	var out GetSysLogListReply
+	pattern := "/basic-api/system/log/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetSysLogList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

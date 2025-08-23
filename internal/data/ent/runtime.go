@@ -8,6 +8,7 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"base-server/internal/data/schema"
 	"time"
@@ -206,6 +207,16 @@ func init() {
 	role.DefaultUpdateTime = roleDescUpdateTime.Default.(func() time.Time)
 	// role.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	role.UpdateDefaultUpdateTime = roleDescUpdateTime.UpdateDefault.(func() time.Time)
+	syslogrecordFields := schema.SysLogRecord{}.Fields()
+	_ = syslogrecordFields
+	// syslogrecordDescCreateTime is the schema descriptor for create_time field.
+	syslogrecordDescCreateTime := syslogrecordFields[21].Descriptor()
+	// syslogrecord.DefaultCreateTime holds the default value on creation for the create_time field.
+	syslogrecord.DefaultCreateTime = syslogrecordDescCreateTime.Default.(func() time.Time)
+	// syslogrecordDescID is the schema descriptor for id field.
+	syslogrecordDescID := syslogrecordFields[0].Descriptor()
+	// syslogrecord.DefaultID holds the default value on creation for the id field.
+	syslogrecord.DefaultID = syslogrecordDescID.Default.(func() string)
 	userMixin := schema.User{}.Mixin()
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0

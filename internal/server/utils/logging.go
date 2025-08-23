@@ -2,6 +2,8 @@ package utils
 
 import (
 	pb "base-server/api/gen/go/base_api/v1"
+	"fmt"
+	"github.com/go-kratos/kratos/v2/log"
 	"net"
 	"strings"
 
@@ -121,6 +123,14 @@ func getRequestId(request *http.Request) string {
 	return ""
 }
 
+// ExtractError returns the string of the error
+func ExtractError(err error) (log.Level, string) {
+	if err != nil {
+		return log.LevelError, fmt.Sprintf("%+v", err)
+	}
+	return log.LevelInfo, ""
+}
+
 // GetStatusCode 状态码
 func GetStatusCode(err error) (int32, string, bool) {
 	// 1. 信息响应 (100–199)
@@ -157,4 +167,13 @@ func ClientIpToLocation(ip string) string {
 		return ""
 	}
 	return res.City
+}
+
+func MarshalToStr(data interface{}) string {
+	marshal, err := json.Marshal(data)
+	if err != nil {
+		return "转化编码失败"
+	}
+
+	return string(marshal)
 }

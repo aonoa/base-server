@@ -305,6 +305,20 @@ service Base {
 			delete: "/basic-api/system/resource/{id}"
 		};
 	}
+
+	//////////////////////////////////////////////// 日志
+	// 获取系统日志列表
+	rpc GetSysLogList (GetSysLogListParams) returns (GetSysLogListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/log/list"
+		};
+	}
+	// 获取单条日志详情
+	rpc GetSysLogInfo (GetSysLogInfoParams) returns (GetSysLogInfoReply) {
+		option (google.api.http) = {
+			get: "/basic-api/system/log/{id}"
+		};
+	}
 }
 
 
@@ -648,3 +662,66 @@ message DeleteResource {
 	string id = 1;
 }
 
+////////////////////////////////////////// 日志
+
+message GetSysLogListParams {
+	int64 currentPage = 20;
+	int64 pageSize = 21;
+	string user_id = 2;
+	string user_name = 3;
+	bool is_login = 4;
+	string session_id = 5;
+	string method = 6;
+	string path = 7;
+	string request_time = 8;
+	string ip_address = 9;
+	int64 latency = 10;
+	int32 res_code = 17;
+	bool res_status = 19;
+}
+message SysLogItem {
+	string id = 1;
+	string user_id = 2;
+	string user_name = 3;
+	string method = 5;
+	string path = 6;
+	string request_time = 7;
+	string ip_address = 8;
+	string ip_location = 9;
+	int64 latency = 10;
+	string os = 11;
+	string browser = 12;
+	int32 res_code = 17;
+	bool res_status = 19;
+}
+message GetSysLogListReply {
+	repeated SysLogItem items = 1;
+	int64	total = 2;
+}
+message GetSysLogInfoParams {
+	string id = 1;
+}
+message GetSysLogInfoReply {
+	string id = 1;
+	string user_id = 2;
+	string user_name = 3;
+	bool is_login = 4;
+	string session_id = 5;
+	string method = 6;
+	string path = 7;
+	string request_time = 8;
+	string ip_address = 9;
+	string ip_location = 10;
+	int64 latency = 11;
+	string os = 12;
+	string browser = 13;
+	string user_agent = 14;
+	string header = 15;
+	string get_params = 16;
+	string post_data = 17;
+	int32 res_code = 18;
+	string reason = 19;
+	bool res_status = 20;
+	string stack = 21;
+	string create_time = 22;
+}

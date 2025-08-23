@@ -57,7 +57,7 @@ func MiddlewareCasbin(e *casbin.Enforcer, logger log.Logger) middleware2.Middlew
 			if claims, ok := jwt.FromContext(ctx); ok {
 				uid = (*claims.(*jwt2.MapClaims))["user_id"].(string)
 				aud = (*claims.(*jwt2.MapClaims))["aud"].(string)
-				context.WithValue(ctx, "uid", uid)
+				ctx = context.WithValue(ctx, "uid", uid)
 			} else {
 				return nil, errors.Unauthorized("UNAUTHORIZED", "uid is missing")
 			}

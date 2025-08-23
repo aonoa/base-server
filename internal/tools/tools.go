@@ -2,7 +2,9 @@ package tools
 
 import (
 	"context"
+	"crypto/md5"
 	"crypto/sha1"
+	"encoding/hex"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"strconv"
@@ -35,4 +37,11 @@ func DeptStrSplitToInt(dept string) (int64, error) {
 
 func GetPageOffset(pageNum, pageSize int64) int64 {
 	return (pageNum - 1) * pageSize
+}
+
+// MD5 计算字符串的 MD5
+func MD5(text string) string {
+	data := []byte(text)
+	hash := md5.Sum(data)
+	return hex.EncodeToString(hash[:])
 }

@@ -9,6 +9,7 @@ import (
 	"base-server/internal/data/ent/predicate"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"context"
 	"errors"
@@ -35,6 +36,7 @@ const (
 	TypeMenu         = "Menu"
 	TypeResource     = "Resource"
 	TypeRole         = "Role"
+	TypeSysLogRecord = "SysLogRecord"
 	TypeUser         = "User"
 )
 
@@ -6000,6 +6002,1487 @@ func (m *RoleMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Role edge %s", name)
+}
+
+// SysLogRecordMutation represents an operation that mutates the SysLogRecord nodes in the graph.
+type SysLogRecordMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *string
+	user_id       *string
+	user_name     *string
+	is_login      *bool
+	session_id    *string
+	method        *string
+	_path         *string
+	request_time  *time.Time
+	ip_address    *string
+	ip_location   *string
+	latency       *int64
+	addlatency    *int64
+	os            *string
+	browser       *string
+	user_agent    *string
+	header        *string
+	get_params    *string
+	post_data     *string
+	res_code      *int32
+	addres_code   *int32
+	reason        *string
+	res_status    *bool
+	stack         *string
+	create_time   *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*SysLogRecord, error)
+	predicates    []predicate.SysLogRecord
+}
+
+var _ ent.Mutation = (*SysLogRecordMutation)(nil)
+
+// syslogrecordOption allows management of the mutation configuration using functional options.
+type syslogrecordOption func(*SysLogRecordMutation)
+
+// newSysLogRecordMutation creates new mutation for the SysLogRecord entity.
+func newSysLogRecordMutation(c config, op Op, opts ...syslogrecordOption) *SysLogRecordMutation {
+	m := &SysLogRecordMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeSysLogRecord,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withSysLogRecordID sets the ID field of the mutation.
+func withSysLogRecordID(id string) syslogrecordOption {
+	return func(m *SysLogRecordMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *SysLogRecord
+		)
+		m.oldValue = func(ctx context.Context) (*SysLogRecord, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().SysLogRecord.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withSysLogRecord sets the old SysLogRecord of the mutation.
+func withSysLogRecord(node *SysLogRecord) syslogrecordOption {
+	return func(m *SysLogRecordMutation) {
+		m.oldValue = func(context.Context) (*SysLogRecord, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m SysLogRecordMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m SysLogRecordMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of SysLogRecord entities.
+func (m *SysLogRecordMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *SysLogRecordMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *SysLogRecordMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().SysLogRecord.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetUserID sets the "user_id" field.
+func (m *SysLogRecordMutation) SetUserID(s string) {
+	m.user_id = &s
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *SysLogRecordMutation) UserID() (r string, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldUserID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *SysLogRecordMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetUserName sets the "user_name" field.
+func (m *SysLogRecordMutation) SetUserName(s string) {
+	m.user_name = &s
+}
+
+// UserName returns the value of the "user_name" field in the mutation.
+func (m *SysLogRecordMutation) UserName() (r string, exists bool) {
+	v := m.user_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserName returns the old "user_name" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldUserName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserName: %w", err)
+	}
+	return oldValue.UserName, nil
+}
+
+// ResetUserName resets all changes to the "user_name" field.
+func (m *SysLogRecordMutation) ResetUserName() {
+	m.user_name = nil
+}
+
+// SetIsLogin sets the "is_login" field.
+func (m *SysLogRecordMutation) SetIsLogin(b bool) {
+	m.is_login = &b
+}
+
+// IsLogin returns the value of the "is_login" field in the mutation.
+func (m *SysLogRecordMutation) IsLogin() (r bool, exists bool) {
+	v := m.is_login
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsLogin returns the old "is_login" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldIsLogin(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsLogin is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsLogin requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsLogin: %w", err)
+	}
+	return oldValue.IsLogin, nil
+}
+
+// ResetIsLogin resets all changes to the "is_login" field.
+func (m *SysLogRecordMutation) ResetIsLogin() {
+	m.is_login = nil
+}
+
+// SetSessionID sets the "session_id" field.
+func (m *SysLogRecordMutation) SetSessionID(s string) {
+	m.session_id = &s
+}
+
+// SessionID returns the value of the "session_id" field in the mutation.
+func (m *SysLogRecordMutation) SessionID() (r string, exists bool) {
+	v := m.session_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSessionID returns the old "session_id" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldSessionID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSessionID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSessionID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSessionID: %w", err)
+	}
+	return oldValue.SessionID, nil
+}
+
+// ResetSessionID resets all changes to the "session_id" field.
+func (m *SysLogRecordMutation) ResetSessionID() {
+	m.session_id = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *SysLogRecordMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *SysLogRecordMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *SysLogRecordMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetPath sets the "path" field.
+func (m *SysLogRecordMutation) SetPath(s string) {
+	m._path = &s
+}
+
+// Path returns the value of the "path" field in the mutation.
+func (m *SysLogRecordMutation) Path() (r string, exists bool) {
+	v := m._path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPath returns the old "path" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldPath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
+	}
+	return oldValue.Path, nil
+}
+
+// ResetPath resets all changes to the "path" field.
+func (m *SysLogRecordMutation) ResetPath() {
+	m._path = nil
+}
+
+// SetRequestTime sets the "request_time" field.
+func (m *SysLogRecordMutation) SetRequestTime(t time.Time) {
+	m.request_time = &t
+}
+
+// RequestTime returns the value of the "request_time" field in the mutation.
+func (m *SysLogRecordMutation) RequestTime() (r time.Time, exists bool) {
+	v := m.request_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRequestTime returns the old "request_time" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldRequestTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRequestTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRequestTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRequestTime: %w", err)
+	}
+	return oldValue.RequestTime, nil
+}
+
+// ResetRequestTime resets all changes to the "request_time" field.
+func (m *SysLogRecordMutation) ResetRequestTime() {
+	m.request_time = nil
+}
+
+// SetIPAddress sets the "ip_address" field.
+func (m *SysLogRecordMutation) SetIPAddress(s string) {
+	m.ip_address = &s
+}
+
+// IPAddress returns the value of the "ip_address" field in the mutation.
+func (m *SysLogRecordMutation) IPAddress() (r string, exists bool) {
+	v := m.ip_address
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIPAddress returns the old "ip_address" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldIPAddress(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIPAddress is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIPAddress requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIPAddress: %w", err)
+	}
+	return oldValue.IPAddress, nil
+}
+
+// ResetIPAddress resets all changes to the "ip_address" field.
+func (m *SysLogRecordMutation) ResetIPAddress() {
+	m.ip_address = nil
+}
+
+// SetIPLocation sets the "ip_location" field.
+func (m *SysLogRecordMutation) SetIPLocation(s string) {
+	m.ip_location = &s
+}
+
+// IPLocation returns the value of the "ip_location" field in the mutation.
+func (m *SysLogRecordMutation) IPLocation() (r string, exists bool) {
+	v := m.ip_location
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIPLocation returns the old "ip_location" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldIPLocation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIPLocation is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIPLocation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIPLocation: %w", err)
+	}
+	return oldValue.IPLocation, nil
+}
+
+// ResetIPLocation resets all changes to the "ip_location" field.
+func (m *SysLogRecordMutation) ResetIPLocation() {
+	m.ip_location = nil
+}
+
+// SetLatency sets the "latency" field.
+func (m *SysLogRecordMutation) SetLatency(i int64) {
+	m.latency = &i
+	m.addlatency = nil
+}
+
+// Latency returns the value of the "latency" field in the mutation.
+func (m *SysLogRecordMutation) Latency() (r int64, exists bool) {
+	v := m.latency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLatency returns the old "latency" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldLatency(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLatency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLatency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLatency: %w", err)
+	}
+	return oldValue.Latency, nil
+}
+
+// AddLatency adds i to the "latency" field.
+func (m *SysLogRecordMutation) AddLatency(i int64) {
+	if m.addlatency != nil {
+		*m.addlatency += i
+	} else {
+		m.addlatency = &i
+	}
+}
+
+// AddedLatency returns the value that was added to the "latency" field in this mutation.
+func (m *SysLogRecordMutation) AddedLatency() (r int64, exists bool) {
+	v := m.addlatency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLatency resets all changes to the "latency" field.
+func (m *SysLogRecordMutation) ResetLatency() {
+	m.latency = nil
+	m.addlatency = nil
+}
+
+// SetOs sets the "os" field.
+func (m *SysLogRecordMutation) SetOs(s string) {
+	m.os = &s
+}
+
+// Os returns the value of the "os" field in the mutation.
+func (m *SysLogRecordMutation) Os() (r string, exists bool) {
+	v := m.os
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOs returns the old "os" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldOs(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOs is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOs requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOs: %w", err)
+	}
+	return oldValue.Os, nil
+}
+
+// ResetOs resets all changes to the "os" field.
+func (m *SysLogRecordMutation) ResetOs() {
+	m.os = nil
+}
+
+// SetBrowser sets the "browser" field.
+func (m *SysLogRecordMutation) SetBrowser(s string) {
+	m.browser = &s
+}
+
+// Browser returns the value of the "browser" field in the mutation.
+func (m *SysLogRecordMutation) Browser() (r string, exists bool) {
+	v := m.browser
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBrowser returns the old "browser" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldBrowser(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBrowser is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBrowser requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBrowser: %w", err)
+	}
+	return oldValue.Browser, nil
+}
+
+// ResetBrowser resets all changes to the "browser" field.
+func (m *SysLogRecordMutation) ResetBrowser() {
+	m.browser = nil
+}
+
+// SetUserAgent sets the "user_agent" field.
+func (m *SysLogRecordMutation) SetUserAgent(s string) {
+	m.user_agent = &s
+}
+
+// UserAgent returns the value of the "user_agent" field in the mutation.
+func (m *SysLogRecordMutation) UserAgent() (r string, exists bool) {
+	v := m.user_agent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserAgent returns the old "user_agent" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldUserAgent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserAgent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserAgent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserAgent: %w", err)
+	}
+	return oldValue.UserAgent, nil
+}
+
+// ResetUserAgent resets all changes to the "user_agent" field.
+func (m *SysLogRecordMutation) ResetUserAgent() {
+	m.user_agent = nil
+}
+
+// SetHeader sets the "header" field.
+func (m *SysLogRecordMutation) SetHeader(s string) {
+	m.header = &s
+}
+
+// Header returns the value of the "header" field in the mutation.
+func (m *SysLogRecordMutation) Header() (r string, exists bool) {
+	v := m.header
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHeader returns the old "header" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldHeader(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHeader is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHeader requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHeader: %w", err)
+	}
+	return oldValue.Header, nil
+}
+
+// ResetHeader resets all changes to the "header" field.
+func (m *SysLogRecordMutation) ResetHeader() {
+	m.header = nil
+}
+
+// SetGetParams sets the "get_params" field.
+func (m *SysLogRecordMutation) SetGetParams(s string) {
+	m.get_params = &s
+}
+
+// GetParams returns the value of the "get_params" field in the mutation.
+func (m *SysLogRecordMutation) GetParams() (r string, exists bool) {
+	v := m.get_params
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGetParams returns the old "get_params" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldGetParams(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGetParams is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGetParams requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGetParams: %w", err)
+	}
+	return oldValue.GetParams, nil
+}
+
+// ResetGetParams resets all changes to the "get_params" field.
+func (m *SysLogRecordMutation) ResetGetParams() {
+	m.get_params = nil
+}
+
+// SetPostData sets the "post_data" field.
+func (m *SysLogRecordMutation) SetPostData(s string) {
+	m.post_data = &s
+}
+
+// PostData returns the value of the "post_data" field in the mutation.
+func (m *SysLogRecordMutation) PostData() (r string, exists bool) {
+	v := m.post_data
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPostData returns the old "post_data" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldPostData(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPostData is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPostData requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPostData: %w", err)
+	}
+	return oldValue.PostData, nil
+}
+
+// ResetPostData resets all changes to the "post_data" field.
+func (m *SysLogRecordMutation) ResetPostData() {
+	m.post_data = nil
+}
+
+// SetResCode sets the "res_code" field.
+func (m *SysLogRecordMutation) SetResCode(i int32) {
+	m.res_code = &i
+	m.addres_code = nil
+}
+
+// ResCode returns the value of the "res_code" field in the mutation.
+func (m *SysLogRecordMutation) ResCode() (r int32, exists bool) {
+	v := m.res_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResCode returns the old "res_code" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldResCode(ctx context.Context) (v int32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldResCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldResCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResCode: %w", err)
+	}
+	return oldValue.ResCode, nil
+}
+
+// AddResCode adds i to the "res_code" field.
+func (m *SysLogRecordMutation) AddResCode(i int32) {
+	if m.addres_code != nil {
+		*m.addres_code += i
+	} else {
+		m.addres_code = &i
+	}
+}
+
+// AddedResCode returns the value that was added to the "res_code" field in this mutation.
+func (m *SysLogRecordMutation) AddedResCode() (r int32, exists bool) {
+	v := m.addres_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetResCode resets all changes to the "res_code" field.
+func (m *SysLogRecordMutation) ResetResCode() {
+	m.res_code = nil
+	m.addres_code = nil
+}
+
+// SetReason sets the "reason" field.
+func (m *SysLogRecordMutation) SetReason(s string) {
+	m.reason = &s
+}
+
+// Reason returns the value of the "reason" field in the mutation.
+func (m *SysLogRecordMutation) Reason() (r string, exists bool) {
+	v := m.reason
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReason returns the old "reason" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldReason(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReason is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReason requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReason: %w", err)
+	}
+	return oldValue.Reason, nil
+}
+
+// ResetReason resets all changes to the "reason" field.
+func (m *SysLogRecordMutation) ResetReason() {
+	m.reason = nil
+}
+
+// SetResStatus sets the "res_status" field.
+func (m *SysLogRecordMutation) SetResStatus(b bool) {
+	m.res_status = &b
+}
+
+// ResStatus returns the value of the "res_status" field in the mutation.
+func (m *SysLogRecordMutation) ResStatus() (r bool, exists bool) {
+	v := m.res_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResStatus returns the old "res_status" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldResStatus(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldResStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldResStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResStatus: %w", err)
+	}
+	return oldValue.ResStatus, nil
+}
+
+// ResetResStatus resets all changes to the "res_status" field.
+func (m *SysLogRecordMutation) ResetResStatus() {
+	m.res_status = nil
+}
+
+// SetStack sets the "stack" field.
+func (m *SysLogRecordMutation) SetStack(s string) {
+	m.stack = &s
+}
+
+// Stack returns the value of the "stack" field in the mutation.
+func (m *SysLogRecordMutation) Stack() (r string, exists bool) {
+	v := m.stack
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStack returns the old "stack" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldStack(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStack is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStack requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStack: %w", err)
+	}
+	return oldValue.Stack, nil
+}
+
+// ResetStack resets all changes to the "stack" field.
+func (m *SysLogRecordMutation) ResetStack() {
+	m.stack = nil
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *SysLogRecordMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *SysLogRecordMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the SysLogRecord entity.
+// If the SysLogRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SysLogRecordMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *SysLogRecordMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// Where appends a list predicates to the SysLogRecordMutation builder.
+func (m *SysLogRecordMutation) Where(ps ...predicate.SysLogRecord) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the SysLogRecordMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *SysLogRecordMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.SysLogRecord, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *SysLogRecordMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *SysLogRecordMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (SysLogRecord).
+func (m *SysLogRecordMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *SysLogRecordMutation) Fields() []string {
+	fields := make([]string, 0, 21)
+	if m.user_id != nil {
+		fields = append(fields, syslogrecord.FieldUserID)
+	}
+	if m.user_name != nil {
+		fields = append(fields, syslogrecord.FieldUserName)
+	}
+	if m.is_login != nil {
+		fields = append(fields, syslogrecord.FieldIsLogin)
+	}
+	if m.session_id != nil {
+		fields = append(fields, syslogrecord.FieldSessionID)
+	}
+	if m.method != nil {
+		fields = append(fields, syslogrecord.FieldMethod)
+	}
+	if m._path != nil {
+		fields = append(fields, syslogrecord.FieldPath)
+	}
+	if m.request_time != nil {
+		fields = append(fields, syslogrecord.FieldRequestTime)
+	}
+	if m.ip_address != nil {
+		fields = append(fields, syslogrecord.FieldIPAddress)
+	}
+	if m.ip_location != nil {
+		fields = append(fields, syslogrecord.FieldIPLocation)
+	}
+	if m.latency != nil {
+		fields = append(fields, syslogrecord.FieldLatency)
+	}
+	if m.os != nil {
+		fields = append(fields, syslogrecord.FieldOs)
+	}
+	if m.browser != nil {
+		fields = append(fields, syslogrecord.FieldBrowser)
+	}
+	if m.user_agent != nil {
+		fields = append(fields, syslogrecord.FieldUserAgent)
+	}
+	if m.header != nil {
+		fields = append(fields, syslogrecord.FieldHeader)
+	}
+	if m.get_params != nil {
+		fields = append(fields, syslogrecord.FieldGetParams)
+	}
+	if m.post_data != nil {
+		fields = append(fields, syslogrecord.FieldPostData)
+	}
+	if m.res_code != nil {
+		fields = append(fields, syslogrecord.FieldResCode)
+	}
+	if m.reason != nil {
+		fields = append(fields, syslogrecord.FieldReason)
+	}
+	if m.res_status != nil {
+		fields = append(fields, syslogrecord.FieldResStatus)
+	}
+	if m.stack != nil {
+		fields = append(fields, syslogrecord.FieldStack)
+	}
+	if m.create_time != nil {
+		fields = append(fields, syslogrecord.FieldCreateTime)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *SysLogRecordMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case syslogrecord.FieldUserID:
+		return m.UserID()
+	case syslogrecord.FieldUserName:
+		return m.UserName()
+	case syslogrecord.FieldIsLogin:
+		return m.IsLogin()
+	case syslogrecord.FieldSessionID:
+		return m.SessionID()
+	case syslogrecord.FieldMethod:
+		return m.Method()
+	case syslogrecord.FieldPath:
+		return m.Path()
+	case syslogrecord.FieldRequestTime:
+		return m.RequestTime()
+	case syslogrecord.FieldIPAddress:
+		return m.IPAddress()
+	case syslogrecord.FieldIPLocation:
+		return m.IPLocation()
+	case syslogrecord.FieldLatency:
+		return m.Latency()
+	case syslogrecord.FieldOs:
+		return m.Os()
+	case syslogrecord.FieldBrowser:
+		return m.Browser()
+	case syslogrecord.FieldUserAgent:
+		return m.UserAgent()
+	case syslogrecord.FieldHeader:
+		return m.Header()
+	case syslogrecord.FieldGetParams:
+		return m.GetParams()
+	case syslogrecord.FieldPostData:
+		return m.PostData()
+	case syslogrecord.FieldResCode:
+		return m.ResCode()
+	case syslogrecord.FieldReason:
+		return m.Reason()
+	case syslogrecord.FieldResStatus:
+		return m.ResStatus()
+	case syslogrecord.FieldStack:
+		return m.Stack()
+	case syslogrecord.FieldCreateTime:
+		return m.CreateTime()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *SysLogRecordMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case syslogrecord.FieldUserID:
+		return m.OldUserID(ctx)
+	case syslogrecord.FieldUserName:
+		return m.OldUserName(ctx)
+	case syslogrecord.FieldIsLogin:
+		return m.OldIsLogin(ctx)
+	case syslogrecord.FieldSessionID:
+		return m.OldSessionID(ctx)
+	case syslogrecord.FieldMethod:
+		return m.OldMethod(ctx)
+	case syslogrecord.FieldPath:
+		return m.OldPath(ctx)
+	case syslogrecord.FieldRequestTime:
+		return m.OldRequestTime(ctx)
+	case syslogrecord.FieldIPAddress:
+		return m.OldIPAddress(ctx)
+	case syslogrecord.FieldIPLocation:
+		return m.OldIPLocation(ctx)
+	case syslogrecord.FieldLatency:
+		return m.OldLatency(ctx)
+	case syslogrecord.FieldOs:
+		return m.OldOs(ctx)
+	case syslogrecord.FieldBrowser:
+		return m.OldBrowser(ctx)
+	case syslogrecord.FieldUserAgent:
+		return m.OldUserAgent(ctx)
+	case syslogrecord.FieldHeader:
+		return m.OldHeader(ctx)
+	case syslogrecord.FieldGetParams:
+		return m.OldGetParams(ctx)
+	case syslogrecord.FieldPostData:
+		return m.OldPostData(ctx)
+	case syslogrecord.FieldResCode:
+		return m.OldResCode(ctx)
+	case syslogrecord.FieldReason:
+		return m.OldReason(ctx)
+	case syslogrecord.FieldResStatus:
+		return m.OldResStatus(ctx)
+	case syslogrecord.FieldStack:
+		return m.OldStack(ctx)
+	case syslogrecord.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	}
+	return nil, fmt.Errorf("unknown SysLogRecord field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SysLogRecordMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case syslogrecord.FieldUserID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case syslogrecord.FieldUserName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserName(v)
+		return nil
+	case syslogrecord.FieldIsLogin:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsLogin(v)
+		return nil
+	case syslogrecord.FieldSessionID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSessionID(v)
+		return nil
+	case syslogrecord.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case syslogrecord.FieldPath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPath(v)
+		return nil
+	case syslogrecord.FieldRequestTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRequestTime(v)
+		return nil
+	case syslogrecord.FieldIPAddress:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIPAddress(v)
+		return nil
+	case syslogrecord.FieldIPLocation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIPLocation(v)
+		return nil
+	case syslogrecord.FieldLatency:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLatency(v)
+		return nil
+	case syslogrecord.FieldOs:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOs(v)
+		return nil
+	case syslogrecord.FieldBrowser:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBrowser(v)
+		return nil
+	case syslogrecord.FieldUserAgent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserAgent(v)
+		return nil
+	case syslogrecord.FieldHeader:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHeader(v)
+		return nil
+	case syslogrecord.FieldGetParams:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGetParams(v)
+		return nil
+	case syslogrecord.FieldPostData:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPostData(v)
+		return nil
+	case syslogrecord.FieldResCode:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResCode(v)
+		return nil
+	case syslogrecord.FieldReason:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReason(v)
+		return nil
+	case syslogrecord.FieldResStatus:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResStatus(v)
+		return nil
+	case syslogrecord.FieldStack:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStack(v)
+		return nil
+	case syslogrecord.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	}
+	return fmt.Errorf("unknown SysLogRecord field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *SysLogRecordMutation) AddedFields() []string {
+	var fields []string
+	if m.addlatency != nil {
+		fields = append(fields, syslogrecord.FieldLatency)
+	}
+	if m.addres_code != nil {
+		fields = append(fields, syslogrecord.FieldResCode)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *SysLogRecordMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case syslogrecord.FieldLatency:
+		return m.AddedLatency()
+	case syslogrecord.FieldResCode:
+		return m.AddedResCode()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SysLogRecordMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case syslogrecord.FieldLatency:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLatency(v)
+		return nil
+	case syslogrecord.FieldResCode:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddResCode(v)
+		return nil
+	}
+	return fmt.Errorf("unknown SysLogRecord numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *SysLogRecordMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *SysLogRecordMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *SysLogRecordMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown SysLogRecord nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *SysLogRecordMutation) ResetField(name string) error {
+	switch name {
+	case syslogrecord.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case syslogrecord.FieldUserName:
+		m.ResetUserName()
+		return nil
+	case syslogrecord.FieldIsLogin:
+		m.ResetIsLogin()
+		return nil
+	case syslogrecord.FieldSessionID:
+		m.ResetSessionID()
+		return nil
+	case syslogrecord.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case syslogrecord.FieldPath:
+		m.ResetPath()
+		return nil
+	case syslogrecord.FieldRequestTime:
+		m.ResetRequestTime()
+		return nil
+	case syslogrecord.FieldIPAddress:
+		m.ResetIPAddress()
+		return nil
+	case syslogrecord.FieldIPLocation:
+		m.ResetIPLocation()
+		return nil
+	case syslogrecord.FieldLatency:
+		m.ResetLatency()
+		return nil
+	case syslogrecord.FieldOs:
+		m.ResetOs()
+		return nil
+	case syslogrecord.FieldBrowser:
+		m.ResetBrowser()
+		return nil
+	case syslogrecord.FieldUserAgent:
+		m.ResetUserAgent()
+		return nil
+	case syslogrecord.FieldHeader:
+		m.ResetHeader()
+		return nil
+	case syslogrecord.FieldGetParams:
+		m.ResetGetParams()
+		return nil
+	case syslogrecord.FieldPostData:
+		m.ResetPostData()
+		return nil
+	case syslogrecord.FieldResCode:
+		m.ResetResCode()
+		return nil
+	case syslogrecord.FieldReason:
+		m.ResetReason()
+		return nil
+	case syslogrecord.FieldResStatus:
+		m.ResetResStatus()
+		return nil
+	case syslogrecord.FieldStack:
+		m.ResetStack()
+		return nil
+	case syslogrecord.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	}
+	return fmt.Errorf("unknown SysLogRecord field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *SysLogRecordMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *SysLogRecordMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *SysLogRecordMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *SysLogRecordMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *SysLogRecordMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *SysLogRecordMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *SysLogRecordMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown SysLogRecord unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *SysLogRecordMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown SysLogRecord edge %s", name)
 }
 
 // UserMutation represents an operation that mutates the User nodes in the graph.

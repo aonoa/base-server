@@ -57,6 +57,8 @@ const (
 	Base_AddResource_FullMethodName      = "/api.base_api.v1.Base/AddResource"
 	Base_UpdateResource_FullMethodName   = "/api.base_api.v1.Base/UpdateResource"
 	Base_DelResource_FullMethodName      = "/api.base_api.v1.Base/DelResource"
+	Base_GetSysLogList_FullMethodName    = "/api.base_api.v1.Base/GetSysLogList"
+	Base_GetSysLogInfo_FullMethodName    = "/api.base_api.v1.Base/GetSysLogInfo"
 )
 
 // BaseClient is the client API for Base service.
@@ -143,6 +145,11 @@ type BaseClient interface {
 	UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
 	// 删除resource资源
 	DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ////////////////////////////////////////////// 日志
+	// 获取系统日志列表
+	GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error)
+	// 获取单条日志详情
+	GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...grpc.CallOption) (*GetSysLogInfoReply, error)
 }
 
 type baseClient struct {
@@ -523,6 +530,26 @@ func (c *baseClient) DelResource(ctx context.Context, in *DeleteResource, opts .
 	return out, nil
 }
 
+func (c *baseClient) GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSysLogListReply)
+	err := c.cc.Invoke(ctx, Base_GetSysLogList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...grpc.CallOption) (*GetSysLogInfoReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSysLogInfoReply)
+	err := c.cc.Invoke(ctx, Base_GetSysLogInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServer is the server API for Base service.
 // All implementations must embed UnimplementedBaseServer
 // for forward compatibility.
@@ -607,6 +634,11 @@ type BaseServer interface {
 	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	// 删除resource资源
 	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
+	// ////////////////////////////////////////////// 日志
+	// 获取系统日志列表
+	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
+	// 获取单条日志详情
+	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	mustEmbedUnimplementedBaseServer()
 }
 
@@ -727,6 +759,12 @@ func (UnimplementedBaseServer) UpdateResource(context.Context, *ResourceListItem
 }
 func (UnimplementedBaseServer) DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelResource not implemented")
+}
+func (UnimplementedBaseServer) GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSysLogList not implemented")
+}
+func (UnimplementedBaseServer) GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSysLogInfo not implemented")
 }
 func (UnimplementedBaseServer) mustEmbedUnimplementedBaseServer() {}
 func (UnimplementedBaseServer) testEmbeddedByValue()              {}
@@ -1415,6 +1453,42 @@ func _Base_DelResource_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_GetSysLogList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSysLogListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetSysLogList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetSysLogList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetSysLogList(ctx, req.(*GetSysLogListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_GetSysLogInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSysLogInfoParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetSysLogInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetSysLogInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetSysLogInfo(ctx, req.(*GetSysLogInfoParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Base_ServiceDesc is the grpc.ServiceDesc for Base service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1569,6 +1643,14 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DelResource",
 			Handler:    _Base_DelResource_Handler,
+		},
+		{
+			MethodName: "GetSysLogList",
+			Handler:    _Base_GetSysLogList_Handler,
+		},
+		{
+			MethodName: "GetSysLogInfo",
+			Handler:    _Base_GetSysLogInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

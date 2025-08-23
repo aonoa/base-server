@@ -338,3 +338,13 @@ func (s *BaseService) UpdateResource(ctx context.Context, req *pb.ResourceListIt
 func (s *BaseService) DelResource(ctx context.Context, req *pb.DeleteResource) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.DelResource(ctx, req)
 }
+
+/////////////////////////////////////////////////// 日志
+
+func (s *BaseService) GetSysLogList(ctx context.Context, req *pb.GetSysLogListParams) (*pb.GetSysLogListReply, error) {
+	return s.uc.GetSysLogList(ctx, req)
+}
+
+func (s *BaseService) GetSysLogInfo(ctx context.Context, req *pb.GetSysLogInfoParams) (*pb.GetSysLogInfoReply, error) {
+	return s.uc.GetSysLogInfo(ctx, req)
+}

@@ -87,6 +87,32 @@ func (u *RoleUpdateOne) UpdateAll(Role *Role) *RoleUpdateOne {
 	return update
 }
 
+// UpdateAll updates all fields of the SysLogRecord entity (excluding create_time and update_time).
+func (u *SysLogRecordUpdateOne) UpdateAll(SysLogRecord *SysLogRecord) *SysLogRecordUpdateOne {
+	update := u
+	update = update.SetUserID(SysLogRecord.UserID)
+	update = update.SetUserName(SysLogRecord.UserName)
+	update = update.SetIsLogin(SysLogRecord.IsLogin)
+	update = update.SetSessionID(SysLogRecord.SessionID)
+	update = update.SetMethod(SysLogRecord.Method)
+	update = update.SetPath(SysLogRecord.Path)
+	update = update.SetRequestTime(SysLogRecord.RequestTime)
+	update = update.SetIPAddress(SysLogRecord.IPAddress)
+	update = update.SetIPLocation(SysLogRecord.IPLocation)
+	update = update.SetLatency(SysLogRecord.Latency)
+	update = update.SetOs(SysLogRecord.Os)
+	update = update.SetBrowser(SysLogRecord.Browser)
+	update = update.SetUserAgent(SysLogRecord.UserAgent)
+	update = update.SetHeader(SysLogRecord.Header)
+	update = update.SetGetParams(SysLogRecord.GetParams)
+	update = update.SetPostData(SysLogRecord.PostData)
+	update = update.SetResCode(SysLogRecord.ResCode)
+	update = update.SetReason(SysLogRecord.Reason)
+	update = update.SetResStatus(SysLogRecord.ResStatus)
+	update = update.SetStack(SysLogRecord.Stack)
+	return update
+}
+
 // UpdateAll updates all fields of the User entity (excluding create_time and update_time).
 func (u *UserUpdateOne) UpdateAll(User *User) *UserUpdateOne {
 	update := u
