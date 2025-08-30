@@ -673,9 +673,10 @@ message GetSysLogListParams {
 	string session_id = 5;
 	string method = 6;
 	string path = 7;
-	string request_time = 8;
-	string ip_address = 9;
-	int64 latency = 10;
+	string request_time_start = 8;
+	string request_time_end = 9;
+	string ip_address = 10;
+	int64 latency = 11;
 	int32 res_code = 17;
 	bool res_status = 19;
 }

@@ -341,7 +341,11 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: requestTime
+                - name: requestTimeStart
+                  in: query
+                  schema:
+                    type: string
+                - name: requestTimeEnd
                   in: query
                   schema:
                     type: string

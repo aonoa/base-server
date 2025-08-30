@@ -21,7 +21,9 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 type baseRepo struct {
@@ -511,6 +513,18 @@ func (r *baseRepo) CreateSysLog(ctx context.Context, req *ent.SysLogRecord) erro
 	return r.data.db.SysLogRecord.Create().CreateAll(req).Exec(ctx)
 }
 
+func replaceBracesIfExists(str string) (bool, string) {
+	// 判断字符串中是否包含大括号
+	hasBraces := strings.Contains(str, "{") || strings.Contains(str, "}")
+	if !hasBraces {
+		return false, str
+	}
+
+	// 匹配 {任意字符} 并替换为 %
+	re := regexp.MustCompile(`{[^}]*}`)
+	return true, re.ReplaceAllString(str, "%")
+}
+
 func getSysLogListQuery(params *pb.GetSysLogListParams, isPage bool) func(s *sql.Selector) {
 	return func(s *sql.Selector) {
 		if params.IsLogin == true {
@@ -528,9 +542,21 @@ func getSysLogListQuery(params *pb.GetSysLogListParams, isPage bool) func(s *sql
 		}
 
 		// 这个可能需要更复杂的匹配
-		//if params.Path != "" {
-		//	s.Where(sql.Like(syslogrecord.FieldPath, params.Path))
-		//}
+		if params.Path != "" {
+			if ok, path := replaceBracesIfExists(params.Path); ok {
+				s.Where(sql.Like(syslogrecord.FieldPath, path))
+			} else {
+				s.Where(sql.EQ(syslogrecord.FieldPath, path))
+			}
+
+		}
+
+		if params.RequestTimeStart != "" {
+			s.Where(sql.GTE(syslogrecord.FieldRequestTime, params.RequestTimeStart))
+		}
+		if params.RequestTimeEnd != "" {
+			s.Where(sql.LTE(syslogrecord.FieldRequestTime, params.RequestTimeEnd))
+		}
 
 		if params.Method != "" {
 			s.Where(sql.EQ(syslogrecord.FieldMethod, params.Method))

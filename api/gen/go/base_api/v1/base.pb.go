@@ -3204,22 +3204,23 @@ func (x *DeleteResource) GetId() string {
 }
 
 type GetSysLogListParams struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CurrentPage   int64                  `protobuf:"varint,20,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
-	PageSize      int64                  `protobuf:"varint,21,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	UserName      string                 `protobuf:"bytes,3,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
-	IsLogin       bool                   `protobuf:"varint,4,opt,name=is_login,json=isLogin,proto3" json:"is_login,omitempty"`
-	SessionId     string                 `protobuf:"bytes,5,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	Method        string                 `protobuf:"bytes,6,opt,name=method,proto3" json:"method,omitempty"`
-	Path          string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`
-	RequestTime   string                 `protobuf:"bytes,8,opt,name=request_time,json=requestTime,proto3" json:"request_time,omitempty"`
-	IpAddress     string                 `protobuf:"bytes,9,opt,name=ip_address,json=ipAddress,proto3" json:"ip_address,omitempty"`
-	Latency       int64                  `protobuf:"varint,10,opt,name=latency,proto3" json:"latency,omitempty"`
-	ResCode       int32                  `protobuf:"varint,17,opt,name=res_code,json=resCode,proto3" json:"res_code,omitempty"`
-	ResStatus     bool                   `protobuf:"varint,19,opt,name=res_status,json=resStatus,proto3" json:"res_status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage      int64                  `protobuf:"varint,20,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize         int64                  `protobuf:"varint,21,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	UserId           string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserName         string                 `protobuf:"bytes,3,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	IsLogin          bool                   `protobuf:"varint,4,opt,name=is_login,json=isLogin,proto3" json:"is_login,omitempty"`
+	SessionId        string                 `protobuf:"bytes,5,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	Method           string                 `protobuf:"bytes,6,opt,name=method,proto3" json:"method,omitempty"`
+	Path             string                 `protobuf:"bytes,7,opt,name=path,proto3" json:"path,omitempty"`
+	RequestTimeStart string                 `protobuf:"bytes,8,opt,name=request_time_start,json=requestTimeStart,proto3" json:"request_time_start,omitempty"`
+	RequestTimeEnd   string                 `protobuf:"bytes,9,opt,name=request_time_end,json=requestTimeEnd,proto3" json:"request_time_end,omitempty"`
+	IpAddress        string                 `protobuf:"bytes,10,opt,name=ip_address,json=ipAddress,proto3" json:"ip_address,omitempty"`
+	Latency          int64                  `protobuf:"varint,11,opt,name=latency,proto3" json:"latency,omitempty"`
+	ResCode          int32                  `protobuf:"varint,17,opt,name=res_code,json=resCode,proto3" json:"res_code,omitempty"`
+	ResStatus        bool                   `protobuf:"varint,19,opt,name=res_status,json=resStatus,proto3" json:"res_status,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *GetSysLogListParams) Reset() {
@@ -3308,9 +3309,16 @@ func (x *GetSysLogListParams) GetPath() string {
 	return ""
 }
 
-func (x *GetSysLogListParams) GetRequestTime() string {
+func (x *GetSysLogListParams) GetRequestTimeStart() string {
 	if x != nil {
-		return x.RequestTime
+		return x.RequestTimeStart
+	}
+	return ""
+}
+
+func (x *GetSysLogListParams) GetRequestTimeEnd() string {
+	if x != nil {
+		return x.RequestTimeEnd
 	}
 	return ""
 }
@@ -4082,7 +4090,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x05items\x18\x01 \x03(\v2!.api.base_api.v1.ResourceListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\" \n" +
 	"\x0eDeleteResource\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x85\x03\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xba\x03\n" +
 	"\x13GetSysLogListParams\x12 \n" +
 	"\vcurrentPage\x18\x14 \x01(\x03R\vcurrentPage\x12\x1a\n" +
 	"\bpageSize\x18\x15 \x01(\x03R\bpageSize\x12\x17\n" +
@@ -4092,12 +4100,13 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x05 \x01(\tR\tsessionId\x12\x16\n" +
 	"\x06method\x18\x06 \x01(\tR\x06method\x12\x12\n" +
-	"\x04path\x18\a \x01(\tR\x04path\x12!\n" +
-	"\frequest_time\x18\b \x01(\tR\vrequestTime\x12\x1d\n" +
+	"\x04path\x18\a \x01(\tR\x04path\x12,\n" +
+	"\x12request_time_start\x18\b \x01(\tR\x10requestTimeStart\x12(\n" +
+	"\x10request_time_end\x18\t \x01(\tR\x0erequestTimeEnd\x12\x1d\n" +
 	"\n" +
-	"ip_address\x18\t \x01(\tR\tipAddress\x12\x18\n" +
-	"\alatency\x18\n" +
-	" \x01(\x03R\alatency\x12\x19\n" +
+	"ip_address\x18\n" +
+	" \x01(\tR\tipAddress\x12\x18\n" +
+	"\alatency\x18\v \x01(\x03R\alatency\x12\x19\n" +
 	"\bres_code\x18\x11 \x01(\x05R\aresCode\x12\x1d\n" +
 	"\n" +
 	"res_status\x18\x13 \x01(\bR\tresStatus\"\xdf\x02\n" +
