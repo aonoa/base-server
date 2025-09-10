@@ -126,6 +126,7 @@ func (c *UserCreate) CreateAll(User *User) *UserCreate {
 	builder = builder.SetUsername(User.Username)
 	builder = builder.SetPassword(User.Password)
 	builder = builder.SetNickname(User.Nickname)
+	builder = builder.SetEmail(User.Email)
 	builder = builder.SetStatus(User.Status)
 	builder = builder.SetAvatar(User.Avatar)
 	builder = builder.SetDesc(User.Desc)

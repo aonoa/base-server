@@ -119,6 +119,7 @@ func (u *UserUpdateOne) UpdateAll(User *User) *UserUpdateOne {
 	update = update.SetUsername(User.Username)
 	update = update.SetPassword(User.Password)
 	update = update.SetNickname(User.Nickname)
+	update = update.SetEmail(User.Email)
 	update = update.SetStatus(User.Status)
 	update = update.SetAvatar(User.Avatar)
 	update = update.SetDesc(User.Desc)

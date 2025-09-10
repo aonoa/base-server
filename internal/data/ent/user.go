@@ -28,6 +28,8 @@ type User struct {
 	Password string `json:"password,omitempty"`
 	// 昵称
 	Nickname string `json:"nickname,omitempty"`
+	// 邮箱
+	Email string `json:"email,omitempty"`
 	// 0-锁定，1-正常
 	Status int8 `json:"status,omitempty"`
 	// 头像
@@ -78,7 +80,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUsername, user.FieldPassword, user.FieldNickname, user.FieldAvatar, user.FieldDesc, user.FieldExtension:
+		case user.FieldUsername, user.FieldPassword, user.FieldNickname, user.FieldEmail, user.FieldAvatar, user.FieldDesc, user.FieldExtension:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -134,6 +136,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
 				u.Nickname = value.String
+			}
+		case user.FieldEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field email", values[i])
+			} else if value.Valid {
+				u.Email = value.String
 			}
 		case user.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -219,6 +227,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("nickname=")
 	builder.WriteString(u.Nickname)
+	builder.WriteString(", ")
+	builder.WriteString("email=")
+	builder.WriteString(u.Email)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", u.Status))
