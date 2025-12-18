@@ -859,6 +859,22 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetUserInfoReply'
+    /basic-api/v1/copilot/see:
+        post:
+            tags:
+                - SSEService
+            description: AI智能助手
+            operationId: SSEService_Copilot
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.Msg'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/v1/server/file/upload:
         post:
             tags:
@@ -1121,6 +1137,13 @@ components:
                     type: string
                 password:
                     type: string
+        api.base_api.v1.Message:
+            type: object
+            properties:
+                role:
+                    type: string
+                content:
+                    type: string
         api.base_api.v1.Meta:
             type: object
             properties:
@@ -1170,6 +1193,13 @@ components:
                     type: array
                     items:
                         type: string
+        api.base_api.v1.Msg:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.Message'
         api.base_api.v1.ResourceListItem:
             type: object
             properties:
@@ -1332,4 +1362,5 @@ components:
                     type: string
 tags:
     - name: Base
+    - name: SSEService
     - name: UploadService

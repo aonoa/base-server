@@ -23,6 +23,8 @@ func NewWhiteListMatcher() selector.MatchFunc {
 	whiteList["/basic-api/v1/server/file/upload"] = struct{}{}
 	whiteList["/api.base_api.v1.Base/IsMenuNameExists"] = struct{}{}
 	whiteList["/api.base_api.v1.Base/IsMenuPathExists"] = struct{}{}
+	whiteList["/api.base_api.v1.SSEService/Copilot"] = struct{}{}
+
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
 			return false

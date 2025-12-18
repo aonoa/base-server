@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api.base_api.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/base_api/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.base_api.v1";
+
+service SSEService {
+  // AI智能助手
+  rpc Copilot(Msg) returns(stream google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/basic-api/v1/copilot/see",
+      body: "*",
+    };
+  }
+}
+
+message Message {
+  string role = 1;
+  string content = 2;
+}
+
+message Msg {
+  repeated Message items = 1;
+}

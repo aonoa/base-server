@@ -9,6 +9,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/cloudwego/eino-ext/components/model/openai"
+	"github.com/cloudwego/eino/components/prompt"
+	"github.com/cloudwego/eino/schema"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/transport/http"
@@ -18,6 +21,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"io"
+	httpx "net/http"
 	"os"
 	"strings"
 )
@@ -347,4 +351,113 @@ func (s *BaseService) GetSysLogList(ctx context.Context, req *pb.GetSysLogListPa
 
 func (s *BaseService) GetSysLogInfo(ctx context.Context, req *pb.GetSysLogInfoParams) (*pb.GetSysLogInfoReply, error) {
 	return s.uc.GetSysLogInfo(ctx, req)
+}
+
+func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, error) {
+	w := ctx.Response()
+	w.Header().Set("Content-Type", "text/event-stream")
+
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		httpx.Error(w, "Streaming unsupported!", httpx.StatusInternalServerError)
+		return nil, nil
+	}
+
+	//notify := context.Background().Done()
+	//
+	//count := 1
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// 创建模板，使用 FString 格式
+	template := prompt.FromMessages(schema.FString,
+		// 系统消息模板
+		schema.SystemMessage("你是一个{role}。你需要用{style}的语气回答问题。你的目标是帮助程序员保持积极乐观的心态，提供技术建议的同时也要关注他们的心理健康。回答要尽可能的精简"),
+
+		// 插入需要的对话历史（新对话的话这里不填）
+		schema.MessagesPlaceholder("chat_history", true),
+
+		// 用户消息模板
+		schema.UserMessage("问题: {question}"),
+	)
+
+	last := req.Items[len(req.Items)-1]
+
+	// 使用模板生成消息
+	messages, err := template.Format(context.Background(), map[string]any{
+		"role":     "程序员鼓励师",
+		"style":    "积极、温暖且专业",
+		"question": last.Content,
+		// 对话历史（这个例子里模拟两轮对话历史）
+		"chat_history": func(msg *pb.Msg) []*schema.Message {
+			res := make([]*schema.Message, 0)
+			for _, item := range msg.Items[:len(msg.Items)-1] {
+				if item.Role == "assistant" {
+					res = append(res, schema.AssistantMessage(item.Content, nil))
+				}
+				if item.Role == "user" {
+					res = append(res, schema.UserMessage(item.Content))
+				}
+			}
+			return res
+			//return []*schema.Message{
+			//	schema.UserMessage("你好"),
+			//	schema.AssistantMessage("嘿！我是你的程序员鼓励师！记住，每个优秀的程序员都是从 Debug 中成长起来的。有什么我可以帮你的吗？", nil),
+			//	schema.UserMessage("我觉得自己写的代码太烂了"),
+			//	schema.AssistantMessage("每个程序员都经历过这个阶段！重要的是你在不断学习和进步。让我们一起看看代码，我相信通过重构和优化，它会变得更好。记住，Rome wasn't built in a day，代码质量是通过持续改进来提升的。", nil),
+			//}
+		}(req),
+	})
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+
+	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
+		BaseURL: "https://open.bigmodel.cn/api/paas/v4/", // Ollama 服务地址
+		Model:   "glm-4-flash",                           // 模型名称
+		APIKey:  "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+	})
+	if err != nil {
+		log.Errorf("failed to create agent: %v", err)
+		return nil, err
+	}
+
+	sr, err := chatModel.Stream(context.Background(), messages)
+	if err != nil {
+		log.Errorf("failed to stream messages: %v", err)
+		return nil, err
+	}
+	defer sr.Close()
+	for {
+		message, err := sr.Recv()
+		if err == io.EOF { // 流式输出结束
+			return nil, nil
+		}
+		if err != nil {
+			log.Fatalf("recv failed: %v", err)
+		}
+		if _, err := w.Write([]byte(message.Content)); err != nil {
+			return nil, err
+		}
+		flusher.Flush()
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	//for {
+	//	select {
+	//	case <-notify:
+	//		log.Info("Client disconnected")
+	//		return nil, nil
+	//	default:
+	//		if count > 5 {
+	//			return nil, nil
+	//		}
+	//		count++
+	//		event := "data: " + time.Now().Format(time.RFC3339) + "\n\n"
+	//		if _, err := w.Write([]byte(event)); err != nil {
+	//			//log.Error("Write error:", err)
+	//			return nil, err
+	//		}
+	//		flusher.Flush()
+	//		time.Sleep(1 * time.Second)
+	//	}
+	//}
 }

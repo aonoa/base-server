@@ -53,6 +53,7 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, e *casbin.Enforcer,
 	srv := http.NewServer(opts...)
 	basev1.RegisterBaseHTTPServer(srv, base)
 	base_api.RegisterFileServiceHTTPServer(srv, base)
+	base_api.RegisterSSEServiceHTTPServer(srv, base)
 
 	base.RestServer = srv
 
