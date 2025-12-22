@@ -12,6 +12,7 @@ message Bootstrap {
   Auth auth = 4;
   Menus menus = 5;
   Job job = 6;
+  Llm llm = 7;
 }
 
 message Server {
@@ -70,4 +71,16 @@ message Job {
     string output = 4;
   }
   repeated JobConfig jobs = 1;
+}
+
+message Llm {
+  message Agent {
+    message OpenAI {
+      string model = 1;
+      string api_base_url = 2;
+      string api_key = 3;
+    }
+    OpenAI openAI = 1;
+  }
+  Agent agent = 1;
 }

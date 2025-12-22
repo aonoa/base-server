@@ -32,6 +32,12 @@ auth:
 menus:
   default_menus: 1,2,3,10,4,5,6,7,8,9
 
+llm:
+  agent:
+    openAI:
+      model: GLM-4.6V-Flash
+      api_key: xxxxxxxxxxxx
+      api_base_url: https://open.bigmodel.cn/api/paas/v4/
 #job:
 #  jobs:
 #    - name: one

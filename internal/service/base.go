@@ -30,6 +30,7 @@ type BaseService struct {
 	pb.UnimplementedBaseServer
 	uc  *biz.BaseUsecase
 	key string
+	llm *conf.Llm
 
 	RestServer *http.Server
 }
@@ -38,10 +39,11 @@ var (
 	ErrLoginFailed = errors.New("login failed")
 )
 
-func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth) *BaseService {
+func NewBaseService(uc *biz.BaseUsecase, conf *conf.Auth, llm *conf.Llm) *BaseService {
 	return &BaseService{
 		uc:  uc,
 		key: conf.ApiKey,
+		llm: llm,
 	}
 }
 
@@ -384,8 +386,8 @@ func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, er
 
 	// 使用模板生成消息
 	messages, err := template.Format(context.Background(), map[string]any{
-		"role":     "程序员鼓励师",
-		"style":    "积极、温暖且专业",
+		"role":     "医学ICD编码员",
+		"style":    "专业、积极且温暖",
 		"question": last.Content,
 		// 对话历史（这个例子里模拟两轮对话历史）
 		"chat_history": func(msg *pb.Msg) []*schema.Message {
@@ -411,9 +413,9 @@ func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, er
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
-		BaseURL: "https://open.bigmodel.cn/api/paas/v4/", // Ollama 服务地址
-		Model:   "glm-4-flash",                           // 模型名称
-		APIKey:  "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+		BaseURL: s.llm.Agent.OpenAI.ApiBaseUrl, // 服务地址
+		Model:   s.llm.Agent.OpenAI.Model,      // 模型名称
+		APIKey:  s.llm.Agent.OpenAI.ApiKey,
 	})
 	if err != nil {
 		log.Errorf("failed to create agent: %v", err)
