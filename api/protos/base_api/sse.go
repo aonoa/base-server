@@ -16,7 +16,7 @@ type SSEServiceHTTPServer interface {
 func RegisterSSEServiceHTTPServer(s *http.Server, srv SSEServiceHTTPServer) {
 	// 文件上传相关的接口
 	r := s.Route("/")
-	r.POST("/basic-api/v1/copilot/see", _SSEService_Copilot0_HTTP_Handler(srv))
+	r.POST("/basic-api/v1/copilot/sse", _SSEService_Copilot0_HTTP_Handler(srv))
 }
 
 func _SSEService_Copilot0_HTTP_Handler(srv SSEServiceHTTPServer) func(ctx http.Context) error {

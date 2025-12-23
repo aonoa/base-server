@@ -131,7 +131,7 @@ const file_base_api_v1_sse_proto_rawDesc = "" +
 	"\x05items\x18\x01 \x03(\v2\x18.api.base_api.v1.MessageR\x05items2m\n" +
 	"\n" +
 	"SSEService\x12_\n" +
-	"\aCopilot\x12\x14.api.base_api.v1.Msg\x1a\x16.google.protobuf.Empty\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/v1/copilot/see0\x01B3\n" +
+	"\aCopilot\x12\x14.api.base_api.v1.Msg\x1a\x16.google.protobuf.Empty\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/basic-api/v1/copilot/sse0\x01B3\n" +
 	"\x0fapi.base_api.v1P\x01Z\x1ebase-server/api/base_api/v1;v1b\x06proto3"
 
 var (

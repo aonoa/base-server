@@ -13,7 +13,7 @@ service SSEService {
   // AI智能助手
   rpc Copilot(Msg) returns(stream google.protobuf.Empty){
     option (google.api.http) = {
-      post: "/basic-api/v1/copilot/see",
+      post: "/basic-api/v1/copilot/sse",
       body: "*",
     };
   }

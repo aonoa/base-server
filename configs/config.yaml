@@ -19,7 +19,7 @@ logger:
 data:
   database:
     driver: pgx
-    source: postgresql://postgres:postgresql666@10.10.100.99:15432/test1
+    source: postgresql://postgres:postgres666@43.142.238.199:15432/test1
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
@@ -35,9 +35,10 @@ menus:
 llm:
   agent:
     openAI:
-      model: GLM-4.6V-Flash
-      api_key: xxxxxxxxxxxx
+      model: GLM-4.5-Flash
+      api_key: xxxxxxxx
       api_base_url: https://open.bigmodel.cn/api/paas/v4/
+
 #job:
 #  jobs:
 #    - name: one

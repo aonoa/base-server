@@ -859,7 +859,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetUserInfoReply'
-    /basic-api/v1/copilot/see:
+    /basic-api/v1/copilot/sse:
         post:
             tags:
                 - SSEService
