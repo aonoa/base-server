@@ -386,7 +386,7 @@ func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, er
 
 	// 使用模板生成消息
 	messages, err := template.Format(context.Background(), map[string]any{
-		"role":     "医学ICD编码员",
+		"role":     "程序员鼓励师",
 		"style":    "专业、积极且温暖",
 		"question": last.Content,
 		// 对话历史（这个例子里模拟两轮对话历史）
@@ -401,12 +401,6 @@ func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, er
 				}
 			}
 			return res
-			//return []*schema.Message{
-			//	schema.UserMessage("你好"),
-			//	schema.AssistantMessage("嘿！我是你的程序员鼓励师！记住，每个优秀的程序员都是从 Debug 中成长起来的。有什么我可以帮你的吗？", nil),
-			//	schema.UserMessage("我觉得自己写的代码太烂了"),
-			//	schema.AssistantMessage("每个程序员都经历过这个阶段！重要的是你在不断学习和进步。让我们一起看看代码，我相信通过重构和优化，它会变得更好。记住，Rome wasn't built in a day，代码质量是通过持续改进来提升的。", nil),
-			//}
 		}(req),
 	})
 
