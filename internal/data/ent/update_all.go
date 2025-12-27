@@ -2,127 +2,162 @@
 
 package ent
 
-// UpdateAll updates all fields of the ApiResources entity (excluding create_time and update_time).
-func (u *ApiResourcesUpdateOne) UpdateAll(ApiResources *ApiResources) *ApiResourcesUpdateOne {
+// UpdateAll updates all mutable fields of the ApiResources entity (excluding create_time, update_time and immutable fields).
+func (u *ApiResourcesUpdateOne) UpdateAll(apiresources *ApiResources) *ApiResourcesUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if apiresources == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetDescription(ApiResources.Description)
-	update = update.SetPath(ApiResources.Path)
-	update = update.SetMethod(ApiResources.Method)
-	update = update.SetModule(ApiResources.Module)
-	update = update.SetModuleDescription(ApiResources.ModuleDescription)
-	update = update.SetResourcesGroup(ApiResources.ResourcesGroup)
+	update = update.SetDescription(apiresources.Description)
+	update = update.SetPath(apiresources.Path)
+	update = update.SetMethod(apiresources.Method)
+	update = update.SetModule(apiresources.Module)
+	update = update.SetModuleDescription(apiresources.ModuleDescription)
+	update = update.SetResourcesGroup(apiresources.ResourcesGroup)
 	return update
 }
 
-// UpdateAll updates all fields of the Dept entity (excluding create_time and update_time).
-func (u *DeptUpdateOne) UpdateAll(Dept *Dept) *DeptUpdateOne {
+// UpdateAll updates all mutable fields of the Dept entity (excluding create_time, update_time and immutable fields).
+func (u *DeptUpdateOne) UpdateAll(dept *Dept) *DeptUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if dept == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetName(Dept.Name)
-	update = update.SetSort(Dept.Sort)
-	update = update.SetStatus(Dept.Status)
-	update = update.SetDesc(Dept.Desc)
-	update = update.SetExtension(Dept.Extension)
-	update = update.SetDom(Dept.Dom)
-	update = update.SetPid(Dept.Pid)
+	update = update.SetName(dept.Name)
+	update = update.SetSort(dept.Sort)
+	update = update.SetStatus(dept.Status)
+	update = update.SetDesc(dept.Desc)
+	update = update.SetExtension(dept.Extension)
+	update = update.SetDom(dept.Dom)
+	update = update.SetPid(dept.Pid)
 	return update
 }
 
-// UpdateAll updates all fields of the Menu entity (excluding create_time and update_time).
-func (u *MenuUpdateOne) UpdateAll(Menu *Menu) *MenuUpdateOne {
+// UpdateAll updates all mutable fields of the Menu entity (excluding create_time, update_time and immutable fields).
+func (u *MenuUpdateOne) UpdateAll(menu *Menu) *MenuUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if menu == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetPid(Menu.Pid)
-	update = update.SetType(Menu.Type)
-	update = update.SetStatus(Menu.Status)
-	update = update.SetPath(Menu.Path)
-	update = update.SetRedirect(Menu.Redirect)
-	update = update.SetAlias(Menu.Alias)
-	update = update.SetName(Menu.Name)
-	update = update.SetComponent(Menu.Component)
-	update = update.SetIcon(Menu.Icon)
-	update = update.SetTitle(Menu.Title)
-	update = update.SetOrder(Menu.Order)
-	update = update.SetOpenInNewWindow(Menu.OpenInNewWindow)
-	update = update.SetNoBasicLayout(Menu.NoBasicLayout)
-	update = update.SetMenuVisibleWithForbidden(Menu.MenuVisibleWithForbidden)
-	update = update.SetLink(Menu.Link)
-	update = update.SetIframeSrc(Menu.IframeSrc)
-	update = update.SetActiveIcon(Menu.ActiveIcon)
-	update = update.SetActivePath(Menu.ActivePath)
-	update = update.SetMaxNumOfOpenTab(Menu.MaxNumOfOpenTab)
-	update = update.SetKeepalive(Menu.Keepalive)
-	update = update.SetIgnoreAccess(Menu.IgnoreAccess)
-	update = update.SetAuthority(Menu.Authority)
-	update = update.SetAffixTab(Menu.AffixTab)
-	update = update.SetAffixTabOrder(Menu.AffixTabOrder)
-	update = update.SetHideInMenu(Menu.HideInMenu)
-	update = update.SetHideInTab(Menu.HideInTab)
-	update = update.SetHideInBreadcrumb(Menu.HideInBreadcrumb)
-	update = update.SetHideChildrenInMenu(Menu.HideChildrenInMenu)
-	update = update.SetFullPathKey(Menu.FullPathKey)
-	update = update.SetBadge(Menu.Badge)
-	update = update.SetBadgeType(Menu.BadgeType)
-	update = update.SetBadgeVariants(Menu.BadgeVariants)
+	update = update.SetPid(menu.Pid)
+	update = update.SetType(menu.Type)
+	update = update.SetStatus(menu.Status)
+	update = update.SetPath(menu.Path)
+	update = update.SetRedirect(menu.Redirect)
+	update = update.SetAlias(menu.Alias)
+	update = update.SetName(menu.Name)
+	update = update.SetComponent(menu.Component)
+	update = update.SetIcon(menu.Icon)
+	update = update.SetTitle(menu.Title)
+	update = update.SetOrder(menu.Order)
+	update = update.SetOpenInNewWindow(menu.OpenInNewWindow)
+	update = update.SetNoBasicLayout(menu.NoBasicLayout)
+	update = update.SetMenuVisibleWithForbidden(menu.MenuVisibleWithForbidden)
+	update = update.SetLink(menu.Link)
+	update = update.SetIframeSrc(menu.IframeSrc)
+	update = update.SetActiveIcon(menu.ActiveIcon)
+	update = update.SetActivePath(menu.ActivePath)
+	update = update.SetMaxNumOfOpenTab(menu.MaxNumOfOpenTab)
+	update = update.SetKeepalive(menu.Keepalive)
+	update = update.SetIgnoreAccess(menu.IgnoreAccess)
+	update = update.SetAuthority(menu.Authority)
+	update = update.SetAffixTab(menu.AffixTab)
+	update = update.SetAffixTabOrder(menu.AffixTabOrder)
+	update = update.SetHideInMenu(menu.HideInMenu)
+	update = update.SetHideInTab(menu.HideInTab)
+	update = update.SetHideInBreadcrumb(menu.HideInBreadcrumb)
+	update = update.SetHideChildrenInMenu(menu.HideChildrenInMenu)
+	update = update.SetFullPathKey(menu.FullPathKey)
+	update = update.SetBadge(menu.Badge)
+	update = update.SetBadgeType(menu.BadgeType)
+	update = update.SetBadgeVariants(menu.BadgeVariants)
 	return update
 }
 
-// UpdateAll updates all fields of the Resource entity (excluding create_time and update_time).
-func (u *ResourceUpdateOne) UpdateAll(Resource *Resource) *ResourceUpdateOne {
+// UpdateAll updates all mutable fields of the Resource entity (excluding create_time, update_time and immutable fields).
+func (u *ResourceUpdateOne) UpdateAll(resource *Resource) *ResourceUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if resource == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetName(Resource.Name)
-	update = update.SetType(Resource.Type)
-	update = update.SetValue(Resource.Value)
-	update = update.SetMethod(Resource.Method)
-	update = update.SetDescription(Resource.Description)
+	update = update.SetName(resource.Name)
+	update = update.SetType(resource.Type)
+	update = update.SetValue(resource.Value)
+	update = update.SetMethod(resource.Method)
+	update = update.SetDescription(resource.Description)
 	return update
 }
 
-// UpdateAll updates all fields of the Role entity (excluding create_time and update_time).
-func (u *RoleUpdateOne) UpdateAll(Role *Role) *RoleUpdateOne {
+// UpdateAll updates all mutable fields of the Role entity (excluding create_time, update_time and immutable fields).
+func (u *RoleUpdateOne) UpdateAll(role *Role) *RoleUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if role == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetName(Role.Name)
-	update = update.SetValue(Role.Value)
-	update = update.SetStatus(Role.Status)
-	update = update.SetDesc(Role.Desc)
-	update = update.SetMenus(Role.Menus)
+	update = update.SetName(role.Name)
+	update = update.SetValue(role.Value)
+	update = update.SetStatus(role.Status)
+	update = update.SetDesc(role.Desc)
+	update = update.SetMenus(role.Menus)
 	return update
 }
 
-// UpdateAll updates all fields of the SysLogRecord entity (excluding create_time and update_time).
-func (u *SysLogRecordUpdateOne) UpdateAll(SysLogRecord *SysLogRecord) *SysLogRecordUpdateOne {
+// UpdateAll updates all mutable fields of the SysLogRecord entity (excluding create_time, update_time and immutable fields).
+func (u *SysLogRecordUpdateOne) UpdateAll(syslogrecord *SysLogRecord) *SysLogRecordUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if syslogrecord == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetUserID(SysLogRecord.UserID)
-	update = update.SetUserName(SysLogRecord.UserName)
-	update = update.SetIsLogin(SysLogRecord.IsLogin)
-	update = update.SetSessionID(SysLogRecord.SessionID)
-	update = update.SetMethod(SysLogRecord.Method)
-	update = update.SetPath(SysLogRecord.Path)
-	update = update.SetRequestTime(SysLogRecord.RequestTime)
-	update = update.SetIPAddress(SysLogRecord.IPAddress)
-	update = update.SetIPLocation(SysLogRecord.IPLocation)
-	update = update.SetLatency(SysLogRecord.Latency)
-	update = update.SetOs(SysLogRecord.Os)
-	update = update.SetBrowser(SysLogRecord.Browser)
-	update = update.SetUserAgent(SysLogRecord.UserAgent)
-	update = update.SetHeader(SysLogRecord.Header)
-	update = update.SetGetParams(SysLogRecord.GetParams)
-	update = update.SetPostData(SysLogRecord.PostData)
-	update = update.SetResCode(SysLogRecord.ResCode)
-	update = update.SetReason(SysLogRecord.Reason)
-	update = update.SetResStatus(SysLogRecord.ResStatus)
-	update = update.SetStack(SysLogRecord.Stack)
+	update = update.SetUserID(syslogrecord.UserID)
+	update = update.SetUserName(syslogrecord.UserName)
+	update = update.SetIsLogin(syslogrecord.IsLogin)
+	update = update.SetSessionID(syslogrecord.SessionID)
+	update = update.SetMethod(syslogrecord.Method)
+	update = update.SetPath(syslogrecord.Path)
+	update = update.SetRequestTime(syslogrecord.RequestTime)
+	update = update.SetIPAddress(syslogrecord.IPAddress)
+	update = update.SetIPLocation(syslogrecord.IPLocation)
+	update = update.SetLatency(syslogrecord.Latency)
+	update = update.SetOs(syslogrecord.Os)
+	update = update.SetBrowser(syslogrecord.Browser)
+	update = update.SetUserAgent(syslogrecord.UserAgent)
+	update = update.SetHeader(syslogrecord.Header)
+	update = update.SetGetParams(syslogrecord.GetParams)
+	update = update.SetPostData(syslogrecord.PostData)
+	update = update.SetResCode(syslogrecord.ResCode)
+	update = update.SetReason(syslogrecord.Reason)
+	update = update.SetResStatus(syslogrecord.ResStatus)
+	update = update.SetStack(syslogrecord.Stack)
 	return update
 }
 
-// UpdateAll updates all fields of the User entity (excluding create_time and update_time).
-func (u *UserUpdateOne) UpdateAll(User *User) *UserUpdateOne {
+// UpdateAll updates all mutable fields of the User entity (excluding create_time, update_time and immutable fields).
+func (u *UserUpdateOne) UpdateAll(user *User) *UserUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if user == nil {
+		return u
+	}
+
 	update := u
-	update = update.SetUsername(User.Username)
-	update = update.SetPassword(User.Password)
-	update = update.SetNickname(User.Nickname)
-	update = update.SetEmail(User.Email)
-	update = update.SetStatus(User.Status)
-	update = update.SetAvatar(User.Avatar)
-	update = update.SetDesc(User.Desc)
-	update = update.SetExtension(User.Extension)
+	update = update.SetUsername(user.Username)
+	update = update.SetPassword(user.Password)
+	update = update.SetNickname(user.Nickname)
+	update = update.SetEmail(user.Email)
+	update = update.SetStatus(user.Status)
+	update = update.SetAvatar(user.Avatar)
+	update = update.SetDesc(user.Desc)
+	update = update.SetExtension(user.Extension)
 	return update
 }

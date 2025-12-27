@@ -6,18 +6,18 @@ package ent
 {{- range $node := $.Nodes }}
 {{ $receiver := printf "%sUpdateOne" $node.Name }}
 
-// UpdateAll updates all fields of the {{ $node.Name }} entity (excluding create_time and update_time).
-func (u *{{ $receiver }}) UpdateAll({{ $node.Name }} *{{ $node.Name }}) *{{ $receiver }} {
+// UpdateAll updates all mutable fields of the {{ $node.Name }} entity (excluding create_time, update_time and immutable fields).
+func (u *{{ $receiver }}) UpdateAll({{ $node.Name | lower }} *{{ $node.Name }}) *{{ $receiver }} {
+    // Skip if the input entity is nil to avoid panic
+    if {{ $node.Name | lower }} == nil {
+        return u
+    }
+
     update := u
-    {{- $first := true }}
     {{- range $field := $node.Fields }}
-        {{- if not (or (eq $field.Name "create_time") (eq $field.Name "update_time")) }}
-            {{- if $first }}
-    update = update.Set{{ $field.StructField }}({{ $node.Name }}.{{ $field.StructField }})
-                {{- $first = false }}
-            {{- else }}
-    update = update.Set{{ $field.StructField }}({{ $node.Name }}.{{ $field.StructField }})
-            {{- end }}
+        {{- /* 过滤条件：排除时间戳字段 + 排除不可变字段 */ -}}
+        {{- if and (not (or (eq $field.Name "create_time") (eq $field.Name "update_time"))) (not $field.Immutable) }}
+    update = update.Set{{ $field.StructField }}({{ $node.Name | lower }}.{{ $field.StructField }})
         {{- end }}
     {{- end }}
     return update
