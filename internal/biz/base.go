@@ -99,21 +99,31 @@ func (uc *BaseUsecase) Login(ctx context.Context, req *pb.LoginRequest) (string,
 }
 
 // GenerateToken 生成Token
-func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.LoginReply, error) {
+func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string, session ...string) (*pb.LoginReply, error) {
 	now := time.Now()
+
+	sessionId := tools.MD5(uuid.NewString())
+
+	if session != nil && len(session) > 0 {
+		sessionId = session[0]
+	}
+
 	// 生成accessToken
 	claims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
-		"user_id": uid,
-		"sub":     uid,
-		"aud":     "login",
-		"exp":     now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
-		"nbf":     now.Unix(),                       // 生效时间
-		"iat":     now.Unix(),                       // 颁发时间
+		"user_id":    uid,
+		"sub":        uid,
+		"aud":        "login",
+		"exp":        now.Add(30 * time.Minute).Unix(), // 过期时间（30分钟后过期）
+		"nbf":        now.Unix(),                       // 生效时间
+		"iat":        now.Unix(),                       // 颁发时间
+		"session_id": sessionId,
 	})
 	accessToken, err := claims.SignedString([]byte(key))
 	if err != nil {
 		return nil, errors.New("")
 	}
+
+	claims.SignedString([]byte(key))
 
 	// 生成refreshToken，提前5分钟生效
 	claims = jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
@@ -124,7 +134,8 @@ func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.
 		"nbf":     now.Add(25 * time.Minute).Unix(), // 生效时间（accessToken过期前5分钟才能生效）
 		"iat":     now.Unix(),                       // 颁发时间
 		// 这里需要配合缓存，暂时没写
-		"jti": uuid.New().String(), // 唯一标识符，主要用来作为一次性 token，从而回避重放（replay）攻击
+		"jti":        uuid.New().String(), // 唯一标识符，主要用来作为一次性 token，从而回避重放（replay）攻击
+		"session_id": sessionId,
 	})
 	refreshToken, err := claims.SignedString([]byte(key))
 	if err != nil {
@@ -135,6 +146,7 @@ func (uc *BaseUsecase) GenerateToken(ctx context.Context, uid, key string) (*pb.
 		UserId:       uid,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		SessionID:    sessionId,
 	}, nil
 }
 

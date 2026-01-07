@@ -136,6 +136,7 @@ type LoginReply struct {
 	UserId        string                 `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
 	AccessToken   string                 `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
 	RefreshToken  string                 `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	SessionID     string                 `protobuf:"bytes,4,opt,name=sessionID,proto3" json:"sessionID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -187,6 +188,13 @@ func (x *LoginReply) GetAccessToken() string {
 func (x *LoginReply) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *LoginReply) GetSessionID() string {
+	if x != nil {
+		return x.SessionID
 	}
 	return ""
 }
@@ -3806,12 +3814,13 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x16base_api/v1/base.proto\x12\x0fapi.base_api.v1\x1a\x15options/options.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"F\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"j\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x88\x01\n" +
 	"\n" +
 	"LoginReply\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12 \n" +
 	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
-	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\"\xf1\x01\n" +
+	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\x12\x1c\n" +
+	"\tsessionID\x18\x04 \x01(\tR\tsessionID\"\xf1\x01\n" +
 	"\x10GetUserInfoReply\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +

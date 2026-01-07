@@ -330,6 +330,7 @@ message LoginReply {
 	string userId = 1;
 	string accessToken = 2;
 	string refreshToken = 3;
+	string sessionID = 4;
 }
 
 message GetUserInfoReply {

@@ -1130,6 +1130,8 @@ components:
                     type: string
                 refreshToken:
                     type: string
+                sessionID:
+                    type: string
         api.base_api.v1.LoginRequest:
             type: object
             properties:

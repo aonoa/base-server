@@ -101,13 +101,15 @@ func (s *BaseService) GetMenuList(ctx context.Context, req *emptypb.Empty) (*pb.
 func (s *BaseService) RefreshToken(ctx context.Context, req *emptypb.Empty) (*pb.LoginReply, error) {
 	uid := ""
 	aud := ""
+	sessionId := ""
 	if claims, ok := jwt.FromContext(ctx); ok {
 		uid = (*claims.(*jwtv5.MapClaims))["user_id"].(string)
 		aud = (*claims.(*jwtv5.MapClaims))["aud"].(string)
+		sessionId = (*claims.(*jwtv5.MapClaims))["session_id"].(string)
 	}
 
 	if aud == "refresh" {
-		return s.uc.GenerateToken(ctx, uid, s.key)
+		return s.uc.GenerateToken(ctx, uid, s.key, sessionId)
 	}
 
 	return &pb.LoginReply{}, nil

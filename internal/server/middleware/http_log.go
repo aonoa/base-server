@@ -6,7 +6,6 @@ import (
 	"base-server/internal/conf"
 	"base-server/internal/data/ent"
 	"base-server/internal/server/utils"
-	"base-server/internal/tools"
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	middleware2 "github.com/go-kratos/kratos/v2/middleware"
@@ -100,7 +99,7 @@ func MiddlewareHttpLog(repo biz.BaseRepo, ac *conf.Auth) middleware2.Middleware 
 									return
 								}
 								logInfo.UserID = reply.UserId
-								logInfo.SessionID = tools.MD5(reply.AccessToken) // 取token的md5值
+								logInfo.SessionID = reply.SessionID
 							}
 						} else {
 							// 解析 jwt
@@ -112,9 +111,10 @@ func MiddlewareHttpLog(repo biz.BaseRepo, ac *conf.Auth) middleware2.Middleware 
 									return []byte(ac.ApiKey), nil
 								})
 								uid := (tokenInfo.Claims.(jwtv5.MapClaims))["user_id"].(string)
+								sessionId := (tokenInfo.Claims.(jwtv5.MapClaims))["session_id"].(string)
 
 								logInfo.UserID = uid
-								logInfo.SessionID = tools.MD5(jwtToken)
+								logInfo.SessionID = sessionId
 							}
 						}
 
