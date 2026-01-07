@@ -7,6 +7,7 @@ import (
 	"base-server/internal/data/ent"
 	"base-server/internal/server/utils"
 	"context"
+	"encoding/json"
 	"github.com/go-kratos/kratos/v2/log"
 	middleware2 "github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
@@ -86,12 +87,21 @@ func MiddlewareHttpLog(repo biz.BaseRepo, ac *conf.Auth) middleware2.Middleware 
 						}
 
 						if tr.Operation() == "/api.base_api.v1.Base/Login" {
-							name, err := utils.BindLoginRequest(data)
+							name, pass, err := utils.BindLoginRequest(data)
 							if err != nil {
 								return
 							}
 							logInfo.IsLogin = true
 							logInfo.UserName = name
+
+							loginRequest := &pb.LoginRequest{
+								Username: name,
+								Password: strings.Repeat("*", len(pass)),
+							}
+							data, err := json.Marshal(loginRequest)
+							if err == nil {
+								logInfo.PostData = string(data)
+							}
 
 							if handlerErr == nil {
 								reply, err := reply.(*pb.LoginReply)

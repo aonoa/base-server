@@ -145,19 +145,19 @@ func GetStatusCode(err error) (int32, string, bool) {
 	}
 }
 
-func BindLoginRequest(body []byte) (string, error) {
+func BindLoginRequest(body []byte) (string, string, error) {
 	var loginRequest pb.LoginRequest
 	if err := json.Unmarshal(body, &loginRequest); err == nil {
 		//fmt.Println("BindLoginRequest Unmarshal JSON failed", err)
-		return loginRequest.GetUsername(), nil
+		return loginRequest.GetUsername(), loginRequest.GetPassword(), nil
 	}
 
 	if values, err := url.ParseQuery(string(body)); err == nil {
 		//fmt.Println("BindLoginRequest Unmarshal Query", err)
-		return values.Get("username"), nil
+		return values.Get("username"), values.Get("password"), nil
 	}
 
-	return "", nil
+	return "", "", nil
 }
 
 // ClientIpToLocation 获取客户端IP的地理位置
