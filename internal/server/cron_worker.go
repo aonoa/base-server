@@ -46,7 +46,7 @@ func (s *CronWorker) Stop(c context.Context) error {
 }
 
 func (s *CronWorker) RunSrv(name string) {
-	log.Info("run job{%s}", name)
+	log.Infof("run job{%s}", name)
 	//switch name {
 	//case s.c.ExampleJob.JonName:
 	//	s.job.DoMyWork()
