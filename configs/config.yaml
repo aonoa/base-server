@@ -19,7 +19,7 @@ logger:
 data:
   database:
     driver: pgx
-    source: postgresql://postgres:postgres666@43.142.238.199:15432/test1
+    source: postgresql://postgres:postgres.666@43.142.238.199:25432/test1
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
