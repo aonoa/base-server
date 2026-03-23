@@ -1,0 +1,78 @@
+services:
+  redis:
+    image: docker.io/redis
+    container_name: base-redis
+    hostname: base-redis
+    ports:
+      - 26379:6379
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - redis-data:/data:rw
+    command: "redis-server --requirepass redis.666  --appendonly yes"
+    privileged: true
+    restart: always
+    networks:
+      - base_networks
+
+  postgres:
+    image: docker.io/postgres
+    container_name: base-postgres
+    hostname: base-postgres
+    restart: always
+    ports:
+      - "25432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - TZ=Asia/Shanghai
+      - POSTGRES_PASSWORD=postgres.666
+    networks:
+      - base_networks
+
+  #jaeger链路追踪
+  jaeger:
+    image: jaegertracing/all-in-one:1.63.0
+    container_name: base-jaeger
+    hostname: base-jaeger
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      - LOG_LEVEL=debug
+    restart: always
+    networks:
+      - base_networks
+
+  # 服务发现注册中心
+  consul:
+    image: consul:1.15.4
+    container_name: base-consul
+    hostname: base-consul
+    ports:
+      - "8500:8500"
+    networks:
+      - base_networks
+    #    command: ["consul","agent","-server","-bootstrap","-ui","-bind","127.0.0.1","-client","0.0.0.0"]
+    command: agent -ui -bootstrap -server -client 0.0.0.0
+    read_only: true
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    user: root:root
+    volumes:
+      - consul-config:/consul/config:z
+      - consul-data:/consul/data:z
+
+
+volumes:
+  consul-config: {}
+  consul-data: {}
+  postgres-data: {}
+  redis-data: {}
+
+networks:
+  base_networks:
+    external: true
