@@ -99,9 +99,14 @@ build-admin:
 build-common:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/common-service ./app/common/service/cmd/service
 
+.PHONY: build-gateway
+# build gateway service
+build-gateway:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/gateway-service ./app/gateway/service/cmd/service
+
 .PHONY: build
 # build split services
-build: build-auth build-user build-admin build-common
+build: build-auth build-user build-admin build-common build-gateway
 
 .PHONY: generate
 # generate

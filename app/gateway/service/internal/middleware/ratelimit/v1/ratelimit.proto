@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package base_server.gateway.middleware.ratelimit.v1;
+
+option go_package = "base-server/app/gateway/service/internal/middleware/ratelimit/v1;ratelimitv1";
+
+import "google/protobuf/duration.proto";
+
+enum Scope {
+  SCOPE_UNSPECIFIED = 0;
+  SCOPE_GLOBAL = 1;
+  SCOPE_IP = 2;
+}
+
+message RateLimit {
+  double requests_per_second = 1;
+  int32 burst = 2;
+  Scope scope = 3;
+  int32 status_code = 4;
+  google.protobuf.Duration cleanup_after = 5;
+}

@@ -1,0 +1,136 @@
+services:
+  postgres:
+    image: docker.io/postgres:16
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres.666
+      POSTGRES_DB: postgres
+    ports:
+      - "25432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./deploy/sql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: docker.io/redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "26379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.63.0
+    restart: unless-stopped
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "16686:16686"
+      - "14268:14268"
+
+  consul:
+    image: consul:1.15.4
+    restart: unless-stopped
+    ports:
+      - "8500:8500"
+    command: agent -ui -bootstrap -server -client 0.0.0.0
+
+  user:
+    build:
+      context: .
+      args:
+        SERVICE: user
+    image: base-server-user:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./deploy/configs/user:/app/configs:ro
+
+  auth:
+    build:
+      context: .
+      args:
+        SERVICE: auth
+    image: base-server-auth:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user:
+        condition: service_started
+    volumes:
+      - ./deploy/configs/auth:/app/configs:ro
+
+  admin:
+    build:
+      context: .
+      args:
+        SERVICE: admin
+    image: base-server-admin:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./deploy/configs/admin:/app/configs:ro
+
+  common:
+    build:
+      context: .
+      args:
+        SERVICE: common
+    image: base-server-common:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./deploy/configs/common:/app/configs:ro
+
+  gateway:
+    build:
+      context: .
+      args:
+        SERVICE: gateway
+    image: base-server-gateway:local
+    restart: unless-stopped
+    depends_on:
+      auth:
+        condition: service_started
+      user:
+        condition: service_started
+      admin:
+        condition: service_started
+      common:
+        condition: service_started
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./deploy/configs/gateway:/app/configs:ro
+
+volumes:
+  postgres-data: {}
+  redis-data: {}

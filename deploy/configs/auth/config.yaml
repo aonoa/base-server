@@ -1,0 +1,25 @@
+server:
+  http:
+    addr: 0.0.0.0:8020
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9020
+    timeout: 1s
+data:
+  database:
+    driver: pgx
+    source: postgresql://postgres:postgres.666@postgres:5432/auth?sslmode=disable
+  redis:
+    addr: redis:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+auth:
+  service_key: auth-service
+  api_key: auth-service-secret
+  whitelist:
+    - /api.auth.service.v1.AuthService/Login
+    - /api.auth.service.v1.AuthService/Logout
+    - /api.auth.service.v1.AuthService/RefreshToken
+services:
+  user:
+    grpc_endpoint: user:9010

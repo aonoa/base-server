@@ -1,0 +1,95 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "base-server/app/gateway/service/internal/conf;conf";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Gateway gateway = 2;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration read_timeout = 3;
+    google.protobuf.Duration read_header_timeout = 4;
+    google.protobuf.Duration idle_timeout = 5;
+  }
+  HTTP http = 1;
+}
+
+message Gateway {
+  string name = 1;
+  string version = 2;
+  repeated Endpoint endpoints = 3;
+  repeated Middleware middlewares = 4;
+  map<string, TLS> tls_store = 5;
+}
+
+message TLS {
+  bool insecure = 1;
+  string cacert = 2;
+  string cert = 3;
+  string key = 4;
+  string server_name = 5;
+}
+
+message Endpoint {
+  string path = 1;
+  string method = 2;
+  string description = 3;
+  Protocol protocol = 4;
+  google.protobuf.Duration timeout = 5;
+  repeated Middleware middlewares = 6;
+  repeated Backend backends = 7;
+  Retry retry = 8;
+  map<string, string> metadata = 9;
+  string host = 10;
+  bool stream = 11;
+}
+
+message Middleware {
+  string name = 1;
+  google.protobuf.Any options = 2;
+  bool required = 3;
+}
+
+message Backend {
+  string target = 1;
+  optional int64 weight = 2;
+  HealthCheck health_check = 3;
+  bool tls = 4;
+  string tls_config_name = 5;
+  map<string, string> metadata = 6;
+}
+
+enum Protocol {
+  UNSPECIFIED = 0;
+  HTTP = 1;
+  GRPC = 2;
+}
+
+message HealthCheck {}
+
+message Retry {
+  uint32 attempts = 1;
+  google.protobuf.Duration per_try_timeout = 2;
+  repeated Condition conditions = 3;
+  repeated string priorities = 4;
+}
+
+message Condition {
+  message Header {
+    string name = 1;
+    string value = 2;
+  }
+
+  oneof condition {
+    string by_status_code = 1;
+    Header by_header = 2;
+  }
+}

@@ -1,0 +1,139 @@
+server:
+  http:
+    network: tcp
+    addr: 0.0.0.0:8000
+    read_timeout: 0s
+    read_header_timeout: 10s
+    idle_timeout: 120s
+gateway:
+  name: gateway
+  middlewares:
+    - name: cors
+      required: true
+      options:
+        "@type": type.googleapis.com/gateway.middleware.cors.v1.Cors
+        allowOrigins:
+          - localhost
+          - 127.0.0.1
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        allowHeaders:
+          - Authorization
+          - Content-Type
+          - X-Request-Id
+          - Traceparent
+          - Tracestate
+        exposeHeaders: []
+        allowCredentials: true
+        maxAge: 10s
+        allowPrivateNetwork: false
+  endpoints:
+    - path: /auth-api/v1/login
+      method: POST
+      protocol: HTTP
+      timeout: 30s
+      backends:
+        - target: 127.0.0.1:8020
+      middlewares:
+        - name: ratelimit
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.ratelimit.v1.RateLimit
+            requestsPerSecond: 5
+            burst: 10
+            scope: SCOPE_IP
+
+    - path: /auth-api/v1/*
+      method: "*"
+      protocol: HTTP
+      timeout: 30s
+      backends:
+        - target: 127.0.0.1:8020
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+            whitelist:
+              - path: /auth-api/v1/login
+                method: POST
+              - path: /auth-api/v1/refresh-token
+                method: POST
+
+    - path: /user-api/v1/*
+      method: "*"
+      protocol: HTTP
+      timeout: 30s
+      backends:
+        - target: 127.0.0.1:8010
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+
+    - path: /admin-api/v1/*
+      method: "*"
+      protocol: HTTP
+      timeout: 30s
+      backends:
+        - target: 127.0.0.1:8030
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+        - name: ratelimit
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.ratelimit.v1.RateLimit
+            requestsPerSecond: 20
+            burst: 40
+            scope: SCOPE_IP
+
+    - path: /common-api/v1/file/upload
+      method: POST
+      protocol: HTTP
+      timeout: 10m
+      backends:
+        - target: 127.0.0.1:8040
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+
+    - path: /common-api/v1/copilot/sse
+      method: GET
+      protocol: HTTP
+      timeout: 24h
+      stream: true
+      backends:
+        - target: 127.0.0.1:8040
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+
+    - path: /common-api/v1/*
+      method: "*"
+      protocol: HTTP
+      timeout: 30s
+      backends:
+        - target: 127.0.0.1:8040
+      middlewares:
+        - name: jwt
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret

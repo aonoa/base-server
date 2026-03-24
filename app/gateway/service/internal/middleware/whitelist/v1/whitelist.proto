@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package base_server.gateway.middleware.whitelist.v1;
+
+option go_package = "base-server/app/gateway/service/internal/middleware/whitelist/v1;whitelistv1";
+
+message Whitelist {
+  repeated Rule rules = 1;
+  int32 status_code = 2;
+}
+
+message Rule {
+  string path = 1;
+  string method = 2;
+  string host = 3;
+}

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [auth, user, admin, common]
+        service: [auth, user, admin, common, gateway]
 
     steps:
       - name: Checkout repository

@@ -1,9 +1,10 @@
 # base-server
 
-Kratos + Go 多服务后端。当前仓库只保留拆分后的四个服务，统一共享根目录 `go.mod`。
+Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行，统一共享根目录 `go.mod`。
 
 ## 服务布局
 
+- `app/gateway/service`：统一公网入口，使用 `go-kratos/gateway` 原生 endpoints 配置转发到下游服务
 - `app/auth/service`：认证、JWT、Casbin 策略、角色/API/资源权限
 - `app/user/service`：用户、密码、用户资料
 - `app/admin/service`：菜单、部门、系统日志
@@ -26,7 +27,7 @@ make wire
 说明：
 
 - `make api` 生成 `api/protos/**` 对应的 pb/http/grpc/errors，并输出 OpenAPI 到 `api/openapi/`
-- `make config` 生成各服务 `app/*/service/internal/conf/*.pb.go`
+- `make config` 生成各服务 `app/*/service/internal/conf/*.pb.go` 以及 gateway 自定义 middleware 的 proto 配置结构
 - `make ent` 基于 `pkg/data/schema/` 重新生成 `pkg/data/ent/`
 - `make wire` 重新生成各服务 `wire_gen.go`
 
@@ -38,6 +39,7 @@ make build
 
 生成：
 
+- `./bin/gateway-service`
 - `./bin/auth-service`
 - `./bin/user-service`
 - `./bin/admin-service`
@@ -46,6 +48,7 @@ make build
 ### 运行服务
 
 ```bash
+./bin/gateway-service -conf ./app/gateway/service/configs
 ./bin/auth-service -conf ./app/auth/service/configs
 ./bin/user-service -conf ./app/user/service/configs
 ./bin/admin-service -conf ./app/admin/service/configs
@@ -54,10 +57,111 @@ make build
 
 默认端口：
 
+- gateway：HTTP `8000`
 - auth：HTTP `8020`，gRPC `9020`
 - user：HTTP `8010`，gRPC `9010`
 - admin：HTTP `8030`，gRPC `9030`
 - common：HTTP `8040`，gRPC `9040`
+
+## 网关与路由
+
+gateway 现在直接使用原生 `gateway.endpoints` / `gateway.middlewares` 配置模型。每个 endpoint 都可以单独配置：
+
+- `path`
+- `method`
+- `protocol`
+- `timeout`
+- `backends`
+- `middlewares`
+- `retry`
+- `host`
+- `stream`
+
+这意味着：
+
+- 不挂 middleware 的 endpoint 就是纯直通代理
+- 挂了 middleware 的 endpoint 会先经过网关处理，再转发到下游
+- upload、SSE 这类特殊路由也通过配置表达，而不是在代码里写死分支
+
+默认建议客户端只访问 gateway，由 gateway 按前缀转发到四个下游 HTTP 服务：
+
+- `/auth-api/v1/*` -> auth `:8020`
+- `/user-api/v1/*` -> user `:8010`
+- `/admin-api/v1/*` -> admin `:8030`
+- `/common-api/v1/*` -> common `:8040`
+
+### 内置 middleware
+
+当前 `go-kratos/gateway` 模块版本可直接使用这些内置 middleware：
+
+- `cors`
+- `logging`
+- `rewrite`
+- `tracing`
+- `circuitbreaker`
+- `bbr`
+- `transcoder`
+- `streamrecorder`
+
+它们通过 `gateway.middlewares` 或 `gateway.endpoints[].middlewares` 直接声明。
+
+### 自定义 middleware
+
+仓库内额外注册了这些 edge middleware：
+
+- `jwt`：校验 Bearer Token，支持按 `path + method + host` 白名单绕过
+- `whitelist`：只允许命中的 HTTP 路由通过，未命中直接拒绝
+- `ratelimit`：传统限流，支持全局或按 IP 限流
+
+对应配置 type URL：
+
+- `type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT`
+- `type.googleapis.com/base_server.gateway.middleware.whitelist.v1.Whitelist`
+- `type.googleapis.com/base_server.gateway.middleware.ratelimit.v1.RateLimit`
+
+建议对安全相关 middleware 打开 `required: true`，这样拼错名字或配置解析失败时会直接报错，而不是静默跳过。
+
+### JWT 边界
+
+当前阶段 gateway 的 JWT 负责入口控制，下游服务仍然保留原有 JWT 校验：
+
+- gateway 继续透传 `Authorization`
+- auth/user/admin/common 仍使用各自服务内的认证中间件
+- 当前是双层校验，不是把信任边界完全迁到 gateway
+
+### Stream 与特殊路由
+
+- `/common-api/v1/file/upload` 建议单独设置更长 `timeout`
+- `/common-api/v1/copilot/sse` 需要 `stream: true`
+- 流式 endpoint 上不要随意叠加不支持流式的 middleware
+- `circuitbreaker` 依赖其自身初始化能力，使用前应确认运行环境和配置完整
+
+### 示例路由行为表
+
+下表对应 `app/gateway/service/configs/config.yaml` 当前示例配置：
+
+| 请求 | 命中路由 | 网关处理 | 预期行为 |
+| --- | --- | --- | --- |
+| `POST /auth-api/v1/login`，无 token | `/auth-api/v1/login` | `ratelimit(SCOPE_IP, 5 rps, burst 10)` + 全局 `cors` | 允许转发到 auth `:8020`；不要求 JWT；同一 IP 高频请求会被 `429` |
+| `POST /auth-api/v1/refresh-token`，无 token | `/auth-api/v1/*` | `jwt`（此 path 在 jwt whitelist） + 全局 `cors` | 允许转发到 auth `:8020`；不要求 JWT |
+| `GET /auth-api/v1/profile`，无 token | `/auth-api/v1/*` | `jwt` + 全局 `cors` | 网关直接返回 `401`，不会转发到 auth |
+| `GET /auth-api/v1/profile`，带有效 Bearer token | `/auth-api/v1/*` | `jwt` + 全局 `cors` | 允许转发到 auth `:8020` |
+| `GET /user-api/v1/profile`，无 token | `/user-api/v1/*` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
+| `GET /user-api/v1/profile`，带有效 Bearer token | `/user-api/v1/*` | `jwt` + 全局 `cors` | 允许转发到 user `:8010` |
+| `GET /admin-api/v1/users`，带有效 Bearer token | `/admin-api/v1/*` | `jwt` + `ratelimit(SCOPE_IP, 20 rps, burst 40)` + 全局 `cors` | 允许转发到 admin `:8030` |
+| `GET /admin-api/v1/users`，无 token | `/admin-api/v1/*` | `jwt` + `ratelimit` + 全局 `cors` | 网关直接返回 `401` |
+| `POST /common-api/v1/file/upload`，带有效 Bearer token | `/common-api/v1/file/upload` | `jwt` + 全局 `cors` | 允许转发到 common `:8040`；超时时间 `10m` |
+| `POST /common-api/v1/file/upload`，无 token | `/common-api/v1/file/upload` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
+| `GET /common-api/v1/copilot/sse`，带有效 Bearer token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 允许转发到 common `:8040`；按 `stream: true` 走流式代理；超时时间 `24h` |
+| `GET /common-api/v1/copilot/sse`，无 token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
+| `GET /common-api/v1/ping`，带有效 Bearer token | `/common-api/v1/*` | `jwt` + 全局 `cors` | 允许转发到 common `:8040` |
+| 任意跨域预检 `OPTIONS` 请求，`Origin` 命中 allowOrigins | 全局 `cors` | `cors` | 由网关直接返回 CORS 预检响应，不再继续走下游业务处理 |
+
+注意：
+
+- README 中的“带有效 Bearer token”只表示 gateway JWT 校验通过；下游服务仍会继续做自己的 JWT 校验。
+- 示例配置里 `cors.allowOrigins` 只包含 `localhost` 和 `127.0.0.1`，其他来源的跨域请求会被 CORS 拒绝。
+- `/auth-api/v1/login` 因为有更精确的独立 endpoint，会优先命中登录路由，而不是落到 `/auth-api/v1/*`。
 
 ## 测试
 
@@ -69,7 +173,10 @@ go test ./...
 
 ## 数据与依赖
 
-本地联调默认依赖 PostgreSQL + Redis，可结合仓库内的 `docker-compose-env.yml` 启动。
+本地联调默认依赖 PostgreSQL + Redis。
+
+- 只起基础依赖：`docker-compose-env.yml`
+- 一次启动完整环境：根目录 `docker-compose.yml`
 
 默认数据库分库：
 
@@ -78,11 +185,105 @@ go test ./...
 - admin DB：`admin`
 - common DB：`common`
 
+### 一键启动完整环境
+
+```bash
+./deploy/scripts/up.sh
+```
+
+脚本会构建并启动：
+
+- `postgres`
+- `redis`
+- `jaeger`
+- `consul`
+- `gateway`
+- `auth`
+- `user`
+- `admin`
+- `common`
+
+默认对外端口：
+
+- gateway：`8000`
+- postgres：`25432`
+- redis：`26379`
+- jaeger UI：`16686`
+- consul UI：`8500`
+
+说明：
+
+- auth/user/admin/common 默认只加入 compose 内部网络，不额外占用宿主机 `8010/8020/8030/8040/9010/9020/9030/9040`
+- gateway 会在容器内通过 `auth:8020`、`user:8010`、`admin:8030`、`common:8040` 转发到下游服务
+
+### 容器内配置目录
+
+`docker-compose.yml` 不直接复用 `app/*/service/configs/config.yaml`，而是挂载部署专用配置：
+
+- `deploy/configs/gateway/config.yaml`
+- `deploy/configs/auth/config.yaml`
+- `deploy/configs/user/config.yaml`
+- `deploy/configs/admin/config.yaml`
+- `deploy/configs/common/config.yaml`
+
+这些配置把 `127.0.0.1` 改成了 compose service name，例如：
+
+- Postgres：`postgres:5432`
+- Redis：`redis:6379`
+- auth -> user gRPC：`user:9010`
+- gateway -> 各服务 HTTP：`auth:8020`、`user:8010`、`admin:8030`、`common:8040`
+
+### 数据库初始化与 seed
+
+Postgres 首次初始化时会自动执行：
+
+- `deploy/sql/init/00-create-databases.sql`
+
+它只负责创建四个数据库，不负责建表。表结构由服务启动后的 Ent 自动迁移完成：
+
+- auth：创建 `sys_role`、`sys_api_resources`、`sys_resources`、`api_resources_roles`、`resource_roles`
+- user：创建 `sys_user`
+- admin：创建 `sys_menu`、`sys_dept`、`sys_log`
+
+基础数据使用单独 seed 文件：
+
+- `deploy/sql/seed/auth.sql`
+- `deploy/sql/seed/admin.sql`
+- `deploy/sql/seed/user.sql`
+
+等待服务完成首次迁移后执行：
+
+```bash
+./deploy/scripts/seed.sh
+```
+
+seed 完成后默认账号：
+
+- `vben / 123456`：root
+- `jack / 123456`：admin
+
+### seed 说明
+
+- `deploy/scripts/seed.sh` 可以重复执行：固定 ID 的基础角色、菜单、用户、API 资源会按 seed 内容更新，关联关系会跳过已存在记录
+- 默认账号 `jack` / `vben` 在重复 seed 时会被归一化到 seed 里的固定记录，避免同名默认账号重复累积
+- 如果想回到完全空白的本地环境，建议清理卷后重建：
+
+```bash
+docker-compose -f ./docker-compose.yml down -v
+./deploy/scripts/up.sh
+./deploy/scripts/seed.sh
+```
+
+- 当前 seed 已按拆分服务结构整理，不再直接整份导入旧的 `deploy/sql/pg_dump.sql`
+- 旧 dump 中的 `user_roles` 已转换为当前 `sys_user.role_id`
+- 旧 `basic-api` 路径已按当前拆分后的 `/auth-api/v1/*`、`/user-api/v1/*`、`/admin-api/v1/*`、`/common-api/v1/*` 重新整理
+
 ## Docker
 
 根目录 `Dockerfile` 现在是通用的单服务镜像构建文件，通过 `SERVICE` 选择目标服务：
 
 ```bash
+docker build --build-arg SERVICE=gateway -t base-server-gateway:v1.1.0 .
 docker build --build-arg SERVICE=auth -t base-server-auth:v1.1.0 .
 docker build --build-arg SERVICE=user -t base-server-user:v1.1.0 .
 ```
@@ -95,7 +296,7 @@ docker run --rm -v "$PWD/app/auth/service/configs":/app/configs base-server-auth
 
 ## Helm
 
-仓库内旧版单体 Helm chart 已移除；如需部署，请按四个服务分别编排。
+仓库内旧版单体 Helm chart 已移除；如需部署，请按 gateway + 四个领域服务分别编排。
 
 ## Casbin
 
