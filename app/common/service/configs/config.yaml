@@ -1,0 +1,24 @@
+server:
+  http:
+    addr: 0.0.0.0:8040
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9040
+    timeout: 1s
+data:
+  database:
+    driver: pgx
+    source: postgresql://postgres:postgres.666@127.0.0.1:25432/common?sslmode=disable
+  redis:
+    addr: 127.0.0.1:26379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+llm:
+  agent:
+    openAI:
+      model: gpt-4o-mini
+      api_base_url: ""
+      api_key: ""
+auth:
+  api_key: auth-service-secret
+  whitelist: []

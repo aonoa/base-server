@@ -1,0 +1,18 @@
+server:
+  http:
+    addr: 0.0.0.0:8030
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9030
+    timeout: 1s
+data:
+  database:
+    driver: pgx
+    source: postgresql://postgres:postgres.666@127.0.0.1:25432/admin?sslmode=disable
+  redis:
+    addr: 127.0.0.1:26379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+auth:
+  api_key: auth-service-secret
+  whitelist: []

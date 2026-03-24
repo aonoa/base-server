@@ -1,0 +1,226 @@
+syntax = "proto3";
+
+package api.auth.service.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/gen/go/auth/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.auth.service.v1";
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/login"
+      body: "*"
+    };
+  }
+
+  rpc GetAccessCodes(google.protobuf.Empty) returns (GetAccessCodesReply) {
+    option (google.api.http) = {
+      get: "/auth-api/v1/access-codes"
+    };
+  }
+
+  rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/logout"
+      body: "*"
+    };
+  }
+
+  rpc RefreshToken(google.protobuf.Empty) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/refresh"
+      body: "*"
+    };
+  }
+
+  rpc ReLoadPolicy(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/reload-policy"
+      body: "*"
+    };
+  }
+
+  rpc GetRoleList(RolePageParams) returns (GetRoleListByPageReply) {
+    option (google.api.http) = {
+      get: "/auth-api/v1/roles"
+    };
+  }
+
+  rpc AddRole(RoleListItem) returns (RoleListItem) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/roles"
+      body: "*"
+    };
+  }
+
+  rpc UpdateRole(RoleListItem) returns (RoleListItem) {
+    option (google.api.http) = {
+      put: "/auth-api/v1/roles/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelRole(DeleteRole) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth-api/v1/roles/{id}"
+    };
+  }
+
+  rpc GetApiList(GetApiPageParams) returns (GetApiListByPageReply) {
+    option (google.api.http) = {
+      get: "/auth-api/v1/apis"
+    };
+  }
+
+  rpc AddApi(ApiListItem) returns (ApiListItem) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/apis"
+      body: "*"
+    };
+  }
+
+  rpc UpdateApi(ApiListItem) returns (ApiListItem) {
+    option (google.api.http) = {
+      put: "/auth-api/v1/apis/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelApi(DeleteApi) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth-api/v1/apis/{id}"
+    };
+  }
+
+  rpc GetResourceList(GetResourcePageParams) returns (GetResourceListByPageReply) {
+    option (google.api.http) = {
+      get: "/auth-api/v1/resources"
+    };
+  }
+
+  rpc AddResource(ResourceListItem) returns (ResourceListItem) {
+    option (google.api.http) = {
+      post: "/auth-api/v1/resources"
+      body: "*"
+    };
+  }
+
+  rpc UpdateResource(ResourceListItem) returns (ResourceListItem) {
+    option (google.api.http) = {
+      put: "/auth-api/v1/resources/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelResource(DeleteResource) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth-api/v1/resources/{id}"
+    };
+  }
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  string user_id = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  string session_id = 4;
+}
+
+message GetAccessCodesReply {
+  repeated string access_code_list = 1;
+}
+
+message RolePageParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string name = 3;
+  int64 status = 4;
+  string dept_id = 5;
+}
+
+message RoleListItem {
+  string id = 1;
+  string name = 2;
+  string value = 3;
+  int32 status = 4;
+  string order_no = 5;
+  string create_time = 6;
+  string remark = 7;
+  repeated int32 permissions = 8;
+  string dept = 9;
+  repeated string api_permissions = 10;
+}
+
+message GetRoleListByPageReply {
+  repeated RoleListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteRole {
+  string id = 1;
+}
+
+message GetApiPageParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string path = 3;
+  string description = 4;
+  string method = 5;
+  string resources_group = 6;
+}
+
+message ApiListItem {
+  string id = 1;
+  string path = 2;
+  string method = 3;
+  string description = 4;
+  string module = 5;
+  string module_description = 6;
+  string resources_group = 7;
+}
+
+message GetApiListByPageReply {
+  repeated ApiListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteApi {
+  string id = 1;
+}
+
+message GetResourcePageParams {
+  int64 current_page = 7;
+  int64 page_size = 8;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+  string method = 5;
+  string description = 6;
+}
+
+message ResourceListItem {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+  string method = 5;
+  string description = 6;
+}
+
+message GetResourceListByPageReply {
+  repeated ResourceListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteResource {
+  string id = 1;
+}

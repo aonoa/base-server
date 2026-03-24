@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package api.common.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "base-server/api/gen/go/common/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.common.service.v1";
+
+service SSEService {
+  rpc Copilot(Msg) returns (stream CopilotReply) {
+    option (google.api.http) = {
+      post: "/common-api/v1/copilot/sse"
+      body: "*"
+    };
+  }
+}
+
+message Message {
+  string role = 1;
+  string content = 2;
+}
+
+message Msg {
+  repeated Message items = 1;
+}
+
+message CopilotReply {
+  string content = 1;
+}

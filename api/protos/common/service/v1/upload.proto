@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.common.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "base-server/api/gen/go/common/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.common.service.v1";
+
+service UploadService {
+  rpc UploadFile(File) returns (UploadResponse) {
+    option (google.api.http) = {
+      post: "/common-api/v1/file/upload"
+      body: "*"
+    };
+  }
+}
+
+message File {
+  bytes file = 1;
+  string fileName = 2;
+  int64 fileSize = 3;
+}
+
+message UploadResponse {
+  string fileInfoId = 1;
+  string fullUrl = 2;
+  string url = 3;
+}

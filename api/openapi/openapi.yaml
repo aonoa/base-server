@@ -1,0 +1,1274 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /admin-api/v1/depts:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetDeptList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetDeptListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_AddDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+    /admin-api/v1/depts/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DelDept
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin-api/v1/logs:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetSysLogList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+                - name: userName
+                  in: query
+                  schema:
+                    type: string
+                - name: isLogin
+                  in: query
+                  schema:
+                    type: boolean
+                - name: sessionId
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: requestTimeStart
+                  in: query
+                  schema:
+                    type: string
+                - name: requestTimeEnd
+                  in: query
+                  schema:
+                    type: string
+                - name: ipAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: latency
+                  in: query
+                  schema:
+                    type: string
+                - name: resCode
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: resStatus
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetSysLogListReply'
+    /admin-api/v1/logs/{id}:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetSysLogInfo
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetSysLogInfoReply'
+    /admin-api/v1/menus:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetSysMenuList
+            parameters:
+                - name: menuName
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetSysMenuListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_CreateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin-api/v1/menus/name-exists:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_IsMenuNameExists
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.IsMenuNameExistsReply'
+    /admin-api/v1/menus/path-exists:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_IsMenuPathExists
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.IsMenuPathExistsReply'
+    /admin-api/v1/menus/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /auth-api/v1/access-codes:
+        get:
+            tags:
+                - AuthService
+            operationId: AuthService_GetAccessCodes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.GetAccessCodesReply'
+    /auth-api/v1/apis:
+        get:
+            tags:
+                - AuthService
+            operationId: AuthService_GetApiList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: resourcesGroup
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.GetApiListByPageReply'
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_AddApi
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.ApiListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.ApiListItem'
+    /auth-api/v1/apis/{id}:
+        put:
+            tags:
+                - AuthService
+            operationId: AuthService_UpdateApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.ApiListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.ApiListItem'
+        delete:
+            tags:
+                - AuthService
+            operationId: AuthService_DelApi
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /auth-api/v1/login:
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.LoginReply'
+    /auth-api/v1/logout:
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_Logout
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /auth-api/v1/refresh:
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_RefreshToken
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.LoginReply'
+    /auth-api/v1/reload-policy:
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_ReLoadPolicy
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /auth-api/v1/resources:
+        get:
+            tags:
+                - AuthService
+            operationId: AuthService_GetResourceList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  schema:
+                    type: string
+                - name: value
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.GetResourceListByPageReply'
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_AddResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.ResourceListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.ResourceListItem'
+    /auth-api/v1/resources/{id}:
+        put:
+            tags:
+                - AuthService
+            operationId: AuthService_UpdateResource
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.ResourceListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.ResourceListItem'
+        delete:
+            tags:
+                - AuthService
+            operationId: AuthService_DelResource
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /auth-api/v1/roles:
+        get:
+            tags:
+                - AuthService
+            operationId: AuthService_GetRoleList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: deptId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.GetRoleListByPageReply'
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_AddRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.RoleListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.RoleListItem'
+    /auth-api/v1/roles/{id}:
+        put:
+            tags:
+                - AuthService
+            operationId: AuthService_UpdateRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.auth.service.v1.RoleListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.auth.service.v1.RoleListItem'
+        delete:
+            tags:
+                - AuthService
+            operationId: AuthService_DelRole
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /common-api/v1/copilot/sse:
+        post:
+            tags:
+                - SSEService
+            operationId: SSEService_Copilot
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.Msg'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.CopilotReply'
+    /common-api/v1/file/upload:
+        post:
+            tags:
+                - UploadService
+            operationId: UploadService_UploadFile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.File'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.UploadResponse'
+    /user-api/v1/users:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_GetUserList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: nickname
+                  in: query
+                  schema:
+                    type: string
+                - name: deptId
+                  in: query
+                  schema:
+                    type: string
+                - name: role
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.service.v1.GetUserListReply'
+        post:
+            tags:
+                - UserService
+            operationId: UserService_AddUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.user.service.v1.UserListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.service.v1.UserListItem'
+    /user-api/v1/users/check:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_IsUserExist
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.service.v1.IsUserExistsReply'
+    /user-api/v1/users/{id}:
+        put:
+            tags:
+                - UserService
+            operationId: UserService_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.user.service.v1.UserListItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.service.v1.UserListItem'
+        delete:
+            tags:
+                - UserService
+            operationId: UserService_DelUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /user-api/v1/users/{userId}:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_GetUserInfo
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.service.v1.GetUserInfoReply'
+    /user-api/v1/users/{userId}/password:
+        post:
+            tags:
+                - UserService
+            operationId: UserService_ChangePassword
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.user.service.v1.ChangePasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+components:
+    schemas:
+        api.admin.service.v1.DeptListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                pid:
+                    type: string
+                name:
+                    type: string
+                orderNo:
+                    type: integer
+                    format: int32
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                createTime:
+                    type: string
+                dom:
+                    type: string
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+        api.admin.service.v1.GetDeptListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetSysLogInfoReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                userName:
+                    type: string
+                isLogin:
+                    type: boolean
+                sessionId:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                requestTime:
+                    type: string
+                ipAddress:
+                    type: string
+                ipLocation:
+                    type: string
+                latency:
+                    type: string
+                os:
+                    type: string
+                browser:
+                    type: string
+                userAgent:
+                    type: string
+                header:
+                    type: string
+                getParams:
+                    type: string
+                postData:
+                    type: string
+                resCode:
+                    type: integer
+                    format: int32
+                reason:
+                    type: string
+                resStatus:
+                    type: boolean
+                stack:
+                    type: string
+                createTime:
+                    type: string
+        api.admin.service.v1.GetSysLogListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.SysLogItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetSysMenuListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
+                total:
+                    type: string
+        api.admin.service.v1.IsMenuNameExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
+        api.admin.service.v1.IsMenuPathExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
+        api.admin.service.v1.Meta:
+            type: object
+            properties:
+                order:
+                    type: string
+                icon:
+                    type: string
+                title:
+                    type: string
+                activeIcon:
+                    type: string
+                activePath:
+                    type: string
+                affixTab:
+                    type: boolean
+                affixTabOrder:
+                    type: string
+                badge:
+                    type: string
+                badgeType:
+                    type: string
+                badgeVariants:
+                    type: string
+                hideChildrenInMenu:
+                    type: boolean
+                hideInBreadcrumb:
+                    type: boolean
+                hideInMenu:
+                    type: boolean
+                hideInTab:
+                    type: boolean
+                iframeSrc:
+                    type: string
+                link:
+                    type: string
+                keepAlive:
+                    type: boolean
+                maxNumOfOpenTab:
+                    type: string
+                noBasicLayout:
+                    type: boolean
+                openInNewWindow:
+                    type: boolean
+                ignoreAccess:
+                    type: boolean
+                authority:
+                    type: array
+                    items:
+                        type: string
+        api.admin.service.v1.SysLogItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                userName:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                requestTime:
+                    type: string
+                ipAddress:
+                    type: string
+                ipLocation:
+                    type: string
+                latency:
+                    type: string
+                os:
+                    type: string
+                browser:
+                    type: string
+                resCode:
+                    type: integer
+                    format: int32
+                resStatus:
+                    type: boolean
+        api.admin.service.v1.SysMenuListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                component:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                authCode:
+                    type: string
+                name:
+                    type: string
+                path:
+                    type: string
+                pid:
+                    type: string
+                redirect:
+                    type: string
+                type:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/api.admin.service.v1.Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
+                createTime:
+                    type: string
+        api.auth.service.v1.ApiListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                path:
+                    type: string
+                method:
+                    type: string
+                description:
+                    type: string
+                module:
+                    type: string
+                moduleDescription:
+                    type: string
+                resourcesGroup:
+                    type: string
+        api.auth.service.v1.GetAccessCodesReply:
+            type: object
+            properties:
+                accessCodeList:
+                    type: array
+                    items:
+                        type: string
+        api.auth.service.v1.GetApiListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.auth.service.v1.ApiListItem'
+                total:
+                    type: string
+        api.auth.service.v1.GetResourceListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.auth.service.v1.ResourceListItem'
+                total:
+                    type: string
+        api.auth.service.v1.GetRoleListByPageReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.auth.service.v1.RoleListItem'
+                total:
+                    type: string
+        api.auth.service.v1.LoginReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                sessionId:
+                    type: string
+        api.auth.service.v1.LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        api.auth.service.v1.ResourceListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                type:
+                    type: string
+                value:
+                    type: string
+                method:
+                    type: string
+                description:
+                    type: string
+        api.auth.service.v1.RoleListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                value:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                orderNo:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                permissions:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                dept:
+                    type: string
+                apiPermissions:
+                    type: array
+                    items:
+                        type: string
+        api.common.service.v1.CopilotReply:
+            type: object
+            properties:
+                content:
+                    type: string
+        api.common.service.v1.File:
+            type: object
+            properties:
+                file:
+                    type: string
+                    format: bytes
+                fileName:
+                    type: string
+                fileSize:
+                    type: string
+        api.common.service.v1.Message:
+            type: object
+            properties:
+                role:
+                    type: string
+                content:
+                    type: string
+        api.common.service.v1.Msg:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.common.service.v1.Message'
+        api.common.service.v1.UploadResponse:
+            type: object
+            properties:
+                fileInfoId:
+                    type: string
+                fullUrl:
+                    type: string
+                url:
+                    type: string
+        api.user.service.v1.ChangePasswordRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                passwordOld:
+                    type: string
+                passwordNew:
+                    type: string
+        api.user.service.v1.GetUserInfoReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                avatar:
+                    type: string
+                email:
+                    type: string
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.user.service.v1.RoleInfo'
+        api.user.service.v1.GetUserListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.user.service.v1.UserListItem'
+                total:
+                    type: string
+        api.user.service.v1.IsUserExistsReply:
+            type: object
+            properties:
+                data:
+                    type: boolean
+        api.user.service.v1.RoleInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                value:
+                    type: string
+        api.user.service.v1.UserListItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                email:
+                    type: string
+                nickname:
+                    type: string
+                role:
+                    type: string
+                createTime:
+                    type: string
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                dept:
+                    type: string
+                avatar:
+                    type: string
+                password:
+                    type: string
+tags:
+    - name: AdminService
+    - name: AuthService
+    - name: SSEService
+    - name: UploadService
+    - name: UserService

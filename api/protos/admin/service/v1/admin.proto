@@ -1,0 +1,248 @@
+syntax = "proto3";
+
+package api.admin.service.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/gen/go/admin/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.admin.service.v1";
+
+service AdminService {
+  rpc GetDeptList(google.protobuf.Empty) returns (GetDeptListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/depts"
+    };
+  }
+
+  rpc AddDept(DeptListItem) returns (DeptListItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/depts"
+      body: "*"
+    };
+  }
+
+  rpc UpdateDept(DeptListItem) returns (DeptListItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/depts/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelDept(DeleteDept) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/depts/{id}"
+    };
+  }
+
+  rpc GetSysMenuList(MenuParams) returns (GetSysMenuListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/menus"
+    };
+  }
+
+  rpc IsMenuNameExists(IsMenuNameExistsRequest) returns (IsMenuNameExistsReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/menus/name-exists"
+    };
+  }
+
+  rpc IsMenuPathExists(IsMenuPathExistsRequest) returns (IsMenuPathExistsReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/menus/path-exists"
+    };
+  }
+
+  rpc CreateMenu(SysMenuListItem) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/menus"
+      body: "*"
+    };
+  }
+
+  rpc UpdateMenu(SysMenuListItem) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/menus/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteMenu(DeleteMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/menus/{id}"
+    };
+  }
+
+  rpc GetSysLogList(GetSysLogListParams) returns (GetSysLogListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/logs"
+    };
+  }
+
+  rpc GetSysLogInfo(GetSysLogInfoParams) returns (GetSysLogInfoReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/logs/{id}"
+    };
+  }
+}
+
+message DeptListItem {
+  string id = 1;
+  string pid = 2;
+  string name = 3;
+  int32 order_no = 4;
+  string remark = 5;
+  int32 status = 6;
+  string create_time = 7;
+  int64 dom = 9;
+  repeated DeptListItem children = 10;
+}
+
+message DeleteDept {
+  string id = 1;
+}
+
+message GetDeptListReply {
+  repeated DeptListItem items = 1;
+  int64 total = 2;
+}
+
+message MenuParams {
+  string menu_name = 1;
+  string status = 2;
+}
+
+message Meta {
+  int64 order = 1;
+  string icon = 2;
+  string title = 3;
+  optional string active_icon = 4;
+  optional string active_path = 5;
+  optional bool affix_tab = 6;
+  optional int64 affix_tab_order = 7;
+  optional string badge = 8;
+  optional string badge_type = 9;
+  optional string badge_variants = 10;
+  optional bool hide_children_in_menu = 11;
+  optional bool hide_in_breadcrumb = 12;
+  optional bool hide_in_menu = 13;
+  optional bool hide_in_tab = 14;
+  optional string iframe_src = 15;
+  optional string link = 16;
+  optional bool keep_alive = 17;
+  optional int64 max_num_of_open_tab = 18;
+  optional bool no_basic_layout = 19;
+  optional bool open_in_new_window = 20;
+  bool ignore_access = 21;
+  repeated string authority = 22;
+}
+
+message SysMenuListItem {
+  int64 id = 1;
+  string component = 2;
+  optional int32 status = 3;
+  string auth_code = 4;
+  string name = 5;
+  string path = 6;
+  int64 pid = 7;
+  optional string redirect = 8;
+  string type = 9;
+  Meta meta = 10;
+  repeated SysMenuListItem children = 11;
+  string create_time = 12;
+}
+
+message GetSysMenuListReply {
+  repeated SysMenuListItem items = 1;
+  int64 total = 2;
+}
+
+message IsMenuNameExistsRequest {
+  int64 id = 1;
+  string name = 2;
+}
+
+message IsMenuNameExistsReply {
+  bool data = 1;
+}
+
+message IsMenuPathExistsRequest {
+  int64 id = 1;
+  string path = 2;
+}
+
+message IsMenuPathExistsReply {
+  bool data = 1;
+}
+
+message DeleteMenuRequest {
+  int64 id = 1;
+}
+
+message GetSysLogListParams {
+  int64 current_page = 20;
+  int64 page_size = 21;
+  string user_id = 2;
+  string user_name = 3;
+  bool is_login = 4;
+  string session_id = 5;
+  string method = 6;
+  string path = 7;
+  string request_time_start = 8;
+  string request_time_end = 9;
+  string ip_address = 10;
+  int64 latency = 11;
+  int32 res_code = 17;
+  bool res_status = 19;
+}
+
+message SysLogItem {
+  string id = 1;
+  string user_id = 2;
+  string user_name = 3;
+  string method = 5;
+  string path = 6;
+  string request_time = 7;
+  string ip_address = 8;
+  string ip_location = 9;
+  int64 latency = 10;
+  string os = 11;
+  string browser = 12;
+  int32 res_code = 17;
+  bool res_status = 19;
+}
+
+message GetSysLogListReply {
+  repeated SysLogItem items = 1;
+  int64 total = 2;
+}
+
+message GetSysLogInfoParams {
+  string id = 1;
+}
+
+message GetSysLogInfoReply {
+  string id = 1;
+  string user_id = 2;
+  string user_name = 3;
+  bool is_login = 4;
+  string session_id = 5;
+  string method = 6;
+  string path = 7;
+  string request_time = 8;
+  string ip_address = 9;
+  string ip_location = 10;
+  int64 latency = 11;
+  string os = 12;
+  string browser = 13;
+  string user_agent = 14;
+  string header = 15;
+  string get_params = 16;
+  string post_data = 17;
+  int32 res_code = 18;
+  string reason = 19;
+  bool res_status = 20;
+  string stack = 21;
+  string create_time = 22;
+}

@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package api.user.service.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/gen/go/user/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.user.service.v1";
+
+service UserService {
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoReply) {
+    option (google.api.http) = {
+      get: "/user-api/v1/users/{user_id}"
+    };
+  }
+
+  rpc GetUserList(GetUserParams) returns (GetUserListReply) {
+    option (google.api.http) = {
+      get: "/user-api/v1/users"
+    };
+  }
+
+  rpc AddUser(UserListItem) returns (UserListItem) {
+    option (google.api.http) = {
+      post: "/user-api/v1/users"
+      body: "*"
+    };
+  }
+
+  rpc UpdateUser(UserListItem) returns (UserListItem) {
+    option (google.api.http) = {
+      put: "/user-api/v1/users/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelUser(DeleteUser) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/user-api/v1/users/{id}"
+    };
+  }
+
+  rpc IsUserExist(IsUserExistsRequest) returns (IsUserExistsReply) {
+    option (google.api.http) = {
+      get: "/user-api/v1/users/check"
+    };
+  }
+
+  rpc ChangePassword(ChangePasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/user-api/v1/users/{user_id}/password"
+      body: "*"
+    };
+  }
+
+  rpc ValidateUserAuth(ValidateUserAuthRequest) returns (ValidateUserAuthReply);
+  rpc GetUserAuthInfo(GetUserAuthInfoRequest) returns (GetUserAuthInfoReply);
+  rpc ListUserAuthBindings(google.protobuf.Empty) returns (ListUserAuthBindingsReply);
+}
+
+message GetUserInfoRequest {
+  string user_id = 1;
+}
+
+message RoleInfo {
+  int64 id = 1;
+  string name = 2;
+  string value = 3;
+}
+
+message GetUserInfoReply {
+  string user_id = 1;
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+  string email = 5;
+  string remark = 6;
+  int32 status = 7;
+  repeated RoleInfo roles = 8;
+}
+
+message GetUserParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string username = 3;
+  string nickname = 4;
+  string dept_id = 5;
+  int64 role = 6;
+  int32 status = 7;
+}
+
+message UserListItem {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string nickname = 4;
+  int64 role = 5;
+  string create_time = 6;
+  string remark = 7;
+  int32 status = 8;
+  string dept = 9;
+  string avatar = 10;
+  string password = 11;
+}
+
+message GetUserListReply {
+  repeated UserListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteUser {
+  string id = 1;
+}
+
+message IsUserExistsRequest {
+  string id = 1;
+  string username = 2;
+}
+
+message IsUserExistsReply {
+  bool data = 1;
+}
+
+message ChangePasswordRequest {
+  string user_id = 1;
+  string password_old = 2;
+  string password_new = 3;
+}
+
+message ValidateUserAuthRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message ValidateUserAuthReply {
+  string user_id = 1;
+}
+
+message GetUserAuthInfoRequest {
+  string user_id = 1;
+}
+
+message UserAuthBinding {
+  string user_id = 1;
+  int64 role_id = 2;
+}
+
+message GetUserAuthInfoReply {
+  string user_id = 1;
+  string username = 2;
+  repeated string access_codes = 3;
+  int64 role_id = 4;
+}
+
+message ListUserAuthBindingsReply {
+  repeated UserAuthBinding items = 1;
+}

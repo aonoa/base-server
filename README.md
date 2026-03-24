@@ -1,85 +1,108 @@
-# 服务演示地址  
-# http://149.88.72.48:30080/basic-api
+# base-server
 
-## 接口文档 
-## https://apifox.com/apidoc/shared-a2b9478a-1782-4094-95d2-dfd9d6c883ec
+Kratos + Go 多服务后端。当前仓库只保留拆分后的四个服务，统一共享根目录 `go.mod`。
 
+## 服务布局
 
-# Kratos Project Template
+- `app/auth/service`：认证、JWT、Casbin 策略、角色/API/资源权限
+- `app/user/service`：用户、密码、用户资料
+- `app/admin/service`：菜单、部门、系统日志
+- `app/common/service`：上传、SSE、LLM 能力
+- `pkg/data`：共享 Ent schema / generated client / templates
+- `pkg/tools`：共享工具函数
 
-## Install Kratos
-```
-go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
-```
-## Create a service
-```
-# Create a template project
-kratos new server
+## 常用命令
 
-cd server
-# Add a proto template
-kratos proto add api/server/server.proto
-# Generate the proto code
-kratos proto client api/server/server.proto
-# Generate the source code of service by proto file
-kratos proto server api/server/server.proto -t internal/service
+### 初始化与代码生成
 
-go generate ./...
-go build -o ./bin/ ./...
-./bin/server -conf ./configs
-```
-## Generate other auxiliary files by Makefile
-```
-# Download and update dependencies
+```bash
 make init
-# Generate API files (include: pb.go, http, grpc, validate, swagger) by proto file
 make api
-# Generate all files
-make all
+make config
+make ent
+make wire
 ```
-## Automated Initialization (wire)
-```
-# install wire
-go get github.com/google/wire/cmd/wire
 
-# generate wire
-cd cmd/base-server
-wire
+说明：
+
+- `make api` 生成 `api/protos/**` 对应的 pb/http/grpc/errors，并输出 OpenAPI 到 `api/openapi/`
+- `make config` 生成各服务 `app/*/service/internal/conf/*.pb.go`
+- `make ent` 基于 `pkg/data/schema/` 重新生成 `pkg/data/ent/`
+- `make wire` 重新生成各服务 `wire_gen.go`
+
+### 构建
+
+```bash
+make build
 ```
+
+生成：
+
+- `./bin/auth-service`
+- `./bin/user-service`
+- `./bin/admin-service`
+- `./bin/common-service`
+
+### 运行服务
+
+```bash
+./bin/auth-service -conf ./app/auth/service/configs
+./bin/user-service -conf ./app/user/service/configs
+./bin/admin-service -conf ./app/admin/service/configs
+./bin/common-service -conf ./app/common/service/configs
+```
+
+默认端口：
+
+- auth：HTTP `8020`，gRPC `9020`
+- user：HTTP `8010`，gRPC `9010`
+- admin：HTTP `8030`，gRPC `9030`
+- common：HTTP `8040`，gRPC `9040`
+
+## 测试
+
+```bash
+go test ./...
+```
+
+当前仓库几乎没有 `*_test.go`，这里主要用于编译/冒烟检查。
+
+## 数据与依赖
+
+本地联调默认依赖 PostgreSQL + Redis，可结合仓库内的 `docker-compose-env.yml` 启动。
+
+默认数据库分库：
+
+- auth DB：`auth`
+- user DB：`user`
+- admin DB：`admin`
+- common DB：`common`
 
 ## Docker
+
+根目录 `Dockerfile` 现在是通用的单服务镜像构建文件，通过 `SERVICE` 选择目标服务：
+
 ```bash
-# build
-docker build -t <your-docker-image-name> .
-docker build -t base-server:v1.1.0 .
-
-# save image
-docker save <your-docker-image-name> | gzip > <your-docker-image-name>.tar.gz
-
-# load image
-gunzip -c <your-docker-image-name>.tar.gz | docker load
-
-# run
-docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
+docker build --build-arg SERVICE=auth -t base-server-auth:v1.1.0 .
+docker build --build-arg SERVICE=user -t base-server-user:v1.1.0 .
 ```
 
-## ent
-使用`--template`添加更新全部字段的模板，`--feature sql/modifier`打开自定义SQL修饰符，`--feature sql/upsert`配置 upsert 和批量 upsert
+运行时挂载对应服务配置目录到 `/app/configs`：
+
 ```bash
-base-server/internal/data$ ent generate ./schema --feature sql/modifier --template ./ent/template --target ./ent
+docker run --rm -v "$PWD/app/auth/service/configs":/app/configs base-server-auth:v1.1.0
 ```
 
+## Helm
 
-## casbin
-数据表中手动导入或者迁移的id可能与新增的id冲突导致插入失败，需手动重置序列的当前值
-```shell
--- 1. 查询表中当前最大 ID
+仓库内旧版单体 Helm chart 已移除；如需部署，请按四个服务分别编排。
+
+## Casbin
+
+手动导入或迁移数据后，如 `casbin_rules` 的序列与现有数据冲突，可手动重置：
+
+```sql
 SELECT MAX(id) FROM casbin_rules;
-
--- 2. 通过 PostgreSQL 系统表 pg_sequences 直接获取序列的当前值
 SELECT last_value FROM pg_sequences WHERE schemaname = 'public' AND sequencename = 'casbin_rules_id_seq';
-
--- 3. 重置序列起始值为当前最大 ID + 1
 ALTER SEQUENCE casbin_rules_id_seq RESTART WITH {max_id + 1};
-ALTER SEQUENCE casbin_rules_id_seq RESTART WITH 10001;
 ```

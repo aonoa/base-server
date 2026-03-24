@@ -1,32 +1,25 @@
-FROM golang:1.23.1-bullseye AS builder
+# Multi-service container build
+FROM golang:1.24.4-bullseye AS builder
+
+ARG SERVICE=auth
 
 COPY . /src
 WORKDIR /src
 
-RUN apt-get update && apt-get install make
-#FROM golang:1.21.8-alpine AS builder
-#
-#COPY . /src
-#WORKDIR /src
-#
-#RUN apk add make
-RUN GOPROXY=https://goproxy.cn make build
+RUN apt-get update && apt-get install -y --no-install-recommends make && rm -rf /var/lib/apt/lists/*
+RUN GOPROXY=https://goproxy.cn make build-${SERVICE}
 
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		ca-certificates  \
-        netbase \
-        && rm -rf /var/lib/apt/lists/ \
-        && apt-get autoremove -y && apt-get autoclean -y
+	ca-certificates \
+	netbase \
+	&& rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /src/bin /app
-#COPY authconf /app/authconf
-
+ARG SERVICE=auth
 WORKDIR /app
 
-EXPOSE 8000
-EXPOSE 9000
-VOLUME /data/conf
+COPY --from=builder /src/bin/${SERVICE}-service /app/service
+VOLUME /app/configs
 
-CMD ["./base-server", "-conf", "/data/conf"]
+CMD ["./service", "-conf", "/app/configs"]

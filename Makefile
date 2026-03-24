@@ -8,11 +8,11 @@ ifeq ($(GOHOSTOS), windows)
 	#changed to use git-bash.exe to run find cli or other cli friendly, caused of every developer has a Git.
 	#Git_Bash= $(subst cmd\,bin\bash.exe,$(dir $(shell where git)))
 	Git_Bash=$(subst \,/,$(subst cmd\,bin\bash.exe,$(dir $(shell where git))))
-	INTERNAL_PROTO_FILES=$(shell $(Git_Bash) -c "find internal -name *.proto")
-	API_PROTO_FILES=$(shell $(Git_Bash) -c "find api -name *.proto")
+	INTERNAL_PROTO_FILES=$(shell $(Git_Bash) -c "find app -name '*.proto'")
+	API_PROTO_FILES=$(shell $(Git_Bash) -c "find api -name '*.proto'")
 else
-	INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
-	API_PROTO_FILES=$(shell find api -name *.proto)
+	INTERNAL_PROTO_FILES=$(shell find app -name '*.proto')
+	API_PROTO_FILES=$(shell find api -name '*.proto')
 endif
 
 .PHONY: init
@@ -28,21 +28,24 @@ init:
 .PHONY: config
 # generate internal proto
 config:
-	protoc --proto_path=./internal \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:./internal \
-	       $(INTERNAL_PROTO_FILES)
+	for file in $(INTERNAL_PROTO_FILES); do \
+		protoc --proto_path=. \
+		       --proto_path=./third_party \
+		       --go_out=paths=source_relative:. \
+		       $$file || exit 1; \
+	done
 
 .PHONY: api
 # generate api proto
 api:
+	mkdir -p api/openapi
 	protoc --proto_path=./api/protos \
 	       --proto_path=./third_party \
  	       --go_out=paths=source_relative:./api/gen/go \
  	       --go-http_out=paths=source_relative:./api/gen/go \
  	       --go-grpc_out=paths=source_relative:./api/gen/go \
  	       --go-errors_out=paths=source_relative:./api/gen/go \
-	       --openapi_out=fq_schema_naming=true,default_response=false:./cmd/base-server/assets \
+	       --openapi_out=fq_schema_naming=true,default_response=false:./api/openapi \
 	       $(API_PROTO_FILES)
 
 .PHONY: errors
@@ -57,9 +60,10 @@ errors:
 .PHONY: openapi
 # generate openapi proto
 openapi:
+	mkdir -p api/openapi
 	protoc --proto_path=./api/protos \
 	       --proto_path=./third_party \
-	       --openapi_out=fq_schema_naming=true,default_response=false:./cmd/base-server/assets \
+	       --openapi_out=fq_schema_naming=true,default_response=false:./api/openapi \
 	       $(API_PROTO_FILES)
 
 .PHONY: wire
@@ -70,15 +74,34 @@ wire:
 .PHONY: ent
 # generate database code
 ent:
-	ent generate ./internal/data/schema \
-			--template ./internal/data/template \
+	ent generate ./pkg/data/schema \
+			--template ./pkg/data/template \
 			--feature sql/modifier \
-			--target ./internal/data/ent
+			--target ./pkg/data/ent
+
+.PHONY: build-auth
+# build auth service
+build-auth:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/auth-service ./app/auth/service/cmd/service
+
+.PHONY: build-user
+# build user service
+build-user:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/user-service ./app/user/service/cmd/service
+
+.PHONY: build-admin
+# build admin service
+build-admin:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/admin-service ./app/admin/service/cmd/service
+
+.PHONY: build-common
+# build common service
+build-common:
+	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/common-service ./app/common/service/cmd/service
 
 .PHONY: build
-# build
-build:
-	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
+# build split services
+build: build-auth build-user build-admin build-common
 
 .PHONY: generate
 # generate

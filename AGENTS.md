@@ -1,54 +1,54 @@
 # base-server — Agent notes
 
 ## What this repo is
-- Go (go.mod: `go 1.24.0`, `toolchain go1.24.4`), Kratos v2 service.
-- Transports: HTTP `:8000`; gRPC `:9000` exists but is currently not started in `cmd/base-server/main.go` (`gs` commented).
-- Data: Ent ORM (generated), Postgres via `database/sql` + `pgx` driver string; schema auto-create on startup.
-- AuthZ/AuthN: JWT HS256 + Casbin. Casbin is backed by DB via `casbin/ent-adapter`.
+- Go (`go 1.24.0`, `toolchain go1.24.4`) Kratos multi-service repo.
+- Active services:
+  - auth: HTTP `:8020`, gRPC `:9020`
+  - user: HTTP `:8010`, gRPC `:9010`
+  - admin: HTTP `:8030`, gRPC `:9030`
+  - common: HTTP `:8040`, gRPC `:9040`
+- Data: Ent ORM over PostgreSQL via `database/sql` + `pgx`.
+- Auth: JWT HS256 + Casbin.
 
-## Where to change things (map)
-- `cmd/base-server/` — entrypoint + Wire DI + embedded OpenAPI assets.
-- `api/protos/` — **source** protos (edit here).
-- `api/gen/go/` — **generated** protobuf/kratos bindings (**do not edit**).
-- `internal/conf/` — config schema proto (`conf.proto`) + generated Go.
-- `internal/data/schema/` — Ent schema sources (edit here).
-- `internal/data/ent/` — Ent generated code (**do not edit**).
-- `internal/biz/` — usecases (auth, menus, users, etc.).
-- `internal/service/` — transport handlers (HTTP/gRPC) implementing generated interfaces.
-- `internal/server/` — HTTP/gRPC server wiring + middleware.
-- `deploy/helm/base-server/` — Helm chart (ConfigMap embeds app + casbin config).
+## Where to change things
+- `app/*/service/cmd/service/` — each service entrypoint + Wire bootstrap.
+- `app/*/service/internal/service/` — transport handlers.
+- `app/*/service/internal/biz/` — use cases.
+- `app/*/service/internal/data/` — service repositories + outbound clients.
+- `app/*/service/internal/conf/` — service-local config proto + generated config structs.
+- `api/protos/*/service/v1/` — source protos.
+- `api/gen/go/**` — generated protobuf/kratos bindings (**do not edit**).
+- `pkg/data/schema/` — Ent schema sources.
+- `pkg/data/ent/` — Ent generated code (**do not edit**).
+- `pkg/tools/` — shared helper functions.
+- `api/openapi/` — generated OpenAPI output.
 
-## Generated code boundaries (changes get overwritten)
-- `api/gen/go/**` (from `api/protos/**`) — `make api`
-- `cmd/base-server/assets/openapi.yaml` — `make api` or `make openapi`
-- `cmd/base-server/wire_gen.go` — `make wire` (runs `go generate ./...`)
-- `internal/conf/conf.pb.go` — `make config`
-- `internal/data/ent/**` — `make ent`
+## Generated code boundaries
+- `api/gen/go/**` — `make api`
+- `api/openapi/**` — `make api` or `make openapi`
+- `app/*/service/cmd/service/wire_gen.go` — `make wire`
+- `app/*/service/internal/conf/*.pb.go` — `make config`
+- `pkg/data/ent/**` — `make ent`
 
 ## Common commands
-- Tooling install: `make init` (protoc plugins, wire, kratos)
+- Tooling install: `make init`
 - Generate API: `make api`
 - Generate config types: `make config`
 - Generate Wire: `make wire`
 - Generate Ent: `make ent`
-- Build: `make build` (writes `./bin/`)
+- Build all services: `make build`
 - Quick compile check: `go test ./...`
 
-## Runtime entrypoint / config
-- Binary: `cmd/base-server/main.go`
-- Config path flag: `-conf` (default `./configs`)
-- Docker runs with `-conf /data/conf` and expects `config.yaml` in that directory.
-- Config schema source of truth: `internal/conf/conf.proto`.
+## Runtime config
+- Each service uses its own `-conf` directory under `app/<service>/service/configs`.
+- Config schema source of truth lives in the corresponding `app/<service>/service/internal/conf/conf.proto`.
 
 ## Repo-specific gotchas
-- Secrets are currently committed in plain YAML:
-  - `configs/config.yaml` includes an LLM API key-like value.
-  - `deploy/helm/base-server/templates/configmap.yaml` embeds DB source + auth keys.
-  Treat these as placeholders; don’t copy real credentials into git.
-- Tests: no `*_test.go` found; CI only builds docker on tag push.
-- Casbin + manual DB imports: read `README.md` (sequence reset for `casbin_rules_id_seq`).
+- Placeholder secrets still exist in service config YAMLs; do not commit real credentials.
+- Tests are mostly compile checks; there are effectively no `*_test.go` files.
+- The old monolith runtime and Helm chart have been removed.
 
 ## When adding/changing APIs
-- Edit protos in `api/protos/base_api/v1/*.proto`.
-- Regenerate: `make api`.
-- Implement/adjust handlers in `internal/service/` and wiring in `internal/server/`.
+- Edit the owning proto under `api/protos/*/service/v1/*.proto`.
+- Run `make api`.
+- Update the owning handler under `app/*/service/internal/service/`.
