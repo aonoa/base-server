@@ -1,7 +1,7 @@
 # base-server — Agent notes
 
 ## What this repo is
-- Go (`go 1.24.0`, `toolchain go1.24.4`) Kratos multi-service repo.
+- Go (`go 1.25.8`) Kratos multi-service repo.
 - Active services:
   - auth: HTTP `:8020`, gRPC `:9020`
   - user: HTTP `:8010`, gRPC `:9010`

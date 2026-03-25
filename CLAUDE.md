@@ -136,4 +136,4 @@ Edit these source locations instead:
 - Placeholder credentials remain in service config files; do not commit real secrets.
 - There is no checked-in Helm chart anymore; deploy the four services separately.
 - CI Docker packaging should build per-service images, not a monolith.
-- `go.mod` targets Go `1.24.0` with toolchain `go1.24.4`.
+- `go.mod` targets Go `1.25.8`.

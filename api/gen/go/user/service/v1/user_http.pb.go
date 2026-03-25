@@ -23,6 +23,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationUserServiceAddUser = "/api.user.service.v1.UserService/AddUser"
 const OperationUserServiceChangePassword = "/api.user.service.v1.UserService/ChangePassword"
 const OperationUserServiceDelUser = "/api.user.service.v1.UserService/DelUser"
+const OperationUserServiceGetInfo = "/api.user.service.v1.UserService/GetInfo"
 const OperationUserServiceGetUserInfo = "/api.user.service.v1.UserService/GetUserInfo"
 const OperationUserServiceGetUserList = "/api.user.service.v1.UserService/GetUserList"
 const OperationUserServiceIsUserExist = "/api.user.service.v1.UserService/IsUserExist"
@@ -32,6 +33,7 @@ type UserServiceHTTPServer interface {
 	AddUser(context.Context, *UserListItem) (*UserListItem, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
+	GetInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoReply, error)
 	GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error)
 	IsUserExist(context.Context, *IsUserExistsRequest) (*IsUserExistsReply, error)
@@ -41,6 +43,7 @@ type UserServiceHTTPServer interface {
 func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/user-api/v1/users/{user_id}", _UserService_GetUserInfo0_HTTP_Handler(srv))
+	r.GET("/user-api/v1/users/info", _UserService_GetInfo0_HTTP_Handler(srv))
 	r.GET("/user-api/v1/users", _UserService_GetUserList0_HTTP_Handler(srv))
 	r.POST("/user-api/v1/users", _UserService_AddUser0_HTTP_Handler(srv))
 	r.PUT("/user-api/v1/users/{id}", _UserService_UpdateUser0_HTTP_Handler(srv))
@@ -61,6 +64,25 @@ func _UserService_GetUserInfo0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx 
 		http.SetOperation(ctx, OperationUserServiceGetUserInfo)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUserInfo(ctx, req.(*GetUserInfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUserInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserService_GetInfo0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceGetInfo)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetInfo(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -207,6 +229,7 @@ type UserServiceHTTPClient interface {
 	AddUser(ctx context.Context, req *UserListItem, opts ...http.CallOption) (rsp *UserListItem, err error)
 	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelUser(ctx context.Context, req *DeleteUser, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetInfo(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserInfo(ctx context.Context, req *GetUserInfoRequest, opts ...http.CallOption) (rsp *GetUserInfoReply, err error)
 	GetUserList(ctx context.Context, req *GetUserParams, opts ...http.CallOption) (rsp *GetUserListReply, err error)
 	IsUserExist(ctx context.Context, req *IsUserExistsRequest, opts ...http.CallOption) (rsp *IsUserExistsReply, err error)
@@ -254,6 +277,19 @@ func (c *UserServiceHTTPClientImpl) DelUser(ctx context.Context, in *DeleteUser,
 	opts = append(opts, http.Operation(OperationUserServiceDelUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserServiceHTTPClientImpl) GetInfo(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserInfoReply, error) {
+	var out GetUserInfoReply
+	pattern := "/user-api/v1/users/info"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserServiceGetInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

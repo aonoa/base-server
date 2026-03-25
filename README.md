@@ -2,6 +2,11 @@
 
 Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行，统一共享根目录 `go.mod`。
 
+当前开发基线：
+
+- Go：`1.25.8`
+- PostgreSQL：`18`
+
 ## 服务布局
 
 - `app/gateway/service`：统一公网入口，使用 `go-kratos/gateway` 原生 endpoints 配置转发到下游服务
@@ -62,6 +67,55 @@ make build
 - user：HTTP `8010`，gRPC `9010`
 - admin：HTTP `8030`，gRPC `9030`
 - common：HTTP `8040`，gRPC `9040`
+
+### 本地断点调试
+
+推荐把数据库、Redis、Jaeger、Consul 放在容器里，只在 IDE 本地启动要调试的服务。
+
+先启动基础依赖：
+
+```bash
+make dev-env-up
+```
+
+停止基础依赖：
+
+```bash
+make dev-env-down
+```
+
+如果刚从旧版 PostgreSQL 主版本切到 PG18，直接删卷重建：
+
+```bash
+make dev-env-reset
+```
+
+直接在终端本地运行服务：
+
+```bash
+make run-gateway
+make run-auth
+make run-user
+make run-admin
+make run-common
+```
+
+IDE 里也可以直接运行对应入口，并传相同参数：
+
+- gateway：`app/gateway/service/cmd/service/main.go` + `-conf ./app/gateway/service/configs`
+- auth：`app/auth/service/cmd/service/main.go` + `-conf ./app/auth/service/configs`
+- user：`app/user/service/cmd/service/main.go` + `-conf ./app/user/service/configs`
+- admin：`app/admin/service/cmd/service/main.go` + `-conf ./app/admin/service/configs`
+- common：`app/common/service/cmd/service/main.go` + `-conf ./app/common/service/configs`
+
+调试组合建议：
+
+- 调 `user` / `admin` / `common`：`make dev-env-up` 后单独启动对应服务即可
+- 调 `auth`：至少同时启动 `user` + `auth`
+- 调 `gateway` 登录链路：建议同时启动 `gateway` + `auth` + `user`
+- 调 `gateway` 管理链路：建议同时启动 `gateway` + `admin`
+
+`make dev-env-up` 会自动确保 `base_networks` 存在，避免 `docker-compose-env.yml` 因外部网络缺失启动失败。
 
 ## 网关与路由
 
@@ -185,6 +239,25 @@ go test ./...
 - admin DB：`admin`
 - common DB：`common`
 
+### PostgreSQL 18 升级说明
+
+仓库现在统一使用 PostgreSQL 18，并采用“跨主版本直接删卷重建”的策略，不提供旧卷原地兼容。
+
+原因：
+
+- PostgreSQL 18 官方镜像调整了数据目录布局
+- 旧的 PG16 数据卷不能直接复用到 PG18 容器
+- 本仓库已经具备 init SQL + startup migrate + seed 流程，重建本地环境成本更低也更可靠
+
+如果你从旧主版本升级：
+
+```bash
+docker-compose -f ./docker-compose-env.yml down -v
+docker compose -f ./docker-compose.yml down -v
+```
+
+然后按你的场景重建。
+
 ### 一键启动完整环境
 
 ```bash
@@ -215,6 +288,7 @@ go test ./...
 
 - auth/user/admin/common 默认只加入 compose 内部网络，不额外占用宿主机 `8010/8020/8030/8040/9010/9020/9030/9040`
 - gateway 会在容器内通过 `auth:8020`、`user:8010`、`admin:8030`、`common:8040` 转发到下游服务
+- 如果你刚从旧 Postgres 主版本切到 PG18，先执行 `docker compose -f ./docker-compose.yml down -v`
 
 ### 容器内配置目录
 
@@ -269,7 +343,7 @@ seed 完成后默认账号：
 - 如果想回到完全空白的本地环境，建议清理卷后重建：
 
 ```bash
-docker-compose -f ./docker-compose.yml down -v
+docker compose -f ./docker-compose.yml down -v
 ./deploy/scripts/up.sh
 ./deploy/scripts/seed.sh
 ```
@@ -306,4 +380,25 @@ docker run --rm -v "$PWD/app/auth/service/configs":/app/configs base-server-auth
 SELECT MAX(id) FROM casbin_rules;
 SELECT last_value FROM pg_sequences WHERE schemaname = 'public' AND sequencename = 'casbin_rules_id_seq';
 ALTER SEQUENCE casbin_rules_id_seq RESTART WITH {max_id + 1};
+```
+
+## 故障排查
+
+### 本地启动 user 报 `127.0.0.1:25432 connection refused`
+
+通常说明本地依赖里的 postgres 没起来，而不是 user 服务本身有问题。优先执行：
+
+```bash
+make dev-env-reset
+```
+
+如果是从旧版 PG 升到 PG18，这一步尤其必要，因为旧卷不会自动迁移到新的目录布局。
+
+### init SQL 没生效
+
+`deploy/sql/init/00-create-databases.sql` 只会在新数据卷首次初始化时执行。若你已经起过旧卷，再改 compose 或 init SQL，必须删卷后重建：
+
+```bash
+docker-compose -f ./docker-compose-env.yml down -v
+docker compose -f ./docker-compose.yml down -v
 ```

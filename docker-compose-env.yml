@@ -1,6 +1,6 @@
 services:
   redis:
-    image: docker.io/redis
+    image: docker.io/redis:7-alpine
     container_name: base-redis
     hostname: base-redis
     ports:
@@ -9,24 +9,28 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - redis-data:/data:rw
-    command: "redis-server --requirepass redis.666  --appendonly yes"
+    command: ["redis-server", "--appendonly", "yes"]
     privileged: true
     restart: always
     networks:
       - base_networks
 
   postgres:
-    image: docker.io/postgres
+    image: docker.io/postgres:18
     container_name: base-postgres
     hostname: base-postgres
     restart: always
     ports:
       - "25432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
+      - ./deploy/sql/init:/docker-entrypoint-initdb.d:ro
     environment:
       - TZ=Asia/Shanghai
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres.666
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/18/docker
     networks:
       - base_networks
 
@@ -55,7 +59,6 @@ services:
       - "8500:8500"
     networks:
       - base_networks
-    #    command: ["consul","agent","-server","-bootstrap","-ui","-bind","127.0.0.1","-client","0.0.0.0"]
     command: agent -ui -bootstrap -server -client 0.0.0.0
     read_only: true
     restart: always
@@ -65,7 +68,6 @@ services:
     volumes:
       - consul-config:/consul/config:z
       - consul-data:/consul/data:z
-
 
 volumes:
   consul-config: {}

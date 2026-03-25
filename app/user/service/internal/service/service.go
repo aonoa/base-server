@@ -1,6 +1,7 @@
 package service
 
 import (
+	"base-server/pkg/tools"
 	"context"
 
 	v1 "base-server/api/gen/go/user/service/v1"
@@ -24,6 +25,9 @@ func NewUserService(uc *biz.UserUsecase) *UserService {
 }
 
 func (s *UserService) GetUserInfo(ctx context.Context, req *v1.GetUserInfoRequest) (*v1.GetUserInfoReply, error) {
+	if req.UserId == "info" {
+		req.UserId = tools.GetUserId(ctx)
+	}
 	return s.uc.GetUserInfo(ctx, req.UserId)
 }
 

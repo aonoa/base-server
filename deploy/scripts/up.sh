@@ -11,6 +11,8 @@ fi
 "${COMPOSE[@]}" up -d --build "$@"
 
 printf '\nFull stack is starting.\n'
+printf 'If you are upgrading from an older PostgreSQL major version, recreate volumes first:\n'
+printf '  %s down -v\n' "${COMPOSE[*]}"
 printf 'Next step: %s\n' "$ROOT_DIR/deploy/scripts/seed.sh"
 printf 'Gateway: http://127.0.0.1:8000\n'
 printf 'Jaeger:  http://127.0.0.1:16686\n'

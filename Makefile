@@ -108,6 +108,49 @@ build-gateway:
 # build split services
 build: build-auth build-user build-admin build-common build-gateway
 
+.PHONY: dev-env-up
+# start local dependency services for IDE debugging
+dev-env-up:
+	docker network inspect base_networks >/dev/null 2>&1 || docker network create base_networks
+	docker-compose -f ./docker-compose-env.yml up -d
+
+.PHONY: dev-env-down
+# stop local dependency services for IDE debugging
+dev-env-down:
+	docker-compose -f ./docker-compose-env.yml down
+
+.PHONY: dev-env-reset
+# recreate local dependency services after PostgreSQL major upgrades
+dev-env-reset:
+	docker-compose -f ./docker-compose-env.yml down -v
+	docker network inspect base_networks >/dev/null 2>&1 || docker network create base_networks
+	docker-compose -f ./docker-compose-env.yml up -d
+
+.PHONY: run-gateway
+# run gateway service with local config
+run-gateway:
+	go run ./app/gateway/service/cmd/service -conf ./app/gateway/service/configs
+
+.PHONY: run-auth
+# run auth service with local config
+run-auth:
+	go run ./app/auth/service/cmd/service -conf ./app/auth/service/configs
+
+.PHONY: run-user
+# run user service with local config
+run-user:
+	go run ./app/user/service/cmd/service -conf ./app/user/service/configs
+
+.PHONY: run-admin
+# run admin service with local config
+run-admin:
+	go run ./app/admin/service/cmd/service -conf ./app/admin/service/configs
+
+.PHONY: run-common
+# run common service with local config
+run-common:
+	go run ./app/common/service/cmd/service -conf ./app/common/service/configs
+
 .PHONY: generate
 # generate
 generate:

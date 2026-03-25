@@ -1,5 +1,5 @@
 # Multi-service container build
-FROM golang:1.24.4-bullseye AS builder
+FROM golang:1.25.8-bullseye AS builder
 
 ARG SERVICE=auth
 

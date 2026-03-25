@@ -1,8 +1,6 @@
 module base-server
 
-go 1.24.0
-
-toolchain go1.24.4
+go 1.25.8
 
 require (
 	ariga.io/entcache v0.1.0

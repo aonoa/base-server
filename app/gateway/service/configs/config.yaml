@@ -101,7 +101,7 @@ gateway:
     - path: /common-api/v1/file/upload
       method: POST
       protocol: HTTP
-      timeout: 10m
+      timeout: 600s
       backends:
         - target: 127.0.0.1:8040
       middlewares:
@@ -114,7 +114,7 @@ gateway:
     - path: /common-api/v1/copilot/sse
       method: GET
       protocol: HTTP
-      timeout: 24h
+      timeout: 86400s
       stream: true
       backends:
         - target: 127.0.0.1:8040
