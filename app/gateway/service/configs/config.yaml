@@ -74,8 +74,6 @@ gateway:
                 method: POST
               - path: /auth-api/v1/logout
                 method: POST
-              - path: /auth-api/v1/refresh
-                method: POST
         - name: casbin
           required: true
           options:

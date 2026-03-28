@@ -64,8 +64,6 @@ gateway:
                 method: POST
               - path: /auth-api/v1/logout
                 method: POST
-              - path: /auth-api/v1/refresh
-                method: POST
 
     - path: /user-api/v1/*
       method: "*"

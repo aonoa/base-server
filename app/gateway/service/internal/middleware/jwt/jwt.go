@@ -13,6 +13,8 @@ import (
 	runtimeutil "base-server/app/gateway/service/internal/middleware/runtime"
 )
 
+const refreshPath = "/auth-api/v1/refresh"
+
 func init() {
 	gwmiddleware.Register("jwt", Middleware)
 }
@@ -44,10 +46,15 @@ func Middleware(cfg *configv1.Middleware) (gwmiddleware.Middleware, error) {
 				resp.Header.Set("WWW-Authenticate", "Bearer")
 				return resp, nil
 			}
-			if _, err := runtimeutil.ParseHS256Token(tokenString, options.SigningKey); err != nil {
+			claims, err := runtimeutil.ParseHS256Token(tokenString, options.SigningKey)
+			if err != nil {
 				resp := runtimeutil.EmptyResponse(http.StatusUnauthorized)
 				resp.Header.Set("WWW-Authenticate", "Bearer error=\"invalid_token\"")
 				return resp, nil
+			}
+			aud, _ := claims["aud"].(string)
+			if aud == "refresh" && req.URL.Path != refreshPath {
+				return runtimeutil.EmptyResponse(http.StatusUnauthorized), nil
 			}
 			return next.RoundTrip(req)
 		})

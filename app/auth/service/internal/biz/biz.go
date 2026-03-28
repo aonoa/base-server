@@ -18,6 +18,7 @@ import (
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
 	adapter "github.com/casbin/ent-adapter"
+	kratoserrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -151,11 +152,11 @@ func (uc *AuthUsecase) GenerateToken(uid string, session ...string) (*v1.LoginRe
 
 	accessClaims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
 		authx.ClaimUserID:    uid,
-		"sub":               uid,
+		"sub":                uid,
 		authx.ClaimAudience:  authx.AudienceLogin,
-		"exp":               now.Add(30 * time.Minute).Unix(),
-		"nbf":               now.Unix(),
-		"iat":               now.Unix(),
+		"exp":                now.Add(3 * time.Minute).Unix(),
+		"nbf":                now.Unix(),
+		"iat":                now.Unix(),
 		authx.ClaimSessionID: sessionID,
 	})
 	accessToken, err := accessClaims.SignedString([]byte(uc.key))
@@ -165,12 +166,12 @@ func (uc *AuthUsecase) GenerateToken(uid string, session ...string) (*v1.LoginRe
 
 	refreshClaims := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{
 		authx.ClaimUserID:    uid,
-		"sub":               uid,
+		"sub":                uid,
 		authx.ClaimAudience:  authx.AudienceRefresh,
-		"exp":               now.Add(60 * time.Minute).Unix(),
-		"nbf":               now.Add(25 * time.Minute).Unix(),
-		"iat":               now.Unix(),
-		"jti":               uuid.New().String(),
+		"exp":                now.Add(60 * time.Minute).Unix(),
+		"nbf":                now.Add(2 * time.Minute).Unix(),
+		"iat":                now.Unix(),
+		"jti":                uuid.New().String(),
 		authx.ClaimSessionID: sessionID,
 	})
 	refreshToken, err := refreshClaims.SignedString([]byte(uc.key))
@@ -188,7 +189,7 @@ func (uc *AuthUsecase) GenerateToken(uid string, session ...string) (*v1.LoginRe
 
 func (uc *AuthUsecase) RefreshToken(ctx context.Context, userID, aud, sessionID string) (*v1.LoginReply, error) {
 	if aud != authx.AudienceRefresh {
-		return &v1.LoginReply{}, nil
+		return nil, kratoserrors.Unauthorized("UNAUTHORIZED", "invalid refresh token")
 	}
 	return uc.GenerateToken(userID, sessionID)
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	configv1 "github.com/go-kratos/gateway/api/gateway/config/v1"
 	gwmiddleware "github.com/go-kratos/gateway/middleware"
@@ -28,7 +29,7 @@ func TestMiddlewareRejectsMissingToken(t *testing.T) {
 
 func TestMiddlewareAllowsValidToken(t *testing.T) {
 	mw := newTestMiddleware(t, &jwtv1.JWT{SigningKey: "secret"})
-	token := signedToken(t, "secret")
+	token := signedToken(t, "secret", jwtv5.MapClaims{"user_id": "u1", "aud": "login"})
 	req := httptest.NewRequest(http.MethodGet, "http://example.com/user-api/v1/profile", nil)
 	req.Header.Set("Authorization", "Bearer "+token)
 	resp, err := mw(gwmiddleware.RoundTripperFunc(func(req *http.Request) (*http.Response, error) {
@@ -39,6 +40,41 @@ func TestMiddlewareAllowsValidToken(t *testing.T) {
 	}
 	if resp.StatusCode != http.StatusNoContent {
 		t.Fatalf("expected next round tripper to run, got %d", resp.StatusCode)
+	}
+}
+
+func TestMiddlewareRejectsRefreshTokenOnNonRefreshPath(t *testing.T) {
+	mw := newTestMiddleware(t, &jwtv1.JWT{SigningKey: "secret"})
+	token := signedToken(t, "secret", jwtv5.MapClaims{"user_id": "u1", "aud": "refresh"})
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/user-api/v1/profile", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	resp, err := mw(gwmiddleware.RoundTripperFunc(func(req *http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: http.StatusNoContent, Body: http.NoBody, Header: make(http.Header)}, nil
+	})).RoundTrip(req)
+	if err != nil {
+		t.Fatalf("round trip: %v", err)
+	}
+	if resp.StatusCode != http.StatusUnauthorized {
+		t.Fatalf("expected 401, got %d", resp.StatusCode)
+	}
+}
+
+func TestMiddlewareRejectsExpiredToken(t *testing.T) {
+	mw := newTestMiddleware(t, &jwtv1.JWT{SigningKey: "secret"})
+	token := signedToken(t, "secret", jwtv5.MapClaims{
+		"user_id": "u1",
+		"exp":     time.Now().Add(-time.Minute).Unix(),
+	})
+	req := httptest.NewRequest(http.MethodGet, "http://example.com/user-api/v1/profile", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	resp, err := mw(gwmiddleware.RoundTripperFunc(func(req *http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: http.StatusNoContent, Body: http.NoBody, Header: make(http.Header)}, nil
+	})).RoundTrip(req)
+	if err != nil {
+		t.Fatalf("round trip: %v", err)
+	}
+	if resp.StatusCode != http.StatusUnauthorized {
+		t.Fatalf("expected 401, got %d", resp.StatusCode)
 	}
 }
 
@@ -72,9 +108,9 @@ func newTestMiddleware(t *testing.T, options *jwtv1.JWT) gwmiddleware.Middleware
 	return mw
 }
 
-func signedToken(t *testing.T, signingKey string) string {
+func signedToken(t *testing.T, signingKey string, claims jwtv5.MapClaims) string {
 	t.Helper()
-	token, err := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, jwtv5.MapClaims{"user_id": "u1"}).SignedString([]byte(signingKey))
+	token, err := jwtv5.NewWithClaims(jwtv5.SigningMethodHS256, claims).SignedString([]byte(signingKey))
 	if err != nil {
 		t.Fatalf("sign token: %v", err)
 	}

@@ -19,7 +19,6 @@ auth:
   whitelist:
     - /api.auth.service.v1.AuthService/Login
     - /api.auth.service.v1.AuthService/Logout
-    - /api.auth.service.v1.AuthService/RefreshToken
 services:
   user:
     grpc_endpoint: user:9010

@@ -17,6 +17,10 @@ const (
 
 	AudienceLogin   = "login"
 	AudienceRefresh = "refresh"
+
+	HeaderAuthorization = "Authorization"
+	HeaderAction        = "x-action"
+	ActionRefreshToken  = "refreshToken"
 )
 
 func ClaimsFromContext(ctx context.Context) (jwtv5.MapClaims, bool) {
@@ -50,6 +54,10 @@ func SessionID(ctx context.Context) string {
 	return claimString(ctx, ClaimSessionID)
 }
 
+func Action(ctx context.Context) string {
+		return strings.TrimSpace(RequestHeader(ctx, HeaderAction))
+}
+
 func ForwardAuthorizationContext(ctx context.Context) context.Context {
 	authorization := strings.TrimSpace(AuthorizationFromContext(ctx))
 	if authorization == "" {
@@ -59,11 +67,15 @@ func ForwardAuthorizationContext(ctx context.Context) context.Context {
 }
 
 func AuthorizationFromContext(ctx context.Context) string {
+	return RequestHeader(ctx, HeaderAuthorization)
+}
+
+func RequestHeader(ctx context.Context, key string) string {
 	tr, ok := transport.FromServerContext(ctx)
 	if !ok {
 		return ""
 	}
-	return tr.RequestHeader().Get("Authorization")
+	return tr.RequestHeader().Get(key)
 }
 
 func claimString(ctx context.Context, key string) string {
