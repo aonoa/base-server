@@ -8,6 +8,7 @@ import (
 	authv1 "base-server/api/gen/go/auth/service/v1"
 	configv1 "github.com/go-kratos/gateway/api/gateway/config/v1"
 	gwmiddleware "github.com/go-kratos/gateway/middleware"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
@@ -69,7 +70,8 @@ func Middleware(cfg *configv1.Middleware) (gwmiddleware.Middleware, error) {
 			if authClientProvider == nil || authClientProvider() == nil {
 				return nil, errors.New("auth client is not configured")
 			}
-			res, err := authClientProvider().CheckAuthorization(context.Background(), &authv1.CheckAuthorizationRequest{
+			ctx := metadata.AppendToOutgoingContext(context.Background(), "authorization", req.Header.Get("Authorization"))
+			res, err := authClientProvider().CheckAuthorization(ctx, &authv1.CheckAuthorizationRequest{
 				UserId: userID,
 				Path:   req.URL.Path,
 				Method: req.Method,

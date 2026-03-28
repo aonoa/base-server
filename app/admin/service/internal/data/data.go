@@ -8,9 +8,12 @@ import (
 	"strings"
 
 	"ariga.io/entcache"
+	authv1 "base-server/api/gen/go/auth/service/v1"
+	userv1 "base-server/api/gen/go/user/service/v1"
 	v1 "base-server/api/gen/go/admin/service/v1"
 	"base-server/app/admin/service/internal/biz"
 	"base-server/app/admin/service/internal/conf"
+	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
@@ -24,6 +27,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // ProviderSet is data providers.
@@ -31,11 +36,15 @@ var ProviderSet = wire.NewSet(NewData, NewAdminRepo)
 
 // Data .
 type Data struct {
-	db *ent.Client
+	db         *ent.Client
+	userConn   *grpc.ClientConn
+	userClient userv1.UserServiceClient
+	authConn   *grpc.ClientConn
+	authClient authv1.AuthServiceClient
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewData(c *conf.Data, services *conf.Services, logger log.Logger) (*Data, func(), error) {
 	helper := log.NewHelper(logger)
 	db, err := dbsql.Open(c.Database.Driver, c.Database.Source)
 	if err != nil {
@@ -49,9 +58,32 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	if err := migrate.Create(context.Background(), migrate.NewSchema(sqlDrv), adminTables(), schema.WithForeignKeys(false)); err != nil {
 		return nil, nil, err
 	}
-	d := &Data{db: client}
+	userConn, err := grpc.NewClient(services.User.GrpcEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		_ = client.Close()
+		return nil, nil, err
+	}
+	authConn, err := grpc.NewClient(services.Auth.GrpcEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		_ = userConn.Close()
+		_ = client.Close()
+		return nil, nil, err
+	}
+	d := &Data{
+		db:         client,
+		userConn:   userConn,
+		userClient: userv1.NewUserServiceClient(userConn),
+		authConn:   authConn,
+		authClient: authv1.NewAuthServiceClient(authConn),
+	}
 	cleanup := func() {
 		helper.Info("closing the data resources")
+		if d.authConn != nil {
+			_ = d.authConn.Close()
+		}
+		if d.userConn != nil {
+			_ = d.userConn.Close()
+		}
 		_ = d.db.Close()
 	}
 	return d, cleanup, nil
@@ -68,6 +100,16 @@ func NewAdminRepo(data *Data, logger log.Logger) biz.AdminRepo {
 
 func (r *adminRepo) GetMenuList(ctx context.Context) ([]*ent.Menu, error) {
 	return r.data.db.Menu.Query().Order(menu.ByPid(), menu.ByOrder()).All(ctx)
+}
+
+func (r *adminRepo) GetUserAuthInfo(ctx context.Context, userID string) (*userv1.GetUserAuthInfoReply, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	return r.data.userClient.GetUserAuthInfo(ctx, &userv1.GetUserAuthInfoRequest{UserId: userID})
+}
+
+func (r *adminRepo) GetCurrentUserMenuAuthority(ctx context.Context, userID string) (*authv1.GetCurrentUserMenuAuthorityReply, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	return r.data.authClient.GetCurrentUserMenuAuthority(ctx, &authv1.GetCurrentUserMenuAuthorityRequest{UserId: userID})
 }
 
 func (r *adminRepo) CreateMenu(ctx context.Context, item *ent.Menu) (*ent.Menu, error) {

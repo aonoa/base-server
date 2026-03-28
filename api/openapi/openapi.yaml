@@ -196,6 +196,18 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/menus/current:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetCurrentUserMenus
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetCurrentUserMenusReply'
     /admin-api/v1/menus/name-exists:
         get:
             tags:
@@ -817,6 +829,37 @@ paths:
                     content: {}
 components:
     schemas:
+        api.admin.service.v1.CurrentUserMenuItem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                component:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                authCode:
+                    type: string
+                name:
+                    type: string
+                path:
+                    type: string
+                pid:
+                    type: string
+                redirect:
+                    type: string
+                type:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/api.admin.service.v1.Meta'
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.CurrentUserMenuItem'
+                createTime:
+                    type: string
         api.admin.service.v1.DeptListItem:
             type: object
             properties:
@@ -842,6 +885,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+        api.admin.service.v1.GetCurrentUserMenusReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.CurrentUserMenuItem'
         api.admin.service.v1.GetDeptListReply:
             type: object
             properties:

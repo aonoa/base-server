@@ -257,6 +257,7 @@ func (x *Auth) GetWhitelist() []string {
 type Services struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *Services_User         `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Admin         *Services_Admin        `protobuf:"bytes,2,opt,name=admin,proto3" json:"admin,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -294,6 +295,13 @@ func (*Services) Descriptor() ([]byte, []int) {
 func (x *Services) GetUser() *Services_User {
 	if x != nil {
 		return x.User
+	}
+	return nil
+}
+
+func (x *Services) GetAdmin() *Services_Admin {
+	if x != nil {
+		return x.Admin
 	}
 	return nil
 }
@@ -582,6 +590,50 @@ func (x *Services_User) GetGrpcEndpoint() string {
 	return ""
 }
 
+type Services_Admin struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrpcEndpoint  string                 `protobuf:"bytes,1,opt,name=grpc_endpoint,json=grpcEndpoint,proto3" json:"grpc_endpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services_Admin) Reset() {
+	*x = Services_Admin{}
+	mi := &file_app_auth_service_internal_conf_conf_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services_Admin) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services_Admin) ProtoMessage() {}
+
+func (x *Services_Admin) ProtoReflect() protoreflect.Message {
+	mi := &file_app_auth_service_internal_conf_conf_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services_Admin.ProtoReflect.Descriptor instead.
+func (*Services_Admin) Descriptor() ([]byte, []int) {
+	return file_app_auth_service_internal_conf_conf_proto_rawDescGZIP(), []int{4, 1}
+}
+
+func (x *Services_Admin) GetGrpcEndpoint() string {
+	if x != nil {
+		return x.GrpcEndpoint
+	}
+	return ""
+}
+
 var File_app_auth_service_internal_conf_conf_proto protoreflect.FileDescriptor
 
 const file_app_auth_service_internal_conf_conf_proto_rawDesc = "" +
@@ -619,10 +671,13 @@ const file_app_auth_service_internal_conf_conf_proto_rawDesc = "" +
 	"\vservice_key\x18\x01 \x01(\tR\n" +
 	"serviceKey\x12\x17\n" +
 	"\aapi_key\x18\x02 \x01(\tR\x06apiKey\x12\x1c\n" +
-	"\twhitelist\x18\x03 \x03(\tR\twhitelist\"f\n" +
+	"\twhitelist\x18\x03 \x03(\tR\twhitelist\"\xc6\x01\n" +
 	"\bServices\x12-\n" +
-	"\x04user\x18\x01 \x01(\v2\x19.kratos.api.Services.UserR\x04user\x1a+\n" +
+	"\x04user\x18\x01 \x01(\v2\x19.kratos.api.Services.UserR\x04user\x120\n" +
+	"\x05admin\x18\x02 \x01(\v2\x1a.kratos.api.Services.AdminR\x05admin\x1a+\n" +
 	"\x04User\x12#\n" +
+	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpoint\x1a,\n" +
+	"\x05Admin\x12#\n" +
 	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpointB1Z/base-server/app/auth/service/internal/conf;confb\x06proto3"
 
 var (
@@ -637,7 +692,7 @@ func file_app_auth_service_internal_conf_conf_proto_rawDescGZIP() []byte {
 	return file_app_auth_service_internal_conf_conf_proto_rawDescData
 }
 
-var file_app_auth_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_app_auth_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_app_auth_service_internal_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
 	(*Server)(nil),              // 1: kratos.api.Server
@@ -649,7 +704,8 @@ var file_app_auth_service_internal_conf_conf_proto_goTypes = []any{
 	(*Data_Database)(nil),       // 7: kratos.api.Data.Database
 	(*Data_Redis)(nil),          // 8: kratos.api.Data.Redis
 	(*Services_User)(nil),       // 9: kratos.api.Services.User
-	(*durationpb.Duration)(nil), // 10: google.protobuf.Duration
+	(*Services_Admin)(nil),      // 10: kratos.api.Services.Admin
+	(*durationpb.Duration)(nil), // 11: google.protobuf.Duration
 }
 var file_app_auth_service_internal_conf_conf_proto_depIdxs = []int32{
 	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
@@ -661,15 +717,16 @@ var file_app_auth_service_internal_conf_conf_proto_depIdxs = []int32{
 	7,  // 6: kratos.api.Data.database:type_name -> kratos.api.Data.Database
 	8,  // 7: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
 	9,  // 8: kratos.api.Services.user:type_name -> kratos.api.Services.User
-	10, // 9: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	10, // 10: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	10, // 11: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	10, // 12: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	10, // 9: kratos.api.Services.admin:type_name -> kratos.api.Services.Admin
+	11, // 10: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	11, // 11: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	11, // 12: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
+	11, // 13: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_app_auth_service_internal_conf_conf_proto_init() }
@@ -683,7 +740,7 @@ func file_app_auth_service_internal_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_app_auth_service_internal_conf_conf_proto_rawDesc), len(file_app_auth_service_internal_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

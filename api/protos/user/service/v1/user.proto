@@ -54,7 +54,6 @@ service UserService {
       body: "*"
     };
   }
-
   rpc ValidateUserAuth(ValidateUserAuthRequest) returns (ValidateUserAuthReply);
   rpc GetUserAuthInfo(GetUserAuthInfoRequest) returns (GetUserAuthInfoReply);
   rpc ListUserAuthBindings(google.protobuf.Empty) returns (ListUserAuthBindingsReply);

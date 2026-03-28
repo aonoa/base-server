@@ -675,6 +675,350 @@ func (x *GetSysMenuListReply) GetTotal() int64 {
 	return 0
 }
 
+type CurrentUserMenuItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Component     string                 `protobuf:"bytes,2,opt,name=component,proto3" json:"component,omitempty"`
+	Status        *int32                 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	AuthCode      string                 `protobuf:"bytes,4,opt,name=authCode,proto3" json:"authCode,omitempty"`
+	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
+	Pid           int64                  `protobuf:"varint,7,opt,name=pid,proto3" json:"pid,omitempty"`
+	Redirect      *string                `protobuf:"bytes,8,opt,name=redirect,proto3,oneof" json:"redirect,omitempty"`
+	Type          string                 `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
+	Meta          *Meta                  `protobuf:"bytes,10,opt,name=meta,proto3" json:"meta,omitempty"`
+	Children      []*CurrentUserMenuItem `protobuf:"bytes,11,rep,name=children,proto3" json:"children,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,12,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CurrentUserMenuItem) Reset() {
+	*x = CurrentUserMenuItem{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CurrentUserMenuItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CurrentUserMenuItem) ProtoMessage() {}
+
+func (x *CurrentUserMenuItem) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CurrentUserMenuItem.ProtoReflect.Descriptor instead.
+func (*CurrentUserMenuItem) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *CurrentUserMenuItem) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *CurrentUserMenuItem) GetComponent() string {
+	if x != nil {
+		return x.Component
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetStatus() int32 {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return 0
+}
+
+func (x *CurrentUserMenuItem) GetAuthCode() string {
+	if x != nil {
+		return x.AuthCode
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetPid() int64 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *CurrentUserMenuItem) GetRedirect() string {
+	if x != nil && x.Redirect != nil {
+		return *x.Redirect
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *CurrentUserMenuItem) GetMeta() *Meta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *CurrentUserMenuItem) GetChildren() []*CurrentUserMenuItem {
+	if x != nil {
+		return x.Children
+	}
+	return nil
+}
+
+func (x *CurrentUserMenuItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type GetCurrentUserMenusReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*CurrentUserMenuItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCurrentUserMenusReply) Reset() {
+	*x = GetCurrentUserMenusReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCurrentUserMenusReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCurrentUserMenusReply) ProtoMessage() {}
+
+func (x *GetCurrentUserMenusReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCurrentUserMenusReply.ProtoReflect.Descriptor instead.
+func (*GetCurrentUserMenusReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetCurrentUserMenusReply) GetItems() []*CurrentUserMenuItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type MenuRecord struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Component     string                 `protobuf:"bytes,2,opt,name=component,proto3" json:"component,omitempty"`
+	Status        *int32                 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
+	AuthCode      string                 `protobuf:"bytes,4,opt,name=authCode,proto3" json:"authCode,omitempty"`
+	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
+	Pid           int64                  `protobuf:"varint,7,opt,name=pid,proto3" json:"pid,omitempty"`
+	Redirect      *string                `protobuf:"bytes,8,opt,name=redirect,proto3,oneof" json:"redirect,omitempty"`
+	Type          string                 `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
+	Meta          *Meta                  `protobuf:"bytes,10,opt,name=meta,proto3" json:"meta,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MenuRecord) Reset() {
+	*x = MenuRecord{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MenuRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MenuRecord) ProtoMessage() {}
+
+func (x *MenuRecord) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MenuRecord.ProtoReflect.Descriptor instead.
+func (*MenuRecord) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *MenuRecord) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *MenuRecord) GetComponent() string {
+	if x != nil {
+		return x.Component
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetStatus() int32 {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return 0
+}
+
+func (x *MenuRecord) GetAuthCode() string {
+	if x != nil {
+		return x.AuthCode
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetPid() int64 {
+	if x != nil {
+		return x.Pid
+	}
+	return 0
+}
+
+func (x *MenuRecord) GetRedirect() string {
+	if x != nil && x.Redirect != nil {
+		return *x.Redirect
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *MenuRecord) GetMeta() *Meta {
+	if x != nil {
+		return x.Meta
+	}
+	return nil
+}
+
+func (x *MenuRecord) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type ListMenusReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*MenuRecord          `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListMenusReply) Reset() {
+	*x = ListMenusReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMenusReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMenusReply) ProtoMessage() {}
+
+func (x *ListMenusReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMenusReply.ProtoReflect.Descriptor instead.
+func (*ListMenusReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ListMenusReply) GetItems() []*MenuRecord {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 type IsMenuNameExistsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -685,7 +1029,7 @@ type IsMenuNameExistsRequest struct {
 
 func (x *IsMenuNameExistsRequest) Reset() {
 	*x = IsMenuNameExistsRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -697,7 +1041,7 @@ func (x *IsMenuNameExistsRequest) String() string {
 func (*IsMenuNameExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -710,7 +1054,7 @@ func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{7}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *IsMenuNameExistsRequest) GetId() int64 {
@@ -736,7 +1080,7 @@ type IsMenuNameExistsReply struct {
 
 func (x *IsMenuNameExistsReply) Reset() {
 	*x = IsMenuNameExistsReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -748,7 +1092,7 @@ func (x *IsMenuNameExistsReply) String() string {
 func (*IsMenuNameExistsReply) ProtoMessage() {}
 
 func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -761,7 +1105,7 @@ func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{8}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *IsMenuNameExistsReply) GetData() bool {
@@ -781,7 +1125,7 @@ type IsMenuPathExistsRequest struct {
 
 func (x *IsMenuPathExistsRequest) Reset() {
 	*x = IsMenuPathExistsRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -793,7 +1137,7 @@ func (x *IsMenuPathExistsRequest) String() string {
 func (*IsMenuPathExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -806,7 +1150,7 @@ func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{9}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *IsMenuPathExistsRequest) GetId() int64 {
@@ -832,7 +1176,7 @@ type IsMenuPathExistsReply struct {
 
 func (x *IsMenuPathExistsReply) Reset() {
 	*x = IsMenuPathExistsReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -844,7 +1188,7 @@ func (x *IsMenuPathExistsReply) String() string {
 func (*IsMenuPathExistsReply) ProtoMessage() {}
 
 func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -857,7 +1201,7 @@ func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{10}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *IsMenuPathExistsReply) GetData() bool {
@@ -876,7 +1220,7 @@ type DeleteMenuRequest struct {
 
 func (x *DeleteMenuRequest) Reset() {
 	*x = DeleteMenuRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -888,7 +1232,7 @@ func (x *DeleteMenuRequest) String() string {
 func (*DeleteMenuRequest) ProtoMessage() {}
 
 func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -901,7 +1245,7 @@ func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMenuRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{11}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *DeleteMenuRequest) GetId() int64 {
@@ -939,7 +1283,7 @@ type CreateSysLogRequest struct {
 
 func (x *CreateSysLogRequest) Reset() {
 	*x = CreateSysLogRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -951,7 +1295,7 @@ func (x *CreateSysLogRequest) String() string {
 func (*CreateSysLogRequest) ProtoMessage() {}
 
 func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -964,7 +1308,7 @@ func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSysLogRequest.ProtoReflect.Descriptor instead.
 func (*CreateSysLogRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CreateSysLogRequest) GetUserId() string {
@@ -1129,7 +1473,7 @@ type GetSysLogListParams struct {
 
 func (x *GetSysLogListParams) Reset() {
 	*x = GetSysLogListParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1141,7 +1485,7 @@ func (x *GetSysLogListParams) String() string {
 func (*GetSysLogListParams) ProtoMessage() {}
 
 func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1154,7 +1498,7 @@ func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogListParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetSysLogListParams) GetCurrentPage() int64 {
@@ -1276,7 +1620,7 @@ type SysLogItem struct {
 
 func (x *SysLogItem) Reset() {
 	*x = SysLogItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1288,7 +1632,7 @@ func (x *SysLogItem) String() string {
 func (*SysLogItem) ProtoMessage() {}
 
 func (x *SysLogItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1301,7 +1645,7 @@ func (x *SysLogItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SysLogItem.ProtoReflect.Descriptor instead.
 func (*SysLogItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *SysLogItem) GetId() string {
@@ -1405,7 +1749,7 @@ type GetSysLogListReply struct {
 
 func (x *GetSysLogListReply) Reset() {
 	*x = GetSysLogListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1417,7 +1761,7 @@ func (x *GetSysLogListReply) String() string {
 func (*GetSysLogListReply) ProtoMessage() {}
 
 func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1430,7 +1774,7 @@ func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetSysLogListReply) GetItems() []*SysLogItem {
@@ -1456,7 +1800,7 @@ type GetSysLogInfoParams struct {
 
 func (x *GetSysLogInfoParams) Reset() {
 	*x = GetSysLogInfoParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1468,7 +1812,7 @@ func (x *GetSysLogInfoParams) String() string {
 func (*GetSysLogInfoParams) ProtoMessage() {}
 
 func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1481,7 +1825,7 @@ func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetSysLogInfoParams) GetId() string {
@@ -1521,7 +1865,7 @@ type GetSysLogInfoReply struct {
 
 func (x *GetSysLogInfoReply) Reset() {
 	*x = GetSysLogInfoReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1533,7 +1877,7 @@ func (x *GetSysLogInfoReply) String() string {
 func (*GetSysLogInfoReply) ProtoMessage() {}
 
 func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1546,7 +1890,7 @@ func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{17}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetSysLogInfoReply) GetId() string {
@@ -1801,7 +2145,45 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\t_redirect\"h\n" +
 	"\x13GetSysMenuListReply\x12;\n" +
 	"\x05items\x18\x01 \x03(\v2%.api.admin.service.v1.SysMenuListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"=\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x9b\x03\n" +
+	"\x13CurrentUserMenuItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x1c\n" +
+	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1a\n" +
+	"\bauthCode\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
+	"\x04path\x18\x06 \x01(\tR\x04path\x12\x10\n" +
+	"\x03pid\x18\a \x01(\x03R\x03pid\x12\x1f\n" +
+	"\bredirect\x18\b \x01(\tH\x01R\bredirect\x88\x01\x01\x12\x12\n" +
+	"\x04type\x18\t \x01(\tR\x04type\x12.\n" +
+	"\x04meta\x18\n" +
+	" \x01(\v2\x1a.api.admin.service.v1.MetaR\x04meta\x12E\n" +
+	"\bchildren\x18\v \x03(\v2).api.admin.service.v1.CurrentUserMenuItemR\bchildren\x12\x1f\n" +
+	"\vcreate_time\x18\f \x01(\tR\n" +
+	"createTimeB\t\n" +
+	"\a_statusB\v\n" +
+	"\t_redirect\"[\n" +
+	"\x18GetCurrentUserMenusReply\x12?\n" +
+	"\x05items\x18\x01 \x03(\v2).api.admin.service.v1.CurrentUserMenuItemR\x05items\"\xcb\x02\n" +
+	"\n" +
+	"MenuRecord\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x1c\n" +
+	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1a\n" +
+	"\bauthCode\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
+	"\x04path\x18\x06 \x01(\tR\x04path\x12\x10\n" +
+	"\x03pid\x18\a \x01(\x03R\x03pid\x12\x1f\n" +
+	"\bredirect\x18\b \x01(\tH\x01R\bredirect\x88\x01\x01\x12\x12\n" +
+	"\x04type\x18\t \x01(\tR\x04type\x12.\n" +
+	"\x04meta\x18\n" +
+	" \x01(\v2\x1a.api.admin.service.v1.MetaR\x04meta\x12\x1f\n" +
+	"\vcreate_time\x18\v \x01(\tR\n" +
+	"createTimeB\t\n" +
+	"\a_statusB\v\n" +
+	"\t_redirect\"H\n" +
+	"\x0eListMenusReply\x126\n" +
+	"\x05items\x18\x01 \x03(\v2 .api.admin.service.v1.MenuRecordR\x05items\"=\n" +
 	"\x17IsMenuNameExistsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"+\n" +
@@ -1915,14 +2297,16 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"res_status\x18\x14 \x01(\bR\tresStatus\x12\x14\n" +
 	"\x05stack\x18\x15 \x01(\tR\x05stack\x12\x1f\n" +
 	"\vcreate_time\x18\x16 \x01(\tR\n" +
-	"createTime2\xad\f\n" +
+	"createTime2\xfd\r\n" +
 	"\fAdminService\x12j\n" +
 	"\vGetDeptList\x12\x16.google.protobuf.Empty\x1a&.api.admin.service.v1.GetDeptListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/depts\x12q\n" +
 	"\aAddDept\x12\".api.admin.service.v1.DeptListItem\x1a\".api.admin.service.v1.DeptListItem\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin-api/v1/depts\x12y\n" +
 	"\n" +
 	"UpdateDept\x12\".api.admin.service.v1.DeptListItem\x1a\".api.admin.service.v1.DeptListItem\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin-api/v1/depts/{id}\x12e\n" +
-	"\aDelDept\x12 .api.admin.service.v1.DeleteDept\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/depts/{id}\x12z\n" +
-	"\x0eGetSysMenuList\x12 .api.admin.service.v1.MenuParams\x1a).api.admin.service.v1.GetSysMenuListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/menus\x12\x97\x01\n" +
+	"\aDelDept\x12 .api.admin.service.v1.DeleteDept\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/depts/{id}\x12\x82\x01\n" +
+	"\x13GetCurrentUserMenus\x12\x16.google.protobuf.Empty\x1a..api.admin.service.v1.GetCurrentUserMenusReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/admin-api/v1/menus/current\x12z\n" +
+	"\x0eGetSysMenuList\x12 .api.admin.service.v1.MenuParams\x1a).api.admin.service.v1.GetSysMenuListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/menus\x12I\n" +
+	"\tListMenus\x12\x16.google.protobuf.Empty\x1a$.api.admin.service.v1.ListMenusReply\x12\x97\x01\n" +
 	"\x10IsMenuNameExists\x12-.api.admin.service.v1.IsMenuNameExistsRequest\x1a+.api.admin.service.v1.IsMenuNameExistsReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/admin-api/v1/menus/name-exists\x12\x97\x01\n" +
 	"\x10IsMenuPathExists\x12-.api.admin.service.v1.IsMenuPathExistsRequest\x1a+.api.admin.service.v1.IsMenuPathExistsReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/admin-api/v1/menus/path-exists\x12k\n" +
 	"\n" +
@@ -1948,27 +2332,31 @@ func file_admin_service_v1_admin_proto_rawDescGZIP() []byte {
 	return file_admin_service_v1_admin_proto_rawDescData
 }
 
-var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_admin_service_v1_admin_proto_goTypes = []any{
-	(*DeptListItem)(nil),            // 0: api.admin.service.v1.DeptListItem
-	(*DeleteDept)(nil),              // 1: api.admin.service.v1.DeleteDept
-	(*GetDeptListReply)(nil),        // 2: api.admin.service.v1.GetDeptListReply
-	(*MenuParams)(nil),              // 3: api.admin.service.v1.MenuParams
-	(*Meta)(nil),                    // 4: api.admin.service.v1.Meta
-	(*SysMenuListItem)(nil),         // 5: api.admin.service.v1.SysMenuListItem
-	(*GetSysMenuListReply)(nil),     // 6: api.admin.service.v1.GetSysMenuListReply
-	(*IsMenuNameExistsRequest)(nil), // 7: api.admin.service.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),   // 8: api.admin.service.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil), // 9: api.admin.service.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),   // 10: api.admin.service.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),       // 11: api.admin.service.v1.DeleteMenuRequest
-	(*CreateSysLogRequest)(nil),     // 12: api.admin.service.v1.CreateSysLogRequest
-	(*GetSysLogListParams)(nil),     // 13: api.admin.service.v1.GetSysLogListParams
-	(*SysLogItem)(nil),              // 14: api.admin.service.v1.SysLogItem
-	(*GetSysLogListReply)(nil),      // 15: api.admin.service.v1.GetSysLogListReply
-	(*GetSysLogInfoParams)(nil),     // 16: api.admin.service.v1.GetSysLogInfoParams
-	(*GetSysLogInfoReply)(nil),      // 17: api.admin.service.v1.GetSysLogInfoReply
-	(*emptypb.Empty)(nil),           // 18: google.protobuf.Empty
+	(*DeptListItem)(nil),             // 0: api.admin.service.v1.DeptListItem
+	(*DeleteDept)(nil),               // 1: api.admin.service.v1.DeleteDept
+	(*GetDeptListReply)(nil),         // 2: api.admin.service.v1.GetDeptListReply
+	(*MenuParams)(nil),               // 3: api.admin.service.v1.MenuParams
+	(*Meta)(nil),                     // 4: api.admin.service.v1.Meta
+	(*SysMenuListItem)(nil),          // 5: api.admin.service.v1.SysMenuListItem
+	(*GetSysMenuListReply)(nil),      // 6: api.admin.service.v1.GetSysMenuListReply
+	(*CurrentUserMenuItem)(nil),      // 7: api.admin.service.v1.CurrentUserMenuItem
+	(*GetCurrentUserMenusReply)(nil), // 8: api.admin.service.v1.GetCurrentUserMenusReply
+	(*MenuRecord)(nil),               // 9: api.admin.service.v1.MenuRecord
+	(*ListMenusReply)(nil),           // 10: api.admin.service.v1.ListMenusReply
+	(*IsMenuNameExistsRequest)(nil),  // 11: api.admin.service.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),    // 12: api.admin.service.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil),  // 13: api.admin.service.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),    // 14: api.admin.service.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),        // 15: api.admin.service.v1.DeleteMenuRequest
+	(*CreateSysLogRequest)(nil),      // 16: api.admin.service.v1.CreateSysLogRequest
+	(*GetSysLogListParams)(nil),      // 17: api.admin.service.v1.GetSysLogListParams
+	(*SysLogItem)(nil),               // 18: api.admin.service.v1.SysLogItem
+	(*GetSysLogListReply)(nil),       // 19: api.admin.service.v1.GetSysLogListReply
+	(*GetSysLogInfoParams)(nil),      // 20: api.admin.service.v1.GetSysLogInfoParams
+	(*GetSysLogInfoReply)(nil),       // 21: api.admin.service.v1.GetSysLogInfoReply
+	(*emptypb.Empty)(nil),            // 22: google.protobuf.Empty
 }
 var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	0,  // 0: api.admin.service.v1.DeptListItem.children:type_name -> api.admin.service.v1.DeptListItem
@@ -1976,38 +2364,47 @@ var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	4,  // 2: api.admin.service.v1.SysMenuListItem.meta:type_name -> api.admin.service.v1.Meta
 	5,  // 3: api.admin.service.v1.SysMenuListItem.children:type_name -> api.admin.service.v1.SysMenuListItem
 	5,  // 4: api.admin.service.v1.GetSysMenuListReply.items:type_name -> api.admin.service.v1.SysMenuListItem
-	14, // 5: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
-	18, // 6: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
-	0,  // 7: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
-	0,  // 8: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
-	1,  // 9: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
-	3,  // 10: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
-	7,  // 11: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
-	9,  // 12: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
-	5,  // 13: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	5,  // 14: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	11, // 15: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
-	12, // 16: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
-	13, // 17: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
-	16, // 18: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
-	2,  // 19: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
-	0,  // 20: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
-	0,  // 21: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
-	18, // 22: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
-	6,  // 23: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
-	8,  // 24: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
-	10, // 25: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
-	18, // 26: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
-	18, // 27: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
-	18, // 28: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
-	18, // 29: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
-	15, // 30: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
-	17, // 31: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
-	19, // [19:32] is the sub-list for method output_type
-	6,  // [6:19] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	4,  // 5: api.admin.service.v1.CurrentUserMenuItem.meta:type_name -> api.admin.service.v1.Meta
+	7,  // 6: api.admin.service.v1.CurrentUserMenuItem.children:type_name -> api.admin.service.v1.CurrentUserMenuItem
+	7,  // 7: api.admin.service.v1.GetCurrentUserMenusReply.items:type_name -> api.admin.service.v1.CurrentUserMenuItem
+	4,  // 8: api.admin.service.v1.MenuRecord.meta:type_name -> api.admin.service.v1.Meta
+	9,  // 9: api.admin.service.v1.ListMenusReply.items:type_name -> api.admin.service.v1.MenuRecord
+	18, // 10: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
+	22, // 11: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
+	0,  // 12: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
+	0,  // 13: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
+	1,  // 14: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
+	22, // 15: api.admin.service.v1.AdminService.GetCurrentUserMenus:input_type -> google.protobuf.Empty
+	3,  // 16: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
+	22, // 17: api.admin.service.v1.AdminService.ListMenus:input_type -> google.protobuf.Empty
+	11, // 18: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
+	13, // 19: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
+	5,  // 20: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	5,  // 21: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	15, // 22: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
+	16, // 23: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
+	17, // 24: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
+	20, // 25: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
+	2,  // 26: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
+	0,  // 27: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
+	0,  // 28: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
+	22, // 29: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
+	8,  // 30: api.admin.service.v1.AdminService.GetCurrentUserMenus:output_type -> api.admin.service.v1.GetCurrentUserMenusReply
+	6,  // 31: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
+	10, // 32: api.admin.service.v1.AdminService.ListMenus:output_type -> api.admin.service.v1.ListMenusReply
+	12, // 33: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
+	14, // 34: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
+	22, // 35: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
+	22, // 36: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
+	22, // 37: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
+	22, // 38: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
+	19, // 39: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
+	21, // 40: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
+	26, // [26:41] is the sub-list for method output_type
+	11, // [11:26] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_admin_service_v1_admin_proto_init() }
@@ -2017,13 +2414,15 @@ func file_admin_service_v1_admin_proto_init() {
 	}
 	file_admin_service_v1_admin_proto_msgTypes[4].OneofWrappers = []any{}
 	file_admin_service_v1_admin_proto_msgTypes[5].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[7].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_admin_service_v1_admin_proto_rawDesc), len(file_admin_service_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -20,24 +20,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName              = "/api.auth.service.v1.AuthService/Login"
-	AuthService_GetAccessCodes_FullMethodName     = "/api.auth.service.v1.AuthService/GetAccessCodes"
-	AuthService_CheckAuthorization_FullMethodName = "/api.auth.service.v1.AuthService/CheckAuthorization"
-	AuthService_Logout_FullMethodName             = "/api.auth.service.v1.AuthService/Logout"
-	AuthService_RefreshToken_FullMethodName       = "/api.auth.service.v1.AuthService/RefreshToken"
-	AuthService_ReLoadPolicy_FullMethodName       = "/api.auth.service.v1.AuthService/ReLoadPolicy"
-	AuthService_GetRoleList_FullMethodName        = "/api.auth.service.v1.AuthService/GetRoleList"
-	AuthService_AddRole_FullMethodName            = "/api.auth.service.v1.AuthService/AddRole"
-	AuthService_UpdateRole_FullMethodName         = "/api.auth.service.v1.AuthService/UpdateRole"
-	AuthService_DelRole_FullMethodName            = "/api.auth.service.v1.AuthService/DelRole"
-	AuthService_GetApiList_FullMethodName         = "/api.auth.service.v1.AuthService/GetApiList"
-	AuthService_AddApi_FullMethodName             = "/api.auth.service.v1.AuthService/AddApi"
-	AuthService_UpdateApi_FullMethodName          = "/api.auth.service.v1.AuthService/UpdateApi"
-	AuthService_DelApi_FullMethodName             = "/api.auth.service.v1.AuthService/DelApi"
-	AuthService_GetResourceList_FullMethodName    = "/api.auth.service.v1.AuthService/GetResourceList"
-	AuthService_AddResource_FullMethodName        = "/api.auth.service.v1.AuthService/AddResource"
-	AuthService_UpdateResource_FullMethodName     = "/api.auth.service.v1.AuthService/UpdateResource"
-	AuthService_DelResource_FullMethodName        = "/api.auth.service.v1.AuthService/DelResource"
+	AuthService_Login_FullMethodName                       = "/api.auth.service.v1.AuthService/Login"
+	AuthService_GetAccessCodes_FullMethodName              = "/api.auth.service.v1.AuthService/GetAccessCodes"
+	AuthService_GetCurrentUserMenuAuthority_FullMethodName = "/api.auth.service.v1.AuthService/GetCurrentUserMenuAuthority"
+	AuthService_CheckAuthorization_FullMethodName          = "/api.auth.service.v1.AuthService/CheckAuthorization"
+	AuthService_Logout_FullMethodName                      = "/api.auth.service.v1.AuthService/Logout"
+	AuthService_RefreshToken_FullMethodName                = "/api.auth.service.v1.AuthService/RefreshToken"
+	AuthService_ReLoadPolicy_FullMethodName                = "/api.auth.service.v1.AuthService/ReLoadPolicy"
+	AuthService_GetRoleList_FullMethodName                 = "/api.auth.service.v1.AuthService/GetRoleList"
+	AuthService_AddRole_FullMethodName                     = "/api.auth.service.v1.AuthService/AddRole"
+	AuthService_UpdateRole_FullMethodName                  = "/api.auth.service.v1.AuthService/UpdateRole"
+	AuthService_DelRole_FullMethodName                     = "/api.auth.service.v1.AuthService/DelRole"
+	AuthService_GetApiList_FullMethodName                  = "/api.auth.service.v1.AuthService/GetApiList"
+	AuthService_AddApi_FullMethodName                      = "/api.auth.service.v1.AuthService/AddApi"
+	AuthService_UpdateApi_FullMethodName                   = "/api.auth.service.v1.AuthService/UpdateApi"
+	AuthService_DelApi_FullMethodName                      = "/api.auth.service.v1.AuthService/DelApi"
+	AuthService_GetResourceList_FullMethodName             = "/api.auth.service.v1.AuthService/GetResourceList"
+	AuthService_AddResource_FullMethodName                 = "/api.auth.service.v1.AuthService/AddResource"
+	AuthService_UpdateResource_FullMethodName              = "/api.auth.service.v1.AuthService/UpdateResource"
+	AuthService_DelResource_FullMethodName                 = "/api.auth.service.v1.AuthService/DelResource"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -46,6 +47,7 @@ const (
 type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
 	GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAccessCodesReply, error)
+	GetCurrentUserMenuAuthority(ctx context.Context, in *GetCurrentUserMenuAuthorityRequest, opts ...grpc.CallOption) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(ctx context.Context, in *CheckAuthorizationRequest, opts ...grpc.CallOption) (*CheckAuthorizationReply, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
@@ -86,6 +88,16 @@ func (c *authServiceClient) GetAccessCodes(ctx context.Context, in *emptypb.Empt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAccessCodesReply)
 	err := c.cc.Invoke(ctx, AuthService_GetAccessCodes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetCurrentUserMenuAuthority(ctx context.Context, in *GetCurrentUserMenuAuthorityRequest, opts ...grpc.CallOption) (*GetCurrentUserMenuAuthorityReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCurrentUserMenuAuthorityReply)
+	err := c.cc.Invoke(ctx, AuthService_GetCurrentUserMenuAuthority_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -258,6 +270,7 @@ func (c *authServiceClient) DelResource(ctx context.Context, in *DeleteResource,
 type AuthServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
+	GetCurrentUserMenuAuthority(context.Context, *GetCurrentUserMenuAuthorityRequest) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
@@ -289,6 +302,9 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*Lo
 }
 func (UnimplementedAuthServiceServer) GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessCodes not implemented")
+}
+func (UnimplementedAuthServiceServer) GetCurrentUserMenuAuthority(context.Context, *GetCurrentUserMenuAuthorityRequest) (*GetCurrentUserMenuAuthorityReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUserMenuAuthority not implemented")
 }
 func (UnimplementedAuthServiceServer) CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuthorization not implemented")
@@ -391,6 +407,24 @@ func _AuthService_GetAccessCodes_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).GetAccessCodes(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetCurrentUserMenuAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCurrentUserMenuAuthorityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetCurrentUserMenuAuthority(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetCurrentUserMenuAuthority_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetCurrentUserMenuAuthority(ctx, req.(*GetCurrentUserMenuAuthorityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -697,6 +731,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccessCodes",
 			Handler:    _AuthService_GetAccessCodes_Handler,
+		},
+		{
+			MethodName: "GetCurrentUserMenuAuthority",
+			Handler:    _AuthService_GetCurrentUserMenuAuthority_Handler,
 		},
 		{
 			MethodName: "CheckAuthorization",

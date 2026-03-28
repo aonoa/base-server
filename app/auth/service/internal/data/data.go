@@ -9,6 +9,7 @@ import (
 	userv1 "base-server/api/gen/go/user/service/v1"
 	"base-server/app/auth/service/internal/biz"
 	"base-server/app/auth/service/internal/conf"
+	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
 	"base-server/pkg/data/ent/apiresources"
 	"base-server/pkg/data/ent/migrate"
@@ -51,12 +52,16 @@ func NewData(c *conf.Data, services *conf.Services, logger log.Logger) (*Data, f
 	if err := migrate.Create(context.Background(), migrate.NewSchema(sqlDrv), authTables(), schema.WithForeignKeys(false)); err != nil {
 		return nil, nil, err
 	}
-	conn, err := grpc.NewClient(services.User.GrpcEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	userConn, err := grpc.NewClient(services.User.GrpcEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		_ = client.Close()
 		return nil, nil, err
 	}
-	d := &Data{db: client, userConn: conn, userClient: userv1.NewUserServiceClient(conn)}
+	d := &Data{
+		db:         client,
+		userConn:   userConn,
+		userClient: userv1.NewUserServiceClient(userConn),
+	}
 	cleanup := func() {
 		helper.Info("closing the data resources")
 		if d.userConn != nil {
@@ -87,6 +92,7 @@ func authTables() []*schema.Table {
 }
 
 func (r *authRepo) Login(ctx context.Context, req *authv1.LoginRequest) (string, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
 	res, err := r.data.userClient.ValidateUserAuth(ctx, &userv1.ValidateUserAuthRequest{
 		Username: req.Username,
 		Password: req.Password,
@@ -98,15 +104,32 @@ func (r *authRepo) Login(ctx context.Context, req *authv1.LoginRequest) (string,
 }
 
 func (r *authRepo) GetUserAuthInfo(ctx context.Context, userID string) (*userv1.GetUserAuthInfoReply, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
 	return r.data.userClient.GetUserAuthInfo(ctx, &userv1.GetUserAuthInfoRequest{UserId: userID})
 }
 
 func (r *authRepo) ListUserAuthBindings(ctx context.Context) ([]*userv1.UserAuthBinding, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
 	res, err := r.data.userClient.ListUserAuthBindings(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 	return res.Items, nil
+}
+
+func (r *authRepo) GetCurrentUserMenuAuthority(ctx context.Context, userID string) (*authv1.GetCurrentUserMenuAuthorityReply, error) {
+	user, err := r.GetUserAuthInfo(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	roleItem, err := r.GetRole(ctx, user.RoleId)
+	if err != nil {
+		return nil, err
+	}
+	return &authv1.GetCurrentUserMenuAuthorityReply{
+		IsRoot:  roleItem.Value == "root",
+		MenuIds: append([]int32(nil), roleItem.Menus...),
+	}, nil
 }
 
 func (r *authRepo) ListRoles(ctx context.Context) ([]*ent.Role, error) {
@@ -273,12 +296,12 @@ func (r *authRepo) GetResourceList(ctx context.Context, req *authv1.GetResourceP
 	return list, int64(count), nil
 }
 
-func (r *authRepo) GetResource(ctx context.Context, id string) (*ent.Resource, error) {
-	return r.data.db.Resource.Query().Where(resource.IDEQ(id)).First(ctx)
-}
-
 func (r *authRepo) AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
 	return r.data.db.Resource.Create().CreateAll(req).Save(ctx)
+}
+
+func (r *authRepo) GetResource(ctx context.Context, id string) (*ent.Resource, error) {
+	return r.data.db.Resource.Query().Where(resource.IDEQ(id)).First(ctx)
 }
 
 func (r *authRepo) UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
@@ -290,12 +313,11 @@ func (r *authRepo) DelResource(ctx context.Context, id string) error {
 }
 
 func toEntDialect(driver string) string {
-	switch strings.ToLower(driver) {
-	case "mysql":
-		return dialect.MySQL
-	case "sqlite", "sqlite3":
-		return dialect.SQLite
-	default:
+	driver = strings.TrimSpace(strings.ToLower(driver))
+	switch driver {
+	case "postgres", "postgresql", "pgx":
 		return dialect.Postgres
+	default:
+		return driver
 	}
 }

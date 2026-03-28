@@ -17,3 +17,8 @@ auth:
   api_key: auth-service-secret
   whitelist:
     - /api.admin.service.v1.AdminService/CreateSysLog
+services:
+  user:
+    grpc_endpoint: 127.0.0.1:9010
+  auth:
+    grpc_endpoint: 127.0.0.1:9020

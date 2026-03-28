@@ -11,6 +11,11 @@ import (
 	_ "base-server/app/gateway/service/internal/middleware/jwt"
 	_ "base-server/app/gateway/service/internal/middleware/ratelimit"
 	_ "base-server/app/gateway/service/internal/middleware/whitelist"
+	_ "base-server/app/gateway/service/internal/middleware/casbin/v1"
+	_ "base-server/app/gateway/service/internal/middleware/httplog/v1"
+	_ "base-server/app/gateway/service/internal/middleware/jwt/v1"
+	_ "base-server/app/gateway/service/internal/middleware/ratelimit/v1"
+	_ "base-server/app/gateway/service/internal/middleware/whitelist/v1"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"

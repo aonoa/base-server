@@ -67,6 +67,7 @@ type AuthRepo interface {
 	Login(context.Context, *v1.LoginRequest) (string, error)
 	GetUserAuthInfo(context.Context, string) (*userv1.GetUserAuthInfoReply, error)
 	ListUserAuthBindings(context.Context) ([]*userv1.UserAuthBinding, error)
+	GetCurrentUserMenuAuthority(context.Context, string) (*v1.GetCurrentUserMenuAuthorityReply, error)
 	ListRoles(context.Context) ([]*ent.Role, error)
 	ListAPIResources(context.Context) ([]*ent.ApiResources, error)
 	ResolveRoleValues(context.Context, []int64) (map[int64]string, error)
@@ -198,6 +199,21 @@ func (uc *AuthUsecase) GetAccessCodes(ctx context.Context, userID string) (*v1.G
 		return nil, err
 	}
 	return &v1.GetAccessCodesReply{AccessCodeList: user.AccessCodes}, nil
+}
+
+func (uc *AuthUsecase) GetCurrentUserMenuAuthority(ctx context.Context, userID string) (*v1.GetCurrentUserMenuAuthorityReply, error) {
+	user, err := uc.repo.GetUserAuthInfo(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	roleItem, err := uc.repo.GetRole(ctx, user.RoleId)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetCurrentUserMenuAuthorityReply{
+		IsRoot:  roleItem.Value == "root",
+		MenuIds: append([]int32(nil), roleItem.Menus...),
+	}, nil
 }
 
 func (uc *AuthUsecase) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {

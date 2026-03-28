@@ -3,11 +3,15 @@ package biz
 import (
 	"context"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	authv1 "base-server/api/gen/go/auth/service/v1"
 	v1 "base-server/api/gen/go/admin/service/v1"
+	userv1 "base-server/api/gen/go/user/service/v1"
+	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
 	"base-server/pkg/tools"
 
@@ -20,6 +24,8 @@ var ProviderSet = wire.NewSet(NewAdminUsecase)
 
 type AdminRepo interface {
 	GetMenuList(context.Context) ([]*ent.Menu, error)
+	GetUserAuthInfo(context.Context, string) (*userv1.GetUserAuthInfoReply, error)
+	GetCurrentUserMenuAuthority(context.Context, string) (*authv1.GetCurrentUserMenuAuthorityReply, error)
 	CreateMenu(context.Context, *ent.Menu) (*ent.Menu, error)
 	UpdateMenu(context.Context, int64, *ent.Menu) (*ent.Menu, error)
 	DeleteMenu(context.Context, int64) error
@@ -107,12 +113,41 @@ func (uc *AdminUsecase) DelDept(ctx context.Context, deptID string) error {
 	return uc.repo.DelDept(ctx, id)
 }
 
+func (uc *AdminUsecase) GetCurrentUserMenus(ctx context.Context, userID string) (*v1.GetCurrentUserMenusReply, error) {
+	_, err := uc.repo.GetUserAuthInfo(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	authority, err := uc.repo.GetCurrentUserMenuAuthority(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	visibleMenus := filterVisibleMenus(menuList, authority)
+	return &v1.GetCurrentUserMenusReply{Items: createCurrentUserMenuTree(visibleMenus)}, nil
+}
+
 func (uc *AdminUsecase) GetSysMenuList(ctx context.Context) (*v1.GetSysMenuListReply, error) {
 	menuList, err := uc.repo.GetMenuList(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return &v1.GetSysMenuListReply{Items: uc.createMenuTree(menuList)}, nil
+}
+
+func (uc *AdminUsecase) ListMenus(ctx context.Context) (*v1.ListMenusReply, error) {
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.ListMenusReply{Items: make([]*v1.MenuRecord, 0, len(menuList))}
+	for _, item := range menuList {
+		res.Items = append(res.Items, entMenuToRecord(item))
+	}
+	return res, nil
 }
 
 func (uc *AdminUsecase) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (bool, error) {
@@ -340,6 +375,93 @@ func buildMenuTree(menuList *[]*v1.SysMenuListItem, menu *ent.Menu) bool {
 	return false
 }
 
+func filterVisibleMenus(menuList []*ent.Menu, authority *authv1.GetCurrentUserMenuAuthorityReply) []*ent.Menu {
+	if authority.GetIsRoot() {
+		items := make([]*ent.Menu, 0, len(menuList))
+		for _, item := range menuList {
+			if item.Status {
+				items = append(items, item)
+			}
+		}
+		sortMenus(items)
+		return items
+	}
+	allowed := make(map[int64]struct{}, len(authority.MenuIds))
+	for _, id := range authority.MenuIds {
+		allowed[int64(id)] = struct{}{}
+	}
+	menuByID := make(map[int64]*ent.Menu, len(menuList))
+	for _, item := range menuList {
+		menuByID[item.ID] = item
+	}
+	for _, id := range authority.MenuIds {
+		item, ok := menuByID[int64(id)]
+		if !ok {
+			continue
+		}
+		pid := item.Pid
+		for pid > 0 {
+			parent, ok := menuByID[pid]
+			if !ok {
+				break
+			}
+			allowed[parent.ID] = struct{}{}
+			pid = parent.Pid
+		}
+	}
+	items := make([]*ent.Menu, 0, len(menuList))
+	for _, item := range menuList {
+		if !item.Status {
+			continue
+		}
+		if _, ok := allowed[item.ID]; !ok {
+			continue
+		}
+		items = append(items, item)
+	}
+	sortMenus(items)
+	return items
+}
+
+func sortMenus(items []*ent.Menu) {
+	sort.SliceStable(items, func(i, j int) bool {
+		if items[i].Pid != items[j].Pid {
+			return items[i].Pid < items[j].Pid
+		}
+		if items[i].Order != items[j].Order {
+			return items[i].Order < items[j].Order
+		}
+		return items[i].ID < items[j].ID
+	})
+}
+
+func createCurrentUserMenuTree(menuList []*ent.Menu) []*v1.CurrentUserMenuItem {
+	items := make([]*v1.CurrentUserMenuItem, 0)
+	for _, menu := range menuList {
+		if menu.Pid == 0 {
+			items = append(items, entMenuToCurrentUserMenu(menu))
+			continue
+		}
+		if !buildCurrentUserMenuTree(&items, menu) {
+			items = append(items, entMenuToCurrentUserMenu(menu))
+		}
+	}
+	return items
+}
+
+func buildCurrentUserMenuTree(menuList *[]*v1.CurrentUserMenuItem, menu *ent.Menu) bool {
+	for _, item := range *menuList {
+		if len(item.Children) > 0 && buildCurrentUserMenuTree(&item.Children, menu) {
+			return true
+		}
+		if int64(item.Id) == menu.Pid {
+			item.Children = append(item.Children, entMenuToCurrentUserMenu(menu))
+			return true
+		}
+	}
+	return false
+}
+
 func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 	status := int32(0)
 	if menu.Status {
@@ -382,6 +504,40 @@ func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 			HideChildrenInMenu: &hideChildrenInMenu,
 			Authority:          splitAuthority(menu.Authority),
 		},
+	}
+}
+
+func entMenuToCurrentUserMenu(menu *ent.Menu) *v1.CurrentUserMenuItem {
+	item := entMenuToMenu(menu)
+	return &v1.CurrentUserMenuItem{
+		Id:         item.Id,
+		Component:  item.Component,
+		Status:     item.Status,
+		AuthCode:   item.AuthCode,
+		Name:       item.Name,
+		Path:       item.Path,
+		Pid:        item.Pid,
+		Redirect:   item.Redirect,
+		Type:       item.Type,
+		Meta:       item.Meta,
+		CreateTime: item.CreateTime,
+	}
+}
+
+func entMenuToRecord(menu *ent.Menu) *v1.MenuRecord {
+	item := entMenuToMenu(menu)
+	return &v1.MenuRecord{
+		Id:         item.Id,
+		Component:  item.Component,
+		Status:     item.Status,
+		AuthCode:   item.AuthCode,
+		Name:       item.Name,
+		Path:       item.Path,
+		Pid:        item.Pid,
+		Redirect:   item.Redirect,
+		Type:       item.Type,
+		Meta:       item.Meta,
+		CreateTime: item.CreateTime,
 	}
 }
 
@@ -466,3 +622,4 @@ func replaceBracesIfExists(str string) (bool, string) {
 }
 
 var _ = emptypb.Empty{}
+var _ = authx.UserID

@@ -2,9 +2,12 @@ package authx
 
 import (
 	"context"
+	"strings"
 
 	kratosjwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/transport"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
@@ -45,6 +48,22 @@ func Audience(ctx context.Context) string {
 
 func SessionID(ctx context.Context) string {
 	return claimString(ctx, ClaimSessionID)
+}
+
+func ForwardAuthorizationContext(ctx context.Context) context.Context {
+	authorization := strings.TrimSpace(AuthorizationFromContext(ctx))
+	if authorization == "" {
+		return ctx
+	}
+	return metadata.AppendToOutgoingContext(ctx, "authorization", authorization)
+}
+
+func AuthorizationFromContext(ctx context.Context) string {
+	tr, ok := transport.FromServerContext(ctx)
+	if !ok {
+		return ""
+	}
+	return tr.RequestHeader().Get("Authorization")
 }
 
 func claimString(ctx context.Context, key string) string {

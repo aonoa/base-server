@@ -20,19 +20,21 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AdminService_GetDeptList_FullMethodName      = "/api.admin.service.v1.AdminService/GetDeptList"
-	AdminService_AddDept_FullMethodName          = "/api.admin.service.v1.AdminService/AddDept"
-	AdminService_UpdateDept_FullMethodName       = "/api.admin.service.v1.AdminService/UpdateDept"
-	AdminService_DelDept_FullMethodName          = "/api.admin.service.v1.AdminService/DelDept"
-	AdminService_GetSysMenuList_FullMethodName   = "/api.admin.service.v1.AdminService/GetSysMenuList"
-	AdminService_IsMenuNameExists_FullMethodName = "/api.admin.service.v1.AdminService/IsMenuNameExists"
-	AdminService_IsMenuPathExists_FullMethodName = "/api.admin.service.v1.AdminService/IsMenuPathExists"
-	AdminService_CreateMenu_FullMethodName       = "/api.admin.service.v1.AdminService/CreateMenu"
-	AdminService_UpdateMenu_FullMethodName       = "/api.admin.service.v1.AdminService/UpdateMenu"
-	AdminService_DeleteMenu_FullMethodName       = "/api.admin.service.v1.AdminService/DeleteMenu"
-	AdminService_CreateSysLog_FullMethodName     = "/api.admin.service.v1.AdminService/CreateSysLog"
-	AdminService_GetSysLogList_FullMethodName    = "/api.admin.service.v1.AdminService/GetSysLogList"
-	AdminService_GetSysLogInfo_FullMethodName    = "/api.admin.service.v1.AdminService/GetSysLogInfo"
+	AdminService_GetDeptList_FullMethodName         = "/api.admin.service.v1.AdminService/GetDeptList"
+	AdminService_AddDept_FullMethodName             = "/api.admin.service.v1.AdminService/AddDept"
+	AdminService_UpdateDept_FullMethodName          = "/api.admin.service.v1.AdminService/UpdateDept"
+	AdminService_DelDept_FullMethodName             = "/api.admin.service.v1.AdminService/DelDept"
+	AdminService_GetCurrentUserMenus_FullMethodName = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
+	AdminService_GetSysMenuList_FullMethodName      = "/api.admin.service.v1.AdminService/GetSysMenuList"
+	AdminService_ListMenus_FullMethodName           = "/api.admin.service.v1.AdminService/ListMenus"
+	AdminService_IsMenuNameExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuNameExists"
+	AdminService_IsMenuPathExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuPathExists"
+	AdminService_CreateMenu_FullMethodName          = "/api.admin.service.v1.AdminService/CreateMenu"
+	AdminService_UpdateMenu_FullMethodName          = "/api.admin.service.v1.AdminService/UpdateMenu"
+	AdminService_DeleteMenu_FullMethodName          = "/api.admin.service.v1.AdminService/DeleteMenu"
+	AdminService_CreateSysLog_FullMethodName        = "/api.admin.service.v1.AdminService/CreateSysLog"
+	AdminService_GetSysLogList_FullMethodName       = "/api.admin.service.v1.AdminService/GetSysLogList"
+	AdminService_GetSysLogInfo_FullMethodName       = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -43,7 +45,9 @@ type AdminServiceClient interface {
 	AddDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	UpdateDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	DelDept(ctx context.Context, in *DeleteDept, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCurrentUserMenusReply, error)
 	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
+	ListMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListMenusReply, error)
 	IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...grpc.CallOption) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...grpc.CallOption) (*IsMenuPathExistsReply, error)
 	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -102,10 +106,30 @@ func (c *adminServiceClient) DelDept(ctx context.Context, in *DeleteDept, opts .
 	return out, nil
 }
 
+func (c *adminServiceClient) GetCurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCurrentUserMenusReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCurrentUserMenusReply)
+	err := c.cc.Invoke(ctx, AdminService_GetCurrentUserMenus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSysMenuListReply)
 	err := c.cc.Invoke(ctx, AdminService_GetSysMenuList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListMenusReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMenusReply)
+	err := c.cc.Invoke(ctx, AdminService_ListMenus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -200,7 +224,9 @@ type AdminServiceServer interface {
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
+	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
+	ListMenus(context.Context, *emptypb.Empty) (*ListMenusReply, error)
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
@@ -231,8 +257,14 @@ func (UnimplementedAdminServiceServer) UpdateDept(context.Context, *DeptListItem
 func (UnimplementedAdminServiceServer) DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelDept not implemented")
 }
+func (UnimplementedAdminServiceServer) GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUserMenus not implemented")
+}
 func (UnimplementedAdminServiceServer) GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysMenuList not implemented")
+}
+func (UnimplementedAdminServiceServer) ListMenus(context.Context, *emptypb.Empty) (*ListMenusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMenus not implemented")
 }
 func (UnimplementedAdminServiceServer) IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsMenuNameExists not implemented")
@@ -351,6 +383,24 @@ func _AdminService_DelDept_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_GetCurrentUserMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCurrentUserMenus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetCurrentUserMenus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCurrentUserMenus(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetSysMenuList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MenuParams)
 	if err := dec(in); err != nil {
@@ -365,6 +415,24 @@ func _AdminService_GetSysMenuList_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetSysMenuList(ctx, req.(*MenuParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListMenus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListMenus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListMenus(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -537,8 +605,16 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_DelDept_Handler,
 		},
 		{
+			MethodName: "GetCurrentUserMenus",
+			Handler:    _AdminService_GetCurrentUserMenus_Handler,
+		},
+		{
 			MethodName: "GetSysMenuList",
 			Handler:    _AdminService_GetSysMenuList_Handler,
+		},
+		{
+			MethodName: "ListMenus",
+			Handler:    _AdminService_ListMenus_Handler,
 		},
 		{
 			MethodName: "IsMenuNameExists",

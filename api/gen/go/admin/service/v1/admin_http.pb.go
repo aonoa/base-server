@@ -24,6 +24,7 @@ const OperationAdminServiceAddDept = "/api.admin.service.v1.AdminService/AddDept
 const OperationAdminServiceCreateMenu = "/api.admin.service.v1.AdminService/CreateMenu"
 const OperationAdminServiceDelDept = "/api.admin.service.v1.AdminService/DelDept"
 const OperationAdminServiceDeleteMenu = "/api.admin.service.v1.AdminService/DeleteMenu"
+const OperationAdminServiceGetCurrentUserMenus = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
 const OperationAdminServiceGetDeptList = "/api.admin.service.v1.AdminService/GetDeptList"
 const OperationAdminServiceGetSysLogInfo = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 const OperationAdminServiceGetSysLogList = "/api.admin.service.v1.AdminService/GetSysLogList"
@@ -38,6 +39,7 @@ type AdminServiceHTTPServer interface {
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
@@ -54,6 +56,7 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 	r.POST("/admin-api/v1/depts", _AdminService_AddDept0_HTTP_Handler(srv))
 	r.PUT("/admin-api/v1/depts/{id}", _AdminService_UpdateDept0_HTTP_Handler(srv))
 	r.DELETE("/admin-api/v1/depts/{id}", _AdminService_DelDept0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/menus/current", _AdminService_GetCurrentUserMenus0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus", _AdminService_GetSysMenuList0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus/name-exists", _AdminService_IsMenuNameExists0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus/path-exists", _AdminService_IsMenuPathExists0_HTTP_Handler(srv))
@@ -148,6 +151,25 @@ func _AdminService_DelDept0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx ht
 			return err
 		}
 		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetCurrentUserMenus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetCurrentUserMenus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCurrentUserMenus(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetCurrentUserMenusReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -324,6 +346,7 @@ type AdminServiceHTTPClient interface {
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetCurrentUserMenus(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetCurrentUserMenusReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
 	GetSysLogInfo(ctx context.Context, req *GetSysLogInfoParams, opts ...http.CallOption) (rsp *GetSysLogInfoReply, err error)
 	GetSysLogList(ctx context.Context, req *GetSysLogListParams, opts ...http.CallOption) (rsp *GetSysLogListReply, err error)
@@ -388,6 +411,19 @@ func (c *AdminServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteM
 	opts = append(opts, http.Operation(OperationAdminServiceDeleteMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetCurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetCurrentUserMenusReply, error) {
+	var out GetCurrentUserMenusReply
+	pattern := "/admin-api/v1/menus/current"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetCurrentUserMenus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

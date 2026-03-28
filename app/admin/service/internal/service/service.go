@@ -5,6 +5,7 @@ import (
 
 	v1 "base-server/api/gen/go/admin/service/v1"
 	"base-server/app/admin/service/internal/biz"
+	"base-server/pkg/authx"
 
 	"github.com/google/wire"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -39,8 +40,16 @@ func (s *AdminService) DelDept(ctx context.Context, req *v1.DeleteDept) (*emptyp
 	return &emptypb.Empty{}, s.uc.DelDept(ctx, req.Id)
 }
 
+func (s *AdminService) GetCurrentUserMenus(ctx context.Context, req *emptypb.Empty) (*v1.GetCurrentUserMenusReply, error) {
+	return s.uc.GetCurrentUserMenus(ctx, authx.UserID(ctx))
+}
+
 func (s *AdminService) GetSysMenuList(ctx context.Context, req *v1.MenuParams) (*v1.GetSysMenuListReply, error) {
 	return s.uc.GetSysMenuList(ctx)
+}
+
+func (s *AdminService) ListMenus(ctx context.Context, req *emptypb.Empty) (*v1.ListMenusReply, error) {
+	return s.uc.ListMenus(ctx)
 }
 
 func (s *AdminService) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (*v1.IsMenuNameExistsReply, error) {

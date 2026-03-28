@@ -52,5 +52,9 @@ message Services {
   message User {
     string grpc_endpoint = 1;
   }
+  message Admin {
+    string grpc_endpoint = 1;
+  }
   User user = 1;
+  Admin admin = 2;
 }

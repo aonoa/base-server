@@ -72,6 +72,8 @@ gateway:
             whitelist:
               - path: /auth-api/v1/login
                 method: POST
+              - path: /auth-api/v1/logout
+                method: POST
               - path: /auth-api/v1/refresh
                 method: POST
         - name: casbin
@@ -81,6 +83,8 @@ gateway:
             signingKey: auth-service-secret
             whitelist:
               - path: /auth-api/v1/login
+                method: POST
+              - path: /auth-api/v1/logout
                 method: POST
               - path: /auth-api/v1/refresh
                 method: POST
@@ -125,11 +129,17 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
             signingKey: auth-service-secret
+            whitelist:
+              - path: /admin-api/v1/*
+                method: OPTIONS
         - name: casbin
           required: true
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
             signingKey: auth-service-secret
+            whitelist:
+              - path: /admin-api/v1/*
+                method: OPTIONS
         - name: httplog
           required: true
           options:

@@ -36,6 +36,10 @@ func (s *AuthService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*
 	return s.uc.GetAccessCodes(ctx, authx.UserID(ctx))
 }
 
+func (s *AuthService) GetCurrentUserMenuAuthority(ctx context.Context, req *v1.GetCurrentUserMenuAuthorityRequest) (*v1.GetCurrentUserMenuAuthorityReply, error) {
+	return s.uc.GetCurrentUserMenuAuthority(ctx, req.UserId)
+}
+
 func (s *AuthService) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {
 	return s.uc.CheckAuthorization(ctx, req)
 }

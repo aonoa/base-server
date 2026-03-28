@@ -9,6 +9,7 @@ message Bootstrap {
   Server server = 1;
   Data data = 2;
   Auth auth = 3;
+  Services services = 4;
 }
 
 message Server {
@@ -44,4 +45,15 @@ message Data {
 message Auth {
   string api_key = 1;
   repeated string whitelist = 2;
+}
+
+message Services {
+  message User {
+    string grpc_endpoint = 1;
+  }
+  message Auth {
+    string grpc_endpoint = 1;
+  }
+  User user = 1;
+  Auth auth = 2;
 }

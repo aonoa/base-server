@@ -68,6 +68,7 @@ VALUES
   ('api-user-delete', '2025-08-04 15:05:01+08', '2025-08-04 15:19:37+08', '删除用户', '/user-api/v1/users/{id}', 'DELETE', 'user', '用户服务', 'user'),
   ('api-user-check', '2025-08-04 15:05:44+08', '2025-08-04 15:19:59+08', '用户存在检查', '/user-api/v1/users/check', 'GET', 'user', '用户服务', 'default'),
   ('api-user-password', '2025-08-04 15:13:33+08', '2025-08-04 15:13:33+08', '修改用户密码', '/user-api/v1/users/{user_id}/password', 'POST', 'user', '用户服务', 'default'),
+  ('api-admin-menu-current', '2025-08-04 15:06:10+08', '2025-08-04 15:20:12+08', '获取当前用户菜单', '/admin-api/v1/menus/current', 'GET', 'admin', '管理服务', 'default'),
   ('api-admin-menu-list', '2025-08-04 15:06:14+08', '2025-08-04 15:20:17+08', '获取系统菜单列表', '/admin-api/v1/menus', 'GET', 'admin', '管理服务', 'menu'),
   ('api-admin-menu-create', '2025-08-04 15:06:39+08', '2025-08-04 15:20:24+08', '新增菜单', '/admin-api/v1/menus', 'POST', 'admin', '管理服务', 'menu'),
   ('api-admin-menu-update', '2025-08-04 15:06:59+08', '2025-08-04 15:20:33+08', '更新菜单', '/admin-api/v1/menus/{id}', 'PUT', 'admin', '管理服务', 'menu'),

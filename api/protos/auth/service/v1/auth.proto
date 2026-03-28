@@ -23,6 +23,8 @@ service AuthService {
     };
   }
 
+  rpc GetCurrentUserMenuAuthority(GetCurrentUserMenuAuthorityRequest) returns (GetCurrentUserMenuAuthorityReply);
+
   rpc CheckAuthorization(CheckAuthorizationRequest) returns (CheckAuthorizationReply);
 
   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
@@ -139,6 +141,15 @@ message LoginReply {
 
 message GetAccessCodesReply {
   repeated string access_code_list = 1;
+}
+
+message GetCurrentUserMenuAuthorityRequest {
+  string user_id = 1;
+}
+
+message GetCurrentUserMenuAuthorityReply {
+  bool is_root = 1;
+  repeated int32 menu_ids = 2;
 }
 
 message CheckAuthorizationRequest {
