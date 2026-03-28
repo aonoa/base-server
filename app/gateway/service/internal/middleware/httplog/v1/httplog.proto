@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package base_server.gateway.middleware.httplog.v1;
+
+option go_package = "base-server/app/gateway/service/internal/middleware/httplog/v1;httplogv1";
+
+message HttpLog {
+  string signing_key = 1;
+  repeated WhitelistRule whitelist = 2;
+}
+
+message WhitelistRule {
+  string path = 1;
+  string method = 2;
+  string host = 3;
+}

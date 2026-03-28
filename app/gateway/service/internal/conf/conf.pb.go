@@ -76,6 +76,7 @@ type Bootstrap struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Server        *Server                `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
 	Gateway       *Gateway               `protobuf:"bytes,2,opt,name=gateway,proto3" json:"gateway,omitempty"`
+	Services      *Services              `protobuf:"bytes,3,opt,name=services,proto3" json:"services,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -120,6 +121,13 @@ func (x *Bootstrap) GetServer() *Server {
 func (x *Bootstrap) GetGateway() *Gateway {
 	if x != nil {
 		return x.Gateway
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetServices() *Services {
+	if x != nil {
+		return x.Services
 	}
 	return nil
 }
@@ -244,6 +252,58 @@ func (x *Gateway) GetTlsStore() map[string]*TLS {
 	return nil
 }
 
+type Services struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Auth          *Services_Auth         `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
+	Admin         *Services_Admin        `protobuf:"bytes,2,opt,name=admin,proto3" json:"admin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services) Reset() {
+	*x = Services{}
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services) ProtoMessage() {}
+
+func (x *Services) ProtoReflect() protoreflect.Message {
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services.ProtoReflect.Descriptor instead.
+func (*Services) Descriptor() ([]byte, []int) {
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Services) GetAuth() *Services_Auth {
+	if x != nil {
+		return x.Auth
+	}
+	return nil
+}
+
+func (x *Services) GetAdmin() *Services_Admin {
+	if x != nil {
+		return x.Admin
+	}
+	return nil
+}
+
 type TLS struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Insecure      bool                   `protobuf:"varint,1,opt,name=insecure,proto3" json:"insecure,omitempty"`
@@ -257,7 +317,7 @@ type TLS struct {
 
 func (x *TLS) Reset() {
 	*x = TLS{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[3]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -269,7 +329,7 @@ func (x *TLS) String() string {
 func (*TLS) ProtoMessage() {}
 
 func (x *TLS) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[3]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -282,7 +342,7 @@ func (x *TLS) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TLS.ProtoReflect.Descriptor instead.
 func (*TLS) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{3}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *TLS) GetInsecure() bool {
@@ -339,7 +399,7 @@ type Endpoint struct {
 
 func (x *Endpoint) Reset() {
 	*x = Endpoint{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[4]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -351,7 +411,7 @@ func (x *Endpoint) String() string {
 func (*Endpoint) ProtoMessage() {}
 
 func (x *Endpoint) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[4]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -364,7 +424,7 @@ func (x *Endpoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Endpoint.ProtoReflect.Descriptor instead.
 func (*Endpoint) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{4}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Endpoint) GetPath() string {
@@ -455,7 +515,7 @@ type Middleware struct {
 
 func (x *Middleware) Reset() {
 	*x = Middleware{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[5]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +527,7 @@ func (x *Middleware) String() string {
 func (*Middleware) ProtoMessage() {}
 
 func (x *Middleware) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[5]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +540,7 @@ func (x *Middleware) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Middleware.ProtoReflect.Descriptor instead.
 func (*Middleware) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{5}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Middleware) GetName() string {
@@ -518,7 +578,7 @@ type Backend struct {
 
 func (x *Backend) Reset() {
 	*x = Backend{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[6]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -530,7 +590,7 @@ func (x *Backend) String() string {
 func (*Backend) ProtoMessage() {}
 
 func (x *Backend) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[6]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -543,7 +603,7 @@ func (x *Backend) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Backend.ProtoReflect.Descriptor instead.
 func (*Backend) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{6}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Backend) GetTarget() string {
@@ -596,7 +656,7 @@ type HealthCheck struct {
 
 func (x *HealthCheck) Reset() {
 	*x = HealthCheck{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[7]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -608,7 +668,7 @@ func (x *HealthCheck) String() string {
 func (*HealthCheck) ProtoMessage() {}
 
 func (x *HealthCheck) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[7]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,7 +681,7 @@ func (x *HealthCheck) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HealthCheck.ProtoReflect.Descriptor instead.
 func (*HealthCheck) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{7}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{8}
 }
 
 type Retry struct {
@@ -636,7 +696,7 @@ type Retry struct {
 
 func (x *Retry) Reset() {
 	*x = Retry{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[8]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -648,7 +708,7 @@ func (x *Retry) String() string {
 func (*Retry) ProtoMessage() {}
 
 func (x *Retry) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[8]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -661,7 +721,7 @@ func (x *Retry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Retry.ProtoReflect.Descriptor instead.
 func (*Retry) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{8}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Retry) GetAttempts() uint32 {
@@ -705,7 +765,7 @@ type Condition struct {
 
 func (x *Condition) Reset() {
 	*x = Condition{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[9]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -717,7 +777,7 @@ func (x *Condition) String() string {
 func (*Condition) ProtoMessage() {}
 
 func (x *Condition) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[9]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -730,7 +790,7 @@ func (x *Condition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Condition.ProtoReflect.Descriptor instead.
 func (*Condition) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{9}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Condition) GetCondition() isCondition_Condition {
@@ -787,7 +847,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[10]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -799,7 +859,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[10]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -850,6 +910,94 @@ func (x *Server_HTTP) GetIdleTimeout() *durationpb.Duration {
 	return nil
 }
 
+type Services_Auth struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrpcEndpoint  string                 `protobuf:"bytes,1,opt,name=grpc_endpoint,json=grpcEndpoint,proto3" json:"grpc_endpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services_Auth) Reset() {
+	*x = Services_Auth{}
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services_Auth) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services_Auth) ProtoMessage() {}
+
+func (x *Services_Auth) ProtoReflect() protoreflect.Message {
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services_Auth.ProtoReflect.Descriptor instead.
+func (*Services_Auth) Descriptor() ([]byte, []int) {
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{3, 0}
+}
+
+func (x *Services_Auth) GetGrpcEndpoint() string {
+	if x != nil {
+		return x.GrpcEndpoint
+	}
+	return ""
+}
+
+type Services_Admin struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrpcEndpoint  string                 `protobuf:"bytes,1,opt,name=grpc_endpoint,json=grpcEndpoint,proto3" json:"grpc_endpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services_Admin) Reset() {
+	*x = Services_Admin{}
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services_Admin) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services_Admin) ProtoMessage() {}
+
+func (x *Services_Admin) ProtoReflect() protoreflect.Message {
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services_Admin.ProtoReflect.Descriptor instead.
+func (*Services_Admin) Descriptor() ([]byte, []int) {
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{3, 1}
+}
+
+func (x *Services_Admin) GetGrpcEndpoint() string {
+	if x != nil {
+		return x.GrpcEndpoint
+	}
+	return ""
+}
+
 type Condition_Header struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -860,7 +1008,7 @@ type Condition_Header struct {
 
 func (x *Condition_Header) Reset() {
 	*x = Condition_Header{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -872,7 +1020,7 @@ func (x *Condition_Header) String() string {
 func (*Condition_Header) ProtoMessage() {}
 
 func (x *Condition_Header) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -885,7 +1033,7 @@ func (x *Condition_Header) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Condition_Header.ProtoReflect.Descriptor instead.
 func (*Condition_Header) Descriptor() ([]byte, []int) {
-	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{9, 0}
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{10, 0}
 }
 
 func (x *Condition_Header) GetName() string {
@@ -907,10 +1055,11 @@ var File_app_gateway_service_internal_conf_conf_proto protoreflect.FileDescripto
 const file_app_gateway_service_internal_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	",app/gateway/service/internal/conf/conf.proto\x12\n" +
-	"kratos.api\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\"f\n" +
+	"kratos.api\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\"\x98\x01\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12-\n" +
-	"\agateway\x18\x02 \x01(\v2\x13.kratos.api.GatewayR\agateway\"\xb3\x02\n" +
+	"\agateway\x18\x02 \x01(\v2\x13.kratos.api.GatewayR\agateway\x120\n" +
+	"\bservices\x18\x03 \x01(\v2\x14.kratos.api.ServicesR\bservices\"\xb3\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x1a\xfb\x01\n" +
 	"\x04HTTP\x12\x18\n" +
@@ -927,7 +1076,14 @@ const file_app_gateway_service_internal_conf_conf_proto_rawDesc = "" +
 	"\ttls_store\x18\x05 \x03(\v2!.kratos.api.Gateway.TlsStoreEntryR\btlsStore\x1aL\n" +
 	"\rTlsStoreEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12%\n" +
-	"\x05value\x18\x02 \x01(\v2\x0f.kratos.api.TLSR\x05value:\x028\x01\"\x80\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x0f.kratos.api.TLSR\x05value:\x028\x01\"\xc6\x01\n" +
+	"\bServices\x12-\n" +
+	"\x04auth\x18\x01 \x01(\v2\x19.kratos.api.Services.AuthR\x04auth\x120\n" +
+	"\x05admin\x18\x02 \x01(\v2\x1a.kratos.api.Services.AdminR\x05admin\x1a+\n" +
+	"\x04Auth\x12#\n" +
+	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpoint\x1a,\n" +
+	"\x05Admin\x12#\n" +
+	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpoint\"\x80\x01\n" +
 	"\x03TLS\x12\x1a\n" +
 	"\binsecure\x18\x01 \x01(\bR\binsecure\x12\x16\n" +
 	"\x06cacert\x18\x02 \x01(\tR\x06cacert\x12\x12\n" +
@@ -1002,55 +1158,61 @@ func file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP() []byte {
 }
 
 var file_app_gateway_service_internal_conf_conf_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_app_gateway_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_app_gateway_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_app_gateway_service_internal_conf_conf_proto_goTypes = []any{
 	(Protocol)(0),               // 0: kratos.api.Protocol
 	(*Bootstrap)(nil),           // 1: kratos.api.Bootstrap
 	(*Server)(nil),              // 2: kratos.api.Server
 	(*Gateway)(nil),             // 3: kratos.api.Gateway
-	(*TLS)(nil),                 // 4: kratos.api.TLS
-	(*Endpoint)(nil),            // 5: kratos.api.Endpoint
-	(*Middleware)(nil),          // 6: kratos.api.Middleware
-	(*Backend)(nil),             // 7: kratos.api.Backend
-	(*HealthCheck)(nil),         // 8: kratos.api.HealthCheck
-	(*Retry)(nil),               // 9: kratos.api.Retry
-	(*Condition)(nil),           // 10: kratos.api.Condition
-	(*Server_HTTP)(nil),         // 11: kratos.api.Server.HTTP
-	nil,                         // 12: kratos.api.Gateway.TlsStoreEntry
-	nil,                         // 13: kratos.api.Endpoint.MetadataEntry
-	nil,                         // 14: kratos.api.Backend.MetadataEntry
-	(*Condition_Header)(nil),    // 15: kratos.api.Condition.Header
-	(*durationpb.Duration)(nil), // 16: google.protobuf.Duration
-	(*anypb.Any)(nil),           // 17: google.protobuf.Any
+	(*Services)(nil),            // 4: kratos.api.Services
+	(*TLS)(nil),                 // 5: kratos.api.TLS
+	(*Endpoint)(nil),            // 6: kratos.api.Endpoint
+	(*Middleware)(nil),          // 7: kratos.api.Middleware
+	(*Backend)(nil),             // 8: kratos.api.Backend
+	(*HealthCheck)(nil),         // 9: kratos.api.HealthCheck
+	(*Retry)(nil),               // 10: kratos.api.Retry
+	(*Condition)(nil),           // 11: kratos.api.Condition
+	(*Server_HTTP)(nil),         // 12: kratos.api.Server.HTTP
+	nil,                         // 13: kratos.api.Gateway.TlsStoreEntry
+	(*Services_Auth)(nil),       // 14: kratos.api.Services.Auth
+	(*Services_Admin)(nil),      // 15: kratos.api.Services.Admin
+	nil,                         // 16: kratos.api.Endpoint.MetadataEntry
+	nil,                         // 17: kratos.api.Backend.MetadataEntry
+	(*Condition_Header)(nil),    // 18: kratos.api.Condition.Header
+	(*durationpb.Duration)(nil), // 19: google.protobuf.Duration
+	(*anypb.Any)(nil),           // 20: google.protobuf.Any
 }
 var file_app_gateway_service_internal_conf_conf_proto_depIdxs = []int32{
 	2,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
 	3,  // 1: kratos.api.Bootstrap.gateway:type_name -> kratos.api.Gateway
-	11, // 2: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	5,  // 3: kratos.api.Gateway.endpoints:type_name -> kratos.api.Endpoint
-	6,  // 4: kratos.api.Gateway.middlewares:type_name -> kratos.api.Middleware
-	12, // 5: kratos.api.Gateway.tls_store:type_name -> kratos.api.Gateway.TlsStoreEntry
-	0,  // 6: kratos.api.Endpoint.protocol:type_name -> kratos.api.Protocol
-	16, // 7: kratos.api.Endpoint.timeout:type_name -> google.protobuf.Duration
-	6,  // 8: kratos.api.Endpoint.middlewares:type_name -> kratos.api.Middleware
-	7,  // 9: kratos.api.Endpoint.backends:type_name -> kratos.api.Backend
-	9,  // 10: kratos.api.Endpoint.retry:type_name -> kratos.api.Retry
-	13, // 11: kratos.api.Endpoint.metadata:type_name -> kratos.api.Endpoint.MetadataEntry
-	17, // 12: kratos.api.Middleware.options:type_name -> google.protobuf.Any
-	8,  // 13: kratos.api.Backend.health_check:type_name -> kratos.api.HealthCheck
-	14, // 14: kratos.api.Backend.metadata:type_name -> kratos.api.Backend.MetadataEntry
-	16, // 15: kratos.api.Retry.per_try_timeout:type_name -> google.protobuf.Duration
-	10, // 16: kratos.api.Retry.conditions:type_name -> kratos.api.Condition
-	15, // 17: kratos.api.Condition.by_header:type_name -> kratos.api.Condition.Header
-	16, // 18: kratos.api.Server.HTTP.read_timeout:type_name -> google.protobuf.Duration
-	16, // 19: kratos.api.Server.HTTP.read_header_timeout:type_name -> google.protobuf.Duration
-	16, // 20: kratos.api.Server.HTTP.idle_timeout:type_name -> google.protobuf.Duration
-	4,  // 21: kratos.api.Gateway.TlsStoreEntry.value:type_name -> kratos.api.TLS
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	4,  // 2: kratos.api.Bootstrap.services:type_name -> kratos.api.Services
+	12, // 3: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	6,  // 4: kratos.api.Gateway.endpoints:type_name -> kratos.api.Endpoint
+	7,  // 5: kratos.api.Gateway.middlewares:type_name -> kratos.api.Middleware
+	13, // 6: kratos.api.Gateway.tls_store:type_name -> kratos.api.Gateway.TlsStoreEntry
+	14, // 7: kratos.api.Services.auth:type_name -> kratos.api.Services.Auth
+	15, // 8: kratos.api.Services.admin:type_name -> kratos.api.Services.Admin
+	0,  // 9: kratos.api.Endpoint.protocol:type_name -> kratos.api.Protocol
+	19, // 10: kratos.api.Endpoint.timeout:type_name -> google.protobuf.Duration
+	7,  // 11: kratos.api.Endpoint.middlewares:type_name -> kratos.api.Middleware
+	8,  // 12: kratos.api.Endpoint.backends:type_name -> kratos.api.Backend
+	10, // 13: kratos.api.Endpoint.retry:type_name -> kratos.api.Retry
+	16, // 14: kratos.api.Endpoint.metadata:type_name -> kratos.api.Endpoint.MetadataEntry
+	20, // 15: kratos.api.Middleware.options:type_name -> google.protobuf.Any
+	9,  // 16: kratos.api.Backend.health_check:type_name -> kratos.api.HealthCheck
+	17, // 17: kratos.api.Backend.metadata:type_name -> kratos.api.Backend.MetadataEntry
+	19, // 18: kratos.api.Retry.per_try_timeout:type_name -> google.protobuf.Duration
+	11, // 19: kratos.api.Retry.conditions:type_name -> kratos.api.Condition
+	18, // 20: kratos.api.Condition.by_header:type_name -> kratos.api.Condition.Header
+	19, // 21: kratos.api.Server.HTTP.read_timeout:type_name -> google.protobuf.Duration
+	19, // 22: kratos.api.Server.HTTP.read_header_timeout:type_name -> google.protobuf.Duration
+	19, // 23: kratos.api.Server.HTTP.idle_timeout:type_name -> google.protobuf.Duration
+	5,  // 24: kratos.api.Gateway.TlsStoreEntry.value:type_name -> kratos.api.TLS
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_app_gateway_service_internal_conf_conf_proto_init() }
@@ -1058,8 +1220,8 @@ func file_app_gateway_service_internal_conf_conf_proto_init() {
 	if File_app_gateway_service_internal_conf_conf_proto != nil {
 		return
 	}
-	file_app_gateway_service_internal_conf_conf_proto_msgTypes[6].OneofWrappers = []any{}
-	file_app_gateway_service_internal_conf_conf_proto_msgTypes[9].OneofWrappers = []any{
+	file_app_gateway_service_internal_conf_conf_proto_msgTypes[7].OneofWrappers = []any{}
+	file_app_gateway_service_internal_conf_conf_proto_msgTypes[10].OneofWrappers = []any{
 		(*Condition_ByStatusCode)(nil),
 		(*Condition_ByHeader)(nil),
 	}
@@ -1069,7 +1231,7 @@ func file_app_gateway_service_internal_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_app_gateway_service_internal_conf_conf_proto_rawDesc), len(file_app_gateway_service_internal_conf_conf_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   15,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

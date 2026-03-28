@@ -9,6 +9,7 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Gateway gateway = 2;
+  Services services = 3;
 }
 
 message Server {
@@ -28,6 +29,17 @@ message Gateway {
   repeated Endpoint endpoints = 3;
   repeated Middleware middlewares = 4;
   map<string, TLS> tls_store = 5;
+}
+
+message Services {
+  message Auth {
+    string grpc_endpoint = 1;
+  }
+  message Admin {
+    string grpc_endpoint = 1;
+  }
+  Auth auth = 1;
+  Admin admin = 2;
 }
 
 message TLS {

@@ -71,6 +71,10 @@ func (s *AdminService) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest
 	return &emptypb.Empty{}, s.uc.DeleteMenu(ctx, req)
 }
 
+func (s *AdminService) CreateSysLog(ctx context.Context, req *v1.CreateSysLogRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.CreateSysLog(ctx, req)
+}
+
 func (s *AdminService) GetSysLogList(ctx context.Context, req *v1.GetSysLogListParams) (*v1.GetSysLogListReply, error) {
 	return s.uc.GetSysLogList(ctx, req)
 }

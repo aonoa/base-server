@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"base-server/app/gateway/service/internal/conf"
+	_ "base-server/app/gateway/service/internal/middleware/casbin"
+	_ "base-server/app/gateway/service/internal/middleware/httplog"
 	_ "base-server/app/gateway/service/internal/middleware/jwt"
 	_ "base-server/app/gateway/service/internal/middleware/ratelimit"
 	_ "base-server/app/gateway/service/internal/middleware/whitelist"
@@ -70,7 +72,7 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Gateway, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Gateway, bc.Services, logger)
 	if err != nil {
 		panic(err)
 	}

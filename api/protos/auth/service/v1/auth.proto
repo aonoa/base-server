@@ -23,6 +23,8 @@ service AuthService {
     };
   }
 
+  rpc CheckAuthorization(CheckAuthorizationRequest) returns (CheckAuthorizationReply);
+
   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/auth-api/v1/logout"
@@ -137,6 +139,16 @@ message LoginReply {
 
 message GetAccessCodesReply {
   repeated string access_code_list = 1;
+}
+
+message CheckAuthorizationRequest {
+  string user_id = 1;
+  string path = 2;
+  string method = 3;
+}
+
+message CheckAuthorizationReply {
+  bool allowed = 1;
 }
 
 message RolePageParams {

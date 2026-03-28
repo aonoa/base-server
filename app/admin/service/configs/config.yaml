@@ -15,4 +15,5 @@ data:
     write_timeout: 0.2s
 auth:
   api_key: auth-service-secret
-  whitelist: []
+  whitelist:
+    - /api.admin.service.v1.AdminService/CreateSysLog

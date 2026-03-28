@@ -36,6 +36,10 @@ func (s *AuthService) GetAccessCodes(ctx context.Context, req *emptypb.Empty) (*
 	return s.uc.GetAccessCodes(ctx, authx.UserID(ctx))
 }
 
+func (s *AuthService) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {
+	return s.uc.CheckAuthorization(ctx, req)
+}
+
 func (s *AuthService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }

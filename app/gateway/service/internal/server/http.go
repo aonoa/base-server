@@ -5,6 +5,12 @@ import (
 	"net/http"
 	"os"
 
+	adminv1 "base-server/api/gen/go/admin/service/v1"
+	authv1 "base-server/api/gen/go/auth/service/v1"
+	gwcasbin "base-server/app/gateway/service/internal/middleware/casbin"
+	gwhttplog "base-server/app/gateway/service/internal/middleware/httplog"
+	"base-server/app/gateway/service/internal/conf"
+
 	gwconfigv1 "github.com/go-kratos/gateway/api/gateway/config/v1"
 	"github.com/go-kratos/gateway/client"
 	gwmiddleware "github.com/go-kratos/gateway/middleware"
@@ -20,16 +26,27 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	ktransport "github.com/go-kratos/kratos/v2/transport"
 	"google.golang.org/protobuf/types/known/durationpb"
-
-	"base-server/app/gateway/service/internal/conf"
 )
 
 const (
 	healthPath = "/healthz"
 )
 
-func NewProxyServer(c *conf.Server, gc *conf.Gateway, logger log.Logger) (ktransport.Server, func(), error) {
+func NewProxyServer(c *conf.Server, gc *conf.Gateway, services *conf.Services, clients *GatewayClients, logger log.Logger) (ktransport.Server, func(), error) {
 	_ = logger
+	gwcasbin.SetAuthClient(func() authv1.AuthServiceClient {
+		if clients == nil {
+			return nil
+		}
+		return clients.Auth
+	})
+	gwhttplog.SetAdminClient(func() adminv1.AdminServiceClient {
+		if clients == nil {
+			return nil
+		}
+		return clients.Admin
+	})
+	_ = services
 
 	nativeConfig := buildGatewayConfig(gc)
 	clientFactory := client.NewFactory(nil)

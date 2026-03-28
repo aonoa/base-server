@@ -29,6 +29,7 @@ type AdminRepo interface {
 	DelDept(context.Context, int64) error
 	GetDeptLeafsChildren(context.Context, int64) ([]*ent.Dept, error)
 	GetDeptById(context.Context, int64) (*ent.Dept, error)
+	CreateSysLog(context.Context, *ent.SysLogRecord) error
 	GetSysLogList(context.Context, *v1.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error)
 	GetSysLogInfo(context.Context, string) (*ent.SysLogRecord, error)
 }
@@ -152,6 +153,35 @@ func (uc *AdminUsecase) UpdateMenu(ctx context.Context, req *v1.SysMenuListItem)
 
 func (uc *AdminUsecase) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest) error {
 	return uc.repo.DeleteMenu(ctx, req.Id)
+}
+
+func (uc *AdminUsecase) CreateSysLog(ctx context.Context, req *v1.CreateSysLogRequest) error {
+	requestTime, err := time.Parse(time.DateTime, req.RequestTime)
+	if err != nil {
+		return err
+	}
+	return uc.repo.CreateSysLog(ctx, &ent.SysLogRecord{
+		UserID:      req.UserId,
+		UserName:    req.UserName,
+		IsLogin:     req.IsLogin,
+		SessionID:   req.SessionId,
+		Method:      req.Method,
+		Path:        req.Path,
+		RequestTime: requestTime,
+		IPAddress:   req.IpAddress,
+		IPLocation:  req.IpLocation,
+		Latency:     req.Latency,
+		Os:          req.Os,
+		Browser:     req.Browser,
+		UserAgent:   req.UserAgent,
+		Header:      req.Header,
+		GetParams:   req.GetParams,
+		PostData:    req.PostData,
+		ResCode:     req.ResCode,
+		Reason:      req.Reason,
+		ResStatus:   req.ResStatus,
+		Stack:       req.Stack,
+	})
 }
 
 func (uc *AdminUsecase) GetSysLogList(ctx context.Context, req *v1.GetSysLogListParams) (*v1.GetSysLogListReply, error) {

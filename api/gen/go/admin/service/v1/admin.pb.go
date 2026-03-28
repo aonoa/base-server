@@ -284,24 +284,24 @@ type Meta struct {
 	Order              int64                  `protobuf:"varint,1,opt,name=order,proto3" json:"order,omitempty"`
 	Icon               string                 `protobuf:"bytes,2,opt,name=icon,proto3" json:"icon,omitempty"`
 	Title              string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	ActiveIcon         *string                `protobuf:"bytes,4,opt,name=active_icon,json=activeIcon,proto3,oneof" json:"active_icon,omitempty"`
-	ActivePath         *string                `protobuf:"bytes,5,opt,name=active_path,json=activePath,proto3,oneof" json:"active_path,omitempty"`
-	AffixTab           *bool                  `protobuf:"varint,6,opt,name=affix_tab,json=affixTab,proto3,oneof" json:"affix_tab,omitempty"`
-	AffixTabOrder      *int64                 `protobuf:"varint,7,opt,name=affix_tab_order,json=affixTabOrder,proto3,oneof" json:"affix_tab_order,omitempty"`
+	ActiveIcon         *string                `protobuf:"bytes,4,opt,name=activeIcon,proto3,oneof" json:"activeIcon,omitempty"`
+	ActivePath         *string                `protobuf:"bytes,5,opt,name=activePath,proto3,oneof" json:"activePath,omitempty"`
+	AffixTab           *bool                  `protobuf:"varint,6,opt,name=affixTab,proto3,oneof" json:"affixTab,omitempty"`
+	AffixTabOrder      *int64                 `protobuf:"varint,7,opt,name=affixTabOrder,proto3,oneof" json:"affixTabOrder,omitempty"`
 	Badge              *string                `protobuf:"bytes,8,opt,name=badge,proto3,oneof" json:"badge,omitempty"`
-	BadgeType          *string                `protobuf:"bytes,9,opt,name=badge_type,json=badgeType,proto3,oneof" json:"badge_type,omitempty"`
-	BadgeVariants      *string                `protobuf:"bytes,10,opt,name=badge_variants,json=badgeVariants,proto3,oneof" json:"badge_variants,omitempty"`
-	HideChildrenInMenu *bool                  `protobuf:"varint,11,opt,name=hide_children_in_menu,json=hideChildrenInMenu,proto3,oneof" json:"hide_children_in_menu,omitempty"`
-	HideInBreadcrumb   *bool                  `protobuf:"varint,12,opt,name=hide_in_breadcrumb,json=hideInBreadcrumb,proto3,oneof" json:"hide_in_breadcrumb,omitempty"`
-	HideInMenu         *bool                  `protobuf:"varint,13,opt,name=hide_in_menu,json=hideInMenu,proto3,oneof" json:"hide_in_menu,omitempty"`
-	HideInTab          *bool                  `protobuf:"varint,14,opt,name=hide_in_tab,json=hideInTab,proto3,oneof" json:"hide_in_tab,omitempty"`
-	IframeSrc          *string                `protobuf:"bytes,15,opt,name=iframe_src,json=iframeSrc,proto3,oneof" json:"iframe_src,omitempty"`
+	BadgeType          *string                `protobuf:"bytes,9,opt,name=badgeType,proto3,oneof" json:"badgeType,omitempty"`
+	BadgeVariants      *string                `protobuf:"bytes,10,opt,name=badgeVariants,proto3,oneof" json:"badgeVariants,omitempty"`
+	HideChildrenInMenu *bool                  `protobuf:"varint,11,opt,name=hideChildrenInMenu,proto3,oneof" json:"hideChildrenInMenu,omitempty"`
+	HideInBreadcrumb   *bool                  `protobuf:"varint,12,opt,name=hideInBreadcrumb,proto3,oneof" json:"hideInBreadcrumb,omitempty"`
+	HideInMenu         *bool                  `protobuf:"varint,13,opt,name=hideInMenu,proto3,oneof" json:"hideInMenu,omitempty"`
+	HideInTab          *bool                  `protobuf:"varint,14,opt,name=hideInTab,proto3,oneof" json:"hideInTab,omitempty"`
+	IframeSrc          *string                `protobuf:"bytes,15,opt,name=iframeSrc,proto3,oneof" json:"iframeSrc,omitempty"`
 	Link               *string                `protobuf:"bytes,16,opt,name=link,proto3,oneof" json:"link,omitempty"`
-	KeepAlive          *bool                  `protobuf:"varint,17,opt,name=keep_alive,json=keepAlive,proto3,oneof" json:"keep_alive,omitempty"`
-	MaxNumOfOpenTab    *int64                 `protobuf:"varint,18,opt,name=max_num_of_open_tab,json=maxNumOfOpenTab,proto3,oneof" json:"max_num_of_open_tab,omitempty"`
-	NoBasicLayout      *bool                  `protobuf:"varint,19,opt,name=no_basic_layout,json=noBasicLayout,proto3,oneof" json:"no_basic_layout,omitempty"`
-	OpenInNewWindow    *bool                  `protobuf:"varint,20,opt,name=open_in_new_window,json=openInNewWindow,proto3,oneof" json:"open_in_new_window,omitempty"`
-	IgnoreAccess       bool                   `protobuf:"varint,21,opt,name=ignore_access,json=ignoreAccess,proto3" json:"ignore_access,omitempty"`
+	KeepAlive          *bool                  `protobuf:"varint,17,opt,name=keepAlive,proto3,oneof" json:"keepAlive,omitempty"`
+	MaxNumOfOpenTab    *int64                 `protobuf:"varint,18,opt,name=maxNumOfOpenTab,proto3,oneof" json:"maxNumOfOpenTab,omitempty"`
+	NoBasicLayout      *bool                  `protobuf:"varint,19,opt,name=noBasicLayout,proto3,oneof" json:"noBasicLayout,omitempty"`
+	OpenInNewWindow    *bool                  `protobuf:"varint,20,opt,name=openInNewWindow,proto3,oneof" json:"openInNewWindow,omitempty"`
+	IgnoreAccess       bool                   `protobuf:"varint,21,opt,name=ignoreAccess,proto3" json:"ignoreAccess,omitempty"`
 	Authority          []string               `protobuf:"bytes,22,rep,name=authority,proto3" json:"authority,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -496,7 +496,7 @@ type SysMenuListItem struct {
 	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Component     string                 `protobuf:"bytes,2,opt,name=component,proto3" json:"component,omitempty"`
 	Status        *int32                 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	AuthCode      string                 `protobuf:"bytes,4,opt,name=auth_code,json=authCode,proto3" json:"auth_code,omitempty"`
+	AuthCode      string                 `protobuf:"bytes,4,opt,name=authCode,proto3" json:"authCode,omitempty"`
 	Name          string                 `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
 	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
 	Pid           int64                  `protobuf:"varint,7,opt,name=pid,proto3" json:"pid,omitempty"`
@@ -911,6 +911,202 @@ func (x *DeleteMenuRequest) GetId() int64 {
 	return 0
 }
 
+type CreateSysLogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserName      string                 `protobuf:"bytes,2,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	IsLogin       bool                   `protobuf:"varint,3,opt,name=is_login,json=isLogin,proto3" json:"is_login,omitempty"`
+	SessionId     string                 `protobuf:"bytes,4,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
+	Path          string                 `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
+	RequestTime   string                 `protobuf:"bytes,7,opt,name=request_time,json=requestTime,proto3" json:"request_time,omitempty"`
+	IpAddress     string                 `protobuf:"bytes,8,opt,name=ip_address,json=ipAddress,proto3" json:"ip_address,omitempty"`
+	IpLocation    string                 `protobuf:"bytes,9,opt,name=ip_location,json=ipLocation,proto3" json:"ip_location,omitempty"`
+	Latency       int64                  `protobuf:"varint,10,opt,name=latency,proto3" json:"latency,omitempty"`
+	Os            string                 `protobuf:"bytes,11,opt,name=os,proto3" json:"os,omitempty"`
+	Browser       string                 `protobuf:"bytes,12,opt,name=browser,proto3" json:"browser,omitempty"`
+	UserAgent     string                 `protobuf:"bytes,13,opt,name=user_agent,json=userAgent,proto3" json:"user_agent,omitempty"`
+	Header        string                 `protobuf:"bytes,14,opt,name=header,proto3" json:"header,omitempty"`
+	GetParams     string                 `protobuf:"bytes,15,opt,name=get_params,json=getParams,proto3" json:"get_params,omitempty"`
+	PostData      string                 `protobuf:"bytes,16,opt,name=post_data,json=postData,proto3" json:"post_data,omitempty"`
+	ResCode       int32                  `protobuf:"varint,17,opt,name=res_code,json=resCode,proto3" json:"res_code,omitempty"`
+	Reason        string                 `protobuf:"bytes,18,opt,name=reason,proto3" json:"reason,omitempty"`
+	ResStatus     bool                   `protobuf:"varint,19,opt,name=res_status,json=resStatus,proto3" json:"res_status,omitempty"`
+	Stack         string                 `protobuf:"bytes,20,opt,name=stack,proto3" json:"stack,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateSysLogRequest) Reset() {
+	*x = CreateSysLogRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSysLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSysLogRequest) ProtoMessage() {}
+
+func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSysLogRequest.ProtoReflect.Descriptor instead.
+func (*CreateSysLogRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *CreateSysLogRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetUserName() string {
+	if x != nil {
+		return x.UserName
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetIsLogin() bool {
+	if x != nil {
+		return x.IsLogin
+	}
+	return false
+}
+
+func (x *CreateSysLogRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetRequestTime() string {
+	if x != nil {
+		return x.RequestTime
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetIpAddress() string {
+	if x != nil {
+		return x.IpAddress
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetIpLocation() string {
+	if x != nil {
+		return x.IpLocation
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetLatency() int64 {
+	if x != nil {
+		return x.Latency
+	}
+	return 0
+}
+
+func (x *CreateSysLogRequest) GetOs() string {
+	if x != nil {
+		return x.Os
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetBrowser() string {
+	if x != nil {
+		return x.Browser
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetUserAgent() string {
+	if x != nil {
+		return x.UserAgent
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetHeader() string {
+	if x != nil {
+		return x.Header
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetGetParams() string {
+	if x != nil {
+		return x.GetParams
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetPostData() string {
+	if x != nil {
+		return x.PostData
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetResCode() int32 {
+	if x != nil {
+		return x.ResCode
+	}
+	return 0
+}
+
+func (x *CreateSysLogRequest) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+func (x *CreateSysLogRequest) GetResStatus() bool {
+	if x != nil {
+		return x.ResStatus
+	}
+	return false
+}
+
+func (x *CreateSysLogRequest) GetStack() string {
+	if x != nil {
+		return x.Stack
+	}
+	return ""
+}
+
 type GetSysLogListParams struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	CurrentPage      int64                  `protobuf:"varint,20,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
@@ -933,7 +1129,7 @@ type GetSysLogListParams struct {
 
 func (x *GetSysLogListParams) Reset() {
 	*x = GetSysLogListParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -945,7 +1141,7 @@ func (x *GetSysLogListParams) String() string {
 func (*GetSysLogListParams) ProtoMessage() {}
 
 func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -958,7 +1154,7 @@ func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogListParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetSysLogListParams) GetCurrentPage() int64 {
@@ -1080,7 +1276,7 @@ type SysLogItem struct {
 
 func (x *SysLogItem) Reset() {
 	*x = SysLogItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1092,7 +1288,7 @@ func (x *SysLogItem) String() string {
 func (*SysLogItem) ProtoMessage() {}
 
 func (x *SysLogItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1105,7 +1301,7 @@ func (x *SysLogItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SysLogItem.ProtoReflect.Descriptor instead.
 func (*SysLogItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SysLogItem) GetId() string {
@@ -1209,7 +1405,7 @@ type GetSysLogListReply struct {
 
 func (x *GetSysLogListReply) Reset() {
 	*x = GetSysLogListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1221,7 +1417,7 @@ func (x *GetSysLogListReply) String() string {
 func (*GetSysLogListReply) ProtoMessage() {}
 
 func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1234,7 +1430,7 @@ func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetSysLogListReply) GetItems() []*SysLogItem {
@@ -1260,7 +1456,7 @@ type GetSysLogInfoParams struct {
 
 func (x *GetSysLogInfoParams) Reset() {
 	*x = GetSysLogInfoParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1272,7 +1468,7 @@ func (x *GetSysLogInfoParams) String() string {
 func (*GetSysLogInfoParams) ProtoMessage() {}
 
 func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1285,7 +1481,7 @@ func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetSysLogInfoParams) GetId() string {
@@ -1325,7 +1521,7 @@ type GetSysLogInfoReply struct {
 
 func (x *GetSysLogInfoReply) Reset() {
 	*x = GetSysLogInfoReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1337,7 +1533,7 @@ func (x *GetSysLogInfoReply) String() string {
 func (*GetSysLogInfoReply) ProtoMessage() {}
 
 func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1350,7 +1546,7 @@ func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetSysLogInfoReply) GetId() string {
@@ -1533,61 +1729,64 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"MenuParams\x12\x1b\n" +
 	"\tmenu_name\x18\x01 \x01(\tR\bmenuName\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\"\xe3\b\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\"\xac\b\n" +
 	"\x04Meta\x12\x14\n" +
 	"\x05order\x18\x01 \x01(\x03R\x05order\x12\x12\n" +
 	"\x04icon\x18\x02 \x01(\tR\x04icon\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12$\n" +
-	"\vactive_icon\x18\x04 \x01(\tH\x00R\n" +
-	"activeIcon\x88\x01\x01\x12$\n" +
-	"\vactive_path\x18\x05 \x01(\tH\x01R\n" +
-	"activePath\x88\x01\x01\x12 \n" +
-	"\taffix_tab\x18\x06 \x01(\bH\x02R\baffixTab\x88\x01\x01\x12+\n" +
-	"\x0faffix_tab_order\x18\a \x01(\x03H\x03R\raffixTabOrder\x88\x01\x01\x12\x19\n" +
-	"\x05badge\x18\b \x01(\tH\x04R\x05badge\x88\x01\x01\x12\"\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12#\n" +
 	"\n" +
-	"badge_type\x18\t \x01(\tH\x05R\tbadgeType\x88\x01\x01\x12*\n" +
-	"\x0ebadge_variants\x18\n" +
-	" \x01(\tH\x06R\rbadgeVariants\x88\x01\x01\x126\n" +
-	"\x15hide_children_in_menu\x18\v \x01(\bH\aR\x12hideChildrenInMenu\x88\x01\x01\x121\n" +
-	"\x12hide_in_breadcrumb\x18\f \x01(\bH\bR\x10hideInBreadcrumb\x88\x01\x01\x12%\n" +
-	"\fhide_in_menu\x18\r \x01(\bH\tR\n" +
-	"hideInMenu\x88\x01\x01\x12#\n" +
-	"\vhide_in_tab\x18\x0e \x01(\bH\n" +
-	"R\thideInTab\x88\x01\x01\x12\"\n" +
+	"activeIcon\x18\x04 \x01(\tH\x00R\n" +
+	"activeIcon\x88\x01\x01\x12#\n" +
 	"\n" +
-	"iframe_src\x18\x0f \x01(\tH\vR\tiframeSrc\x88\x01\x01\x12\x17\n" +
-	"\x04link\x18\x10 \x01(\tH\fR\x04link\x88\x01\x01\x12\"\n" +
+	"activePath\x18\x05 \x01(\tH\x01R\n" +
+	"activePath\x88\x01\x01\x12\x1f\n" +
+	"\baffixTab\x18\x06 \x01(\bH\x02R\baffixTab\x88\x01\x01\x12)\n" +
+	"\raffixTabOrder\x18\a \x01(\x03H\x03R\raffixTabOrder\x88\x01\x01\x12\x19\n" +
+	"\x05badge\x18\b \x01(\tH\x04R\x05badge\x88\x01\x01\x12!\n" +
+	"\tbadgeType\x18\t \x01(\tH\x05R\tbadgeType\x88\x01\x01\x12)\n" +
+	"\rbadgeVariants\x18\n" +
+	" \x01(\tH\x06R\rbadgeVariants\x88\x01\x01\x123\n" +
+	"\x12hideChildrenInMenu\x18\v \x01(\bH\aR\x12hideChildrenInMenu\x88\x01\x01\x12/\n" +
+	"\x10hideInBreadcrumb\x18\f \x01(\bH\bR\x10hideInBreadcrumb\x88\x01\x01\x12#\n" +
 	"\n" +
-	"keep_alive\x18\x11 \x01(\bH\rR\tkeepAlive\x88\x01\x01\x121\n" +
-	"\x13max_num_of_open_tab\x18\x12 \x01(\x03H\x0eR\x0fmaxNumOfOpenTab\x88\x01\x01\x12+\n" +
-	"\x0fno_basic_layout\x18\x13 \x01(\bH\x0fR\rnoBasicLayout\x88\x01\x01\x120\n" +
-	"\x12open_in_new_window\x18\x14 \x01(\bH\x10R\x0fopenInNewWindow\x88\x01\x01\x12#\n" +
-	"\rignore_access\x18\x15 \x01(\bR\fignoreAccess\x12\x1c\n" +
-	"\tauthority\x18\x16 \x03(\tR\tauthorityB\x0e\n" +
-	"\f_active_iconB\x0e\n" +
-	"\f_active_pathB\f\n" +
+	"hideInMenu\x18\r \x01(\bH\tR\n" +
+	"hideInMenu\x88\x01\x01\x12!\n" +
+	"\thideInTab\x18\x0e \x01(\bH\n" +
+	"R\thideInTab\x88\x01\x01\x12!\n" +
+	"\tiframeSrc\x18\x0f \x01(\tH\vR\tiframeSrc\x88\x01\x01\x12\x17\n" +
+	"\x04link\x18\x10 \x01(\tH\fR\x04link\x88\x01\x01\x12!\n" +
+	"\tkeepAlive\x18\x11 \x01(\bH\rR\tkeepAlive\x88\x01\x01\x12-\n" +
+	"\x0fmaxNumOfOpenTab\x18\x12 \x01(\x03H\x0eR\x0fmaxNumOfOpenTab\x88\x01\x01\x12)\n" +
+	"\rnoBasicLayout\x18\x13 \x01(\bH\x0fR\rnoBasicLayout\x88\x01\x01\x12-\n" +
+	"\x0fopenInNewWindow\x18\x14 \x01(\bH\x10R\x0fopenInNewWindow\x88\x01\x01\x12\"\n" +
+	"\fignoreAccess\x18\x15 \x01(\bR\fignoreAccess\x12\x1c\n" +
+	"\tauthority\x18\x16 \x03(\tR\tauthorityB\r\n" +
+	"\v_activeIconB\r\n" +
+	"\v_activePathB\v\n" +
+	"\t_affixTabB\x10\n" +
+	"\x0e_affixTabOrderB\b\n" +
+	"\x06_badgeB\f\n" +
 	"\n" +
-	"_affix_tabB\x12\n" +
-	"\x10_affix_tab_orderB\b\n" +
-	"\x06_badgeB\r\n" +
-	"\v_badge_typeB\x11\n" +
-	"\x0f_badge_variantsB\x18\n" +
-	"\x16_hide_children_in_menuB\x15\n" +
-	"\x13_hide_in_breadcrumbB\x0f\n" +
-	"\r_hide_in_menuB\x0e\n" +
-	"\f_hide_in_tabB\r\n" +
-	"\v_iframe_srcB\a\n" +
-	"\x05_linkB\r\n" +
-	"\v_keep_aliveB\x16\n" +
-	"\x14_max_num_of_open_tabB\x12\n" +
-	"\x10_no_basic_layoutB\x15\n" +
-	"\x13_open_in_new_window\"\x94\x03\n" +
+	"_badgeTypeB\x10\n" +
+	"\x0e_badgeVariantsB\x15\n" +
+	"\x13_hideChildrenInMenuB\x13\n" +
+	"\x11_hideInBreadcrumbB\r\n" +
+	"\v_hideInMenuB\f\n" +
+	"\n" +
+	"_hideInTabB\f\n" +
+	"\n" +
+	"_iframeSrcB\a\n" +
+	"\x05_linkB\f\n" +
+	"\n" +
+	"_keepAliveB\x12\n" +
+	"\x10_maxNumOfOpenTabB\x10\n" +
+	"\x0e_noBasicLayoutB\x12\n" +
+	"\x10_openInNewWindow\"\x93\x03\n" +
 	"\x0fSysMenuListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x1c\n" +
 	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x1b\n" +
-	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1b\n" +
-	"\tauth_code\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +
+	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1a\n" +
+	"\bauthCode\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
 	"\x04path\x18\x06 \x01(\tR\x04path\x12\x10\n" +
 	"\x03pid\x18\a \x01(\x03R\x03pid\x12\x1f\n" +
@@ -1614,7 +1813,35 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x15IsMenuPathExistsReply\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\bR\x04data\"#\n" +
 	"\x11DeleteMenuRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xbc\x03\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xb3\x04\n" +
+	"\x13CreateSysLogRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
+	"\tuser_name\x18\x02 \x01(\tR\buserName\x12\x19\n" +
+	"\bis_login\x18\x03 \x01(\bR\aisLogin\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x04 \x01(\tR\tsessionId\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\x12\x12\n" +
+	"\x04path\x18\x06 \x01(\tR\x04path\x12!\n" +
+	"\frequest_time\x18\a \x01(\tR\vrequestTime\x12\x1d\n" +
+	"\n" +
+	"ip_address\x18\b \x01(\tR\tipAddress\x12\x1f\n" +
+	"\vip_location\x18\t \x01(\tR\n" +
+	"ipLocation\x12\x18\n" +
+	"\alatency\x18\n" +
+	" \x01(\x03R\alatency\x12\x0e\n" +
+	"\x02os\x18\v \x01(\tR\x02os\x12\x18\n" +
+	"\abrowser\x18\f \x01(\tR\abrowser\x12\x1d\n" +
+	"\n" +
+	"user_agent\x18\r \x01(\tR\tuserAgent\x12\x16\n" +
+	"\x06header\x18\x0e \x01(\tR\x06header\x12\x1d\n" +
+	"\n" +
+	"get_params\x18\x0f \x01(\tR\tgetParams\x12\x1b\n" +
+	"\tpost_data\x18\x10 \x01(\tR\bpostData\x12\x19\n" +
+	"\bres_code\x18\x11 \x01(\x05R\aresCode\x12\x16\n" +
+	"\x06reason\x18\x12 \x01(\tR\x06reason\x12\x1d\n" +
+	"\n" +
+	"res_status\x18\x13 \x01(\bR\tresStatus\x12\x14\n" +
+	"\x05stack\x18\x14 \x01(\tR\x05stack\"\xbc\x03\n" +
 	"\x13GetSysLogListParams\x12!\n" +
 	"\fcurrent_page\x18\x14 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x15 \x01(\x03R\bpageSize\x12\x17\n" +
@@ -1688,7 +1915,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"res_status\x18\x14 \x01(\bR\tresStatus\x12\x14\n" +
 	"\x05stack\x18\x15 \x01(\tR\x05stack\x12\x1f\n" +
 	"\vcreate_time\x18\x16 \x01(\tR\n" +
-	"createTime2\xda\v\n" +
+	"createTime2\xad\f\n" +
 	"\fAdminService\x12j\n" +
 	"\vGetDeptList\x12\x16.google.protobuf.Empty\x1a&.api.admin.service.v1.GetDeptListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/depts\x12q\n" +
 	"\aAddDept\x12\".api.admin.service.v1.DeptListItem\x1a\".api.admin.service.v1.DeptListItem\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin-api/v1/depts\x12y\n" +
@@ -1703,7 +1930,8 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"UpdateMenu\x12%.api.admin.service.v1.SysMenuListItem\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin-api/v1/menus/{id}\x12o\n" +
 	"\n" +
-	"DeleteMenu\x12'.api.admin.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/menus/{id}\x12\x80\x01\n" +
+	"DeleteMenu\x12'.api.admin.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/menus/{id}\x12Q\n" +
+	"\fCreateSysLog\x12).api.admin.service.v1.CreateSysLogRequest\x1a\x16.google.protobuf.Empty\x12\x80\x01\n" +
 	"\rGetSysLogList\x12).api.admin.service.v1.GetSysLogListParams\x1a(.api.admin.service.v1.GetSysLogListReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/admin-api/v1/logs\x12\x85\x01\n" +
 	"\rGetSysLogInfo\x12).api.admin.service.v1.GetSysLogInfoParams\x1a(.api.admin.service.v1.GetSysLogInfoReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/admin-api/v1/logs/{id}BD\n" +
 	"\x14api.admin.service.v1P\x01Z*base-server/api/gen/go/admin/service/v1;v1b\x06proto3"
@@ -1720,7 +1948,7 @@ func file_admin_service_v1_admin_proto_rawDescGZIP() []byte {
 	return file_admin_service_v1_admin_proto_rawDescData
 }
 
-var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_admin_service_v1_admin_proto_goTypes = []any{
 	(*DeptListItem)(nil),            // 0: api.admin.service.v1.DeptListItem
 	(*DeleteDept)(nil),              // 1: api.admin.service.v1.DeleteDept
@@ -1734,12 +1962,13 @@ var file_admin_service_v1_admin_proto_goTypes = []any{
 	(*IsMenuPathExistsRequest)(nil), // 9: api.admin.service.v1.IsMenuPathExistsRequest
 	(*IsMenuPathExistsReply)(nil),   // 10: api.admin.service.v1.IsMenuPathExistsReply
 	(*DeleteMenuRequest)(nil),       // 11: api.admin.service.v1.DeleteMenuRequest
-	(*GetSysLogListParams)(nil),     // 12: api.admin.service.v1.GetSysLogListParams
-	(*SysLogItem)(nil),              // 13: api.admin.service.v1.SysLogItem
-	(*GetSysLogListReply)(nil),      // 14: api.admin.service.v1.GetSysLogListReply
-	(*GetSysLogInfoParams)(nil),     // 15: api.admin.service.v1.GetSysLogInfoParams
-	(*GetSysLogInfoReply)(nil),      // 16: api.admin.service.v1.GetSysLogInfoReply
-	(*emptypb.Empty)(nil),           // 17: google.protobuf.Empty
+	(*CreateSysLogRequest)(nil),     // 12: api.admin.service.v1.CreateSysLogRequest
+	(*GetSysLogListParams)(nil),     // 13: api.admin.service.v1.GetSysLogListParams
+	(*SysLogItem)(nil),              // 14: api.admin.service.v1.SysLogItem
+	(*GetSysLogListReply)(nil),      // 15: api.admin.service.v1.GetSysLogListReply
+	(*GetSysLogInfoParams)(nil),     // 16: api.admin.service.v1.GetSysLogInfoParams
+	(*GetSysLogInfoReply)(nil),      // 17: api.admin.service.v1.GetSysLogInfoReply
+	(*emptypb.Empty)(nil),           // 18: google.protobuf.Empty
 }
 var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	0,  // 0: api.admin.service.v1.DeptListItem.children:type_name -> api.admin.service.v1.DeptListItem
@@ -1747,8 +1976,8 @@ var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	4,  // 2: api.admin.service.v1.SysMenuListItem.meta:type_name -> api.admin.service.v1.Meta
 	5,  // 3: api.admin.service.v1.SysMenuListItem.children:type_name -> api.admin.service.v1.SysMenuListItem
 	5,  // 4: api.admin.service.v1.GetSysMenuListReply.items:type_name -> api.admin.service.v1.SysMenuListItem
-	13, // 5: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
-	17, // 6: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
+	14, // 5: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
+	18, // 6: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
 	0,  // 7: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
 	0,  // 8: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
 	1,  // 9: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
@@ -1758,22 +1987,24 @@ var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	5,  // 13: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
 	5,  // 14: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
 	11, // 15: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
-	12, // 16: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
-	15, // 17: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
-	2,  // 18: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
-	0,  // 19: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
-	0,  // 20: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
-	17, // 21: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
-	6,  // 22: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
-	8,  // 23: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
-	10, // 24: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
-	17, // 25: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
-	17, // 26: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
-	17, // 27: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
-	14, // 28: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
-	16, // 29: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
-	18, // [18:30] is the sub-list for method output_type
-	6,  // [6:18] is the sub-list for method input_type
+	12, // 16: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
+	13, // 17: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
+	16, // 18: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
+	2,  // 19: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
+	0,  // 20: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
+	0,  // 21: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
+	18, // 22: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
+	6,  // 23: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
+	8,  // 24: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
+	10, // 25: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
+	18, // 26: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
+	18, // 27: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
+	18, // 28: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
+	18, // 29: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
+	15, // 30: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
+	17, // 31: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
+	19, // [19:32] is the sub-list for method output_type
+	6,  // [6:19] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name
@@ -1792,7 +2023,7 @@ func file_admin_service_v1_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_admin_service_v1_admin_proto_rawDesc), len(file_admin_service_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -136,6 +136,32 @@ func (r *adminRepo) GetDeptById(ctx context.Context, id int64) (*ent.Dept, error
 	return r.data.db.Dept.Get(ctx, id)
 }
 
+func (r *adminRepo) CreateSysLog(ctx context.Context, item *ent.SysLogRecord) error {
+	_, err := r.data.db.SysLogRecord.Create().
+		SetUserID(item.UserID).
+		SetUserName(item.UserName).
+		SetIsLogin(item.IsLogin).
+		SetSessionID(item.SessionID).
+		SetMethod(item.Method).
+		SetPath(item.Path).
+		SetRequestTime(item.RequestTime).
+		SetIPAddress(item.IPAddress).
+		SetIPLocation(item.IPLocation).
+		SetLatency(item.Latency).
+		SetOs(item.Os).
+		SetBrowser(item.Browser).
+		SetUserAgent(item.UserAgent).
+		SetHeader(item.Header).
+		SetGetParams(item.GetParams).
+		SetPostData(item.PostData).
+		SetResCode(item.ResCode).
+		SetReason(item.Reason).
+		SetResStatus(item.ResStatus).
+		SetStack(item.Stack).
+		Save(ctx)
+	return err
+}
+
 func adminTables() []*schema.Table {
 	return []*schema.Table{
 		migrate.SysMenuTable,

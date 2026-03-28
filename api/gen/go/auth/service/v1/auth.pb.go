@@ -187,6 +187,110 @@ func (x *GetAccessCodesReply) GetAccessCodeList() []string {
 	return nil
 }
 
+type CheckAuthorizationRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckAuthorizationRequest) Reset() {
+	*x = CheckAuthorizationRequest{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckAuthorizationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckAuthorizationRequest) ProtoMessage() {}
+
+func (x *CheckAuthorizationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckAuthorizationRequest.ProtoReflect.Descriptor instead.
+func (*CheckAuthorizationRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CheckAuthorizationRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetPath() string {
+	if x != nil {
+		return x.Path
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+type CheckAuthorizationReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Allowed       bool                   `protobuf:"varint,1,opt,name=allowed,proto3" json:"allowed,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CheckAuthorizationReply) Reset() {
+	*x = CheckAuthorizationReply{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CheckAuthorizationReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckAuthorizationReply) ProtoMessage() {}
+
+func (x *CheckAuthorizationReply) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckAuthorizationReply.ProtoReflect.Descriptor instead.
+func (*CheckAuthorizationReply) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CheckAuthorizationReply) GetAllowed() bool {
+	if x != nil {
+		return x.Allowed
+	}
+	return false
+}
+
 type RolePageParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
@@ -200,7 +304,7 @@ type RolePageParams struct {
 
 func (x *RolePageParams) Reset() {
 	*x = RolePageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -212,7 +316,7 @@ func (x *RolePageParams) String() string {
 func (*RolePageParams) ProtoMessage() {}
 
 func (x *RolePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -225,7 +329,7 @@ func (x *RolePageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePageParams.ProtoReflect.Descriptor instead.
 func (*RolePageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{3}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *RolePageParams) GetCurrentPage() int64 {
@@ -281,7 +385,7 @@ type RoleListItem struct {
 
 func (x *RoleListItem) Reset() {
 	*x = RoleListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -293,7 +397,7 @@ func (x *RoleListItem) String() string {
 func (*RoleListItem) ProtoMessage() {}
 
 func (x *RoleListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -306,7 +410,7 @@ func (x *RoleListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleListItem.ProtoReflect.Descriptor instead.
 func (*RoleListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{4}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RoleListItem) GetId() string {
@@ -389,7 +493,7 @@ type GetRoleListByPageReply struct {
 
 func (x *GetRoleListByPageReply) Reset() {
 	*x = GetRoleListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -401,7 +505,7 @@ func (x *GetRoleListByPageReply) String() string {
 func (*GetRoleListByPageReply) ProtoMessage() {}
 
 func (x *GetRoleListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -414,7 +518,7 @@ func (x *GetRoleListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetRoleListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{5}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetRoleListByPageReply) GetItems() []*RoleListItem {
@@ -440,7 +544,7 @@ type DeleteRole struct {
 
 func (x *DeleteRole) Reset() {
 	*x = DeleteRole{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -452,7 +556,7 @@ func (x *DeleteRole) String() string {
 func (*DeleteRole) ProtoMessage() {}
 
 func (x *DeleteRole) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -465,7 +569,7 @@ func (x *DeleteRole) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRole.ProtoReflect.Descriptor instead.
 func (*DeleteRole) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{6}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeleteRole) GetId() string {
@@ -489,7 +593,7 @@ type GetApiPageParams struct {
 
 func (x *GetApiPageParams) Reset() {
 	*x = GetApiPageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -501,7 +605,7 @@ func (x *GetApiPageParams) String() string {
 func (*GetApiPageParams) ProtoMessage() {}
 
 func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -514,7 +618,7 @@ func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetApiPageParams.ProtoReflect.Descriptor instead.
 func (*GetApiPageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{7}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetApiPageParams) GetCurrentPage() int64 {
@@ -574,7 +678,7 @@ type ApiListItem struct {
 
 func (x *ApiListItem) Reset() {
 	*x = ApiListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -586,7 +690,7 @@ func (x *ApiListItem) String() string {
 func (*ApiListItem) ProtoMessage() {}
 
 func (x *ApiListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -599,7 +703,7 @@ func (x *ApiListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApiListItem.ProtoReflect.Descriptor instead.
 func (*ApiListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{8}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ApiListItem) GetId() string {
@@ -661,7 +765,7 @@ type GetApiListByPageReply struct {
 
 func (x *GetApiListByPageReply) Reset() {
 	*x = GetApiListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -673,7 +777,7 @@ func (x *GetApiListByPageReply) String() string {
 func (*GetApiListByPageReply) ProtoMessage() {}
 
 func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -686,7 +790,7 @@ func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetApiListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetApiListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{9}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetApiListByPageReply) GetItems() []*ApiListItem {
@@ -712,7 +816,7 @@ type DeleteApi struct {
 
 func (x *DeleteApi) Reset() {
 	*x = DeleteApi{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -724,7 +828,7 @@ func (x *DeleteApi) String() string {
 func (*DeleteApi) ProtoMessage() {}
 
 func (x *DeleteApi) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,7 +841,7 @@ func (x *DeleteApi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteApi.ProtoReflect.Descriptor instead.
 func (*DeleteApi) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{10}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DeleteApi) GetId() string {
@@ -762,7 +866,7 @@ type GetResourcePageParams struct {
 
 func (x *GetResourcePageParams) Reset() {
 	*x = GetResourcePageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -774,7 +878,7 @@ func (x *GetResourcePageParams) String() string {
 func (*GetResourcePageParams) ProtoMessage() {}
 
 func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -787,7 +891,7 @@ func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourcePageParams.ProtoReflect.Descriptor instead.
 func (*GetResourcePageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{11}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetResourcePageParams) GetCurrentPage() int64 {
@@ -853,7 +957,7 @@ type ResourceListItem struct {
 
 func (x *ResourceListItem) Reset() {
 	*x = ResourceListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -865,7 +969,7 @@ func (x *ResourceListItem) String() string {
 func (*ResourceListItem) ProtoMessage() {}
 
 func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -878,7 +982,7 @@ func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResourceListItem.ProtoReflect.Descriptor instead.
 func (*ResourceListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{12}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ResourceListItem) GetId() string {
@@ -933,7 +1037,7 @@ type GetResourceListByPageReply struct {
 
 func (x *GetResourceListByPageReply) Reset() {
 	*x = GetResourceListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -945,7 +1049,7 @@ func (x *GetResourceListByPageReply) String() string {
 func (*GetResourceListByPageReply) ProtoMessage() {}
 
 func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -958,7 +1062,7 @@ func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetResourceListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{13}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetResourceListByPageReply) GetItems() []*ResourceListItem {
@@ -984,7 +1088,7 @@ type DeleteResource struct {
 
 func (x *DeleteResource) Reset() {
 	*x = DeleteResource{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -996,7 +1100,7 @@ func (x *DeleteResource) String() string {
 func (*DeleteResource) ProtoMessage() {}
 
 func (x *DeleteResource) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1009,7 +1113,7 @@ func (x *DeleteResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResource.ProtoReflect.Descriptor instead.
 func (*DeleteResource) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{14}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteResource) GetId() string {
@@ -1035,7 +1139,13 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x04 \x01(\tR\tsessionId\"?\n" +
 	"\x13GetAccessCodesReply\x12(\n" +
-	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"\x95\x01\n" +
+	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"`\n" +
+	"\x19CheckAuthorizationRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\"3\n" +
+	"\x17CheckAuthorizationReply\x12\x18\n" +
+	"\aallowed\x18\x01 \x01(\bR\aallowed\"\x95\x01\n" +
 	"\x0eRolePageParams\x12!\n" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
@@ -1100,10 +1210,11 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\x05items\x18\x01 \x03(\v2%.api.auth.service.v1.ResourceListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\" \n" +
 	"\x0eDeleteResource\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id2\xae\x0f\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id2\xa2\x10\n" +
 	"\vAuthService\x12j\n" +
 	"\x05Login\x12!.api.auth.service.v1.LoginRequest\x1a\x1f.api.auth.service.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/auth-api/v1/login\x12u\n" +
-	"\x0eGetAccessCodes\x12\x16.google.protobuf.Empty\x1a(.api.auth.service.v1.GetAccessCodesReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/auth-api/v1/access-codes\x12X\n" +
+	"\x0eGetAccessCodes\x12\x16.google.protobuf.Empty\x1a(.api.auth.service.v1.GetAccessCodesReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/auth-api/v1/access-codes\x12r\n" +
+	"\x12CheckAuthorization\x12..api.auth.service.v1.CheckAuthorizationRequest\x1a,.api.auth.service.v1.CheckAuthorizationReply\x12X\n" +
 	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/auth-api/v1/logout\x12h\n" +
 	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x1f.api.auth.service.v1.LoginReply\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/auth-api/v1/refresh\x12e\n" +
 	"\fReLoadPolicy\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/auth-api/v1/reload-policy\x12{\n" +
@@ -1135,65 +1246,69 @@ func file_auth_service_v1_auth_proto_rawDescGZIP() []byte {
 	return file_auth_service_v1_auth_proto_rawDescData
 }
 
-var file_auth_service_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_auth_service_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_auth_service_v1_auth_proto_goTypes = []any{
 	(*LoginRequest)(nil),               // 0: api.auth.service.v1.LoginRequest
 	(*LoginReply)(nil),                 // 1: api.auth.service.v1.LoginReply
 	(*GetAccessCodesReply)(nil),        // 2: api.auth.service.v1.GetAccessCodesReply
-	(*RolePageParams)(nil),             // 3: api.auth.service.v1.RolePageParams
-	(*RoleListItem)(nil),               // 4: api.auth.service.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),     // 5: api.auth.service.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),                 // 6: api.auth.service.v1.DeleteRole
-	(*GetApiPageParams)(nil),           // 7: api.auth.service.v1.GetApiPageParams
-	(*ApiListItem)(nil),                // 8: api.auth.service.v1.ApiListItem
-	(*GetApiListByPageReply)(nil),      // 9: api.auth.service.v1.GetApiListByPageReply
-	(*DeleteApi)(nil),                  // 10: api.auth.service.v1.DeleteApi
-	(*GetResourcePageParams)(nil),      // 11: api.auth.service.v1.GetResourcePageParams
-	(*ResourceListItem)(nil),           // 12: api.auth.service.v1.ResourceListItem
-	(*GetResourceListByPageReply)(nil), // 13: api.auth.service.v1.GetResourceListByPageReply
-	(*DeleteResource)(nil),             // 14: api.auth.service.v1.DeleteResource
-	(*emptypb.Empty)(nil),              // 15: google.protobuf.Empty
+	(*CheckAuthorizationRequest)(nil),  // 3: api.auth.service.v1.CheckAuthorizationRequest
+	(*CheckAuthorizationReply)(nil),    // 4: api.auth.service.v1.CheckAuthorizationReply
+	(*RolePageParams)(nil),             // 5: api.auth.service.v1.RolePageParams
+	(*RoleListItem)(nil),               // 6: api.auth.service.v1.RoleListItem
+	(*GetRoleListByPageReply)(nil),     // 7: api.auth.service.v1.GetRoleListByPageReply
+	(*DeleteRole)(nil),                 // 8: api.auth.service.v1.DeleteRole
+	(*GetApiPageParams)(nil),           // 9: api.auth.service.v1.GetApiPageParams
+	(*ApiListItem)(nil),                // 10: api.auth.service.v1.ApiListItem
+	(*GetApiListByPageReply)(nil),      // 11: api.auth.service.v1.GetApiListByPageReply
+	(*DeleteApi)(nil),                  // 12: api.auth.service.v1.DeleteApi
+	(*GetResourcePageParams)(nil),      // 13: api.auth.service.v1.GetResourcePageParams
+	(*ResourceListItem)(nil),           // 14: api.auth.service.v1.ResourceListItem
+	(*GetResourceListByPageReply)(nil), // 15: api.auth.service.v1.GetResourceListByPageReply
+	(*DeleteResource)(nil),             // 16: api.auth.service.v1.DeleteResource
+	(*emptypb.Empty)(nil),              // 17: google.protobuf.Empty
 }
 var file_auth_service_v1_auth_proto_depIdxs = []int32{
-	4,  // 0: api.auth.service.v1.GetRoleListByPageReply.items:type_name -> api.auth.service.v1.RoleListItem
-	8,  // 1: api.auth.service.v1.GetApiListByPageReply.items:type_name -> api.auth.service.v1.ApiListItem
-	12, // 2: api.auth.service.v1.GetResourceListByPageReply.items:type_name -> api.auth.service.v1.ResourceListItem
+	6,  // 0: api.auth.service.v1.GetRoleListByPageReply.items:type_name -> api.auth.service.v1.RoleListItem
+	10, // 1: api.auth.service.v1.GetApiListByPageReply.items:type_name -> api.auth.service.v1.ApiListItem
+	14, // 2: api.auth.service.v1.GetResourceListByPageReply.items:type_name -> api.auth.service.v1.ResourceListItem
 	0,  // 3: api.auth.service.v1.AuthService.Login:input_type -> api.auth.service.v1.LoginRequest
-	15, // 4: api.auth.service.v1.AuthService.GetAccessCodes:input_type -> google.protobuf.Empty
-	15, // 5: api.auth.service.v1.AuthService.Logout:input_type -> google.protobuf.Empty
-	15, // 6: api.auth.service.v1.AuthService.RefreshToken:input_type -> google.protobuf.Empty
-	15, // 7: api.auth.service.v1.AuthService.ReLoadPolicy:input_type -> google.protobuf.Empty
-	3,  // 8: api.auth.service.v1.AuthService.GetRoleList:input_type -> api.auth.service.v1.RolePageParams
-	4,  // 9: api.auth.service.v1.AuthService.AddRole:input_type -> api.auth.service.v1.RoleListItem
-	4,  // 10: api.auth.service.v1.AuthService.UpdateRole:input_type -> api.auth.service.v1.RoleListItem
-	6,  // 11: api.auth.service.v1.AuthService.DelRole:input_type -> api.auth.service.v1.DeleteRole
-	7,  // 12: api.auth.service.v1.AuthService.GetApiList:input_type -> api.auth.service.v1.GetApiPageParams
-	8,  // 13: api.auth.service.v1.AuthService.AddApi:input_type -> api.auth.service.v1.ApiListItem
-	8,  // 14: api.auth.service.v1.AuthService.UpdateApi:input_type -> api.auth.service.v1.ApiListItem
-	10, // 15: api.auth.service.v1.AuthService.DelApi:input_type -> api.auth.service.v1.DeleteApi
-	11, // 16: api.auth.service.v1.AuthService.GetResourceList:input_type -> api.auth.service.v1.GetResourcePageParams
-	12, // 17: api.auth.service.v1.AuthService.AddResource:input_type -> api.auth.service.v1.ResourceListItem
-	12, // 18: api.auth.service.v1.AuthService.UpdateResource:input_type -> api.auth.service.v1.ResourceListItem
-	14, // 19: api.auth.service.v1.AuthService.DelResource:input_type -> api.auth.service.v1.DeleteResource
-	1,  // 20: api.auth.service.v1.AuthService.Login:output_type -> api.auth.service.v1.LoginReply
-	2,  // 21: api.auth.service.v1.AuthService.GetAccessCodes:output_type -> api.auth.service.v1.GetAccessCodesReply
-	15, // 22: api.auth.service.v1.AuthService.Logout:output_type -> google.protobuf.Empty
-	1,  // 23: api.auth.service.v1.AuthService.RefreshToken:output_type -> api.auth.service.v1.LoginReply
-	15, // 24: api.auth.service.v1.AuthService.ReLoadPolicy:output_type -> google.protobuf.Empty
-	5,  // 25: api.auth.service.v1.AuthService.GetRoleList:output_type -> api.auth.service.v1.GetRoleListByPageReply
-	4,  // 26: api.auth.service.v1.AuthService.AddRole:output_type -> api.auth.service.v1.RoleListItem
-	4,  // 27: api.auth.service.v1.AuthService.UpdateRole:output_type -> api.auth.service.v1.RoleListItem
-	15, // 28: api.auth.service.v1.AuthService.DelRole:output_type -> google.protobuf.Empty
-	9,  // 29: api.auth.service.v1.AuthService.GetApiList:output_type -> api.auth.service.v1.GetApiListByPageReply
-	8,  // 30: api.auth.service.v1.AuthService.AddApi:output_type -> api.auth.service.v1.ApiListItem
-	8,  // 31: api.auth.service.v1.AuthService.UpdateApi:output_type -> api.auth.service.v1.ApiListItem
-	15, // 32: api.auth.service.v1.AuthService.DelApi:output_type -> google.protobuf.Empty
-	13, // 33: api.auth.service.v1.AuthService.GetResourceList:output_type -> api.auth.service.v1.GetResourceListByPageReply
-	12, // 34: api.auth.service.v1.AuthService.AddResource:output_type -> api.auth.service.v1.ResourceListItem
-	12, // 35: api.auth.service.v1.AuthService.UpdateResource:output_type -> api.auth.service.v1.ResourceListItem
-	15, // 36: api.auth.service.v1.AuthService.DelResource:output_type -> google.protobuf.Empty
-	20, // [20:37] is the sub-list for method output_type
-	3,  // [3:20] is the sub-list for method input_type
+	17, // 4: api.auth.service.v1.AuthService.GetAccessCodes:input_type -> google.protobuf.Empty
+	3,  // 5: api.auth.service.v1.AuthService.CheckAuthorization:input_type -> api.auth.service.v1.CheckAuthorizationRequest
+	17, // 6: api.auth.service.v1.AuthService.Logout:input_type -> google.protobuf.Empty
+	17, // 7: api.auth.service.v1.AuthService.RefreshToken:input_type -> google.protobuf.Empty
+	17, // 8: api.auth.service.v1.AuthService.ReLoadPolicy:input_type -> google.protobuf.Empty
+	5,  // 9: api.auth.service.v1.AuthService.GetRoleList:input_type -> api.auth.service.v1.RolePageParams
+	6,  // 10: api.auth.service.v1.AuthService.AddRole:input_type -> api.auth.service.v1.RoleListItem
+	6,  // 11: api.auth.service.v1.AuthService.UpdateRole:input_type -> api.auth.service.v1.RoleListItem
+	8,  // 12: api.auth.service.v1.AuthService.DelRole:input_type -> api.auth.service.v1.DeleteRole
+	9,  // 13: api.auth.service.v1.AuthService.GetApiList:input_type -> api.auth.service.v1.GetApiPageParams
+	10, // 14: api.auth.service.v1.AuthService.AddApi:input_type -> api.auth.service.v1.ApiListItem
+	10, // 15: api.auth.service.v1.AuthService.UpdateApi:input_type -> api.auth.service.v1.ApiListItem
+	12, // 16: api.auth.service.v1.AuthService.DelApi:input_type -> api.auth.service.v1.DeleteApi
+	13, // 17: api.auth.service.v1.AuthService.GetResourceList:input_type -> api.auth.service.v1.GetResourcePageParams
+	14, // 18: api.auth.service.v1.AuthService.AddResource:input_type -> api.auth.service.v1.ResourceListItem
+	14, // 19: api.auth.service.v1.AuthService.UpdateResource:input_type -> api.auth.service.v1.ResourceListItem
+	16, // 20: api.auth.service.v1.AuthService.DelResource:input_type -> api.auth.service.v1.DeleteResource
+	1,  // 21: api.auth.service.v1.AuthService.Login:output_type -> api.auth.service.v1.LoginReply
+	2,  // 22: api.auth.service.v1.AuthService.GetAccessCodes:output_type -> api.auth.service.v1.GetAccessCodesReply
+	4,  // 23: api.auth.service.v1.AuthService.CheckAuthorization:output_type -> api.auth.service.v1.CheckAuthorizationReply
+	17, // 24: api.auth.service.v1.AuthService.Logout:output_type -> google.protobuf.Empty
+	1,  // 25: api.auth.service.v1.AuthService.RefreshToken:output_type -> api.auth.service.v1.LoginReply
+	17, // 26: api.auth.service.v1.AuthService.ReLoadPolicy:output_type -> google.protobuf.Empty
+	7,  // 27: api.auth.service.v1.AuthService.GetRoleList:output_type -> api.auth.service.v1.GetRoleListByPageReply
+	6,  // 28: api.auth.service.v1.AuthService.AddRole:output_type -> api.auth.service.v1.RoleListItem
+	6,  // 29: api.auth.service.v1.AuthService.UpdateRole:output_type -> api.auth.service.v1.RoleListItem
+	17, // 30: api.auth.service.v1.AuthService.DelRole:output_type -> google.protobuf.Empty
+	11, // 31: api.auth.service.v1.AuthService.GetApiList:output_type -> api.auth.service.v1.GetApiListByPageReply
+	10, // 32: api.auth.service.v1.AuthService.AddApi:output_type -> api.auth.service.v1.ApiListItem
+	10, // 33: api.auth.service.v1.AuthService.UpdateApi:output_type -> api.auth.service.v1.ApiListItem
+	17, // 34: api.auth.service.v1.AuthService.DelApi:output_type -> google.protobuf.Empty
+	15, // 35: api.auth.service.v1.AuthService.GetResourceList:output_type -> api.auth.service.v1.GetResourceListByPageReply
+	14, // 36: api.auth.service.v1.AuthService.AddResource:output_type -> api.auth.service.v1.ResourceListItem
+	14, // 37: api.auth.service.v1.AuthService.UpdateResource:output_type -> api.auth.service.v1.ResourceListItem
+	17, // 38: api.auth.service.v1.AuthService.DelResource:output_type -> google.protobuf.Empty
+	21, // [21:39] is the sub-list for method output_type
+	3,  // [3:21] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name
@@ -1210,7 +1325,7 @@ func file_auth_service_v1_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_service_v1_auth_proto_rawDesc), len(file_auth_service_v1_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

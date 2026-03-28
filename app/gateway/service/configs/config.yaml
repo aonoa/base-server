@@ -5,6 +5,11 @@ server:
     read_timeout: 0s
     read_header_timeout: 10s
     idle_timeout: 120s
+services:
+  auth:
+    grpc_endpoint: 127.0.0.1:9020
+  admin:
+    grpc_endpoint: 127.0.0.1:9030
 gateway:
   name: gateway
   middlewares:
@@ -39,6 +44,11 @@ gateway:
       backends:
         - target: 127.0.0.1:8020
       middlewares:
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
+            signingKey: auth-service-secret
         - name: ratelimit
           required: true
           options:
@@ -62,8 +72,23 @@ gateway:
             whitelist:
               - path: /auth-api/v1/login
                 method: POST
-              - path: /auth-api/v1/refresh-token
+              - path: /auth-api/v1/refresh
                 method: POST
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+            whitelist:
+              - path: /auth-api/v1/login
+                method: POST
+              - path: /auth-api/v1/refresh
+                method: POST
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
+            signingKey: auth-service-secret
 
     - path: /user-api/v1/*
       method: "*"
@@ -77,6 +102,16 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
             signingKey: auth-service-secret
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
+            signingKey: auth-service-secret
 
     - path: /admin-api/v1/*
       method: "*"
@@ -89,6 +124,16 @@ gateway:
           required: true
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
             signingKey: auth-service-secret
         - name: ratelimit
           required: true
@@ -110,6 +155,16 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
             signingKey: auth-service-secret
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
+            signingKey: auth-service-secret
 
     - path: /common-api/v1/copilot/sse
       method: GET
@@ -124,6 +179,16 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
             signingKey: auth-service-secret
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
+            signingKey: auth-service-secret
 
     - path: /common-api/v1/*
       method: "*"
@@ -136,4 +201,14 @@ gateway:
           required: true
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT
+            signingKey: auth-service-secret
+        - name: casbin
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin
+            signingKey: auth-service-secret
+        - name: httplog
+          required: true
+          options:
+            "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
             signingKey: auth-service-secret

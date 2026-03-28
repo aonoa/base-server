@@ -200,6 +200,14 @@ func (uc *AuthUsecase) GetAccessCodes(ctx context.Context, userID string) (*v1.G
 	return &v1.GetAccessCodesReply{AccessCodeList: user.AccessCodes}, nil
 }
 
+func (uc *AuthUsecase) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {
+	allowed, err := uc.e.Enforce(RoleToApiEnforceContext, req.UserId, req.Path, req.Method)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.CheckAuthorizationReply{Allowed: allowed}, nil
+}
+
 func (uc *AuthUsecase) ReLoadPolicy(ctx context.Context) error {
 	return uc.syncAuthPolicy()
 }

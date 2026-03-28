@@ -14,6 +14,8 @@ import (
 )
 
 import (
+	_ "base-server/app/gateway/service/internal/middleware/casbin"
+	_ "base-server/app/gateway/service/internal/middleware/httplog"
 	_ "base-server/app/gateway/service/internal/middleware/jwt"
 	_ "base-server/app/gateway/service/internal/middleware/ratelimit"
 	_ "base-server/app/gateway/service/internal/middleware/whitelist"
@@ -23,13 +25,19 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, gateway *conf.Gateway, logger log.Logger) (*kratos.App, func(), error) {
-	transportServer, cleanup, err := server.NewProxyServer(confServer, gateway, logger)
+func wireApp(confServer *conf.Server, gateway *conf.Gateway, services *conf.Services, logger log.Logger) (*kratos.App, func(), error) {
+	gatewayClients, cleanup, err := server.NewGatewayClients(services, logger)
 	if err != nil {
+		return nil, nil, err
+	}
+	transportServer, cleanup2, err := server.NewProxyServer(confServer, gateway, services, gatewayClients, logger)
+	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	app := newApp(logger, transportServer)
 	return app, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

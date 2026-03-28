@@ -74,6 +74,8 @@ service AdminService {
     };
   }
 
+  rpc CreateSysLog(CreateSysLogRequest) returns (google.protobuf.Empty);
+
   rpc GetSysLogList(GetSysLogListParams) returns (GetSysLogListReply) {
     option (google.api.http) = {
       get: "/admin-api/v1/logs"
@@ -117,24 +119,24 @@ message Meta {
   int64 order = 1;
   string icon = 2;
   string title = 3;
-  optional string active_icon = 4;
-  optional string active_path = 5;
-  optional bool affix_tab = 6;
-  optional int64 affix_tab_order = 7;
+  optional string activeIcon = 4;
+  optional string activePath = 5;
+  optional bool affixTab = 6;
+  optional int64 affixTabOrder = 7;
   optional string badge = 8;
-  optional string badge_type = 9;
-  optional string badge_variants = 10;
-  optional bool hide_children_in_menu = 11;
-  optional bool hide_in_breadcrumb = 12;
-  optional bool hide_in_menu = 13;
-  optional bool hide_in_tab = 14;
-  optional string iframe_src = 15;
+  optional string badgeType = 9;
+  optional string badgeVariants = 10;
+  optional bool hideChildrenInMenu = 11;
+  optional bool hideInBreadcrumb = 12;
+  optional bool hideInMenu = 13;
+  optional bool hideInTab = 14;
+  optional string iframeSrc = 15;
   optional string link = 16;
-  optional bool keep_alive = 17;
-  optional int64 max_num_of_open_tab = 18;
-  optional bool no_basic_layout = 19;
-  optional bool open_in_new_window = 20;
-  bool ignore_access = 21;
+  optional bool keepAlive = 17;
+  optional int64 maxNumOfOpenTab = 18;
+  optional bool noBasicLayout = 19;
+  optional bool openInNewWindow = 20;
+  bool ignoreAccess = 21;
   repeated string authority = 22;
 }
 
@@ -142,7 +144,7 @@ message SysMenuListItem {
   int32 id = 1;
   string component = 2;
   optional int32 status = 3;
-  string auth_code = 4;
+  string authCode = 4;
   string name = 5;
   string path = 6;
   int64 pid = 7;
@@ -178,6 +180,29 @@ message IsMenuPathExistsReply {
 
 message DeleteMenuRequest {
   int64 id = 1;
+}
+
+message CreateSysLogRequest {
+  string user_id = 1;
+  string user_name = 2;
+  bool is_login = 3;
+  string session_id = 4;
+  string method = 5;
+  string path = 6;
+  string request_time = 7;
+  string ip_address = 8;
+  string ip_location = 9;
+  int64 latency = 10;
+  string os = 11;
+  string browser = 12;
+  string user_agent = 13;
+  string header = 14;
+  string get_params = 15;
+  string post_data = 16;
+  int32 res_code = 17;
+  string reason = 18;
+  bool res_status = 19;
+  string stack = 20;
 }
 
 message GetSysLogListParams {

@@ -30,6 +30,7 @@ const (
 	AdminService_CreateMenu_FullMethodName       = "/api.admin.service.v1.AdminService/CreateMenu"
 	AdminService_UpdateMenu_FullMethodName       = "/api.admin.service.v1.AdminService/UpdateMenu"
 	AdminService_DeleteMenu_FullMethodName       = "/api.admin.service.v1.AdminService/DeleteMenu"
+	AdminService_CreateSysLog_FullMethodName     = "/api.admin.service.v1.AdminService/CreateSysLog"
 	AdminService_GetSysLogList_FullMethodName    = "/api.admin.service.v1.AdminService/GetSysLogList"
 	AdminService_GetSysLogInfo_FullMethodName    = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 )
@@ -48,6 +49,7 @@ type AdminServiceClient interface {
 	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CreateSysLog(ctx context.Context, in *CreateSysLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error)
 	GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...grpc.CallOption) (*GetSysLogInfoReply, error)
 }
@@ -160,6 +162,16 @@ func (c *adminServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 	return out, nil
 }
 
+func (c *adminServiceClient) CreateSysLog(ctx context.Context, in *CreateSysLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_CreateSysLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSysLogListReply)
@@ -194,6 +206,7 @@ type AdminServiceServer interface {
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	CreateSysLog(context.Context, *CreateSysLogRequest) (*emptypb.Empty, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	mustEmbedUnimplementedAdminServiceServer()
@@ -235,6 +248,9 @@ func (UnimplementedAdminServiceServer) UpdateMenu(context.Context, *SysMenuListI
 }
 func (UnimplementedAdminServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedAdminServiceServer) CreateSysLog(context.Context, *CreateSysLogRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSysLog not implemented")
 }
 func (UnimplementedAdminServiceServer) GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysLogList not implemented")
@@ -443,6 +459,24 @@ func _AdminService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_CreateSysLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSysLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).CreateSysLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_CreateSysLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).CreateSysLog(ctx, req.(*CreateSysLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_GetSysLogList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSysLogListParams)
 	if err := dec(in); err != nil {
@@ -525,6 +559,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMenu",
 			Handler:    _AdminService_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "CreateSysLog",
+			Handler:    _AdminService_CreateSysLog_Handler,
 		},
 		{
 			MethodName: "GetSysLogList",
