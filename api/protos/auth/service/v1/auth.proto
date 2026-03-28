@@ -130,8 +130,8 @@ message LoginRequest {
 
 message LoginReply {
   string user_id = 1;
-  string access_token = 2;
-  string refresh_token = 3;
+  string accessToken = 2;
+  string refreshToken = 3;
   string session_id = 4;
 }
 

@@ -493,7 +493,7 @@ func (x *Meta) GetAuthority() []string {
 
 type SysMenuListItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Component     string                 `protobuf:"bytes,2,opt,name=component,proto3" json:"component,omitempty"`
 	Status        *int32                 `protobuf:"varint,3,opt,name=status,proto3,oneof" json:"status,omitempty"`
 	AuthCode      string                 `protobuf:"bytes,4,opt,name=auth_code,json=authCode,proto3" json:"auth_code,omitempty"`
@@ -539,7 +539,7 @@ func (*SysMenuListItem) Descriptor() ([]byte, []int) {
 	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *SysMenuListItem) GetId() int64 {
+func (x *SysMenuListItem) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
@@ -1584,7 +1584,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x10_no_basic_layoutB\x15\n" +
 	"\x13_open_in_new_window\"\x94\x03\n" +
 	"\x0fSysMenuListItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1c\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x1c\n" +
 	"\tcomponent\x18\x02 \x01(\tR\tcomponent\x12\x1b\n" +
 	"\x06status\x18\x03 \x01(\x05H\x00R\x06status\x88\x01\x01\x12\x1b\n" +
 	"\tauth_code\x18\x04 \x01(\tR\bauthCode\x12\x12\n" +

@@ -2,9 +2,9 @@ BEGIN;
 
 INSERT INTO sys_role (id, create_time, update_time, name, value, status, "desc", menus)
 VALUES
-  (0, '2025-02-25 00:00:39+08', '2025-08-21 23:57:17+08', '默认角色', 'default', true, '', '[10,11,12,13,14,15]'),
-  (1, '2025-02-25 00:00:39+08', '2025-08-22 00:47:56+08', '超级管理员', 'root', true, '在系统层就拥有全部权限，不用设置', '[]'),
-  (2, '2025-02-25 00:00:39+08', '2025-08-22 00:48:34+08', '管理员', 'admin', true, '', '[10,11,12,13,14,15,16,17,18,19,5,3,1]')
+  (0, '2025-02-25 00:00:39.255+08', '2025-11-01 16:31:19.080417+08', '默认角色', 'default', true, '', '[10, 11, 12, 13, 14, 15]'),
+  (1, '2025-02-25 00:00:39.255+08', '2025-08-22 00:47:56.788297+08', '超级管理员', 'root', true, '在系统层就拥有全部权限，不用设置', 'null'),
+  (2, '2025-02-25 00:00:39.255+08', '2025-08-22 00:48:34.778634+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3]')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -16,15 +16,14 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO sys_resources (id, create_time, update_time, name, type, value, method, description)
 VALUES
-  ('res-api', '2025-08-06 22:08:19+08', '2025-08-06 22:08:19+08', '系统管理 API 组', 'api', 'api', '(GET|POST|PUT|DELETE)', 'API 资源管理'),
-  ('res-data', '2025-08-06 22:09:27+08', '2025-08-06 22:09:27+08', '系统管理资源组', 'api', 'data', '(GET|POST|PUT|DELETE)', '数据资源管理'),
-  ('res-dept', '2025-08-06 22:09:52+08', '2025-08-06 22:09:52+08', '系统管理部门组', 'api', 'dept', '(GET|POST|PUT|DELETE)', '部门管理'),
-  ('res-user', '2025-08-06 22:10:40+08', '2025-08-06 22:10:40+08', '系统管理用户组', 'api', 'user', '(GET|POST|PUT|DELETE)', '用户管理'),
-  ('res-role', '2025-08-06 22:11:02+08', '2025-08-06 22:11:02+08', '系统管理角色组', 'api', 'role', '(GET|POST|PUT|DELETE)', '角色管理'),
-  ('res-menu', '2025-08-06 22:11:10+08', '2025-08-06 22:11:10+08', '系统管理菜单组', 'api', 'menu', '(GET|POST|PUT|DELETE)', '菜单管理'),
-  ('res-admin', '2025-08-06 22:13:24+08', '2025-08-06 22:13:24+08', '系统高级操作组', 'api', 'admin', 'GET', '高权限操作'),
-  ('res-default', '2025-08-06 21:29:31+08', '2025-08-20 19:03:27+08', '基础接口组', 'api', 'default', '(GET|POST|PUT|DELETE)', '基础接口'),
-  ('res-demo', '2025-08-06 22:14:12+08', '2025-08-06 22:14:12+08', '演示能力组', 'api', 'demo', '(GET|POST)', '上传 / SSE / Copilot')
+  ('0ad0ceb4-6019-4feb-8d9a-eb561465777a', '2025-08-06 22:11:26.553496+08', '2025-08-06 22:11:26.553496+08', '系统管理菜单组', 'api', 'menu', '(GET|POST|PUT|DELETE)', ''),
+  ('33c2ca63-4b51-43c6-b432-075047e083d7', '2025-08-06 22:11:02.317492+08', '2025-08-06 22:11:02.317492+08', '系统管理角色组', 'api', 'role', '(GET|POST|PUT|DELETE)', ''),
+  ('779480bf-da02-46a4-8d87-89efbf1827de', '2025-08-06 22:10:40.309395+08', '2025-08-06 22:10:40.309395+08', '系统管理用户组', 'api', 'user', '(GET|POST|PUT|DELETE)', ''),
+  ('7d6b49f5-3ef5-41e1-a4e5-0ccb96da5a95', '2025-08-06 22:09:27.466794+08', '2025-08-06 22:09:27.466795+08', '系统管理资源组', 'api', 'data', '(GET|POST|PUT|DELETE)', ''),
+  ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', '2025-08-06 21:29:31.728041+08', '2025-08-20 19:03:27.329457+08', '基础api组', 'api', 'default', '(GET|POST|PUT|DELETE)', ''),
+  ('a3e1fca5-e7ab-41f2-b7a9-2ab46f3640ea', '2025-08-06 22:08:19.563908+08', '2025-08-06 22:08:19.563908+08', '系统管理api组', 'api', 'api', '(GET|POST|PUT|DELETE)', ''),
+  ('d3213f61-23d8-4be3-a44a-63f49d8c6cec', '2025-08-06 22:09:52.787831+08', '2025-08-06 22:09:52.787831+08', '系统管理部门组', 'api', 'dept', '(GET|POST|PUT|DELETE)', ''),
+  ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', '2025-08-06 22:13:24.978161+08', '2025-08-06 22:13:24.978161+08', 'admin接口操作权限', 'api', 'admin', 'GET', '')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -36,13 +35,11 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO resource_roles (resource_id, role_id)
 VALUES
-  ('res-default', 2),
-  ('res-user', 2),
-  ('res-role', 2),
-  ('res-dept', 2),
-  ('res-menu', 2),
-  ('res-api', 2),
-  ('res-data', 2)
+  ('33c2ca63-4b51-43c6-b432-075047e083d7', 2),
+  ('779480bf-da02-46a4-8d87-89efbf1827de', 2),
+  ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', 0),
+  ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', 2),
+  ('d3213f61-23d8-4be3-a44a-63f49d8c6cec', 2)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO sys_api_resources (id, create_time, update_time, description, path, method, module, module_description, resources_group)

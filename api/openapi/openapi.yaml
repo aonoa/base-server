@@ -248,7 +248,8 @@ paths:
                   in: path
                   required: true
                   schema:
-                    type: string
+                    type: integer
+                    format: int32
             requestBody:
                 content:
                     application/json:
@@ -737,18 +738,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.user.service.v1.IsUserExistsReply'
-    /user-api/v1/users/info:
-        get:
-            tags:
-                - UserService
-            operationId: UserService_GetInfo
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.user.service.v1.GetUserInfoReply'
     /user-api/v1/users/{id}:
         put:
             tags:
@@ -1021,7 +1010,8 @@ components:
             type: object
             properties:
                 id:
-                    type: string
+                    type: integer
+                    format: int32
                 component:
                     type: string
                 status:

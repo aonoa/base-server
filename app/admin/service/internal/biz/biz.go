@@ -146,7 +146,7 @@ func (uc *AdminUsecase) CreateMenu(ctx context.Context, req *v1.SysMenuListItem)
 }
 
 func (uc *AdminUsecase) UpdateMenu(ctx context.Context, req *v1.SysMenuListItem) error {
-	_, err := uc.repo.UpdateMenu(ctx, req.Id, menuToEntMenu(req))
+	_, err := uc.repo.UpdateMenu(ctx, int64(req.Id), menuToEntMenu(req))
 	return err
 }
 
@@ -302,7 +302,7 @@ func buildMenuTree(menuList *[]*v1.SysMenuListItem, menu *ent.Menu) bool {
 		if len(item.Children) > 0 && buildMenuTree(&item.Children, menu) {
 			return true
 		}
-		if item.Id == menu.Pid {
+		if int64(item.Id) == menu.Pid {
 			item.Children = append(item.Children, entMenuToMenu(menu))
 			return true
 		}
@@ -326,7 +326,7 @@ func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 	hideInBreadcrumb := menu.HideInBreadcrumb
 	hideChildrenInMenu := menu.HideChildrenInMenu
 	return &v1.SysMenuListItem{
-		Id:         menu.ID,
+		Id:         int32(menu.ID),
 		Component:  menu.Component,
 		Status:     &status,
 		AuthCode:   "",
@@ -365,7 +365,7 @@ func menuToEntMenu(menu *v1.SysMenuListItem) *ent.Menu {
 		status = true
 	}
 	return &ent.Menu{
-		ID:                 menu.Id,
+		ID:                 int64(menu.Id),
 		Pid:                menu.Pid,
 		Type:               menu.Type,
 		Status:             status,

@@ -139,7 +139,7 @@ message Meta {
 }
 
 message SysMenuListItem {
-  int64 id = 1;
+  int32 id = 1;
   string component = 2;
   optional int32 status = 3;
   string auth_code = 4;

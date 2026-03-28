@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserService_GetUserInfo_FullMethodName          = "/api.user.service.v1.UserService/GetUserInfo"
-	UserService_GetInfo_FullMethodName              = "/api.user.service.v1.UserService/GetInfo"
 	UserService_GetUserList_FullMethodName          = "/api.user.service.v1.UserService/GetUserList"
 	UserService_AddUser_FullMethodName              = "/api.user.service.v1.UserService/AddUser"
 	UserService_UpdateUser_FullMethodName           = "/api.user.service.v1.UserService/UpdateUser"
@@ -38,7 +37,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoReply, error)
-	GetInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error)
 	GetUserList(ctx context.Context, in *GetUserParams, opts ...grpc.CallOption) (*GetUserListReply, error)
 	AddUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error)
 	UpdateUser(ctx context.Context, in *UserListItem, opts ...grpc.CallOption) (*UserListItem, error)
@@ -62,16 +60,6 @@ func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequ
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserInfoReply)
 	err := c.cc.Invoke(ctx, UserService_GetUserInfo_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserInfoReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserInfoReply)
-	err := c.cc.Invoke(ctx, UserService_GetInfo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +161,6 @@ func (c *userServiceClient) ListUserAuthBindings(ctx context.Context, in *emptyp
 // for forward compatibility.
 type UserServiceServer interface {
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoReply, error)
-	GetInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error)
 	GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error)
 	AddUser(context.Context, *UserListItem) (*UserListItem, error)
 	UpdateUser(context.Context, *UserListItem) (*UserListItem, error)
@@ -195,9 +182,6 @@ type UnimplementedUserServiceServer struct{}
 
 func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
-}
-func (UnimplementedUserServiceServer) GetInfo(context.Context, *emptypb.Empty) (*GetUserInfoReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetInfo not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserList(context.Context, *GetUserParams) (*GetUserListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserList not implemented")
@@ -261,24 +245,6 @@ func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_GetInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetInfo(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -455,10 +421,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserInfo",
 			Handler:    _UserService_GetUserInfo_Handler,
-		},
-		{
-			MethodName: "GetInfo",
-			Handler:    _UserService_GetInfo_Handler,
 		},
 		{
 			MethodName: "GetUserList",

@@ -1072,11 +1072,9 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\faccess_codes\x18\x03 \x03(\tR\vaccessCodes\x12\x17\n" +
 	"\arole_id\x18\x04 \x01(\x03R\x06roleId\"W\n" +
 	"\x19ListUserAuthBindingsReply\x12:\n" +
-	"\x05items\x18\x01 \x03(\v2$.api.user.service.v1.UserAuthBindingR\x05items2\x87\n" +
-	"\n" +
+	"\x05items\x18\x01 \x03(\v2$.api.user.service.v1.UserAuthBindingR\x05items2\x9c\t\n" +
 	"\vUserService\x12\x83\x01\n" +
-	"\vGetUserInfo\x12'.api.user.service.v1.GetUserInfoRequest\x1a%.api.user.service.v1.GetUserInfoReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/user-api/v1/users/{user_id}\x12i\n" +
-	"\aGetInfo\x12\x16.google.protobuf.Empty\x1a%.api.user.service.v1.GetUserInfoReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/user-api/v1/users/info\x12t\n" +
+	"\vGetUserInfo\x12'.api.user.service.v1.GetUserInfoRequest\x1a%.api.user.service.v1.GetUserInfoReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/user-api/v1/users/{user_id}\x12t\n" +
 	"\vGetUserList\x12\".api.user.service.v1.GetUserParams\x1a%.api.user.service.v1.GetUserListReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/user-api/v1/users\x12n\n" +
 	"\aAddUser\x12!.api.user.service.v1.UserListItem\x1a!.api.user.service.v1.UserListItem\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/user-api/v1/users\x12v\n" +
 	"\n" +
@@ -1126,29 +1124,27 @@ var file_user_service_v1_user_proto_depIdxs = []int32{
 	4,  // 1: api.user.service.v1.GetUserListReply.items:type_name -> api.user.service.v1.UserListItem
 	13, // 2: api.user.service.v1.ListUserAuthBindingsReply.items:type_name -> api.user.service.v1.UserAuthBinding
 	0,  // 3: api.user.service.v1.UserService.GetUserInfo:input_type -> api.user.service.v1.GetUserInfoRequest
-	16, // 4: api.user.service.v1.UserService.GetInfo:input_type -> google.protobuf.Empty
-	3,  // 5: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
-	4,  // 6: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
-	4,  // 7: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
-	6,  // 8: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
-	7,  // 9: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
-	9,  // 10: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
-	10, // 11: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
-	12, // 12: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
-	16, // 13: api.user.service.v1.UserService.ListUserAuthBindings:input_type -> google.protobuf.Empty
-	2,  // 14: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
-	2,  // 15: api.user.service.v1.UserService.GetInfo:output_type -> api.user.service.v1.GetUserInfoReply
-	5,  // 16: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
-	4,  // 17: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
-	4,  // 18: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
-	16, // 19: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
-	8,  // 20: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
-	16, // 21: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
-	11, // 22: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
-	14, // 23: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
-	15, // 24: api.user.service.v1.UserService.ListUserAuthBindings:output_type -> api.user.service.v1.ListUserAuthBindingsReply
-	14, // [14:25] is the sub-list for method output_type
-	3,  // [3:14] is the sub-list for method input_type
+	3,  // 4: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
+	4,  // 5: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
+	4,  // 6: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
+	6,  // 7: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
+	7,  // 8: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
+	9,  // 9: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
+	10, // 10: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
+	12, // 11: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
+	16, // 12: api.user.service.v1.UserService.ListUserAuthBindings:input_type -> google.protobuf.Empty
+	2,  // 13: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
+	5,  // 14: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
+	4,  // 15: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
+	4,  // 16: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
+	16, // 17: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
+	8,  // 18: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
+	16, // 19: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
+	11, // 20: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
+	14, // 21: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
+	15, // 22: api.user.service.v1.UserService.ListUserAuthBindings:output_type -> api.user.service.v1.ListUserAuthBindingsReply
+	13, // [13:23] is the sub-list for method output_type
+	3,  // [3:13] is the sub-list for method input_type
 	3,  // [3:3] is the sub-list for extension type_name
 	3,  // [3:3] is the sub-list for extension extendee
 	0,  // [0:3] is the sub-list for field type_name

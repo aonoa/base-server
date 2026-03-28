@@ -15,4 +15,7 @@ data:
     write_timeout: 0.2s
 auth:
   api_key: auth-service-secret
-  whitelist: []
+  whitelist:
+    - /api.user.service.v1.UserService/ValidateUserAuth
+    - /api.user.service.v1.UserService/GetUserAuthInfo
+    - /api.user.service.v1.UserService/ListUserAuthBindings
