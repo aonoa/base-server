@@ -6,10 +6,11 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
-	authv1 "base-server/api/gen/go/auth/service/v1"
 	v1 "base-server/api/gen/go/admin/service/v1"
+	authv1 "base-server/api/gen/go/auth/service/v1"
 	userv1 "base-server/api/gen/go/user/service/v1"
 	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
@@ -26,6 +27,9 @@ type AdminRepo interface {
 	GetMenuList(context.Context) ([]*ent.Menu, error)
 	GetUserAuthInfo(context.Context, string) (*userv1.GetUserAuthInfoReply, error)
 	GetCurrentUserMenuAuthority(context.Context, string) (*authv1.GetCurrentUserMenuAuthorityReply, error)
+	ListAuthWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
+	ListUserWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
+	ListCommonWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
 	CreateMenu(context.Context, *ent.Menu) (*ent.Menu, error)
 	UpdateMenu(context.Context, int64, *ent.Menu) (*ent.Menu, error)
 	DeleteMenu(context.Context, int64) error
@@ -148,6 +152,51 @@ func (uc *AdminUsecase) ListMenus(ctx context.Context) (*v1.ListMenusReply, erro
 		res.Items = append(res.Items, entMenuToRecord(item))
 	}
 	return res, nil
+}
+
+func (uc *AdminUsecase) GetWalkRoute(ctx context.Context) (*v1.GetWalkRouteReply, error) {
+	type walkRouteResult struct {
+		items []tools.WalkRouteItem
+		err   error
+	}
+
+	results := make(chan walkRouteResult, 3)
+	var wg sync.WaitGroup
+	fetchers := []func(context.Context) ([]tools.WalkRouteItem, error){
+		uc.repo.ListAuthWalkRoutes,
+		uc.repo.ListUserWalkRoutes,
+		uc.repo.ListCommonWalkRoutes,
+	}
+	for _, fetch := range fetchers {
+		wg.Add(1)
+		go func(fetch func(context.Context) ([]tools.WalkRouteItem, error)) {
+			defer wg.Done()
+			items, err := fetch(ctx)
+			results <- walkRouteResult{items: items, err: err}
+		}(fetch)
+	}
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	items := make([]tools.WalkRouteItem, 0)
+	for result := range results {
+		if result.err != nil {
+			return nil, result.err
+		}
+		items = append(items, result.items...)
+	}
+	items = tools.SortAndUniqueWalkRoutes(items)
+	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
+	for _, item := range items {
+		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) ListSelfWalkRoute(ctx context.Context) ([]tools.WalkRouteItem, error) {
+	return nil, nil
 }
 
 func (uc *AdminUsecase) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (bool, error) {
@@ -275,6 +324,8 @@ func (uc *AdminUsecase) GetSysLogInfo(ctx context.Context, id string) (*v1.GetSy
 		CreateTime:  info.CreateTime.Format(time.DateTime),
 	}, nil
 }
+
+// remaining helper functions unchanged below
 
 type deptNode struct {
 	Id       int64

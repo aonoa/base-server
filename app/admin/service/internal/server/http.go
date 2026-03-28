@@ -31,5 +31,6 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, admin *service.AdminService, l
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterAdminServiceHTTPServer(srv, admin)
+	admin.RestServer = srv
 	return srv
 }

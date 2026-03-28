@@ -31,5 +31,6 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, auth *service.AuthService, log
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterAuthServiceHTTPServer(srv, auth)
+	auth.RestServer = srv
 	return srv
 }

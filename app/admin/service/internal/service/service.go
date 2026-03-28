@@ -6,7 +6,9 @@ import (
 	v1 "base-server/api/gen/go/admin/service/v1"
 	"base-server/app/admin/service/internal/biz"
 	"base-server/pkg/authx"
+	"base-server/pkg/tools"
 
+	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -17,7 +19,8 @@ var ProviderSet = wire.NewSet(NewAdminService)
 type AdminService struct {
 	v1.UnimplementedAdminServiceServer
 
-	uc *biz.AdminUsecase
+	uc         *biz.AdminUsecase
+	RestServer *kratoshttp.Server
 }
 
 func NewAdminService(uc *biz.AdminUsecase) *AdminService {
@@ -50,6 +53,22 @@ func (s *AdminService) GetSysMenuList(ctx context.Context, req *v1.MenuParams) (
 
 func (s *AdminService) ListMenus(ctx context.Context, req *emptypb.Empty) (*v1.ListMenusReply, error) {
 	return s.uc.ListMenus(ctx)
+}
+
+func (s *AdminService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+	return s.uc.GetWalkRoute(ctx)
+}
+
+func (s *AdminService) GetSelfWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+	items, err := tools.WalkHTTPRoutes(s.RestServer)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
+	for _, item := range tools.SortAndUniqueWalkRoutes(items) {
+		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
+	}
+	return res, nil
 }
 
 func (s *AdminService) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (*v1.IsMenuNameExistsReply, error) {

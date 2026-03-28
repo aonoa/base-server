@@ -27,6 +27,8 @@ const (
 	AdminService_GetCurrentUserMenus_FullMethodName = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
 	AdminService_GetSysMenuList_FullMethodName      = "/api.admin.service.v1.AdminService/GetSysMenuList"
 	AdminService_ListMenus_FullMethodName           = "/api.admin.service.v1.AdminService/ListMenus"
+	AdminService_GetWalkRoute_FullMethodName        = "/api.admin.service.v1.AdminService/GetWalkRoute"
+	AdminService_GetSelfWalkRoute_FullMethodName    = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
 	AdminService_IsMenuNameExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuNameExists"
 	AdminService_IsMenuPathExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuPathExists"
 	AdminService_CreateMenu_FullMethodName          = "/api.admin.service.v1.AdminService/CreateMenu"
@@ -48,6 +50,8 @@ type AdminServiceClient interface {
 	GetCurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCurrentUserMenusReply, error)
 	GetSysMenuList(ctx context.Context, in *MenuParams, opts ...grpc.CallOption) (*GetSysMenuListReply, error)
 	ListMenus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListMenusReply, error)
+	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
+	GetSelfWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
 	IsMenuNameExists(ctx context.Context, in *IsMenuNameExistsRequest, opts ...grpc.CallOption) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(ctx context.Context, in *IsMenuPathExistsRequest, opts ...grpc.CallOption) (*IsMenuPathExistsReply, error)
 	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -130,6 +134,26 @@ func (c *adminServiceClient) ListMenus(ctx context.Context, in *emptypb.Empty, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListMenusReply)
 	err := c.cc.Invoke(ctx, AdminService_ListMenus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWalkRouteReply)
+	err := c.cc.Invoke(ctx, AdminService_GetWalkRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetSelfWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWalkRouteReply)
+	err := c.cc.Invoke(ctx, AdminService_GetSelfWalkRoute_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -227,6 +251,8 @@ type AdminServiceServer interface {
 	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	ListMenus(context.Context, *emptypb.Empty) (*ListMenusReply, error)
+	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
+	GetSelfWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
@@ -265,6 +291,12 @@ func (UnimplementedAdminServiceServer) GetSysMenuList(context.Context, *MenuPara
 }
 func (UnimplementedAdminServiceServer) ListMenus(context.Context, *emptypb.Empty) (*ListMenusReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenus not implemented")
+}
+func (UnimplementedAdminServiceServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
+}
+func (UnimplementedAdminServiceServer) GetSelfWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSelfWalkRoute not implemented")
 }
 func (UnimplementedAdminServiceServer) IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsMenuNameExists not implemented")
@@ -433,6 +465,42 @@ func _AdminService_ListMenus_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ListMenus(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetWalkRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetWalkRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetWalkRoute(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetSelfWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetSelfWalkRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetSelfWalkRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetSelfWalkRoute(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -615,6 +683,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListMenus",
 			Handler:    _AdminService_ListMenus_Handler,
+		},
+		{
+			MethodName: "GetWalkRoute",
+			Handler:    _AdminService_GetWalkRoute_Handler,
+		},
+		{
+			MethodName: "GetSelfWalkRoute",
+			Handler:    _AdminService_GetSelfWalkRoute_Handler,
 		},
 		{
 			MethodName: "IsMenuNameExists",

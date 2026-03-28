@@ -1041,7 +1041,7 @@ COPY public.casbin_rules (id, ptype, v0, v1, v2, v3, v4, v5) FROM stdin;
 426	g2	/basic-api/system/role/list	api:role				
 427	g2	/basic-api/system/role	api:role				
 428	g2	/basic-api/system/role/{id}	api:role				
-429	g2	/basic-api/system/getWalkRoute	api:api				
+429	g2	/basic-api/system/getWalkRoute	api:api	
 430	g2	/basic-api/system/api/list	api:api				
 431	g2	/basic-api/system/api	api:api				
 432	g2	/basic-api/system/api/{id}	api:api				

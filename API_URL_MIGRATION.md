@@ -40,7 +40,7 @@
 | `/basic-api/system/dept/*` | `/admin-api/v1/depts*` | admin |
 | `/basic-api/system/menu/*` | `/admin-api/v1/menus*` | admin |
 | `/basic-api/system/log/*` | `/admin-api/v1/logs*` | admin |
-| `/basic-api/menu/*` | `/admin-api/v1/menus*` | admin |
+| `/basic-api/menu/*` | `/admin-api/v1/menus/current` | admin |
 | `/basic-api/v1/server/file/*` | `/common-api/v1/file/*` | common |
 | `/basic-api/v1/copilot/*` | `/common-api/v1/copilot/*` | common |
 
@@ -155,7 +155,7 @@ body 仍然传：
 | 功能 | 旧 URL | 新 URL | 方法 |
 | --- | --- | --- | --- |
 | 获取菜单列表 | `/basic-api/system/menu/list` | `/admin-api/v1/menus` | GET |
-| 获取路由菜单列表 | `/basic-api/menu/all` | `/admin-api/v1/menus` | GET |
+| 获取路由菜单列表 | `/basic-api/menu/all` | `/admin-api/v1/menus/current` | GET |
 | 菜单名是否存在 | `/basic-api/system/menu/name-exists` | `/admin-api/v1/menus/name-exists` | GET |
 | 菜单路径是否存在 | `/basic-api/system/menu/path-exists` | `/admin-api/v1/menus/path-exists` | GET |
 | 创建菜单 | `/basic-api/system/menu` | `/admin-api/v1/menus` | POST |
@@ -178,11 +178,17 @@ body 仍然传：
 | 日志列表 | `/basic-api/system/log/list` | `/admin-api/v1/logs` | GET |
 | 日志详情 | `/basic-api/system/log/{id}` | `/admin-api/v1/logs/{id}` | GET |
 
+### 路由枚举
+
+| 功能 | 旧 URL | 新 URL | 方法 |
+| --- | --- | --- | --- |
+| 获取系统所有 API 接口 | `/basic-api/system/getWalkRoute` | `/admin-api/v1/walk-routes` | GET |
+
 ### 已移除 / 不再对前端开放
 
 | 旧 URL | 说明 |
 | --- | --- |
-| `/basic-api/system/getWalkRoute` | 对应 `GetWalkRoute`，新版本未保留 HTTP 接口 |
+| `/basic-api/system/setRoleStatus` | 对应 `SetRoleStatus`，新版本未提供 HTTP 接口 |
 
 ---
 
@@ -236,7 +242,7 @@ body 仍然传：
 - `/basic-api/user/info` 不是简单换前缀，已经变成 `/user-api/v1/users/{user_id}`
 - `/basic-api/system/changePassword` 不是简单换前缀，已经变成 `/user-api/v1/users/{user_id}/password`
 - `/basic-api/system/user/user-exists` 从 `POST` 改成了 `GET`
-- `/basic-api/menu/all` 需要切到 admin 服务的 `/admin-api/v1/menus`
+- `/basic-api/menu/all` 需要切到 admin 服务的 `/admin-api/v1/menus/current`
 - `/basic-api/auth/reloadPolicy` 改成了 kebab-case：`/auth-api/v1/reload-policy`
 
 ---

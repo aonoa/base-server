@@ -175,7 +175,7 @@ gateway:
             signingKey: auth-service-secret
 
     - path: /common-api/v1/copilot/sse
-      method: GET
+      method: POST
       protocol: HTTP
       timeout: 86400s
       stream: true

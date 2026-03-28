@@ -7,6 +7,7 @@ import (
 	v1 "base-server/api/gen/go/user/service/v1"
 	"base-server/app/user/service/internal/biz"
 
+	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -17,7 +18,8 @@ var ProviderSet = wire.NewSet(NewUserService)
 type UserService struct {
 	v1.UnimplementedUserServiceServer
 
-	uc *biz.UserUsecase
+	uc         *biz.UserUsecase
+	RestServer *kratoshttp.Server
 }
 
 func NewUserService(uc *biz.UserUsecase) *UserService {
@@ -72,4 +74,16 @@ func (s *UserService) GetUserAuthInfo(ctx context.Context, req *v1.GetUserAuthIn
 
 func (s *UserService) ListUserAuthBindings(ctx context.Context, req *emptypb.Empty) (*v1.ListUserAuthBindingsReply, error) {
 	return s.uc.ListUserAuthBindings(ctx)
+}
+
+func (s *UserService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+	items, err := tools.WalkHTTPRoutes(s.RestServer)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
+	for _, item := range tools.SortAndUniqueWalkRoutes(items) {
+		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
+	}
+	return res, nil
 }

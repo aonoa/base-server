@@ -81,6 +81,7 @@ VALUES
   ('api-admin-dept-delete', '2025-08-04 15:10:42+08', '2025-08-04 15:21:44+08', '删除部门', '/admin-api/v1/depts/{id}', 'DELETE', 'admin', '管理服务', 'dept'),
   ('api-admin-log-list', '2025-08-04 15:16:30+08', '2025-08-04 15:16:30+08', '获取日志列表', '/admin-api/v1/logs', 'GET', 'admin', '管理服务', 'admin'),
   ('api-admin-log-detail', '2025-08-04 15:16:35+08', '2025-08-04 15:16:35+08', '获取日志详情', '/admin-api/v1/logs/{id}', 'GET', 'admin', '管理服务', 'admin'),
+  ('api-admin-walk-route', '2026-03-28 00:00:00+08', '2026-03-28 00:00:00+08', '获取系统所有api接口', '/admin-api/v1/walk-routes', 'GET', 'admin', '系统管理', 'api'),
   ('api-common-upload', '2025-08-04 15:16:13+08', '2025-08-04 15:23:14+08', '上传文件', '/common-api/v1/file/upload', 'POST', 'common', '公共服务', 'demo'),
   ('api-common-copilot-sse', '2025-08-04 15:16:20+08', '2025-08-04 15:23:20+08', 'Copilot SSE', '/common-api/v1/copilot/sse', 'POST', 'common', '公共服务', 'demo')
 ON CONFLICT (id) DO UPDATE SET

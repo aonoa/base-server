@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package api.common.service.v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "base-server/api/gen/go/common/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.common.service.v1";
+
+service CommonService {
+  rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
+}
+
+message WalkRouteItem {
+  string url = 1;
+  string method = 2;
+}
+
+message GetWalkRouteReply {
+  repeated WalkRouteItem items = 1;
+}

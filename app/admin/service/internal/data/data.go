@@ -8,9 +8,10 @@ import (
 	"strings"
 
 	"ariga.io/entcache"
-	authv1 "base-server/api/gen/go/auth/service/v1"
-	userv1 "base-server/api/gen/go/user/service/v1"
 	v1 "base-server/api/gen/go/admin/service/v1"
+	authv1 "base-server/api/gen/go/auth/service/v1"
+	commonv1 "base-server/api/gen/go/common/service/v1"
+	userv1 "base-server/api/gen/go/user/service/v1"
 	"base-server/app/admin/service/internal/biz"
 	"base-server/app/admin/service/internal/conf"
 	"base-server/pkg/authx"
@@ -29,6 +30,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // ProviderSet is data providers.
@@ -36,11 +38,13 @@ var ProviderSet = wire.NewSet(NewData, NewAdminRepo)
 
 // Data .
 type Data struct {
-	db         *ent.Client
-	userConn   *grpc.ClientConn
-	userClient userv1.UserServiceClient
-	authConn   *grpc.ClientConn
-	authClient authv1.AuthServiceClient
+	db           *ent.Client
+	userConn     *grpc.ClientConn
+	userClient   userv1.UserServiceClient
+	authConn     *grpc.ClientConn
+	authClient   authv1.AuthServiceClient
+	commonConn   *grpc.ClientConn
+	commonClient commonv1.CommonServiceClient
 }
 
 // NewData .
@@ -69,15 +73,27 @@ func NewData(c *conf.Data, services *conf.Services, logger log.Logger) (*Data, f
 		_ = client.Close()
 		return nil, nil, err
 	}
+	commonConn, err := grpc.NewClient(services.Common.GrpcEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		_ = authConn.Close()
+		_ = userConn.Close()
+		_ = client.Close()
+		return nil, nil, err
+	}
 	d := &Data{
-		db:         client,
-		userConn:   userConn,
-		userClient: userv1.NewUserServiceClient(userConn),
-		authConn:   authConn,
-		authClient: authv1.NewAuthServiceClient(authConn),
+		db:           client,
+		userConn:     userConn,
+		userClient:   userv1.NewUserServiceClient(userConn),
+		authConn:     authConn,
+		authClient:   authv1.NewAuthServiceClient(authConn),
+		commonConn:   commonConn,
+		commonClient: commonv1.NewCommonServiceClient(commonConn),
 	}
 	cleanup := func() {
 		helper.Info("closing the data resources")
+		if d.commonConn != nil {
+			_ = d.commonConn.Close()
+		}
 		if d.authConn != nil {
 			_ = d.authConn.Close()
 		}
@@ -115,6 +131,45 @@ func (r *adminRepo) GetCurrentUserMenuAuthority(ctx context.Context, userID stri
 func (r *adminRepo) CreateMenu(ctx context.Context, item *ent.Menu) (*ent.Menu, error) {
 	defer r.data.db.Menu.Query().All(entcache.Evict(ctx))
 	return r.data.db.Menu.Create().CreateAll(item).Save(ctx)
+}
+
+func (r *adminRepo) ListAuthWalkRoutes(ctx context.Context) ([]tools.WalkRouteItem, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	res, err := r.data.authClient.GetWalkRoute(ctx, &emptypb.Empty{})
+	if err != nil {
+		return nil, err
+	}
+	items := make([]tools.WalkRouteItem, 0, len(res.Items))
+	for _, item := range res.Items {
+		items = append(items, tools.WalkRouteItem{URL: item.Url, Method: item.Method})
+	}
+	return items, nil
+}
+
+func (r *adminRepo) ListUserWalkRoutes(ctx context.Context) ([]tools.WalkRouteItem, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	res, err := r.data.userClient.GetWalkRoute(ctx, &emptypb.Empty{})
+	if err != nil {
+		return nil, err
+	}
+	items := make([]tools.WalkRouteItem, 0, len(res.Items))
+	for _, item := range res.Items {
+		items = append(items, tools.WalkRouteItem{URL: item.Url, Method: item.Method})
+	}
+	return items, nil
+}
+
+func (r *adminRepo) ListCommonWalkRoutes(ctx context.Context) ([]tools.WalkRouteItem, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	res, err := r.data.commonClient.GetWalkRoute(ctx, &emptypb.Empty{})
+	if err != nil {
+		return nil, err
+	}
+	items := make([]tools.WalkRouteItem, 0, len(res.Items))
+	for _, item := range res.Items {
+		items = append(items, tools.WalkRouteItem{URL: item.Url, Method: item.Method})
+	}
+	return items, nil
 }
 
 func (r *adminRepo) UpdateMenu(ctx context.Context, id int64, item *ent.Menu) (*ent.Menu, error) {

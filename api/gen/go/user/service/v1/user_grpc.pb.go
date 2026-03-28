@@ -30,6 +30,7 @@ const (
 	UserService_ValidateUserAuth_FullMethodName     = "/api.user.service.v1.UserService/ValidateUserAuth"
 	UserService_GetUserAuthInfo_FullMethodName      = "/api.user.service.v1.UserService/GetUserAuthInfo"
 	UserService_ListUserAuthBindings_FullMethodName = "/api.user.service.v1.UserService/ListUserAuthBindings"
+	UserService_GetWalkRoute_FullMethodName         = "/api.user.service.v1.UserService/GetWalkRoute"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -46,6 +47,7 @@ type UserServiceClient interface {
 	ValidateUserAuth(ctx context.Context, in *ValidateUserAuthRequest, opts ...grpc.CallOption) (*ValidateUserAuthReply, error)
 	GetUserAuthInfo(ctx context.Context, in *GetUserAuthInfoRequest, opts ...grpc.CallOption) (*GetUserAuthInfoReply, error)
 	ListUserAuthBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthBindingsReply, error)
+	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
 }
 
 type userServiceClient struct {
@@ -156,6 +158,16 @@ func (c *userServiceClient) ListUserAuthBindings(ctx context.Context, in *emptyp
 	return out, nil
 }
 
+func (c *userServiceClient) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWalkRouteReply)
+	err := c.cc.Invoke(ctx, UserService_GetWalkRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -170,6 +182,7 @@ type UserServiceServer interface {
 	ValidateUserAuth(context.Context, *ValidateUserAuthRequest) (*ValidateUserAuthReply, error)
 	GetUserAuthInfo(context.Context, *GetUserAuthInfoRequest) (*GetUserAuthInfoReply, error)
 	ListUserAuthBindings(context.Context, *emptypb.Empty) (*ListUserAuthBindingsReply, error)
+	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -209,6 +222,9 @@ func (UnimplementedUserServiceServer) GetUserAuthInfo(context.Context, *GetUserA
 }
 func (UnimplementedUserServiceServer) ListUserAuthBindings(context.Context, *emptypb.Empty) (*ListUserAuthBindingsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthBindings not implemented")
+}
+func (UnimplementedUserServiceServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -411,6 +427,24 @@ func _UserService_ListUserAuthBindings_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetWalkRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetWalkRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetWalkRoute(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -457,6 +491,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUserAuthBindings",
 			Handler:    _UserService_ListUserAuthBindings_Handler,
+		},
+		{
+			MethodName: "GetWalkRoute",
+			Handler:    _UserService_GetWalkRoute_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -166,12 +166,16 @@ gateway 现在直接使用原生 `gateway.endpoints` / `gateway.middlewares` 配
 - `jwt`：校验 Bearer Token，支持按 `path + method + host` 白名单绕过
 - `whitelist`：只允许命中的 HTTP 路由通过，未命中直接拒绝
 - `ratelimit`：传统限流，支持全局或按 IP 限流
+- `casbin`：基于角色/API 资源关系做接口授权
+- `httplog`：按接口请求记录访问日志并上报 admin
 
 对应配置 type URL：
 
 - `type.googleapis.com/base_server.gateway.middleware.jwt.v1.JWT`
 - `type.googleapis.com/base_server.gateway.middleware.whitelist.v1.Whitelist`
 - `type.googleapis.com/base_server.gateway.middleware.ratelimit.v1.RateLimit`
+- `type.googleapis.com/base_server.gateway.middleware.casbin.v1.Casbin`
+- `type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog`
 
 建议对安全相关 middleware 打开 `required: true`，这样拼错名字或配置解析失败时会直接报错，而不是静默跳过。
 
@@ -197,7 +201,7 @@ gateway 现在直接使用原生 `gateway.endpoints` / `gateway.middlewares` 配
 | 请求 | 命中路由 | 网关处理 | 预期行为 |
 | --- | --- | --- | --- |
 | `POST /auth-api/v1/login`，无 token | `/auth-api/v1/login` | `ratelimit(SCOPE_IP, 5 rps, burst 10)` + 全局 `cors` | 允许转发到 auth `:8020`；不要求 JWT；同一 IP 高频请求会被 `429` |
-| `POST /auth-api/v1/refresh-token`，无 token | `/auth-api/v1/*` | `jwt`（此 path 在 jwt whitelist） + 全局 `cors` | 允许转发到 auth `:8020`；不要求 JWT |
+| `POST /auth-api/v1/refresh`，无 token | `/auth-api/v1/*` | `jwt`（此 path 在 jwt whitelist） + 全局 `cors` | 允许转发到 auth `:8020`；不要求 JWT |
 | `GET /auth-api/v1/profile`，无 token | `/auth-api/v1/*` | `jwt` + 全局 `cors` | 网关直接返回 `401`，不会转发到 auth |
 | `GET /auth-api/v1/profile`，带有效 Bearer token | `/auth-api/v1/*` | `jwt` + 全局 `cors` | 允许转发到 auth `:8020` |
 | `GET /user-api/v1/profile`，无 token | `/user-api/v1/*` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
@@ -206,9 +210,8 @@ gateway 现在直接使用原生 `gateway.endpoints` / `gateway.middlewares` 配
 | `GET /admin-api/v1/users`，无 token | `/admin-api/v1/*` | `jwt` + `ratelimit` + 全局 `cors` | 网关直接返回 `401` |
 | `POST /common-api/v1/file/upload`，带有效 Bearer token | `/common-api/v1/file/upload` | `jwt` + 全局 `cors` | 允许转发到 common `:8040`；超时时间 `10m` |
 | `POST /common-api/v1/file/upload`，无 token | `/common-api/v1/file/upload` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
-| `GET /common-api/v1/copilot/sse`，带有效 Bearer token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 允许转发到 common `:8040`；按 `stream: true` 走流式代理；超时时间 `24h` |
-| `GET /common-api/v1/copilot/sse`，无 token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
-| `GET /common-api/v1/ping`，带有效 Bearer token | `/common-api/v1/*` | `jwt` + 全局 `cors` | 允许转发到 common `:8040` |
+| `POST /common-api/v1/copilot/sse`，带有效 Bearer token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 允许转发到 common `:8040`；按 `stream: true` 走流式代理；超时时间 `24h` |
+| `POST /common-api/v1/copilot/sse`，无 token | `/common-api/v1/copilot/sse` | `jwt` + 全局 `cors` | 网关直接返回 `401` |
 | 任意跨域预检 `OPTIONS` 请求，`Origin` 命中 allowOrigins | 全局 `cors` | `cors` | 由网关直接返回 CORS 预检响应，不再继续走下游业务处理 |
 
 注意：

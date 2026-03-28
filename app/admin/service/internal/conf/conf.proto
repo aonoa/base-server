@@ -54,6 +54,10 @@ message Services {
   message Auth {
     string grpc_endpoint = 1;
   }
+  message Common {
+    string grpc_endpoint = 1;
+  }
   User user = 1;
   Auth auth = 2;
+  Common common = 3;
 }

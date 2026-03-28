@@ -32,5 +32,6 @@ func NewHTTPServer(c *conf.Server, ac *conf.Auth, common *service.CommonService,
 	srv := http.NewServer(opts...)
 	commonhttp.RegisterUploadServiceHTTPServer(srv, common)
 	commonhttp.RegisterSSEServiceHTTPServer(srv, common)
+	common.RestServer = srv
 	return srv
 }

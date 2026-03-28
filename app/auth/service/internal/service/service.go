@@ -6,7 +6,9 @@ import (
 	v1 "base-server/api/gen/go/auth/service/v1"
 	"base-server/app/auth/service/internal/biz"
 	"base-server/pkg/authx"
+	"base-server/pkg/tools"
 
+	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -17,7 +19,8 @@ var ProviderSet = wire.NewSet(NewAuthService)
 type AuthService struct {
 	v1.UnimplementedAuthServiceServer
 
-	uc *biz.AuthUsecase
+	uc         *biz.AuthUsecase
+	RestServer *kratoshttp.Server
 }
 
 func NewAuthService(uc *biz.AuthUsecase) *AuthService {
@@ -42,6 +45,18 @@ func (s *AuthService) GetCurrentUserMenuAuthority(ctx context.Context, req *v1.G
 
 func (s *AuthService) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {
 	return s.uc.CheckAuthorization(ctx, req)
+}
+
+func (s *AuthService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
+	items, err := tools.WalkHTTPRoutes(s.RestServer)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
+	for _, item := range tools.SortAndUniqueWalkRoutes(items) {
+		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
+	}
+	return res, nil
 }
 
 func (s *AuthService) Logout(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {

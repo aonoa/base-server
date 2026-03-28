@@ -29,6 +29,7 @@ const OperationAdminServiceGetDeptList = "/api.admin.service.v1.AdminService/Get
 const OperationAdminServiceGetSysLogInfo = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 const OperationAdminServiceGetSysLogList = "/api.admin.service.v1.AdminService/GetSysLogList"
 const OperationAdminServiceGetSysMenuList = "/api.admin.service.v1.AdminService/GetSysMenuList"
+const OperationAdminServiceGetWalkRoute = "/api.admin.service.v1.AdminService/GetWalkRoute"
 const OperationAdminServiceIsMenuNameExists = "/api.admin.service.v1.AdminService/IsMenuNameExists"
 const OperationAdminServiceIsMenuPathExists = "/api.admin.service.v1.AdminService/IsMenuPathExists"
 const OperationAdminServiceUpdateDept = "/api.admin.service.v1.AdminService/UpdateDept"
@@ -44,6 +45,7 @@ type AdminServiceHTTPServer interface {
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
+	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
@@ -58,6 +60,7 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 	r.DELETE("/admin-api/v1/depts/{id}", _AdminService_DelDept0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus/current", _AdminService_GetCurrentUserMenus0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus", _AdminService_GetSysMenuList0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/walk-routes", _AdminService_GetWalkRoute0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus/name-exists", _AdminService_IsMenuNameExists0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/menus/path-exists", _AdminService_IsMenuPathExists0_HTTP_Handler(srv))
 	r.POST("/admin-api/v1/menus", _AdminService_CreateMenu0_HTTP_Handler(srv))
@@ -189,6 +192,25 @@ func _AdminService_GetSysMenuList0_HTTP_Handler(srv AdminServiceHTTPServer) func
 			return err
 		}
 		reply := out.(*GetSysMenuListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetWalkRoute0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetWalkRoute)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetWalkRoute(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetWalkRouteReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -351,6 +373,7 @@ type AdminServiceHTTPClient interface {
 	GetSysLogInfo(ctx context.Context, req *GetSysLogInfoParams, opts ...http.CallOption) (rsp *GetSysLogInfoReply, err error)
 	GetSysLogList(ctx context.Context, req *GetSysLogListParams, opts ...http.CallOption) (rsp *GetSysLogListReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
+	GetWalkRoute(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetWalkRouteReply, err error)
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
@@ -474,6 +497,19 @@ func (c *AdminServiceHTTPClientImpl) GetSysMenuList(ctx context.Context, in *Men
 	pattern := "/admin-api/v1/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetSysMenuList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetWalkRouteReply, error) {
+	var out GetWalkRouteReply
+	pattern := "/admin-api/v1/walk-routes"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetWalkRoute))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

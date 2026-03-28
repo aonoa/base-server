@@ -50,6 +50,14 @@ service AdminService {
 
   rpc ListMenus(google.protobuf.Empty) returns (ListMenusReply);
 
+  rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/walk-routes"
+    };
+  }
+
+  rpc GetSelfWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
+
   rpc IsMenuNameExists(IsMenuNameExistsRequest) returns (IsMenuNameExistsReply) {
     option (google.api.http) = {
       get: "/admin-api/v1/menus/name-exists"
@@ -203,6 +211,15 @@ message MenuRecord {
 
 message ListMenusReply {
   repeated MenuRecord items = 1;
+}
+
+message WalkRouteItem {
+  string url = 1;
+  string method = 2;
+}
+
+message GetWalkRouteReply {
+  repeated WalkRouteItem items = 1;
 }
 
 message IsMenuNameExistsRequest {

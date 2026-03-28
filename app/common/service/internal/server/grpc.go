@@ -30,6 +30,7 @@ func NewGRPCServer(c *conf.Server, ac *conf.Auth, common *service.CommonService,
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
+	pb.RegisterCommonServiceServer(srv, common)
 	pb.RegisterUploadServiceServer(srv, common)
 	pb.RegisterSSEServiceServer(srv, common)
 	return srv

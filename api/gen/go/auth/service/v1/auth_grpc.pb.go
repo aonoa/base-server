@@ -24,6 +24,7 @@ const (
 	AuthService_GetAccessCodes_FullMethodName              = "/api.auth.service.v1.AuthService/GetAccessCodes"
 	AuthService_GetCurrentUserMenuAuthority_FullMethodName = "/api.auth.service.v1.AuthService/GetCurrentUserMenuAuthority"
 	AuthService_CheckAuthorization_FullMethodName          = "/api.auth.service.v1.AuthService/CheckAuthorization"
+	AuthService_GetWalkRoute_FullMethodName                = "/api.auth.service.v1.AuthService/GetWalkRoute"
 	AuthService_Logout_FullMethodName                      = "/api.auth.service.v1.AuthService/Logout"
 	AuthService_RefreshToken_FullMethodName                = "/api.auth.service.v1.AuthService/RefreshToken"
 	AuthService_ReLoadPolicy_FullMethodName                = "/api.auth.service.v1.AuthService/ReLoadPolicy"
@@ -49,6 +50,7 @@ type AuthServiceClient interface {
 	GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAccessCodesReply, error)
 	GetCurrentUserMenuAuthority(ctx context.Context, in *GetCurrentUserMenuAuthorityRequest, opts ...grpc.CallOption) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(ctx context.Context, in *CheckAuthorizationRequest, opts ...grpc.CallOption) (*CheckAuthorizationReply, error)
+	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
 	ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -108,6 +110,16 @@ func (c *authServiceClient) CheckAuthorization(ctx context.Context, in *CheckAut
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CheckAuthorizationReply)
 	err := c.cc.Invoke(ctx, AuthService_CheckAuthorization_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWalkRouteReply)
+	err := c.cc.Invoke(ctx, AuthService_GetWalkRoute_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -272,6 +284,7 @@ type AuthServiceServer interface {
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
 	GetCurrentUserMenuAuthority(context.Context, *GetCurrentUserMenuAuthorityRequest) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error)
+	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
@@ -308,6 +321,9 @@ func (UnimplementedAuthServiceServer) GetCurrentUserMenuAuthority(context.Contex
 }
 func (UnimplementedAuthServiceServer) CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuthorization not implemented")
+}
+func (UnimplementedAuthServiceServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
 }
 func (UnimplementedAuthServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
@@ -443,6 +459,24 @@ func _AuthService_CheckAuthorization_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).CheckAuthorization(ctx, req.(*CheckAuthorizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_GetWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetWalkRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetWalkRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetWalkRoute(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -739,6 +773,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckAuthorization",
 			Handler:    _AuthService_CheckAuthorization_Handler,
+		},
+		{
+			MethodName: "GetWalkRoute",
+			Handler:    _AuthService_GetWalkRoute_Handler,
 		},
 		{
 			MethodName: "Logout",

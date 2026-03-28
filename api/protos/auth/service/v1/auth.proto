@@ -27,6 +27,8 @@ service AuthService {
 
   rpc CheckAuthorization(CheckAuthorizationRequest) returns (CheckAuthorizationReply);
 
+  rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
+
   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/auth-api/v1/logout"
@@ -160,6 +162,15 @@ message CheckAuthorizationRequest {
 
 message CheckAuthorizationReply {
   bool allowed = 1;
+}
+
+message WalkRouteItem {
+  string url = 1;
+  string method = 2;
+}
+
+message GetWalkRouteReply {
+  repeated WalkRouteItem items = 1;
 }
 
 message RolePageParams {

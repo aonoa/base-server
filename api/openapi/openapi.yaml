@@ -286,6 +286,18 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/walk-routes:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetWalkRoute
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetWalkRouteReply'
     /auth-api/v1/access-codes:
         get:
             tags:
@@ -967,6 +979,13 @@ components:
                         $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
                 total:
                     type: string
+        api.admin.service.v1.GetWalkRouteReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.WalkRouteItem'
         api.admin.service.v1.IsMenuNameExistsReply:
             type: object
             properties:
@@ -1086,6 +1105,13 @@ components:
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
                 createTime:
+                    type: string
+        api.admin.service.v1.WalkRouteItem:
+            type: object
+            properties:
+                url:
+                    type: string
+                method:
                     type: string
         api.auth.service.v1.ApiListItem:
             type: object

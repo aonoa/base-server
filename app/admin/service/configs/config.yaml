@@ -22,3 +22,5 @@ services:
     grpc_endpoint: 127.0.0.1:9010
   auth:
     grpc_endpoint: 127.0.0.1:9020
+  common:
+    grpc_endpoint: 127.0.0.1:9040

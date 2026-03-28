@@ -3,6 +3,7 @@
 ## What this repo is
 - Go (`go 1.25.8`) Kratos multi-service repo.
 - Active services:
+  - gateway: HTTP `:8000`
   - auth: HTTP `:8020`, gRPC `:9020`
   - user: HTTP `:8010`, gRPC `:9010`
   - admin: HTTP `:8030`, gRPC `:9030`
@@ -45,7 +46,8 @@
 
 ## Repo-specific gotchas
 - Placeholder secrets still exist in service config YAMLs; do not commit real credentials.
-- Tests are mostly compile checks; there are effectively no `*_test.go` files.
+- Tests are mostly compile checks; there are effectively no meaningful `*_test.go` files.
+- Gateway is part of the active split-service architecture and should be considered when updating routes, auth, or local run instructions.
 - The old monolith runtime and Helm chart have been removed.
 
 ## When adding/changing APIs

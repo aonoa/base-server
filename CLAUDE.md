@@ -18,6 +18,7 @@ Notes:
 
 ### Build and run
 - `make build` — build split service binaries into `./bin/`
+- `./bin/gateway-service -conf ./app/gateway/service/configs`
 - `./bin/auth-service -conf ./app/auth/service/configs`
 - `./bin/user-service -conf ./app/user/service/configs`
 - `./bin/admin-service -conf ./app/admin/service/configs`
@@ -32,6 +33,7 @@ Notes:
 
 ### Docker
 - Generic per-service image build:
+  - `docker build --build-arg SERVICE=gateway -t base-server-gateway:v1.1.0 .`
   - `docker build --build-arg SERVICE=auth -t base-server-auth:v1.1.0 .`
   - `docker build --build-arg SERVICE=user -t base-server-user:v1.1.0 .`
   - `docker build --build-arg SERVICE=admin -t base-server-admin:v1.1.0 .`
@@ -43,6 +45,7 @@ Notes:
 This is a Kratos-based Go backend with protobuf-first APIs, Ent for persistence, JWT authentication, Casbin authorization, and split services under `app/*/service`.
 
 ### Active services
+- `gateway` — external HTTP entrypoint, endpoint routing, edge middleware
 - `auth` — login, refresh, Casbin policy rebuild, role/api/resource management
 - `user` — user CRUD, profile, password, auth identity data
 - `admin` — menu, dept, syslog
@@ -54,8 +57,10 @@ This is a Kratos-based Go backend with protobuf-first APIs, Ent for persistence,
 3. Handlers delegate business logic to use cases in `app/*/service/internal/biz/`.
 4. Use cases depend on repository interfaces implemented in `app/*/service/internal/data/`.
 5. Shared persistence code lives in `pkg/data/` and shared helpers in `pkg/tools/`.
+6. Gateway reads endpoint config and forwards external HTTP traffic to the owning split service.
 
 ### Important directories
+- `app/gateway/service/`
 - `app/auth/service/`
 - `app/user/service/`
 - `app/admin/service/`
@@ -73,7 +78,8 @@ This is a Kratos-based Go backend with protobuf-first APIs, Ent for persistence,
 
 ### Bootstrap and runtime
 - Each service has its own entrypoint under `app/<service>/service/cmd/service/main.go`.
-- Each service starts both HTTP and gRPC servers.
+- Each split service starts both HTTP and gRPC servers.
+- Gateway is a separate HTTP edge service and should be included when changes affect routing, auth, or externally exposed paths.
 - Each service loads config from its own `app/<service>/service/configs` directory.
 
 ### API layer
@@ -134,6 +140,7 @@ Edit these source locations instead:
 
 ## Repo-specific gotchas
 - Placeholder credentials remain in service config files; do not commit real secrets.
-- There is no checked-in Helm chart anymore; deploy the four services separately.
+- Gateway config may expose behavior that is not obvious from service proto files alone, especially for auth, SSE, upload, and timeout behavior.
+- There is no checked-in Helm chart anymore; deploy the four domain services plus gateway separately.
 - CI Docker packaging should build per-service images, not a monolith.
 - `go.mod` targets Go `1.25.8`.

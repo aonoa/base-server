@@ -999,6 +999,102 @@ func (x *ListUserAuthBindingsReply) GetItems() []*UserAuthBinding {
 	return nil
 }
 
+type WalkRouteItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Method        string                 `protobuf:"bytes,2,opt,name=method,proto3" json:"method,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WalkRouteItem) Reset() {
+	*x = WalkRouteItem{}
+	mi := &file_user_service_v1_user_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WalkRouteItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WalkRouteItem) ProtoMessage() {}
+
+func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
+	mi := &file_user_service_v1_user_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WalkRouteItem.ProtoReflect.Descriptor instead.
+func (*WalkRouteItem) Descriptor() ([]byte, []int) {
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *WalkRouteItem) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *WalkRouteItem) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+type GetWalkRouteReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*WalkRouteItem       `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWalkRouteReply) Reset() {
+	*x = GetWalkRouteReply{}
+	mi := &file_user_service_v1_user_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWalkRouteReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWalkRouteReply) ProtoMessage() {}
+
+func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
+	mi := &file_user_service_v1_user_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWalkRouteReply.ProtoReflect.Descriptor instead.
+func (*GetWalkRouteReply) Descriptor() ([]byte, []int) {
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 var File_user_service_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_service_v1_user_proto_rawDesc = "" +
@@ -1072,7 +1168,12 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\faccess_codes\x18\x03 \x03(\tR\vaccessCodes\x12\x17\n" +
 	"\arole_id\x18\x04 \x01(\x03R\x06roleId\"W\n" +
 	"\x19ListUserAuthBindingsReply\x12:\n" +
-	"\x05items\x18\x01 \x03(\v2$.api.user.service.v1.UserAuthBindingR\x05items2\x9c\t\n" +
+	"\x05items\x18\x01 \x03(\v2$.api.user.service.v1.UserAuthBindingR\x05items\"9\n" +
+	"\rWalkRouteItem\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
+	"\x06method\x18\x02 \x01(\tR\x06method\"M\n" +
+	"\x11GetWalkRouteReply\x128\n" +
+	"\x05items\x18\x01 \x03(\v2\".api.user.service.v1.WalkRouteItemR\x05items2\xec\t\n" +
 	"\vUserService\x12\x83\x01\n" +
 	"\vGetUserInfo\x12'.api.user.service.v1.GetUserInfoRequest\x1a%.api.user.service.v1.GetUserInfoReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/user-api/v1/users/{user_id}\x12t\n" +
 	"\vGetUserList\x12\".api.user.service.v1.GetUserParams\x1a%.api.user.service.v1.GetUserListReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/user-api/v1/users\x12n\n" +
@@ -1084,7 +1185,8 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\x0eChangePassword\x12*.api.user.service.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/user-api/v1/users/{user_id}/password\x12l\n" +
 	"\x10ValidateUserAuth\x12,.api.user.service.v1.ValidateUserAuthRequest\x1a*.api.user.service.v1.ValidateUserAuthReply\x12i\n" +
 	"\x0fGetUserAuthInfo\x12+.api.user.service.v1.GetUserAuthInfoRequest\x1a).api.user.service.v1.GetUserAuthInfoReply\x12^\n" +
-	"\x14ListUserAuthBindings\x12\x16.google.protobuf.Empty\x1a..api.user.service.v1.ListUserAuthBindingsReplyBB\n" +
+	"\x14ListUserAuthBindings\x12\x16.google.protobuf.Empty\x1a..api.user.service.v1.ListUserAuthBindingsReply\x12N\n" +
+	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a&.api.user.service.v1.GetWalkRouteReplyBB\n" +
 	"\x13api.user.service.v1P\x01Z)base-server/api/gen/go/user/service/v1;v1b\x06proto3"
 
 var (
@@ -1099,7 +1201,7 @@ func file_user_service_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_service_v1_user_proto_rawDescData
 }
 
-var file_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_user_service_v1_user_proto_goTypes = []any{
 	(*GetUserInfoRequest)(nil),        // 0: api.user.service.v1.GetUserInfoRequest
 	(*RoleInfo)(nil),                  // 1: api.user.service.v1.RoleInfo
@@ -1117,37 +1219,42 @@ var file_user_service_v1_user_proto_goTypes = []any{
 	(*UserAuthBinding)(nil),           // 13: api.user.service.v1.UserAuthBinding
 	(*GetUserAuthInfoReply)(nil),      // 14: api.user.service.v1.GetUserAuthInfoReply
 	(*ListUserAuthBindingsReply)(nil), // 15: api.user.service.v1.ListUserAuthBindingsReply
-	(*emptypb.Empty)(nil),             // 16: google.protobuf.Empty
+	(*WalkRouteItem)(nil),             // 16: api.user.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),         // 17: api.user.service.v1.GetWalkRouteReply
+	(*emptypb.Empty)(nil),             // 18: google.protobuf.Empty
 }
 var file_user_service_v1_user_proto_depIdxs = []int32{
 	1,  // 0: api.user.service.v1.GetUserInfoReply.roles:type_name -> api.user.service.v1.RoleInfo
 	4,  // 1: api.user.service.v1.GetUserListReply.items:type_name -> api.user.service.v1.UserListItem
 	13, // 2: api.user.service.v1.ListUserAuthBindingsReply.items:type_name -> api.user.service.v1.UserAuthBinding
-	0,  // 3: api.user.service.v1.UserService.GetUserInfo:input_type -> api.user.service.v1.GetUserInfoRequest
-	3,  // 4: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
-	4,  // 5: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
-	4,  // 6: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
-	6,  // 7: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
-	7,  // 8: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
-	9,  // 9: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
-	10, // 10: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
-	12, // 11: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
-	16, // 12: api.user.service.v1.UserService.ListUserAuthBindings:input_type -> google.protobuf.Empty
-	2,  // 13: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
-	5,  // 14: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
-	4,  // 15: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
-	4,  // 16: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
-	16, // 17: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
-	8,  // 18: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
-	16, // 19: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
-	11, // 20: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
-	14, // 21: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
-	15, // 22: api.user.service.v1.UserService.ListUserAuthBindings:output_type -> api.user.service.v1.ListUserAuthBindingsReply
-	13, // [13:23] is the sub-list for method output_type
-	3,  // [3:13] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	16, // 3: api.user.service.v1.GetWalkRouteReply.items:type_name -> api.user.service.v1.WalkRouteItem
+	0,  // 4: api.user.service.v1.UserService.GetUserInfo:input_type -> api.user.service.v1.GetUserInfoRequest
+	3,  // 5: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
+	4,  // 6: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
+	4,  // 7: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
+	6,  // 8: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
+	7,  // 9: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
+	9,  // 10: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
+	10, // 11: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
+	12, // 12: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
+	18, // 13: api.user.service.v1.UserService.ListUserAuthBindings:input_type -> google.protobuf.Empty
+	18, // 14: api.user.service.v1.UserService.GetWalkRoute:input_type -> google.protobuf.Empty
+	2,  // 15: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
+	5,  // 16: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
+	4,  // 17: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
+	4,  // 18: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
+	18, // 19: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
+	8,  // 20: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
+	18, // 21: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
+	11, // 22: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
+	14, // 23: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
+	15, // 24: api.user.service.v1.UserService.ListUserAuthBindings:output_type -> api.user.service.v1.ListUserAuthBindingsReply
+	17, // 25: api.user.service.v1.UserService.GetWalkRoute:output_type -> api.user.service.v1.GetWalkRouteReply
+	15, // [15:26] is the sub-list for method output_type
+	4,  // [4:15] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_user_service_v1_user_proto_init() }
@@ -1161,7 +1268,7 @@ func file_user_service_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_service_v1_user_proto_rawDesc), len(file_user_service_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

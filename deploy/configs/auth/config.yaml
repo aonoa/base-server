@@ -22,3 +22,5 @@ auth:
 services:
   user:
     grpc_endpoint: user:9010
+  admin:
+    grpc_endpoint: admin:9030

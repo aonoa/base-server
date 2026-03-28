@@ -5,6 +5,7 @@ import (
 	commonhttp "base-server/api/protos/common/service"
 	"base-server/app/common/service/internal/biz"
 	"base-server/app/common/service/internal/conf"
+	"base-server/pkg/tools"
 	"bytes"
 	"context"
 	"fmt"
@@ -20,6 +21,7 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // ProviderSet is service providers.
@@ -28,13 +30,27 @@ var ProviderSet = wire.NewSet(NewCommonService)
 type CommonService struct {
 	pb.UnimplementedUploadServiceServer
 	pb.UnimplementedSSEServiceServer
+	pb.UnimplementedCommonServiceServer
 
-	uc  *biz.CommonUsecase
-	llm *conf.Llm
+	uc         *biz.CommonUsecase
+	llm        *conf.Llm
+	RestServer *khttp.Server
 }
 
 func NewCommonService(uc *biz.CommonUsecase, llm *conf.Llm) *CommonService {
 	return &CommonService{uc: uc, llm: llm}
+}
+
+func (s *CommonService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*pb.GetWalkRouteReply, error) {
+	items, err := tools.WalkHTTPRoutes(s.RestServer)
+	if err != nil {
+		return nil, err
+	}
+	res := &pb.GetWalkRouteReply{Items: make([]*pb.WalkRouteItem, 0, len(items))}
+	for _, item := range tools.SortAndUniqueWalkRoutes(items) {
+		res.Items = append(res.Items, &pb.WalkRouteItem{Url: item.URL, Method: item.Method})
+	}
+	return res, nil
 }
 
 func (s *CommonService) UploadFile(ctx context.Context, req *pb.File) (*pb.UploadResponse, error) {

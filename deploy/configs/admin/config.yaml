@@ -15,4 +15,12 @@ data:
     write_timeout: 0.2s
 auth:
   api_key: auth-service-secret
-  whitelist: []
+  whitelist:
+    - /api.admin.service.v1.AdminService/CreateSysLog
+services:
+  user:
+    grpc_endpoint: user:9010
+  auth:
+    grpc_endpoint: auth:9020
+  common:
+    grpc_endpoint: common:9040

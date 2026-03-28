@@ -57,6 +57,7 @@ service UserService {
   rpc ValidateUserAuth(ValidateUserAuthRequest) returns (ValidateUserAuthReply);
   rpc GetUserAuthInfo(GetUserAuthInfoRequest) returns (GetUserAuthInfoReply);
   rpc ListUserAuthBindings(google.protobuf.Empty) returns (ListUserAuthBindingsReply);
+  rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
 }
 
 message GetUserInfoRequest {
@@ -155,4 +156,13 @@ message GetUserAuthInfoReply {
 
 message ListUserAuthBindingsReply {
   repeated UserAuthBinding items = 1;
+}
+
+message WalkRouteItem {
+  string url = 1;
+  string method = 2;
+}
+
+message GetWalkRouteReply {
+  repeated WalkRouteItem items = 1;
 }
