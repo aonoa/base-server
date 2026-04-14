@@ -67,66 +67,6 @@ func (x *GetUserInfoRequest) GetUserId() string {
 	return ""
 }
 
-type RoleInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RoleInfo) Reset() {
-	*x = RoleInfo{}
-	mi := &file_user_service_v1_user_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleInfo) ProtoMessage() {}
-
-func (x *RoleInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleInfo.ProtoReflect.Descriptor instead.
-func (*RoleInfo) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *RoleInfo) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *RoleInfo) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *RoleInfo) GetValue() string {
-	if x != nil {
-		return x.Value
-	}
-	return ""
-}
-
 type GetUserInfoReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -136,14 +76,13 @@ type GetUserInfoReply struct {
 	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
 	Remark        string                 `protobuf:"bytes,6,opt,name=remark,proto3" json:"remark,omitempty"`
 	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
-	Roles         []*RoleInfo            `protobuf:"bytes,8,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserInfoReply) Reset() {
 	*x = GetUserInfoReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[2]
+	mi := &file_user_service_v1_user_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -155,7 +94,7 @@ func (x *GetUserInfoReply) String() string {
 func (*GetUserInfoReply) ProtoMessage() {}
 
 func (x *GetUserInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[2]
+	mi := &file_user_service_v1_user_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +107,7 @@ func (x *GetUserInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserInfoReply.ProtoReflect.Descriptor instead.
 func (*GetUserInfoReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{2}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetUserInfoReply) GetUserId() string {
@@ -220,13 +159,6 @@ func (x *GetUserInfoReply) GetStatus() int32 {
 	return 0
 }
 
-func (x *GetUserInfoReply) GetRoles() []*RoleInfo {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
 type GetUserParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
@@ -234,7 +166,6 @@ type GetUserParams struct {
 	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	DeptId        string                 `protobuf:"bytes,5,opt,name=dept_id,json=deptId,proto3" json:"dept_id,omitempty"`
-	Role          int64                  `protobuf:"varint,6,opt,name=role,proto3" json:"role,omitempty"`
 	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -242,7 +173,7 @@ type GetUserParams struct {
 
 func (x *GetUserParams) Reset() {
 	*x = GetUserParams{}
-	mi := &file_user_service_v1_user_proto_msgTypes[3]
+	mi := &file_user_service_v1_user_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -254,7 +185,7 @@ func (x *GetUserParams) String() string {
 func (*GetUserParams) ProtoMessage() {}
 
 func (x *GetUserParams) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[3]
+	mi := &file_user_service_v1_user_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -267,7 +198,7 @@ func (x *GetUserParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserParams.ProtoReflect.Descriptor instead.
 func (*GetUserParams) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{3}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetUserParams) GetCurrentPage() int64 {
@@ -305,13 +236,6 @@ func (x *GetUserParams) GetDeptId() string {
 	return ""
 }
 
-func (x *GetUserParams) GetRole() int64 {
-	if x != nil {
-		return x.Role
-	}
-	return 0
-}
-
 func (x *GetUserParams) GetStatus() int32 {
 	if x != nil {
 		return x.Status
@@ -325,7 +249,6 @@ type UserListItem struct {
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Role          int64                  `protobuf:"varint,5,opt,name=role,proto3" json:"role,omitempty"`
 	CreateTime    string                 `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	Remark        string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
 	Status        int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
@@ -338,7 +261,7 @@ type UserListItem struct {
 
 func (x *UserListItem) Reset() {
 	*x = UserListItem{}
-	mi := &file_user_service_v1_user_proto_msgTypes[4]
+	mi := &file_user_service_v1_user_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -350,7 +273,7 @@ func (x *UserListItem) String() string {
 func (*UserListItem) ProtoMessage() {}
 
 func (x *UserListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[4]
+	mi := &file_user_service_v1_user_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -363,7 +286,7 @@ func (x *UserListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserListItem.ProtoReflect.Descriptor instead.
 func (*UserListItem) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{4}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UserListItem) GetId() string {
@@ -392,13 +315,6 @@ func (x *UserListItem) GetNickname() string {
 		return x.Nickname
 	}
 	return ""
-}
-
-func (x *UserListItem) GetRole() int64 {
-	if x != nil {
-		return x.Role
-	}
-	return 0
 }
 
 func (x *UserListItem) GetCreateTime() string {
@@ -453,7 +369,7 @@ type GetUserListReply struct {
 
 func (x *GetUserListReply) Reset() {
 	*x = GetUserListReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[5]
+	mi := &file_user_service_v1_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -465,7 +381,7 @@ func (x *GetUserListReply) String() string {
 func (*GetUserListReply) ProtoMessage() {}
 
 func (x *GetUserListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[5]
+	mi := &file_user_service_v1_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +394,7 @@ func (x *GetUserListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserListReply.ProtoReflect.Descriptor instead.
 func (*GetUserListReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{5}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserListReply) GetItems() []*UserListItem {
@@ -504,7 +420,7 @@ type DeleteUser struct {
 
 func (x *DeleteUser) Reset() {
 	*x = DeleteUser{}
-	mi := &file_user_service_v1_user_proto_msgTypes[6]
+	mi := &file_user_service_v1_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -516,7 +432,7 @@ func (x *DeleteUser) String() string {
 func (*DeleteUser) ProtoMessage() {}
 
 func (x *DeleteUser) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[6]
+	mi := &file_user_service_v1_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -529,7 +445,7 @@ func (x *DeleteUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUser.ProtoReflect.Descriptor instead.
 func (*DeleteUser) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{6}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DeleteUser) GetId() string {
@@ -549,7 +465,7 @@ type IsUserExistsRequest struct {
 
 func (x *IsUserExistsRequest) Reset() {
 	*x = IsUserExistsRequest{}
-	mi := &file_user_service_v1_user_proto_msgTypes[7]
+	mi := &file_user_service_v1_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -561,7 +477,7 @@ func (x *IsUserExistsRequest) String() string {
 func (*IsUserExistsRequest) ProtoMessage() {}
 
 func (x *IsUserExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[7]
+	mi := &file_user_service_v1_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -574,7 +490,7 @@ func (x *IsUserExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsUserExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsUserExistsRequest) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{7}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *IsUserExistsRequest) GetId() string {
@@ -600,7 +516,7 @@ type IsUserExistsReply struct {
 
 func (x *IsUserExistsReply) Reset() {
 	*x = IsUserExistsReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[8]
+	mi := &file_user_service_v1_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -612,7 +528,7 @@ func (x *IsUserExistsReply) String() string {
 func (*IsUserExistsReply) ProtoMessage() {}
 
 func (x *IsUserExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[8]
+	mi := &file_user_service_v1_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -625,7 +541,7 @@ func (x *IsUserExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsUserExistsReply.ProtoReflect.Descriptor instead.
 func (*IsUserExistsReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{8}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *IsUserExistsReply) GetData() bool {
@@ -646,7 +562,7 @@ type ChangePasswordRequest struct {
 
 func (x *ChangePasswordRequest) Reset() {
 	*x = ChangePasswordRequest{}
-	mi := &file_user_service_v1_user_proto_msgTypes[9]
+	mi := &file_user_service_v1_user_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -658,7 +574,7 @@ func (x *ChangePasswordRequest) String() string {
 func (*ChangePasswordRequest) ProtoMessage() {}
 
 func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[9]
+	mi := &file_user_service_v1_user_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -671,7 +587,7 @@ func (x *ChangePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePasswordRequest.ProtoReflect.Descriptor instead.
 func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{9}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChangePasswordRequest) GetUserId() string {
@@ -705,7 +621,7 @@ type ValidateUserAuthRequest struct {
 
 func (x *ValidateUserAuthRequest) Reset() {
 	*x = ValidateUserAuthRequest{}
-	mi := &file_user_service_v1_user_proto_msgTypes[10]
+	mi := &file_user_service_v1_user_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -717,7 +633,7 @@ func (x *ValidateUserAuthRequest) String() string {
 func (*ValidateUserAuthRequest) ProtoMessage() {}
 
 func (x *ValidateUserAuthRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[10]
+	mi := &file_user_service_v1_user_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -730,7 +646,7 @@ func (x *ValidateUserAuthRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateUserAuthRequest.ProtoReflect.Descriptor instead.
 func (*ValidateUserAuthRequest) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{10}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ValidateUserAuthRequest) GetUsername() string {
@@ -756,7 +672,7 @@ type ValidateUserAuthReply struct {
 
 func (x *ValidateUserAuthReply) Reset() {
 	*x = ValidateUserAuthReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[11]
+	mi := &file_user_service_v1_user_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -768,7 +684,7 @@ func (x *ValidateUserAuthReply) String() string {
 func (*ValidateUserAuthReply) ProtoMessage() {}
 
 func (x *ValidateUserAuthReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[11]
+	mi := &file_user_service_v1_user_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -781,7 +697,7 @@ func (x *ValidateUserAuthReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateUserAuthReply.ProtoReflect.Descriptor instead.
 func (*ValidateUserAuthReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{11}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ValidateUserAuthReply) GetUserId() string {
@@ -800,7 +716,7 @@ type GetUserAuthInfoRequest struct {
 
 func (x *GetUserAuthInfoRequest) Reset() {
 	*x = GetUserAuthInfoRequest{}
-	mi := &file_user_service_v1_user_proto_msgTypes[12]
+	mi := &file_user_service_v1_user_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -812,7 +728,7 @@ func (x *GetUserAuthInfoRequest) String() string {
 func (*GetUserAuthInfoRequest) ProtoMessage() {}
 
 func (x *GetUserAuthInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[12]
+	mi := &file_user_service_v1_user_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -825,7 +741,7 @@ func (x *GetUserAuthInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserAuthInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetUserAuthInfoRequest) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{12}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetUserAuthInfoRequest) GetUserId() string {
@@ -845,7 +761,7 @@ type UserAuthBinding struct {
 
 func (x *UserAuthBinding) Reset() {
 	*x = UserAuthBinding{}
-	mi := &file_user_service_v1_user_proto_msgTypes[13]
+	mi := &file_user_service_v1_user_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -857,7 +773,7 @@ func (x *UserAuthBinding) String() string {
 func (*UserAuthBinding) ProtoMessage() {}
 
 func (x *UserAuthBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[13]
+	mi := &file_user_service_v1_user_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -870,7 +786,7 @@ func (x *UserAuthBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserAuthBinding.ProtoReflect.Descriptor instead.
 func (*UserAuthBinding) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{13}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UserAuthBinding) GetUserId() string {
@@ -892,14 +808,13 @@ type GetUserAuthInfoReply struct {
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	AccessCodes   []string               `protobuf:"bytes,3,rep,name=access_codes,json=accessCodes,proto3" json:"access_codes,omitempty"`
-	RoleId        int64                  `protobuf:"varint,4,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserAuthInfoReply) Reset() {
 	*x = GetUserAuthInfoReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[14]
+	mi := &file_user_service_v1_user_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -911,7 +826,7 @@ func (x *GetUserAuthInfoReply) String() string {
 func (*GetUserAuthInfoReply) ProtoMessage() {}
 
 func (x *GetUserAuthInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[14]
+	mi := &file_user_service_v1_user_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -924,7 +839,7 @@ func (x *GetUserAuthInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserAuthInfoReply.ProtoReflect.Descriptor instead.
 func (*GetUserAuthInfoReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{14}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetUserAuthInfoReply) GetUserId() string {
@@ -948,57 +863,6 @@ func (x *GetUserAuthInfoReply) GetAccessCodes() []string {
 	return nil
 }
 
-func (x *GetUserAuthInfoReply) GetRoleId() int64 {
-	if x != nil {
-		return x.RoleId
-	}
-	return 0
-}
-
-type ListUserAuthBindingsReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*UserAuthBinding     `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListUserAuthBindingsReply) Reset() {
-	*x = ListUserAuthBindingsReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListUserAuthBindingsReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListUserAuthBindingsReply) ProtoMessage() {}
-
-func (x *ListUserAuthBindingsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListUserAuthBindingsReply.ProtoReflect.Descriptor instead.
-func (*ListUserAuthBindingsReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ListUserAuthBindingsReply) GetItems() []*UserAuthBinding {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
 type WalkRouteItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
@@ -1009,7 +873,7 @@ type WalkRouteItem struct {
 
 func (x *WalkRouteItem) Reset() {
 	*x = WalkRouteItem{}
-	mi := &file_user_service_v1_user_proto_msgTypes[16]
+	mi := &file_user_service_v1_user_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1021,7 +885,7 @@ func (x *WalkRouteItem) String() string {
 func (*WalkRouteItem) ProtoMessage() {}
 
 func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[16]
+	mi := &file_user_service_v1_user_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1034,7 +898,7 @@ func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WalkRouteItem.ProtoReflect.Descriptor instead.
 func (*WalkRouteItem) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{16}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *WalkRouteItem) GetUrl() string {
@@ -1060,7 +924,7 @@ type GetWalkRouteReply struct {
 
 func (x *GetWalkRouteReply) Reset() {
 	*x = GetWalkRouteReply{}
-	mi := &file_user_service_v1_user_proto_msgTypes[17]
+	mi := &file_user_service_v1_user_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1072,7 +936,7 @@ func (x *GetWalkRouteReply) String() string {
 func (*GetWalkRouteReply) ProtoMessage() {}
 
 func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_user_service_v1_user_proto_msgTypes[17]
+	mi := &file_user_service_v1_user_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1085,7 +949,7 @@ func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWalkRouteReply.ProtoReflect.Descriptor instead.
 func (*GetWalkRouteReply) Descriptor() ([]byte, []int) {
-	return file_user_service_v1_user_proto_rawDescGZIP(), []int{17}
+	return file_user_service_v1_user_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
@@ -1101,11 +965,7 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\n" +
 	"\x1auser/service/v1/user.proto\x12\x13api.user.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"-\n" +
 	"\x12GetUserInfoRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"D\n" +
-	"\bRoleInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05value\x18\x03 \x01(\tR\x05value\"\xf6\x01\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"\xc1\x01\n" +
 	"\x10GetUserInfoReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
@@ -1113,22 +973,19 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\x06avatar\x18\x04 \x01(\tR\x06avatar\x12\x14\n" +
 	"\x05email\x18\x05 \x01(\tR\x05email\x12\x16\n" +
 	"\x06remark\x18\x06 \x01(\tR\x06remark\x12\x16\n" +
-	"\x06status\x18\a \x01(\x05R\x06status\x123\n" +
-	"\x05roles\x18\b \x03(\v2\x1d.api.user.service.v1.RoleInfoR\x05roles\"\xcc\x01\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\"\xb8\x01\n" +
 	"\rGetUserParams\x12!\n" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1a\n" +
 	"\busername\x18\x03 \x01(\tR\busername\x12\x1a\n" +
 	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x17\n" +
-	"\adept_id\x18\x05 \x01(\tR\x06deptId\x12\x12\n" +
-	"\x04role\x18\x06 \x01(\x03R\x04role\x12\x16\n" +
-	"\x06status\x18\a \x01(\x05R\x06status\"\x99\x02\n" +
+	"\adept_id\x18\x05 \x01(\tR\x06deptId\x12\x16\n" +
+	"\x06status\x18\a \x01(\x05R\x06status\"\x85\x02\n" +
 	"\fUserListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
-	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x12\n" +
-	"\x04role\x18\x05 \x01(\x03R\x04role\x12\x1f\n" +
+	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x1f\n" +
 	"\vcreate_time\x18\x06 \x01(\tR\n" +
 	"createTime\x12\x16\n" +
 	"\x06remark\x18\a \x01(\tR\x06remark\x12\x16\n" +
@@ -1161,19 +1018,16 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"C\n" +
 	"\x0fUserAuthBinding\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
-	"\arole_id\x18\x02 \x01(\x03R\x06roleId\"\x87\x01\n" +
+	"\arole_id\x18\x02 \x01(\x03R\x06roleId\"n\n" +
 	"\x14GetUserAuthInfoReply\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
-	"\faccess_codes\x18\x03 \x03(\tR\vaccessCodes\x12\x17\n" +
-	"\arole_id\x18\x04 \x01(\x03R\x06roleId\"W\n" +
-	"\x19ListUserAuthBindingsReply\x12:\n" +
-	"\x05items\x18\x01 \x03(\v2$.api.user.service.v1.UserAuthBindingR\x05items\"9\n" +
+	"\faccess_codes\x18\x03 \x03(\tR\vaccessCodes\"9\n" +
 	"\rWalkRouteItem\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\"M\n" +
 	"\x11GetWalkRouteReply\x128\n" +
-	"\x05items\x18\x01 \x03(\v2\".api.user.service.v1.WalkRouteItemR\x05items2\xec\t\n" +
+	"\x05items\x18\x01 \x03(\v2\".api.user.service.v1.WalkRouteItemR\x05items2\x8c\t\n" +
 	"\vUserService\x12\x83\x01\n" +
 	"\vGetUserInfo\x12'.api.user.service.v1.GetUserInfoRequest\x1a%.api.user.service.v1.GetUserInfoReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/user-api/v1/users/{user_id}\x12t\n" +
 	"\vGetUserList\x12\".api.user.service.v1.GetUserParams\x1a%.api.user.service.v1.GetUserListReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/user-api/v1/users\x12n\n" +
@@ -1184,8 +1038,7 @@ const file_user_service_v1_user_proto_rawDesc = "" +
 	"\vIsUserExist\x12(.api.user.service.v1.IsUserExistsRequest\x1a&.api.user.service.v1.IsUserExistsReply\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/user-api/v1/users/check\x12\x86\x01\n" +
 	"\x0eChangePassword\x12*.api.user.service.v1.ChangePasswordRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/user-api/v1/users/{user_id}/password\x12l\n" +
 	"\x10ValidateUserAuth\x12,.api.user.service.v1.ValidateUserAuthRequest\x1a*.api.user.service.v1.ValidateUserAuthReply\x12i\n" +
-	"\x0fGetUserAuthInfo\x12+.api.user.service.v1.GetUserAuthInfoRequest\x1a).api.user.service.v1.GetUserAuthInfoReply\x12^\n" +
-	"\x14ListUserAuthBindings\x12\x16.google.protobuf.Empty\x1a..api.user.service.v1.ListUserAuthBindingsReply\x12N\n" +
+	"\x0fGetUserAuthInfo\x12+.api.user.service.v1.GetUserAuthInfoRequest\x1a).api.user.service.v1.GetUserAuthInfoReply\x12N\n" +
 	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a&.api.user.service.v1.GetWalkRouteReplyBB\n" +
 	"\x13api.user.service.v1P\x01Z)base-server/api/gen/go/user/service/v1;v1b\x06proto3"
 
@@ -1201,60 +1054,54 @@ func file_user_service_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_service_v1_user_proto_rawDescData
 }
 
-var file_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_user_service_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_user_service_v1_user_proto_goTypes = []any{
-	(*GetUserInfoRequest)(nil),        // 0: api.user.service.v1.GetUserInfoRequest
-	(*RoleInfo)(nil),                  // 1: api.user.service.v1.RoleInfo
-	(*GetUserInfoReply)(nil),          // 2: api.user.service.v1.GetUserInfoReply
-	(*GetUserParams)(nil),             // 3: api.user.service.v1.GetUserParams
-	(*UserListItem)(nil),              // 4: api.user.service.v1.UserListItem
-	(*GetUserListReply)(nil),          // 5: api.user.service.v1.GetUserListReply
-	(*DeleteUser)(nil),                // 6: api.user.service.v1.DeleteUser
-	(*IsUserExistsRequest)(nil),       // 7: api.user.service.v1.IsUserExistsRequest
-	(*IsUserExistsReply)(nil),         // 8: api.user.service.v1.IsUserExistsReply
-	(*ChangePasswordRequest)(nil),     // 9: api.user.service.v1.ChangePasswordRequest
-	(*ValidateUserAuthRequest)(nil),   // 10: api.user.service.v1.ValidateUserAuthRequest
-	(*ValidateUserAuthReply)(nil),     // 11: api.user.service.v1.ValidateUserAuthReply
-	(*GetUserAuthInfoRequest)(nil),    // 12: api.user.service.v1.GetUserAuthInfoRequest
-	(*UserAuthBinding)(nil),           // 13: api.user.service.v1.UserAuthBinding
-	(*GetUserAuthInfoReply)(nil),      // 14: api.user.service.v1.GetUserAuthInfoReply
-	(*ListUserAuthBindingsReply)(nil), // 15: api.user.service.v1.ListUserAuthBindingsReply
-	(*WalkRouteItem)(nil),             // 16: api.user.service.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),         // 17: api.user.service.v1.GetWalkRouteReply
-	(*emptypb.Empty)(nil),             // 18: google.protobuf.Empty
+	(*GetUserInfoRequest)(nil),      // 0: api.user.service.v1.GetUserInfoRequest
+	(*GetUserInfoReply)(nil),        // 1: api.user.service.v1.GetUserInfoReply
+	(*GetUserParams)(nil),           // 2: api.user.service.v1.GetUserParams
+	(*UserListItem)(nil),            // 3: api.user.service.v1.UserListItem
+	(*GetUserListReply)(nil),        // 4: api.user.service.v1.GetUserListReply
+	(*DeleteUser)(nil),              // 5: api.user.service.v1.DeleteUser
+	(*IsUserExistsRequest)(nil),     // 6: api.user.service.v1.IsUserExistsRequest
+	(*IsUserExistsReply)(nil),       // 7: api.user.service.v1.IsUserExistsReply
+	(*ChangePasswordRequest)(nil),   // 8: api.user.service.v1.ChangePasswordRequest
+	(*ValidateUserAuthRequest)(nil), // 9: api.user.service.v1.ValidateUserAuthRequest
+	(*ValidateUserAuthReply)(nil),   // 10: api.user.service.v1.ValidateUserAuthReply
+	(*GetUserAuthInfoRequest)(nil),  // 11: api.user.service.v1.GetUserAuthInfoRequest
+	(*UserAuthBinding)(nil),         // 12: api.user.service.v1.UserAuthBinding
+	(*GetUserAuthInfoReply)(nil),    // 13: api.user.service.v1.GetUserAuthInfoReply
+	(*WalkRouteItem)(nil),           // 14: api.user.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),       // 15: api.user.service.v1.GetWalkRouteReply
+	(*emptypb.Empty)(nil),           // 16: google.protobuf.Empty
 }
 var file_user_service_v1_user_proto_depIdxs = []int32{
-	1,  // 0: api.user.service.v1.GetUserInfoReply.roles:type_name -> api.user.service.v1.RoleInfo
-	4,  // 1: api.user.service.v1.GetUserListReply.items:type_name -> api.user.service.v1.UserListItem
-	13, // 2: api.user.service.v1.ListUserAuthBindingsReply.items:type_name -> api.user.service.v1.UserAuthBinding
-	16, // 3: api.user.service.v1.GetWalkRouteReply.items:type_name -> api.user.service.v1.WalkRouteItem
-	0,  // 4: api.user.service.v1.UserService.GetUserInfo:input_type -> api.user.service.v1.GetUserInfoRequest
-	3,  // 5: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
-	4,  // 6: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
-	4,  // 7: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
-	6,  // 8: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
-	7,  // 9: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
-	9,  // 10: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
-	10, // 11: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
-	12, // 12: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
-	18, // 13: api.user.service.v1.UserService.ListUserAuthBindings:input_type -> google.protobuf.Empty
-	18, // 14: api.user.service.v1.UserService.GetWalkRoute:input_type -> google.protobuf.Empty
-	2,  // 15: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
-	5,  // 16: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
-	4,  // 17: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
-	4,  // 18: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
-	18, // 19: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
-	8,  // 20: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
-	18, // 21: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
-	11, // 22: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
-	14, // 23: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
-	15, // 24: api.user.service.v1.UserService.ListUserAuthBindings:output_type -> api.user.service.v1.ListUserAuthBindingsReply
-	17, // 25: api.user.service.v1.UserService.GetWalkRoute:output_type -> api.user.service.v1.GetWalkRouteReply
-	15, // [15:26] is the sub-list for method output_type
-	4,  // [4:15] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	3,  // 0: api.user.service.v1.GetUserListReply.items:type_name -> api.user.service.v1.UserListItem
+	14, // 1: api.user.service.v1.GetWalkRouteReply.items:type_name -> api.user.service.v1.WalkRouteItem
+	0,  // 2: api.user.service.v1.UserService.GetUserInfo:input_type -> api.user.service.v1.GetUserInfoRequest
+	2,  // 3: api.user.service.v1.UserService.GetUserList:input_type -> api.user.service.v1.GetUserParams
+	3,  // 4: api.user.service.v1.UserService.AddUser:input_type -> api.user.service.v1.UserListItem
+	3,  // 5: api.user.service.v1.UserService.UpdateUser:input_type -> api.user.service.v1.UserListItem
+	5,  // 6: api.user.service.v1.UserService.DelUser:input_type -> api.user.service.v1.DeleteUser
+	6,  // 7: api.user.service.v1.UserService.IsUserExist:input_type -> api.user.service.v1.IsUserExistsRequest
+	8,  // 8: api.user.service.v1.UserService.ChangePassword:input_type -> api.user.service.v1.ChangePasswordRequest
+	9,  // 9: api.user.service.v1.UserService.ValidateUserAuth:input_type -> api.user.service.v1.ValidateUserAuthRequest
+	11, // 10: api.user.service.v1.UserService.GetUserAuthInfo:input_type -> api.user.service.v1.GetUserAuthInfoRequest
+	16, // 11: api.user.service.v1.UserService.GetWalkRoute:input_type -> google.protobuf.Empty
+	1,  // 12: api.user.service.v1.UserService.GetUserInfo:output_type -> api.user.service.v1.GetUserInfoReply
+	4,  // 13: api.user.service.v1.UserService.GetUserList:output_type -> api.user.service.v1.GetUserListReply
+	3,  // 14: api.user.service.v1.UserService.AddUser:output_type -> api.user.service.v1.UserListItem
+	3,  // 15: api.user.service.v1.UserService.UpdateUser:output_type -> api.user.service.v1.UserListItem
+	16, // 16: api.user.service.v1.UserService.DelUser:output_type -> google.protobuf.Empty
+	7,  // 17: api.user.service.v1.UserService.IsUserExist:output_type -> api.user.service.v1.IsUserExistsReply
+	16, // 18: api.user.service.v1.UserService.ChangePassword:output_type -> google.protobuf.Empty
+	10, // 19: api.user.service.v1.UserService.ValidateUserAuth:output_type -> api.user.service.v1.ValidateUserAuthReply
+	13, // 20: api.user.service.v1.UserService.GetUserAuthInfo:output_type -> api.user.service.v1.GetUserAuthInfoReply
+	15, // 21: api.user.service.v1.UserService.GetWalkRoute:output_type -> api.user.service.v1.GetWalkRouteReply
+	12, // [12:22] is the sub-list for method output_type
+	2,  // [2:12] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_user_service_v1_user_proto_init() }
@@ -1268,7 +1115,7 @@ func file_user_service_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_service_v1_user_proto_rawDesc), len(file_user_service_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

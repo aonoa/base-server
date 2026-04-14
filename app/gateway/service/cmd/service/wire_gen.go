@@ -15,10 +15,15 @@ import (
 
 import (
 	_ "base-server/app/gateway/service/internal/middleware/casbin"
+	_ "base-server/app/gateway/service/internal/middleware/casbin/v1"
 	_ "base-server/app/gateway/service/internal/middleware/httplog"
+	_ "base-server/app/gateway/service/internal/middleware/httplog/v1"
 	_ "base-server/app/gateway/service/internal/middleware/jwt"
+	_ "base-server/app/gateway/service/internal/middleware/jwt/v1"
 	_ "base-server/app/gateway/service/internal/middleware/ratelimit"
+	_ "base-server/app/gateway/service/internal/middleware/ratelimit/v1"
 	_ "base-server/app/gateway/service/internal/middleware/whitelist"
+	_ "base-server/app/gateway/service/internal/middleware/whitelist/v1"
 	_ "go.uber.org/automaxprocs"
 )
 

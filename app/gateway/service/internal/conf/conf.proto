@@ -10,6 +10,7 @@ message Bootstrap {
   Server server = 1;
   Gateway gateway = 2;
   Services services = 3;
+  Logger logger = 4;
 }
 
 message Server {
@@ -104,4 +105,13 @@ message Condition {
     string by_status_code = 1;
     Header by_header = 2;
   }
+}
+
+message Logger {
+  string level = 1;
+  string filename = 2;
+  int32 max_size = 3;
+  int32 max_backups = 4;
+  int32 max_age = 5;
+  bool compress = 6;
 }

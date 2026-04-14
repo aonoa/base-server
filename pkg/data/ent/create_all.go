@@ -131,6 +131,14 @@ func (c *UserCreate) CreateAll(User *User) *UserCreate {
 	builder = builder.SetAvatar(User.Avatar)
 	builder = builder.SetDesc(User.Desc)
 	builder = builder.SetExtension(User.Extension)
-	builder = builder.SetNillableRoleID(User.RoleID)
+	return builder
+}
+
+// CreateAll creates a new UserRoleBinding entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *UserRoleBindingCreate) CreateAll(UserRoleBinding *UserRoleBinding) *UserRoleBindingCreate {
+	builder := c
+	builder = builder.SetUserID(UserRoleBinding.UserID)
+	builder = builder.SetRoleID(UserRoleBinding.RoleID)
 	return builder
 }

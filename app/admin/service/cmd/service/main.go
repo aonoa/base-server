@@ -5,13 +5,14 @@ import (
 	"os"
 
 	"base-server/app/admin/service/internal/conf"
+	"base-server/pkg/logx"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/encoding/json"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	kratostransport "github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -21,6 +22,8 @@ import (
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
+	defaultServiceName = "admin"
+
 	// Name is the name of the compiled software.
 	Name string
 	// Version is the version of the compiled software.
@@ -40,7 +43,7 @@ func init() {
 	}
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server, startup kratostransport.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -50,21 +53,16 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 		kratos.Server(
 			gs,
 			hs,
+			startup,
 		),
 	)
 }
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
+	if Name == "" {
+		Name = defaultServiceName
+	}
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -80,6 +78,10 @@ func main() {
 	if err := c.Scan(&bc); err != nil {
 		panic(err)
 	}
+
+	logger, loggerCleanup := logx.New(id, Name, Version, bc.Logger)
+	defer loggerCleanup()
+	log.SetLogger(logger)
 
 	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Auth, bc.Services, logger)
 	if err != nil {

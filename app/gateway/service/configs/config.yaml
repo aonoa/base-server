@@ -91,7 +91,6 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
             signingKey: auth-service-secret
-
     - path: /user-api/v1/*
       method: "*"
       protocol: HTTP
@@ -114,7 +113,6 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
             signingKey: auth-service-secret
-
     - path: /admin-api/v1/*
       method: "*"
       protocol: HTTP
@@ -220,3 +218,10 @@ gateway:
           options:
             "@type": type.googleapis.com/base_server.gateway.middleware.httplog.v1.HttpLog
             signingKey: auth-service-secret
+logger:
+  level: info
+  filename: logs/gateway-service.log
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  compress: false

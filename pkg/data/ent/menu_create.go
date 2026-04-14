@@ -21,453 +21,453 @@ type MenuCreate struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (mc *MenuCreate) SetCreateTime(t time.Time) *MenuCreate {
-	mc.mutation.SetCreateTime(t)
-	return mc
+func (_c *MenuCreate) SetCreateTime(v time.Time) *MenuCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableCreateTime(t *time.Time) *MenuCreate {
-	if t != nil {
-		mc.SetCreateTime(*t)
+func (_c *MenuCreate) SetNillableCreateTime(v *time.Time) *MenuCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (mc *MenuCreate) SetUpdateTime(t time.Time) *MenuCreate {
-	mc.mutation.SetUpdateTime(t)
-	return mc
+func (_c *MenuCreate) SetUpdateTime(v time.Time) *MenuCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
 }
 
 // SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableUpdateTime(t *time.Time) *MenuCreate {
-	if t != nil {
-		mc.SetUpdateTime(*t)
+func (_c *MenuCreate) SetNillableUpdateTime(v *time.Time) *MenuCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetPid sets the "pid" field.
-func (mc *MenuCreate) SetPid(i int64) *MenuCreate {
-	mc.mutation.SetPid(i)
-	return mc
+func (_c *MenuCreate) SetPid(v int64) *MenuCreate {
+	_c.mutation.SetPid(v)
+	return _c
 }
 
 // SetType sets the "type" field.
-func (mc *MenuCreate) SetType(s string) *MenuCreate {
-	mc.mutation.SetType(s)
-	return mc
+func (_c *MenuCreate) SetType(v string) *MenuCreate {
+	_c.mutation.SetType(v)
+	return _c
 }
 
 // SetStatus sets the "status" field.
-func (mc *MenuCreate) SetStatus(b bool) *MenuCreate {
-	mc.mutation.SetStatus(b)
-	return mc
+func (_c *MenuCreate) SetStatus(v bool) *MenuCreate {
+	_c.mutation.SetStatus(v)
+	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableStatus(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetStatus(*b)
+func (_c *MenuCreate) SetNillableStatus(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetStatus(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetPath sets the "path" field.
-func (mc *MenuCreate) SetPath(s string) *MenuCreate {
-	mc.mutation.SetPath(s)
-	return mc
+func (_c *MenuCreate) SetPath(v string) *MenuCreate {
+	_c.mutation.SetPath(v)
+	return _c
 }
 
 // SetRedirect sets the "redirect" field.
-func (mc *MenuCreate) SetRedirect(s string) *MenuCreate {
-	mc.mutation.SetRedirect(s)
-	return mc
+func (_c *MenuCreate) SetRedirect(v string) *MenuCreate {
+	_c.mutation.SetRedirect(v)
+	return _c
 }
 
 // SetNillableRedirect sets the "redirect" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableRedirect(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetRedirect(*s)
+func (_c *MenuCreate) SetNillableRedirect(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetRedirect(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetAlias sets the "alias" field.
-func (mc *MenuCreate) SetAlias(s string) *MenuCreate {
-	mc.mutation.SetAlias(s)
-	return mc
+func (_c *MenuCreate) SetAlias(v string) *MenuCreate {
+	_c.mutation.SetAlias(v)
+	return _c
 }
 
 // SetNillableAlias sets the "alias" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableAlias(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetAlias(*s)
+func (_c *MenuCreate) SetNillableAlias(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetAlias(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetName sets the "name" field.
-func (mc *MenuCreate) SetName(s string) *MenuCreate {
-	mc.mutation.SetName(s)
-	return mc
+func (_c *MenuCreate) SetName(v string) *MenuCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetComponent sets the "component" field.
-func (mc *MenuCreate) SetComponent(s string) *MenuCreate {
-	mc.mutation.SetComponent(s)
-	return mc
+func (_c *MenuCreate) SetComponent(v string) *MenuCreate {
+	_c.mutation.SetComponent(v)
+	return _c
 }
 
 // SetIcon sets the "icon" field.
-func (mc *MenuCreate) SetIcon(s string) *MenuCreate {
-	mc.mutation.SetIcon(s)
-	return mc
+func (_c *MenuCreate) SetIcon(v string) *MenuCreate {
+	_c.mutation.SetIcon(v)
+	return _c
 }
 
 // SetNillableIcon sets the "icon" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableIcon(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetIcon(*s)
+func (_c *MenuCreate) SetNillableIcon(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetIcon(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetTitle sets the "title" field.
-func (mc *MenuCreate) SetTitle(s string) *MenuCreate {
-	mc.mutation.SetTitle(s)
-	return mc
+func (_c *MenuCreate) SetTitle(v string) *MenuCreate {
+	_c.mutation.SetTitle(v)
+	return _c
 }
 
 // SetOrder sets the "order" field.
-func (mc *MenuCreate) SetOrder(i int32) *MenuCreate {
-	mc.mutation.SetOrder(i)
-	return mc
+func (_c *MenuCreate) SetOrder(v int32) *MenuCreate {
+	_c.mutation.SetOrder(v)
+	return _c
 }
 
 // SetNillableOrder sets the "order" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableOrder(i *int32) *MenuCreate {
-	if i != nil {
-		mc.SetOrder(*i)
+func (_c *MenuCreate) SetNillableOrder(v *int32) *MenuCreate {
+	if v != nil {
+		_c.SetOrder(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetOpenInNewWindow sets the "openInNewWindow" field.
-func (mc *MenuCreate) SetOpenInNewWindow(b bool) *MenuCreate {
-	mc.mutation.SetOpenInNewWindow(b)
-	return mc
+func (_c *MenuCreate) SetOpenInNewWindow(v bool) *MenuCreate {
+	_c.mutation.SetOpenInNewWindow(v)
+	return _c
 }
 
 // SetNillableOpenInNewWindow sets the "openInNewWindow" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableOpenInNewWindow(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetOpenInNewWindow(*b)
+func (_c *MenuCreate) SetNillableOpenInNewWindow(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetOpenInNewWindow(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetNoBasicLayout sets the "noBasicLayout" field.
-func (mc *MenuCreate) SetNoBasicLayout(b bool) *MenuCreate {
-	mc.mutation.SetNoBasicLayout(b)
-	return mc
+func (_c *MenuCreate) SetNoBasicLayout(v bool) *MenuCreate {
+	_c.mutation.SetNoBasicLayout(v)
+	return _c
 }
 
 // SetNillableNoBasicLayout sets the "noBasicLayout" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableNoBasicLayout(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetNoBasicLayout(*b)
+func (_c *MenuCreate) SetNillableNoBasicLayout(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetNoBasicLayout(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field.
-func (mc *MenuCreate) SetMenuVisibleWithForbidden(b bool) *MenuCreate {
-	mc.mutation.SetMenuVisibleWithForbidden(b)
-	return mc
+func (_c *MenuCreate) SetMenuVisibleWithForbidden(v bool) *MenuCreate {
+	_c.mutation.SetMenuVisibleWithForbidden(v)
+	return _c
 }
 
 // SetNillableMenuVisibleWithForbidden sets the "menuVisibleWithForbidden" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableMenuVisibleWithForbidden(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetMenuVisibleWithForbidden(*b)
+func (_c *MenuCreate) SetNillableMenuVisibleWithForbidden(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetMenuVisibleWithForbidden(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetLink sets the "link" field.
-func (mc *MenuCreate) SetLink(s string) *MenuCreate {
-	mc.mutation.SetLink(s)
-	return mc
+func (_c *MenuCreate) SetLink(v string) *MenuCreate {
+	_c.mutation.SetLink(v)
+	return _c
 }
 
 // SetNillableLink sets the "link" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableLink(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetLink(*s)
+func (_c *MenuCreate) SetNillableLink(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetLink(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetIframeSrc sets the "iframeSrc" field.
-func (mc *MenuCreate) SetIframeSrc(s string) *MenuCreate {
-	mc.mutation.SetIframeSrc(s)
-	return mc
+func (_c *MenuCreate) SetIframeSrc(v string) *MenuCreate {
+	_c.mutation.SetIframeSrc(v)
+	return _c
 }
 
 // SetNillableIframeSrc sets the "iframeSrc" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableIframeSrc(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetIframeSrc(*s)
+func (_c *MenuCreate) SetNillableIframeSrc(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetIframeSrc(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetActiveIcon sets the "activeIcon" field.
-func (mc *MenuCreate) SetActiveIcon(s string) *MenuCreate {
-	mc.mutation.SetActiveIcon(s)
-	return mc
+func (_c *MenuCreate) SetActiveIcon(v string) *MenuCreate {
+	_c.mutation.SetActiveIcon(v)
+	return _c
 }
 
 // SetNillableActiveIcon sets the "activeIcon" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableActiveIcon(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetActiveIcon(*s)
+func (_c *MenuCreate) SetNillableActiveIcon(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetActiveIcon(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetActivePath sets the "activePath" field.
-func (mc *MenuCreate) SetActivePath(s string) *MenuCreate {
-	mc.mutation.SetActivePath(s)
-	return mc
+func (_c *MenuCreate) SetActivePath(v string) *MenuCreate {
+	_c.mutation.SetActivePath(v)
+	return _c
 }
 
 // SetNillableActivePath sets the "activePath" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableActivePath(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetActivePath(*s)
+func (_c *MenuCreate) SetNillableActivePath(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetActivePath(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetMaxNumOfOpenTab sets the "maxNumOfOpenTab" field.
-func (mc *MenuCreate) SetMaxNumOfOpenTab(i int16) *MenuCreate {
-	mc.mutation.SetMaxNumOfOpenTab(i)
-	return mc
+func (_c *MenuCreate) SetMaxNumOfOpenTab(v int16) *MenuCreate {
+	_c.mutation.SetMaxNumOfOpenTab(v)
+	return _c
 }
 
 // SetNillableMaxNumOfOpenTab sets the "maxNumOfOpenTab" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableMaxNumOfOpenTab(i *int16) *MenuCreate {
-	if i != nil {
-		mc.SetMaxNumOfOpenTab(*i)
+func (_c *MenuCreate) SetNillableMaxNumOfOpenTab(v *int16) *MenuCreate {
+	if v != nil {
+		_c.SetMaxNumOfOpenTab(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetKeepalive sets the "keepalive" field.
-func (mc *MenuCreate) SetKeepalive(b bool) *MenuCreate {
-	mc.mutation.SetKeepalive(b)
-	return mc
+func (_c *MenuCreate) SetKeepalive(v bool) *MenuCreate {
+	_c.mutation.SetKeepalive(v)
+	return _c
 }
 
 // SetNillableKeepalive sets the "keepalive" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableKeepalive(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetKeepalive(*b)
+func (_c *MenuCreate) SetNillableKeepalive(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetKeepalive(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetIgnoreAccess sets the "ignoreAccess" field.
-func (mc *MenuCreate) SetIgnoreAccess(b bool) *MenuCreate {
-	mc.mutation.SetIgnoreAccess(b)
-	return mc
+func (_c *MenuCreate) SetIgnoreAccess(v bool) *MenuCreate {
+	_c.mutation.SetIgnoreAccess(v)
+	return _c
 }
 
 // SetNillableIgnoreAccess sets the "ignoreAccess" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableIgnoreAccess(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetIgnoreAccess(*b)
+func (_c *MenuCreate) SetNillableIgnoreAccess(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetIgnoreAccess(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetAuthority sets the "authority" field.
-func (mc *MenuCreate) SetAuthority(s string) *MenuCreate {
-	mc.mutation.SetAuthority(s)
-	return mc
+func (_c *MenuCreate) SetAuthority(v string) *MenuCreate {
+	_c.mutation.SetAuthority(v)
+	return _c
 }
 
 // SetNillableAuthority sets the "authority" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableAuthority(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetAuthority(*s)
+func (_c *MenuCreate) SetNillableAuthority(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetAuthority(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetAffixTab sets the "affixTab" field.
-func (mc *MenuCreate) SetAffixTab(b bool) *MenuCreate {
-	mc.mutation.SetAffixTab(b)
-	return mc
+func (_c *MenuCreate) SetAffixTab(v bool) *MenuCreate {
+	_c.mutation.SetAffixTab(v)
+	return _c
 }
 
 // SetNillableAffixTab sets the "affixTab" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableAffixTab(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetAffixTab(*b)
+func (_c *MenuCreate) SetNillableAffixTab(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetAffixTab(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetAffixTabOrder sets the "affixTabOrder" field.
-func (mc *MenuCreate) SetAffixTabOrder(i int16) *MenuCreate {
-	mc.mutation.SetAffixTabOrder(i)
-	return mc
+func (_c *MenuCreate) SetAffixTabOrder(v int16) *MenuCreate {
+	_c.mutation.SetAffixTabOrder(v)
+	return _c
 }
 
 // SetNillableAffixTabOrder sets the "affixTabOrder" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableAffixTabOrder(i *int16) *MenuCreate {
-	if i != nil {
-		mc.SetAffixTabOrder(*i)
+func (_c *MenuCreate) SetNillableAffixTabOrder(v *int16) *MenuCreate {
+	if v != nil {
+		_c.SetAffixTabOrder(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetHideInMenu sets the "hideInMenu" field.
-func (mc *MenuCreate) SetHideInMenu(b bool) *MenuCreate {
-	mc.mutation.SetHideInMenu(b)
-	return mc
+func (_c *MenuCreate) SetHideInMenu(v bool) *MenuCreate {
+	_c.mutation.SetHideInMenu(v)
+	return _c
 }
 
 // SetNillableHideInMenu sets the "hideInMenu" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableHideInMenu(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetHideInMenu(*b)
+func (_c *MenuCreate) SetNillableHideInMenu(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetHideInMenu(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetHideInTab sets the "hideInTab" field.
-func (mc *MenuCreate) SetHideInTab(b bool) *MenuCreate {
-	mc.mutation.SetHideInTab(b)
-	return mc
+func (_c *MenuCreate) SetHideInTab(v bool) *MenuCreate {
+	_c.mutation.SetHideInTab(v)
+	return _c
 }
 
 // SetNillableHideInTab sets the "hideInTab" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableHideInTab(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetHideInTab(*b)
+func (_c *MenuCreate) SetNillableHideInTab(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetHideInTab(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetHideInBreadcrumb sets the "hideInBreadcrumb" field.
-func (mc *MenuCreate) SetHideInBreadcrumb(b bool) *MenuCreate {
-	mc.mutation.SetHideInBreadcrumb(b)
-	return mc
+func (_c *MenuCreate) SetHideInBreadcrumb(v bool) *MenuCreate {
+	_c.mutation.SetHideInBreadcrumb(v)
+	return _c
 }
 
 // SetNillableHideInBreadcrumb sets the "hideInBreadcrumb" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableHideInBreadcrumb(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetHideInBreadcrumb(*b)
+func (_c *MenuCreate) SetNillableHideInBreadcrumb(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetHideInBreadcrumb(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetHideChildrenInMenu sets the "hideChildrenInMenu" field.
-func (mc *MenuCreate) SetHideChildrenInMenu(b bool) *MenuCreate {
-	mc.mutation.SetHideChildrenInMenu(b)
-	return mc
+func (_c *MenuCreate) SetHideChildrenInMenu(v bool) *MenuCreate {
+	_c.mutation.SetHideChildrenInMenu(v)
+	return _c
 }
 
 // SetNillableHideChildrenInMenu sets the "hideChildrenInMenu" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableHideChildrenInMenu(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetHideChildrenInMenu(*b)
+func (_c *MenuCreate) SetNillableHideChildrenInMenu(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetHideChildrenInMenu(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetFullPathKey sets the "fullPathKey" field.
-func (mc *MenuCreate) SetFullPathKey(b bool) *MenuCreate {
-	mc.mutation.SetFullPathKey(b)
-	return mc
+func (_c *MenuCreate) SetFullPathKey(v bool) *MenuCreate {
+	_c.mutation.SetFullPathKey(v)
+	return _c
 }
 
 // SetNillableFullPathKey sets the "fullPathKey" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableFullPathKey(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetFullPathKey(*b)
+func (_c *MenuCreate) SetNillableFullPathKey(v *bool) *MenuCreate {
+	if v != nil {
+		_c.SetFullPathKey(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetBadge sets the "badge" field.
-func (mc *MenuCreate) SetBadge(s string) *MenuCreate {
-	mc.mutation.SetBadge(s)
-	return mc
+func (_c *MenuCreate) SetBadge(v string) *MenuCreate {
+	_c.mutation.SetBadge(v)
+	return _c
 }
 
 // SetNillableBadge sets the "badge" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableBadge(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetBadge(*s)
+func (_c *MenuCreate) SetNillableBadge(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetBadge(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetBadgeType sets the "badgeType" field.
-func (mc *MenuCreate) SetBadgeType(s string) *MenuCreate {
-	mc.mutation.SetBadgeType(s)
-	return mc
+func (_c *MenuCreate) SetBadgeType(v string) *MenuCreate {
+	_c.mutation.SetBadgeType(v)
+	return _c
 }
 
 // SetNillableBadgeType sets the "badgeType" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableBadgeType(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetBadgeType(*s)
+func (_c *MenuCreate) SetNillableBadgeType(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetBadgeType(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetBadgeVariants sets the "badgeVariants" field.
-func (mc *MenuCreate) SetBadgeVariants(s string) *MenuCreate {
-	mc.mutation.SetBadgeVariants(s)
-	return mc
+func (_c *MenuCreate) SetBadgeVariants(v string) *MenuCreate {
+	_c.mutation.SetBadgeVariants(v)
+	return _c
 }
 
 // SetNillableBadgeVariants sets the "badgeVariants" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableBadgeVariants(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetBadgeVariants(*s)
+func (_c *MenuCreate) SetNillableBadgeVariants(v *string) *MenuCreate {
+	if v != nil {
+		_c.SetBadgeVariants(*v)
 	}
-	return mc
+	return _c
 }
 
 // SetID sets the "id" field.
-func (mc *MenuCreate) SetID(i int64) *MenuCreate {
-	mc.mutation.SetID(i)
-	return mc
+func (_c *MenuCreate) SetID(v int64) *MenuCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // Mutation returns the MenuMutation object of the builder.
-func (mc *MenuCreate) Mutation() *MenuMutation {
-	return mc.mutation
+func (_c *MenuCreate) Mutation() *MenuMutation {
+	return _c.mutation
 }
 
 // Save creates the Menu in the database.
-func (mc *MenuCreate) Save(ctx context.Context) (*Menu, error) {
-	mc.defaults()
-	return withHooks(ctx, mc.sqlSave, mc.mutation, mc.hooks)
+func (_c *MenuCreate) Save(ctx context.Context) (*Menu, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (mc *MenuCreate) SaveX(ctx context.Context) *Menu {
-	v, err := mc.Save(ctx)
+func (_c *MenuCreate) SaveX(ctx context.Context) *Menu {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -475,247 +475,247 @@ func (mc *MenuCreate) SaveX(ctx context.Context) *Menu {
 }
 
 // Exec executes the query.
-func (mc *MenuCreate) Exec(ctx context.Context) error {
-	_, err := mc.Save(ctx)
+func (_c *MenuCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (mc *MenuCreate) ExecX(ctx context.Context) {
-	if err := mc.Exec(ctx); err != nil {
+func (_c *MenuCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (mc *MenuCreate) defaults() {
-	if _, ok := mc.mutation.CreateTime(); !ok {
+func (_c *MenuCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := menu.DefaultCreateTime()
-		mc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := mc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		v := menu.DefaultUpdateTime()
-		mc.mutation.SetUpdateTime(v)
+		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := mc.mutation.Status(); !ok {
+	if _, ok := _c.mutation.Status(); !ok {
 		v := menu.DefaultStatus
-		mc.mutation.SetStatus(v)
+		_c.mutation.SetStatus(v)
 	}
-	if _, ok := mc.mutation.Redirect(); !ok {
+	if _, ok := _c.mutation.Redirect(); !ok {
 		v := menu.DefaultRedirect
-		mc.mutation.SetRedirect(v)
+		_c.mutation.SetRedirect(v)
 	}
-	if _, ok := mc.mutation.Alias(); !ok {
+	if _, ok := _c.mutation.Alias(); !ok {
 		v := menu.DefaultAlias
-		mc.mutation.SetAlias(v)
+		_c.mutation.SetAlias(v)
 	}
-	if _, ok := mc.mutation.Icon(); !ok {
+	if _, ok := _c.mutation.Icon(); !ok {
 		v := menu.DefaultIcon
-		mc.mutation.SetIcon(v)
+		_c.mutation.SetIcon(v)
 	}
-	if _, ok := mc.mutation.Order(); !ok {
+	if _, ok := _c.mutation.Order(); !ok {
 		v := menu.DefaultOrder
-		mc.mutation.SetOrder(v)
+		_c.mutation.SetOrder(v)
 	}
-	if _, ok := mc.mutation.OpenInNewWindow(); !ok {
+	if _, ok := _c.mutation.OpenInNewWindow(); !ok {
 		v := menu.DefaultOpenInNewWindow
-		mc.mutation.SetOpenInNewWindow(v)
+		_c.mutation.SetOpenInNewWindow(v)
 	}
-	if _, ok := mc.mutation.NoBasicLayout(); !ok {
+	if _, ok := _c.mutation.NoBasicLayout(); !ok {
 		v := menu.DefaultNoBasicLayout
-		mc.mutation.SetNoBasicLayout(v)
+		_c.mutation.SetNoBasicLayout(v)
 	}
-	if _, ok := mc.mutation.MenuVisibleWithForbidden(); !ok {
+	if _, ok := _c.mutation.MenuVisibleWithForbidden(); !ok {
 		v := menu.DefaultMenuVisibleWithForbidden
-		mc.mutation.SetMenuVisibleWithForbidden(v)
+		_c.mutation.SetMenuVisibleWithForbidden(v)
 	}
-	if _, ok := mc.mutation.Link(); !ok {
+	if _, ok := _c.mutation.Link(); !ok {
 		v := menu.DefaultLink
-		mc.mutation.SetLink(v)
+		_c.mutation.SetLink(v)
 	}
-	if _, ok := mc.mutation.IframeSrc(); !ok {
+	if _, ok := _c.mutation.IframeSrc(); !ok {
 		v := menu.DefaultIframeSrc
-		mc.mutation.SetIframeSrc(v)
+		_c.mutation.SetIframeSrc(v)
 	}
-	if _, ok := mc.mutation.ActiveIcon(); !ok {
+	if _, ok := _c.mutation.ActiveIcon(); !ok {
 		v := menu.DefaultActiveIcon
-		mc.mutation.SetActiveIcon(v)
+		_c.mutation.SetActiveIcon(v)
 	}
-	if _, ok := mc.mutation.ActivePath(); !ok {
+	if _, ok := _c.mutation.ActivePath(); !ok {
 		v := menu.DefaultActivePath
-		mc.mutation.SetActivePath(v)
+		_c.mutation.SetActivePath(v)
 	}
-	if _, ok := mc.mutation.MaxNumOfOpenTab(); !ok {
+	if _, ok := _c.mutation.MaxNumOfOpenTab(); !ok {
 		v := menu.DefaultMaxNumOfOpenTab
-		mc.mutation.SetMaxNumOfOpenTab(v)
+		_c.mutation.SetMaxNumOfOpenTab(v)
 	}
-	if _, ok := mc.mutation.Keepalive(); !ok {
+	if _, ok := _c.mutation.Keepalive(); !ok {
 		v := menu.DefaultKeepalive
-		mc.mutation.SetKeepalive(v)
+		_c.mutation.SetKeepalive(v)
 	}
-	if _, ok := mc.mutation.IgnoreAccess(); !ok {
+	if _, ok := _c.mutation.IgnoreAccess(); !ok {
 		v := menu.DefaultIgnoreAccess
-		mc.mutation.SetIgnoreAccess(v)
+		_c.mutation.SetIgnoreAccess(v)
 	}
-	if _, ok := mc.mutation.Authority(); !ok {
+	if _, ok := _c.mutation.Authority(); !ok {
 		v := menu.DefaultAuthority
-		mc.mutation.SetAuthority(v)
+		_c.mutation.SetAuthority(v)
 	}
-	if _, ok := mc.mutation.AffixTab(); !ok {
+	if _, ok := _c.mutation.AffixTab(); !ok {
 		v := menu.DefaultAffixTab
-		mc.mutation.SetAffixTab(v)
+		_c.mutation.SetAffixTab(v)
 	}
-	if _, ok := mc.mutation.AffixTabOrder(); !ok {
+	if _, ok := _c.mutation.AffixTabOrder(); !ok {
 		v := menu.DefaultAffixTabOrder
-		mc.mutation.SetAffixTabOrder(v)
+		_c.mutation.SetAffixTabOrder(v)
 	}
-	if _, ok := mc.mutation.HideInMenu(); !ok {
+	if _, ok := _c.mutation.HideInMenu(); !ok {
 		v := menu.DefaultHideInMenu
-		mc.mutation.SetHideInMenu(v)
+		_c.mutation.SetHideInMenu(v)
 	}
-	if _, ok := mc.mutation.HideInTab(); !ok {
+	if _, ok := _c.mutation.HideInTab(); !ok {
 		v := menu.DefaultHideInTab
-		mc.mutation.SetHideInTab(v)
+		_c.mutation.SetHideInTab(v)
 	}
-	if _, ok := mc.mutation.HideInBreadcrumb(); !ok {
+	if _, ok := _c.mutation.HideInBreadcrumb(); !ok {
 		v := menu.DefaultHideInBreadcrumb
-		mc.mutation.SetHideInBreadcrumb(v)
+		_c.mutation.SetHideInBreadcrumb(v)
 	}
-	if _, ok := mc.mutation.HideChildrenInMenu(); !ok {
+	if _, ok := _c.mutation.HideChildrenInMenu(); !ok {
 		v := menu.DefaultHideChildrenInMenu
-		mc.mutation.SetHideChildrenInMenu(v)
+		_c.mutation.SetHideChildrenInMenu(v)
 	}
-	if _, ok := mc.mutation.FullPathKey(); !ok {
+	if _, ok := _c.mutation.FullPathKey(); !ok {
 		v := menu.DefaultFullPathKey
-		mc.mutation.SetFullPathKey(v)
+		_c.mutation.SetFullPathKey(v)
 	}
-	if _, ok := mc.mutation.Badge(); !ok {
+	if _, ok := _c.mutation.Badge(); !ok {
 		v := menu.DefaultBadge
-		mc.mutation.SetBadge(v)
+		_c.mutation.SetBadge(v)
 	}
-	if _, ok := mc.mutation.BadgeType(); !ok {
+	if _, ok := _c.mutation.BadgeType(); !ok {
 		v := menu.DefaultBadgeType
-		mc.mutation.SetBadgeType(v)
+		_c.mutation.SetBadgeType(v)
 	}
-	if _, ok := mc.mutation.BadgeVariants(); !ok {
+	if _, ok := _c.mutation.BadgeVariants(); !ok {
 		v := menu.DefaultBadgeVariants
-		mc.mutation.SetBadgeVariants(v)
+		_c.mutation.SetBadgeVariants(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (mc *MenuCreate) check() error {
-	if _, ok := mc.mutation.CreateTime(); !ok {
+func (_c *MenuCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Menu.create_time"`)}
 	}
-	if _, ok := mc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Menu.update_time"`)}
 	}
-	if _, ok := mc.mutation.Pid(); !ok {
+	if _, ok := _c.mutation.Pid(); !ok {
 		return &ValidationError{Name: "pid", err: errors.New(`ent: missing required field "Menu.pid"`)}
 	}
-	if _, ok := mc.mutation.GetType(); !ok {
+	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Menu.type"`)}
 	}
-	if _, ok := mc.mutation.Status(); !ok {
+	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Menu.status"`)}
 	}
-	if _, ok := mc.mutation.Path(); !ok {
+	if _, ok := _c.mutation.Path(); !ok {
 		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Menu.path"`)}
 	}
-	if _, ok := mc.mutation.Redirect(); !ok {
+	if _, ok := _c.mutation.Redirect(); !ok {
 		return &ValidationError{Name: "redirect", err: errors.New(`ent: missing required field "Menu.redirect"`)}
 	}
-	if _, ok := mc.mutation.Alias(); !ok {
+	if _, ok := _c.mutation.Alias(); !ok {
 		return &ValidationError{Name: "alias", err: errors.New(`ent: missing required field "Menu.alias"`)}
 	}
-	if _, ok := mc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Menu.name"`)}
 	}
-	if _, ok := mc.mutation.Component(); !ok {
+	if _, ok := _c.mutation.Component(); !ok {
 		return &ValidationError{Name: "component", err: errors.New(`ent: missing required field "Menu.component"`)}
 	}
-	if _, ok := mc.mutation.Icon(); !ok {
+	if _, ok := _c.mutation.Icon(); !ok {
 		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Menu.icon"`)}
 	}
-	if _, ok := mc.mutation.Title(); !ok {
+	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Menu.title"`)}
 	}
-	if _, ok := mc.mutation.Order(); !ok {
+	if _, ok := _c.mutation.Order(); !ok {
 		return &ValidationError{Name: "order", err: errors.New(`ent: missing required field "Menu.order"`)}
 	}
-	if _, ok := mc.mutation.OpenInNewWindow(); !ok {
+	if _, ok := _c.mutation.OpenInNewWindow(); !ok {
 		return &ValidationError{Name: "openInNewWindow", err: errors.New(`ent: missing required field "Menu.openInNewWindow"`)}
 	}
-	if _, ok := mc.mutation.NoBasicLayout(); !ok {
+	if _, ok := _c.mutation.NoBasicLayout(); !ok {
 		return &ValidationError{Name: "noBasicLayout", err: errors.New(`ent: missing required field "Menu.noBasicLayout"`)}
 	}
-	if _, ok := mc.mutation.MenuVisibleWithForbidden(); !ok {
+	if _, ok := _c.mutation.MenuVisibleWithForbidden(); !ok {
 		return &ValidationError{Name: "menuVisibleWithForbidden", err: errors.New(`ent: missing required field "Menu.menuVisibleWithForbidden"`)}
 	}
-	if _, ok := mc.mutation.Link(); !ok {
+	if _, ok := _c.mutation.Link(); !ok {
 		return &ValidationError{Name: "link", err: errors.New(`ent: missing required field "Menu.link"`)}
 	}
-	if _, ok := mc.mutation.IframeSrc(); !ok {
+	if _, ok := _c.mutation.IframeSrc(); !ok {
 		return &ValidationError{Name: "iframeSrc", err: errors.New(`ent: missing required field "Menu.iframeSrc"`)}
 	}
-	if _, ok := mc.mutation.ActiveIcon(); !ok {
+	if _, ok := _c.mutation.ActiveIcon(); !ok {
 		return &ValidationError{Name: "activeIcon", err: errors.New(`ent: missing required field "Menu.activeIcon"`)}
 	}
-	if _, ok := mc.mutation.ActivePath(); !ok {
+	if _, ok := _c.mutation.ActivePath(); !ok {
 		return &ValidationError{Name: "activePath", err: errors.New(`ent: missing required field "Menu.activePath"`)}
 	}
-	if _, ok := mc.mutation.MaxNumOfOpenTab(); !ok {
+	if _, ok := _c.mutation.MaxNumOfOpenTab(); !ok {
 		return &ValidationError{Name: "maxNumOfOpenTab", err: errors.New(`ent: missing required field "Menu.maxNumOfOpenTab"`)}
 	}
-	if _, ok := mc.mutation.Keepalive(); !ok {
+	if _, ok := _c.mutation.Keepalive(); !ok {
 		return &ValidationError{Name: "keepalive", err: errors.New(`ent: missing required field "Menu.keepalive"`)}
 	}
-	if _, ok := mc.mutation.IgnoreAccess(); !ok {
+	if _, ok := _c.mutation.IgnoreAccess(); !ok {
 		return &ValidationError{Name: "ignoreAccess", err: errors.New(`ent: missing required field "Menu.ignoreAccess"`)}
 	}
-	if _, ok := mc.mutation.Authority(); !ok {
+	if _, ok := _c.mutation.Authority(); !ok {
 		return &ValidationError{Name: "authority", err: errors.New(`ent: missing required field "Menu.authority"`)}
 	}
-	if _, ok := mc.mutation.AffixTab(); !ok {
+	if _, ok := _c.mutation.AffixTab(); !ok {
 		return &ValidationError{Name: "affixTab", err: errors.New(`ent: missing required field "Menu.affixTab"`)}
 	}
-	if _, ok := mc.mutation.AffixTabOrder(); !ok {
+	if _, ok := _c.mutation.AffixTabOrder(); !ok {
 		return &ValidationError{Name: "affixTabOrder", err: errors.New(`ent: missing required field "Menu.affixTabOrder"`)}
 	}
-	if _, ok := mc.mutation.HideInMenu(); !ok {
+	if _, ok := _c.mutation.HideInMenu(); !ok {
 		return &ValidationError{Name: "hideInMenu", err: errors.New(`ent: missing required field "Menu.hideInMenu"`)}
 	}
-	if _, ok := mc.mutation.HideInTab(); !ok {
+	if _, ok := _c.mutation.HideInTab(); !ok {
 		return &ValidationError{Name: "hideInTab", err: errors.New(`ent: missing required field "Menu.hideInTab"`)}
 	}
-	if _, ok := mc.mutation.HideInBreadcrumb(); !ok {
+	if _, ok := _c.mutation.HideInBreadcrumb(); !ok {
 		return &ValidationError{Name: "hideInBreadcrumb", err: errors.New(`ent: missing required field "Menu.hideInBreadcrumb"`)}
 	}
-	if _, ok := mc.mutation.HideChildrenInMenu(); !ok {
+	if _, ok := _c.mutation.HideChildrenInMenu(); !ok {
 		return &ValidationError{Name: "hideChildrenInMenu", err: errors.New(`ent: missing required field "Menu.hideChildrenInMenu"`)}
 	}
-	if _, ok := mc.mutation.FullPathKey(); !ok {
+	if _, ok := _c.mutation.FullPathKey(); !ok {
 		return &ValidationError{Name: "fullPathKey", err: errors.New(`ent: missing required field "Menu.fullPathKey"`)}
 	}
-	if _, ok := mc.mutation.Badge(); !ok {
+	if _, ok := _c.mutation.Badge(); !ok {
 		return &ValidationError{Name: "badge", err: errors.New(`ent: missing required field "Menu.badge"`)}
 	}
-	if _, ok := mc.mutation.BadgeType(); !ok {
+	if _, ok := _c.mutation.BadgeType(); !ok {
 		return &ValidationError{Name: "badgeType", err: errors.New(`ent: missing required field "Menu.badgeType"`)}
 	}
-	if _, ok := mc.mutation.BadgeVariants(); !ok {
+	if _, ok := _c.mutation.BadgeVariants(); !ok {
 		return &ValidationError{Name: "badgeVariants", err: errors.New(`ent: missing required field "Menu.badgeVariants"`)}
 	}
 	return nil
 }
 
-func (mc *MenuCreate) sqlSave(ctx context.Context) (*Menu, error) {
-	if err := mc.check(); err != nil {
+func (_c *MenuCreate) sqlSave(ctx context.Context) (*Menu, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := mc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, mc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -725,153 +725,153 @@ func (mc *MenuCreate) sqlSave(ctx context.Context) (*Menu, error) {
 		id := _spec.ID.Value.(int64)
 		_node.ID = int64(id)
 	}
-	mc.mutation.id = &_node.ID
-	mc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
+func (_c *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Menu{config: mc.config}
+		_node = &Menu{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(menu.Table, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64))
 	)
-	if id, ok := mc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := mc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(menu.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := mc.mutation.UpdateTime(); ok {
+	if value, ok := _c.mutation.UpdateTime(); ok {
 		_spec.SetField(menu.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := mc.mutation.Pid(); ok {
+	if value, ok := _c.mutation.Pid(); ok {
 		_spec.SetField(menu.FieldPid, field.TypeInt64, value)
 		_node.Pid = value
 	}
-	if value, ok := mc.mutation.GetType(); ok {
+	if value, ok := _c.mutation.GetType(); ok {
 		_spec.SetField(menu.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
-	if value, ok := mc.mutation.Status(); ok {
+	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(menu.FieldStatus, field.TypeBool, value)
 		_node.Status = value
 	}
-	if value, ok := mc.mutation.Path(); ok {
+	if value, ok := _c.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
 		_node.Path = value
 	}
-	if value, ok := mc.mutation.Redirect(); ok {
+	if value, ok := _c.mutation.Redirect(); ok {
 		_spec.SetField(menu.FieldRedirect, field.TypeString, value)
 		_node.Redirect = value
 	}
-	if value, ok := mc.mutation.Alias(); ok {
+	if value, ok := _c.mutation.Alias(); ok {
 		_spec.SetField(menu.FieldAlias, field.TypeString, value)
 		_node.Alias = value
 	}
-	if value, ok := mc.mutation.Name(); ok {
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := mc.mutation.Component(); ok {
+	if value, ok := _c.mutation.Component(); ok {
 		_spec.SetField(menu.FieldComponent, field.TypeString, value)
 		_node.Component = value
 	}
-	if value, ok := mc.mutation.Icon(); ok {
+	if value, ok := _c.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
 		_node.Icon = value
 	}
-	if value, ok := mc.mutation.Title(); ok {
+	if value, ok := _c.mutation.Title(); ok {
 		_spec.SetField(menu.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
-	if value, ok := mc.mutation.Order(); ok {
+	if value, ok := _c.mutation.Order(); ok {
 		_spec.SetField(menu.FieldOrder, field.TypeInt32, value)
 		_node.Order = value
 	}
-	if value, ok := mc.mutation.OpenInNewWindow(); ok {
+	if value, ok := _c.mutation.OpenInNewWindow(); ok {
 		_spec.SetField(menu.FieldOpenInNewWindow, field.TypeBool, value)
 		_node.OpenInNewWindow = value
 	}
-	if value, ok := mc.mutation.NoBasicLayout(); ok {
+	if value, ok := _c.mutation.NoBasicLayout(); ok {
 		_spec.SetField(menu.FieldNoBasicLayout, field.TypeBool, value)
 		_node.NoBasicLayout = value
 	}
-	if value, ok := mc.mutation.MenuVisibleWithForbidden(); ok {
+	if value, ok := _c.mutation.MenuVisibleWithForbidden(); ok {
 		_spec.SetField(menu.FieldMenuVisibleWithForbidden, field.TypeBool, value)
 		_node.MenuVisibleWithForbidden = value
 	}
-	if value, ok := mc.mutation.Link(); ok {
+	if value, ok := _c.mutation.Link(); ok {
 		_spec.SetField(menu.FieldLink, field.TypeString, value)
 		_node.Link = value
 	}
-	if value, ok := mc.mutation.IframeSrc(); ok {
+	if value, ok := _c.mutation.IframeSrc(); ok {
 		_spec.SetField(menu.FieldIframeSrc, field.TypeString, value)
 		_node.IframeSrc = value
 	}
-	if value, ok := mc.mutation.ActiveIcon(); ok {
+	if value, ok := _c.mutation.ActiveIcon(); ok {
 		_spec.SetField(menu.FieldActiveIcon, field.TypeString, value)
 		_node.ActiveIcon = value
 	}
-	if value, ok := mc.mutation.ActivePath(); ok {
+	if value, ok := _c.mutation.ActivePath(); ok {
 		_spec.SetField(menu.FieldActivePath, field.TypeString, value)
 		_node.ActivePath = value
 	}
-	if value, ok := mc.mutation.MaxNumOfOpenTab(); ok {
+	if value, ok := _c.mutation.MaxNumOfOpenTab(); ok {
 		_spec.SetField(menu.FieldMaxNumOfOpenTab, field.TypeInt16, value)
 		_node.MaxNumOfOpenTab = value
 	}
-	if value, ok := mc.mutation.Keepalive(); ok {
+	if value, ok := _c.mutation.Keepalive(); ok {
 		_spec.SetField(menu.FieldKeepalive, field.TypeBool, value)
 		_node.Keepalive = value
 	}
-	if value, ok := mc.mutation.IgnoreAccess(); ok {
+	if value, ok := _c.mutation.IgnoreAccess(); ok {
 		_spec.SetField(menu.FieldIgnoreAccess, field.TypeBool, value)
 		_node.IgnoreAccess = value
 	}
-	if value, ok := mc.mutation.Authority(); ok {
+	if value, ok := _c.mutation.Authority(); ok {
 		_spec.SetField(menu.FieldAuthority, field.TypeString, value)
 		_node.Authority = value
 	}
-	if value, ok := mc.mutation.AffixTab(); ok {
+	if value, ok := _c.mutation.AffixTab(); ok {
 		_spec.SetField(menu.FieldAffixTab, field.TypeBool, value)
 		_node.AffixTab = value
 	}
-	if value, ok := mc.mutation.AffixTabOrder(); ok {
+	if value, ok := _c.mutation.AffixTabOrder(); ok {
 		_spec.SetField(menu.FieldAffixTabOrder, field.TypeInt16, value)
 		_node.AffixTabOrder = value
 	}
-	if value, ok := mc.mutation.HideInMenu(); ok {
+	if value, ok := _c.mutation.HideInMenu(); ok {
 		_spec.SetField(menu.FieldHideInMenu, field.TypeBool, value)
 		_node.HideInMenu = value
 	}
-	if value, ok := mc.mutation.HideInTab(); ok {
+	if value, ok := _c.mutation.HideInTab(); ok {
 		_spec.SetField(menu.FieldHideInTab, field.TypeBool, value)
 		_node.HideInTab = value
 	}
-	if value, ok := mc.mutation.HideInBreadcrumb(); ok {
+	if value, ok := _c.mutation.HideInBreadcrumb(); ok {
 		_spec.SetField(menu.FieldHideInBreadcrumb, field.TypeBool, value)
 		_node.HideInBreadcrumb = value
 	}
-	if value, ok := mc.mutation.HideChildrenInMenu(); ok {
+	if value, ok := _c.mutation.HideChildrenInMenu(); ok {
 		_spec.SetField(menu.FieldHideChildrenInMenu, field.TypeBool, value)
 		_node.HideChildrenInMenu = value
 	}
-	if value, ok := mc.mutation.FullPathKey(); ok {
+	if value, ok := _c.mutation.FullPathKey(); ok {
 		_spec.SetField(menu.FieldFullPathKey, field.TypeBool, value)
 		_node.FullPathKey = value
 	}
-	if value, ok := mc.mutation.Badge(); ok {
+	if value, ok := _c.mutation.Badge(); ok {
 		_spec.SetField(menu.FieldBadge, field.TypeString, value)
 		_node.Badge = value
 	}
-	if value, ok := mc.mutation.BadgeType(); ok {
+	if value, ok := _c.mutation.BadgeType(); ok {
 		_spec.SetField(menu.FieldBadgeType, field.TypeString, value)
 		_node.BadgeType = value
 	}
-	if value, ok := mc.mutation.BadgeVariants(); ok {
+	if value, ok := _c.mutation.BadgeVariants(); ok {
 		_spec.SetField(menu.FieldBadgeVariants, field.TypeString, value)
 		_node.BadgeVariants = value
 	}
@@ -886,16 +886,16 @@ type MenuCreateBulk struct {
 }
 
 // Save creates the Menu entities in the database.
-func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
-	if mcb.err != nil {
-		return nil, mcb.err
+func (_c *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(mcb.builders))
-	nodes := make([]*Menu, len(mcb.builders))
-	mutators := make([]Mutator, len(mcb.builders))
-	for i := range mcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Menu, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := mcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*MenuMutation)
@@ -909,11 +909,11 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, mcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, mcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -937,7 +937,7 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, mcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -945,8 +945,8 @@ func (mcb *MenuCreateBulk) Save(ctx context.Context) ([]*Menu, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (mcb *MenuCreateBulk) SaveX(ctx context.Context) []*Menu {
-	v, err := mcb.Save(ctx)
+func (_c *MenuCreateBulk) SaveX(ctx context.Context) []*Menu {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -954,14 +954,14 @@ func (mcb *MenuCreateBulk) SaveX(ctx context.Context) []*Menu {
 }
 
 // Exec executes the query.
-func (mcb *MenuCreateBulk) Exec(ctx context.Context) error {
-	_, err := mcb.Save(ctx)
+func (_c *MenuCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (mcb *MenuCreateBulk) ExecX(ctx context.Context) {
-	if err := mcb.Exec(ctx); err != nil {
+func (_c *MenuCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

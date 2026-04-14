@@ -19,3 +19,10 @@ auth:
     - /api.user.service.v1.UserService/ValidateUserAuth
     - /api.user.service.v1.UserService/GetUserAuthInfo
     - /api.user.service.v1.UserService/ListUserAuthBindings
+logger:
+  level: info
+  filename: logs/user-service.log
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  compress: false

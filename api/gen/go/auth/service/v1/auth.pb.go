@@ -187,102 +187,6 @@ func (x *GetAccessCodesReply) GetAccessCodeList() []string {
 	return nil
 }
 
-type GetCurrentUserMenuAuthorityRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetCurrentUserMenuAuthorityRequest) Reset() {
-	*x = GetCurrentUserMenuAuthorityRequest{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetCurrentUserMenuAuthorityRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetCurrentUserMenuAuthorityRequest) ProtoMessage() {}
-
-func (x *GetCurrentUserMenuAuthorityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetCurrentUserMenuAuthorityRequest.ProtoReflect.Descriptor instead.
-func (*GetCurrentUserMenuAuthorityRequest) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetCurrentUserMenuAuthorityRequest) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-type GetCurrentUserMenuAuthorityReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	IsRoot        bool                   `protobuf:"varint,1,opt,name=is_root,json=isRoot,proto3" json:"is_root,omitempty"`
-	MenuIds       []int32                `protobuf:"varint,2,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetCurrentUserMenuAuthorityReply) Reset() {
-	*x = GetCurrentUserMenuAuthorityReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetCurrentUserMenuAuthorityReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetCurrentUserMenuAuthorityReply) ProtoMessage() {}
-
-func (x *GetCurrentUserMenuAuthorityReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetCurrentUserMenuAuthorityReply.ProtoReflect.Descriptor instead.
-func (*GetCurrentUserMenuAuthorityReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetCurrentUserMenuAuthorityReply) GetIsRoot() bool {
-	if x != nil {
-		return x.IsRoot
-	}
-	return false
-}
-
-func (x *GetCurrentUserMenuAuthorityReply) GetMenuIds() []int32 {
-	if x != nil {
-		return x.MenuIds
-	}
-	return nil
-}
-
 type CheckAuthorizationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -294,7 +198,7 @@ type CheckAuthorizationRequest struct {
 
 func (x *CheckAuthorizationRequest) Reset() {
 	*x = CheckAuthorizationRequest{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -306,7 +210,7 @@ func (x *CheckAuthorizationRequest) String() string {
 func (*CheckAuthorizationRequest) ProtoMessage() {}
 
 func (x *CheckAuthorizationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -319,7 +223,7 @@ func (x *CheckAuthorizationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckAuthorizationRequest.ProtoReflect.Descriptor instead.
 func (*CheckAuthorizationRequest) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{5}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CheckAuthorizationRequest) GetUserId() string {
@@ -352,7 +256,7 @@ type CheckAuthorizationReply struct {
 
 func (x *CheckAuthorizationReply) Reset() {
 	*x = CheckAuthorizationReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -364,7 +268,7 @@ func (x *CheckAuthorizationReply) String() string {
 func (*CheckAuthorizationReply) ProtoMessage() {}
 
 func (x *CheckAuthorizationReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -377,7 +281,7 @@ func (x *CheckAuthorizationReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckAuthorizationReply.ProtoReflect.Descriptor instead.
 func (*CheckAuthorizationReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{6}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CheckAuthorizationReply) GetAllowed() bool {
@@ -397,7 +301,7 @@ type WalkRouteItem struct {
 
 func (x *WalkRouteItem) Reset() {
 	*x = WalkRouteItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -409,7 +313,7 @@ func (x *WalkRouteItem) String() string {
 func (*WalkRouteItem) ProtoMessage() {}
 
 func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -422,7 +326,7 @@ func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WalkRouteItem.ProtoReflect.Descriptor instead.
 func (*WalkRouteItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{7}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *WalkRouteItem) GetUrl() string {
@@ -448,7 +352,7 @@ type GetWalkRouteReply struct {
 
 func (x *GetWalkRouteReply) Reset() {
 	*x = GetWalkRouteReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -460,7 +364,7 @@ func (x *GetWalkRouteReply) String() string {
 func (*GetWalkRouteReply) ProtoMessage() {}
 
 func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
+	mi := &file_auth_service_v1_auth_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +377,7 @@ func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWalkRouteReply.ProtoReflect.Descriptor instead.
 func (*GetWalkRouteReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{8}
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
@@ -483,32 +387,31 @@ func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
 	return nil
 }
 
-type RolePageParams struct {
+type PolicyRoleResource struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
-	PageSize      int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	DeptId        string                 `protobuf:"bytes,5,opt,name=dept_id,json=deptId,proto3" json:"dept_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Method        string                 `protobuf:"bytes,4,opt,name=method,proto3" json:"method,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RolePageParams) Reset() {
-	*x = RolePageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
+func (x *PolicyRoleResource) Reset() {
+	*x = PolicyRoleResource{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RolePageParams) String() string {
+func (x *PolicyRoleResource) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RolePageParams) ProtoMessage() {}
+func (*PolicyRoleResource) ProtoMessage() {}
 
-func (x *RolePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
+func (x *PolicyRoleResource) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -519,343 +422,132 @@ func (x *RolePageParams) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RolePageParams.ProtoReflect.Descriptor instead.
-func (*RolePageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{9}
+// Deprecated: Use PolicyRoleResource.ProtoReflect.Descriptor instead.
+func (*PolicyRoleResource) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *RolePageParams) GetCurrentPage() int64 {
-	if x != nil {
-		return x.CurrentPage
-	}
-	return 0
-}
-
-func (x *RolePageParams) GetPageSize() int64 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *RolePageParams) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *RolePageParams) GetStatus() int64 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *RolePageParams) GetDeptId() string {
-	if x != nil {
-		return x.DeptId
-	}
-	return ""
-}
-
-type RoleListItem struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Value          string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
-	Status         int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	OrderNo        string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	CreateTime     string                 `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	Remark         string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
-	Permissions    []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"`
-	Dept           string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`
-	ApiPermissions []string               `protobuf:"bytes,10,rep,name=api_permissions,json=apiPermissions,proto3" json:"api_permissions,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *RoleListItem) Reset() {
-	*x = RoleListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleListItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleListItem) ProtoMessage() {}
-
-func (x *RoleListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleListItem.ProtoReflect.Descriptor instead.
-func (*RoleListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *RoleListItem) GetId() string {
+func (x *PolicyRoleResource) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *RoleListItem) GetName() string {
+func (x *PolicyRoleResource) GetType() string {
 	if x != nil {
-		return x.Name
+		return x.Type
 	}
 	return ""
 }
 
-func (x *RoleListItem) GetValue() string {
+func (x *PolicyRoleResource) GetValue() string {
 	if x != nil {
 		return x.Value
 	}
 	return ""
 }
 
-func (x *RoleListItem) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *RoleListItem) GetOrderNo() string {
-	if x != nil {
-		return x.OrderNo
-	}
-	return ""
-}
-
-func (x *RoleListItem) GetCreateTime() string {
-	if x != nil {
-		return x.CreateTime
-	}
-	return ""
-}
-
-func (x *RoleListItem) GetRemark() string {
-	if x != nil {
-		return x.Remark
-	}
-	return ""
-}
-
-func (x *RoleListItem) GetPermissions() []int32 {
-	if x != nil {
-		return x.Permissions
-	}
-	return nil
-}
-
-func (x *RoleListItem) GetDept() string {
-	if x != nil {
-		return x.Dept
-	}
-	return ""
-}
-
-func (x *RoleListItem) GetApiPermissions() []string {
-	if x != nil {
-		return x.ApiPermissions
-	}
-	return nil
-}
-
-type GetRoleListByPageReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*RoleListItem        `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetRoleListByPageReply) Reset() {
-	*x = GetRoleListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetRoleListByPageReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetRoleListByPageReply) ProtoMessage() {}
-
-func (x *GetRoleListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetRoleListByPageReply.ProtoReflect.Descriptor instead.
-func (*GetRoleListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *GetRoleListByPageReply) GetItems() []*RoleListItem {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *GetRoleListByPageReply) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-type DeleteRole struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteRole) Reset() {
-	*x = DeleteRole{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteRole) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteRole) ProtoMessage() {}
-
-func (x *DeleteRole) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteRole.ProtoReflect.Descriptor instead.
-func (*DeleteRole) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *DeleteRole) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type GetApiPageParams struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	CurrentPage    int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
-	PageSize       int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Path           string                 `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
-	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	Method         string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
-	ResourcesGroup string                 `protobuf:"bytes,6,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *GetApiPageParams) Reset() {
-	*x = GetApiPageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetApiPageParams) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetApiPageParams) ProtoMessage() {}
-
-func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetApiPageParams.ProtoReflect.Descriptor instead.
-func (*GetApiPageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *GetApiPageParams) GetCurrentPage() int64 {
-	if x != nil {
-		return x.CurrentPage
-	}
-	return 0
-}
-
-func (x *GetApiPageParams) GetPageSize() int64 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *GetApiPageParams) GetPath() string {
-	if x != nil {
-		return x.Path
-	}
-	return ""
-}
-
-func (x *GetApiPageParams) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *GetApiPageParams) GetMethod() string {
+func (x *PolicyRoleResource) GetMethod() string {
 	if x != nil {
 		return x.Method
 	}
 	return ""
 }
 
-func (x *GetApiPageParams) GetResourcesGroup() string {
+type PolicyRole struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Value         string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Status        bool                   `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
+	MenuIds       []int32                `protobuf:"varint,6,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`
+	Resources     []*PolicyRoleResource  `protobuf:"bytes,7,rep,name=resources,proto3" json:"resources,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PolicyRole) Reset() {
+	*x = PolicyRole{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PolicyRole) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PolicyRole) ProtoMessage() {}
+
+func (x *PolicyRole) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[8]
 	if x != nil {
-		return x.ResourcesGroup
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PolicyRole.ProtoReflect.Descriptor instead.
+func (*PolicyRole) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *PolicyRole) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PolicyRole) GetName() string {
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
-type ApiListItem struct {
+func (x *PolicyRole) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+func (x *PolicyRole) GetStatus() bool {
+	if x != nil {
+		return x.Status
+	}
+	return false
+}
+
+func (x *PolicyRole) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *PolicyRole) GetMenuIds() []int32 {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+func (x *PolicyRole) GetResources() []*PolicyRoleResource {
+	if x != nil {
+		return x.Resources
+	}
+	return nil
+}
+
+type PolicyApi struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Path              string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
@@ -868,21 +560,21 @@ type ApiListItem struct {
 	sizeCache         protoimpl.SizeCache
 }
 
-func (x *ApiListItem) Reset() {
-	*x = ApiListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+func (x *PolicyApi) Reset() {
+	*x = PolicyApi{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ApiListItem) String() string {
+func (x *PolicyApi) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ApiListItem) ProtoMessage() {}
+func (*PolicyApi) ProtoMessage() {}
 
-func (x *ApiListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+func (x *PolicyApi) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -893,83 +585,87 @@ func (x *ApiListItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ApiListItem.ProtoReflect.Descriptor instead.
-func (*ApiListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{14}
+// Deprecated: Use PolicyApi.ProtoReflect.Descriptor instead.
+func (*PolicyApi) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ApiListItem) GetId() string {
+func (x *PolicyApi) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetPath() string {
+func (x *PolicyApi) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetMethod() string {
+func (x *PolicyApi) GetMethod() string {
 	if x != nil {
 		return x.Method
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetDescription() string {
+func (x *PolicyApi) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetModule() string {
+func (x *PolicyApi) GetModule() string {
 	if x != nil {
 		return x.Module
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetModuleDescription() string {
+func (x *PolicyApi) GetModuleDescription() string {
 	if x != nil {
 		return x.ModuleDescription
 	}
 	return ""
 }
 
-func (x *ApiListItem) GetResourcesGroup() string {
+func (x *PolicyApi) GetResourcesGroup() string {
 	if x != nil {
 		return x.ResourcesGroup
 	}
 	return ""
 }
 
-type GetApiListByPageReply struct {
+type PolicyUserRoleBinding struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*ApiListItem         `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RoleId        int64                  `protobuf:"varint,3,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
+	RoleValue     string                 `protobuf:"bytes,4,opt,name=role_value,json=roleValue,proto3" json:"role_value,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,6,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetApiListByPageReply) Reset() {
-	*x = GetApiListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[15]
+func (x *PolicyUserRoleBinding) Reset() {
+	*x = PolicyUserRoleBinding{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetApiListByPageReply) String() string {
+func (x *PolicyUserRoleBinding) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetApiListByPageReply) ProtoMessage() {}
+func (*PolicyUserRoleBinding) ProtoMessage() {}
 
-func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[15]
+func (x *PolicyUserRoleBinding) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -980,319 +676,154 @@ func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetApiListByPageReply.ProtoReflect.Descriptor instead.
-func (*GetApiListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{15}
+// Deprecated: Use PolicyUserRoleBinding.ProtoReflect.Descriptor instead.
+func (*PolicyUserRoleBinding) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *GetApiListByPageReply) GetItems() []*ApiListItem {
+func (x *PolicyUserRoleBinding) GetId() string {
 	if x != nil {
-		return x.Items
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetRoleId() int64 {
+	if x != nil {
+		return x.RoleId
+	}
+	return 0
+}
+
+func (x *PolicyUserRoleBinding) GetRoleValue() string {
+	if x != nil {
+		return x.RoleValue
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+type RegisterPermissionSnapshotRequest struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	SourceService string                   `protobuf:"bytes,1,opt,name=source_service,json=sourceService,proto3" json:"source_service,omitempty"`
+	Revision      uint64                   `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	Roles         []*PolicyRole            `protobuf:"bytes,3,rep,name=roles,proto3" json:"roles,omitempty"`
+	Apis          []*PolicyApi             `protobuf:"bytes,4,rep,name=apis,proto3" json:"apis,omitempty"`
+	Bindings      []*PolicyUserRoleBinding `protobuf:"bytes,5,rep,name=bindings,proto3" json:"bindings,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegisterPermissionSnapshotRequest) Reset() {
+	*x = RegisterPermissionSnapshotRequest{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegisterPermissionSnapshotRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterPermissionSnapshotRequest) ProtoMessage() {}
+
+func (x *RegisterPermissionSnapshotRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterPermissionSnapshotRequest.ProtoReflect.Descriptor instead.
+func (*RegisterPermissionSnapshotRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *RegisterPermissionSnapshotRequest) GetSourceService() string {
+	if x != nil {
+		return x.SourceService
+	}
+	return ""
+}
+
+func (x *RegisterPermissionSnapshotRequest) GetRevision() uint64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *RegisterPermissionSnapshotRequest) GetRoles() []*PolicyRole {
+	if x != nil {
+		return x.Roles
 	}
 	return nil
 }
 
-func (x *GetApiListByPageReply) GetTotal() int64 {
+func (x *RegisterPermissionSnapshotRequest) GetApis() []*PolicyApi {
 	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-type DeleteApi struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteApi) Reset() {
-	*x = DeleteApi{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteApi) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteApi) ProtoMessage() {}
-
-func (x *DeleteApi) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteApi.ProtoReflect.Descriptor instead.
-func (*DeleteApi) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *DeleteApi) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type GetResourcePageParams struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CurrentPage   int64                  `protobuf:"varint,7,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
-	PageSize      int64                  `protobuf:"varint,8,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`
-	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetResourcePageParams) Reset() {
-	*x = GetResourcePageParams{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetResourcePageParams) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetResourcePageParams) ProtoMessage() {}
-
-func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetResourcePageParams.ProtoReflect.Descriptor instead.
-func (*GetResourcePageParams) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *GetResourcePageParams) GetCurrentPage() int64 {
-	if x != nil {
-		return x.CurrentPage
-	}
-	return 0
-}
-
-func (x *GetResourcePageParams) GetPageSize() int64 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *GetResourcePageParams) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *GetResourcePageParams) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *GetResourcePageParams) GetValue() string {
-	if x != nil {
-		return x.Value
-	}
-	return ""
-}
-
-func (x *GetResourcePageParams) GetMethod() string {
-	if x != nil {
-		return x.Method
-	}
-	return ""
-}
-
-func (x *GetResourcePageParams) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-type ResourceListItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Value         string                 `protobuf:"bytes,4,opt,name=value,proto3" json:"value,omitempty"`
-	Method        string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
-	Description   string                 `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ResourceListItem) Reset() {
-	*x = ResourceListItem{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResourceListItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResourceListItem) ProtoMessage() {}
-
-func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResourceListItem.ProtoReflect.Descriptor instead.
-func (*ResourceListItem) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *ResourceListItem) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *ResourceListItem) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ResourceListItem) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *ResourceListItem) GetValue() string {
-	if x != nil {
-		return x.Value
-	}
-	return ""
-}
-
-func (x *ResourceListItem) GetMethod() string {
-	if x != nil {
-		return x.Method
-	}
-	return ""
-}
-
-func (x *ResourceListItem) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-type GetResourceListByPageReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*ResourceListItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetResourceListByPageReply) Reset() {
-	*x = GetResourceListByPageReply{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetResourceListByPageReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetResourceListByPageReply) ProtoMessage() {}
-
-func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetResourceListByPageReply.ProtoReflect.Descriptor instead.
-func (*GetResourceListByPageReply) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *GetResourceListByPageReply) GetItems() []*ResourceListItem {
-	if x != nil {
-		return x.Items
+		return x.Apis
 	}
 	return nil
 }
 
-func (x *GetResourceListByPageReply) GetTotal() int64 {
+func (x *RegisterPermissionSnapshotRequest) GetBindings() []*PolicyUserRoleBinding {
 	if x != nil {
-		return x.Total
+		return x.Bindings
 	}
-	return 0
+	return nil
 }
 
-type DeleteResource struct {
+type ApplyRoleDeltaRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	SourceService string                 `protobuf:"bytes,1,opt,name=source_service,json=sourceService,proto3" json:"source_service,omitempty"`
+	Revision      uint64                 `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	Before        *PolicyRole            `protobuf:"bytes,3,opt,name=before,proto3" json:"before,omitempty"`
+	After         *PolicyRole            `protobuf:"bytes,4,opt,name=after,proto3" json:"after,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DeleteResource) Reset() {
-	*x = DeleteResource{}
-	mi := &file_auth_service_v1_auth_proto_msgTypes[20]
+func (x *ApplyRoleDeltaRequest) Reset() {
+	*x = ApplyRoleDeltaRequest{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DeleteResource) String() string {
+func (x *ApplyRoleDeltaRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteResource) ProtoMessage() {}
+func (*ApplyRoleDeltaRequest) ProtoMessage() {}
 
-func (x *DeleteResource) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_service_v1_auth_proto_msgTypes[20]
+func (x *ApplyRoleDeltaRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1303,16 +834,173 @@ func (x *DeleteResource) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteResource.ProtoReflect.Descriptor instead.
-func (*DeleteResource) Descriptor() ([]byte, []int) {
-	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{20}
+// Deprecated: Use ApplyRoleDeltaRequest.ProtoReflect.Descriptor instead.
+func (*ApplyRoleDeltaRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *DeleteResource) GetId() string {
+func (x *ApplyRoleDeltaRequest) GetSourceService() string {
 	if x != nil {
-		return x.Id
+		return x.SourceService
 	}
 	return ""
+}
+
+func (x *ApplyRoleDeltaRequest) GetRevision() uint64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *ApplyRoleDeltaRequest) GetBefore() *PolicyRole {
+	if x != nil {
+		return x.Before
+	}
+	return nil
+}
+
+func (x *ApplyRoleDeltaRequest) GetAfter() *PolicyRole {
+	if x != nil {
+		return x.After
+	}
+	return nil
+}
+
+type ApplyApiDeltaRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SourceService string                 `protobuf:"bytes,1,opt,name=source_service,json=sourceService,proto3" json:"source_service,omitempty"`
+	Revision      uint64                 `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	Before        *PolicyApi             `protobuf:"bytes,3,opt,name=before,proto3" json:"before,omitempty"`
+	After         *PolicyApi             `protobuf:"bytes,4,opt,name=after,proto3" json:"after,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApplyApiDeltaRequest) Reset() {
+	*x = ApplyApiDeltaRequest{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApplyApiDeltaRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApplyApiDeltaRequest) ProtoMessage() {}
+
+func (x *ApplyApiDeltaRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApplyApiDeltaRequest.ProtoReflect.Descriptor instead.
+func (*ApplyApiDeltaRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ApplyApiDeltaRequest) GetSourceService() string {
+	if x != nil {
+		return x.SourceService
+	}
+	return ""
+}
+
+func (x *ApplyApiDeltaRequest) GetRevision() uint64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *ApplyApiDeltaRequest) GetBefore() *PolicyApi {
+	if x != nil {
+		return x.Before
+	}
+	return nil
+}
+
+func (x *ApplyApiDeltaRequest) GetAfter() *PolicyApi {
+	if x != nil {
+		return x.After
+	}
+	return nil
+}
+
+type ApplyUserRoleBindingDeltaRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SourceService string                 `protobuf:"bytes,1,opt,name=source_service,json=sourceService,proto3" json:"source_service,omitempty"`
+	Revision      uint64                 `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
+	Before        *PolicyUserRoleBinding `protobuf:"bytes,3,opt,name=before,proto3" json:"before,omitempty"`
+	After         *PolicyUserRoleBinding `protobuf:"bytes,4,opt,name=after,proto3" json:"after,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) Reset() {
+	*x = ApplyUserRoleBindingDeltaRequest{}
+	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApplyUserRoleBindingDeltaRequest) ProtoMessage() {}
+
+func (x *ApplyUserRoleBindingDeltaRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_v1_auth_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApplyUserRoleBindingDeltaRequest.ProtoReflect.Descriptor instead.
+func (*ApplyUserRoleBindingDeltaRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_v1_auth_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) GetSourceService() string {
+	if x != nil {
+		return x.SourceService
+	}
+	return ""
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) GetRevision() uint64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) GetBefore() *PolicyUserRoleBinding {
+	if x != nil {
+		return x.Before
+	}
+	return nil
+}
+
+func (x *ApplyUserRoleBindingDeltaRequest) GetAfter() *PolicyUserRoleBinding {
+	if x != nil {
+		return x.After
+	}
+	return nil
 }
 
 var File_auth_service_v1_auth_proto protoreflect.FileDescriptor
@@ -1331,12 +1019,7 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x04 \x01(\tR\tsessionId\"?\n" +
 	"\x13GetAccessCodesReply\x12(\n" +
-	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"=\n" +
-	"\"GetCurrentUserMenuAuthorityRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"V\n" +
-	" GetCurrentUserMenuAuthorityReply\x12\x17\n" +
-	"\ais_root\x18\x01 \x01(\bR\x06isRoot\x12\x19\n" +
-	"\bmenu_ids\x18\x02 \x03(\x05R\amenuIds\"`\n" +
+	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"`\n" +
 	"\x19CheckAuthorizationRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
@@ -1347,95 +1030,71 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\"M\n" +
 	"\x11GetWalkRouteReply\x128\n" +
-	"\x05items\x18\x01 \x03(\v2\".api.auth.service.v1.WalkRouteItemR\x05items\"\x95\x01\n" +
-	"\x0eRolePageParams\x12!\n" +
-	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x17\n" +
-	"\adept_id\x18\x05 \x01(\tR\x06deptId\"\x93\x02\n" +
-	"\fRoleListItem\x12\x0e\n" +
+	"\x05items\x18\x01 \x03(\v2\".api.auth.service.v1.WalkRouteItemR\x05items\"f\n" +
+	"\x12PolicyRoleResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12\x14\n" +
+	"\x05value\x18\x03 \x01(\tR\x05value\x12\x16\n" +
+	"\x06method\x18\x04 \x01(\tR\x06method\"\xd8\x01\n" +
+	"\n" +
+	"PolicyRole\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05value\x18\x03 \x01(\tR\x05value\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x19\n" +
-	"\border_no\x18\x05 \x01(\tR\aorderNo\x12\x1f\n" +
-	"\vcreate_time\x18\x06 \x01(\tR\n" +
-	"createTime\x12\x16\n" +
-	"\x06remark\x18\a \x01(\tR\x06remark\x12 \n" +
-	"\vpermissions\x18\b \x03(\x05R\vpermissions\x12\x12\n" +
-	"\x04dept\x18\t \x01(\tR\x04dept\x12'\n" +
-	"\x0fapi_permissions\x18\n" +
-	" \x03(\tR\x0eapiPermissions\"g\n" +
-	"\x16GetRoleListByPageReply\x127\n" +
-	"\x05items\x18\x01 \x03(\v2!.api.auth.service.v1.RoleListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1c\n" +
-	"\n" +
-	"DeleteRole\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xc9\x01\n" +
-	"\x10GetApiPageParams\x12!\n" +
-	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
-	"\x04path\x18\x03 \x01(\tR\x04path\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06method\x18\x05 \x01(\tR\x06method\x12'\n" +
-	"\x0fresources_group\x18\x06 \x01(\tR\x0eresourcesGroup\"\xdb\x01\n" +
-	"\vApiListItem\x12\x0e\n" +
+	"\x06status\x18\x04 \x01(\bR\x06status\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x19\n" +
+	"\bmenu_ids\x18\x06 \x03(\x05R\amenuIds\x12E\n" +
+	"\tresources\x18\a \x03(\v2'.api.auth.service.v1.PolicyRoleResourceR\tresources\"\xd9\x01\n" +
+	"\tPolicyApi\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
 	"\x06method\x18\x03 \x01(\tR\x06method\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06module\x18\x05 \x01(\tR\x06module\x12-\n" +
 	"\x12module_description\x18\x06 \x01(\tR\x11moduleDescription\x12'\n" +
-	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"e\n" +
-	"\x15GetApiListByPageReply\x126\n" +
-	"\x05items\x18\x01 \x03(\v2 .api.auth.service.v1.ApiListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1b\n" +
-	"\tDeleteApi\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xcf\x01\n" +
-	"\x15GetResourcePageParams\x12!\n" +
-	"\fcurrent_page\x18\a \x01(\x03R\vcurrentPage\x12\x1b\n" +
-	"\tpage_size\x18\b \x01(\x03R\bpageSize\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
-	"\x05value\x18\x04 \x01(\tR\x05value\x12\x16\n" +
-	"\x06method\x18\x05 \x01(\tR\x06method\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"\x9a\x01\n" +
-	"\x10ResourceListItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
-	"\x04type\x18\x03 \x01(\tR\x04type\x12\x14\n" +
-	"\x05value\x18\x04 \x01(\tR\x05value\x12\x16\n" +
-	"\x06method\x18\x05 \x01(\tR\x06method\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\"o\n" +
-	"\x1aGetResourceListByPageReply\x12;\n" +
-	"\x05items\x18\x01 \x03(\v2%.api.auth.service.v1.ResourceListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\" \n" +
-	"\x0eDeleteResource\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id2\x82\x12\n" +
+	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"\xba\x01\n" +
+	"\x15PolicyUserRoleBinding\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x17\n" +
+	"\arole_id\x18\x03 \x01(\x03R\x06roleId\x12\x1d\n" +
+	"\n" +
+	"role_value\x18\x04 \x01(\tR\troleValue\x12\x1f\n" +
+	"\vcreate_time\x18\x05 \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\x06 \x01(\tR\n" +
+	"updateTime\"\x99\x02\n" +
+	"!RegisterPermissionSnapshotRequest\x12%\n" +
+	"\x0esource_service\x18\x01 \x01(\tR\rsourceService\x12\x1a\n" +
+	"\brevision\x18\x02 \x01(\x04R\brevision\x125\n" +
+	"\x05roles\x18\x03 \x03(\v2\x1f.api.auth.service.v1.PolicyRoleR\x05roles\x122\n" +
+	"\x04apis\x18\x04 \x03(\v2\x1e.api.auth.service.v1.PolicyApiR\x04apis\x12F\n" +
+	"\bbindings\x18\x05 \x03(\v2*.api.auth.service.v1.PolicyUserRoleBindingR\bbindings\"\xca\x01\n" +
+	"\x15ApplyRoleDeltaRequest\x12%\n" +
+	"\x0esource_service\x18\x01 \x01(\tR\rsourceService\x12\x1a\n" +
+	"\brevision\x18\x02 \x01(\x04R\brevision\x127\n" +
+	"\x06before\x18\x03 \x01(\v2\x1f.api.auth.service.v1.PolicyRoleR\x06before\x125\n" +
+	"\x05after\x18\x04 \x01(\v2\x1f.api.auth.service.v1.PolicyRoleR\x05after\"\xc7\x01\n" +
+	"\x14ApplyApiDeltaRequest\x12%\n" +
+	"\x0esource_service\x18\x01 \x01(\tR\rsourceService\x12\x1a\n" +
+	"\brevision\x18\x02 \x01(\x04R\brevision\x126\n" +
+	"\x06before\x18\x03 \x01(\v2\x1e.api.auth.service.v1.PolicyApiR\x06before\x124\n" +
+	"\x05after\x18\x04 \x01(\v2\x1e.api.auth.service.v1.PolicyApiR\x05after\"\xeb\x01\n" +
+	" ApplyUserRoleBindingDeltaRequest\x12%\n" +
+	"\x0esource_service\x18\x01 \x01(\tR\rsourceService\x12\x1a\n" +
+	"\brevision\x18\x02 \x01(\x04R\brevision\x12B\n" +
+	"\x06before\x18\x03 \x01(\v2*.api.auth.service.v1.PolicyUserRoleBindingR\x06before\x12@\n" +
+	"\x05after\x18\x04 \x01(\v2*.api.auth.service.v1.PolicyUserRoleBindingR\x05after2\xfc\a\n" +
 	"\vAuthService\x12j\n" +
 	"\x05Login\x12!.api.auth.service.v1.LoginRequest\x1a\x1f.api.auth.service.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/auth-api/v1/login\x12u\n" +
-	"\x0eGetAccessCodes\x12\x16.google.protobuf.Empty\x1a(.api.auth.service.v1.GetAccessCodesReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/auth-api/v1/access-codes\x12\x8d\x01\n" +
-	"\x1bGetCurrentUserMenuAuthority\x127.api.auth.service.v1.GetCurrentUserMenuAuthorityRequest\x1a5.api.auth.service.v1.GetCurrentUserMenuAuthorityReply\x12r\n" +
+	"\x0eGetAccessCodes\x12\x16.google.protobuf.Empty\x1a(.api.auth.service.v1.GetAccessCodesReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/auth-api/v1/access-codes\x12r\n" +
 	"\x12CheckAuthorization\x12..api.auth.service.v1.CheckAuthorizationRequest\x1a,.api.auth.service.v1.CheckAuthorizationReply\x12N\n" +
 	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a&.api.auth.service.v1.GetWalkRouteReply\x12X\n" +
 	"\x06Logout\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/auth-api/v1/logout\x12h\n" +
-	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x1f.api.auth.service.v1.LoginReply\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/auth-api/v1/refresh\x12e\n" +
-	"\fReLoadPolicy\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/auth-api/v1/reload-policy\x12{\n" +
-	"\vGetRoleList\x12#.api.auth.service.v1.RolePageParams\x1a+.api.auth.service.v1.GetRoleListByPageReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/auth-api/v1/roles\x12n\n" +
-	"\aAddRole\x12!.api.auth.service.v1.RoleListItem\x1a!.api.auth.service.v1.RoleListItem\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/auth-api/v1/roles\x12v\n" +
-	"\n" +
-	"UpdateRole\x12!.api.auth.service.v1.RoleListItem\x1a!.api.auth.service.v1.RoleListItem\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\x1a\x17/auth-api/v1/roles/{id}\x12c\n" +
-	"\aDelRole\x12\x1f.api.auth.service.v1.DeleteRole\x1a\x16.google.protobuf.Empty\"\x1f\x82\xd3\xe4\x93\x02\x19*\x17/auth-api/v1/roles/{id}\x12z\n" +
-	"\n" +
-	"GetApiList\x12%.api.auth.service.v1.GetApiPageParams\x1a*.api.auth.service.v1.GetApiListByPageReply\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/auth-api/v1/apis\x12j\n" +
-	"\x06AddApi\x12 .api.auth.service.v1.ApiListItem\x1a .api.auth.service.v1.ApiListItem\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/auth-api/v1/apis\x12r\n" +
-	"\tUpdateApi\x12 .api.auth.service.v1.ApiListItem\x1a .api.auth.service.v1.ApiListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/auth-api/v1/apis/{id}\x12`\n" +
-	"\x06DelApi\x12\x1e.api.auth.service.v1.DeleteApi\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18*\x16/auth-api/v1/apis/{id}\x12\x8e\x01\n" +
-	"\x0fGetResourceList\x12*.api.auth.service.v1.GetResourcePageParams\x1a/.api.auth.service.v1.GetResourceListByPageReply\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/auth-api/v1/resources\x12~\n" +
-	"\vAddResource\x12%.api.auth.service.v1.ResourceListItem\x1a%.api.auth.service.v1.ResourceListItem\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/auth-api/v1/resources\x12\x86\x01\n" +
-	"\x0eUpdateResource\x12%.api.auth.service.v1.ResourceListItem\x1a%.api.auth.service.v1.ResourceListItem\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/auth-api/v1/resources/{id}\x12o\n" +
-	"\vDelResource\x12#.api.auth.service.v1.DeleteResource\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth-api/v1/resources/{id}BB\n" +
+	"\fRefreshToken\x12\x16.google.protobuf.Empty\x1a\x1f.api.auth.service.v1.LoginReply\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/auth-api/v1/refresh\x12l\n" +
+	"\x1aRegisterPermissionSnapshot\x126.api.auth.service.v1.RegisterPermissionSnapshotRequest\x1a\x16.google.protobuf.Empty\x12T\n" +
+	"\x0eApplyRoleDelta\x12*.api.auth.service.v1.ApplyRoleDeltaRequest\x1a\x16.google.protobuf.Empty\x12R\n" +
+	"\rApplyApiDelta\x12).api.auth.service.v1.ApplyApiDeltaRequest\x1a\x16.google.protobuf.Empty\x12j\n" +
+	"\x19ApplyUserRoleBindingDelta\x125.api.auth.service.v1.ApplyUserRoleBindingDeltaRequest\x1a\x16.google.protobuf.EmptyBB\n" +
 	"\x13api.auth.service.v1P\x01Z)base-server/api/gen/go/auth/service/v1;v1b\x06proto3"
 
 var (
@@ -1450,81 +1109,62 @@ func file_auth_service_v1_auth_proto_rawDescGZIP() []byte {
 	return file_auth_service_v1_auth_proto_rawDescData
 }
 
-var file_auth_service_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_auth_service_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_auth_service_v1_auth_proto_goTypes = []any{
-	(*LoginRequest)(nil),                       // 0: api.auth.service.v1.LoginRequest
-	(*LoginReply)(nil),                         // 1: api.auth.service.v1.LoginReply
-	(*GetAccessCodesReply)(nil),                // 2: api.auth.service.v1.GetAccessCodesReply
-	(*GetCurrentUserMenuAuthorityRequest)(nil), // 3: api.auth.service.v1.GetCurrentUserMenuAuthorityRequest
-	(*GetCurrentUserMenuAuthorityReply)(nil),   // 4: api.auth.service.v1.GetCurrentUserMenuAuthorityReply
-	(*CheckAuthorizationRequest)(nil),          // 5: api.auth.service.v1.CheckAuthorizationRequest
-	(*CheckAuthorizationReply)(nil),            // 6: api.auth.service.v1.CheckAuthorizationReply
-	(*WalkRouteItem)(nil),                      // 7: api.auth.service.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),                  // 8: api.auth.service.v1.GetWalkRouteReply
-	(*RolePageParams)(nil),                     // 9: api.auth.service.v1.RolePageParams
-	(*RoleListItem)(nil),                       // 10: api.auth.service.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),             // 11: api.auth.service.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),                         // 12: api.auth.service.v1.DeleteRole
-	(*GetApiPageParams)(nil),                   // 13: api.auth.service.v1.GetApiPageParams
-	(*ApiListItem)(nil),                        // 14: api.auth.service.v1.ApiListItem
-	(*GetApiListByPageReply)(nil),              // 15: api.auth.service.v1.GetApiListByPageReply
-	(*DeleteApi)(nil),                          // 16: api.auth.service.v1.DeleteApi
-	(*GetResourcePageParams)(nil),              // 17: api.auth.service.v1.GetResourcePageParams
-	(*ResourceListItem)(nil),                   // 18: api.auth.service.v1.ResourceListItem
-	(*GetResourceListByPageReply)(nil),         // 19: api.auth.service.v1.GetResourceListByPageReply
-	(*DeleteResource)(nil),                     // 20: api.auth.service.v1.DeleteResource
-	(*emptypb.Empty)(nil),                      // 21: google.protobuf.Empty
+	(*LoginRequest)(nil),                      // 0: api.auth.service.v1.LoginRequest
+	(*LoginReply)(nil),                        // 1: api.auth.service.v1.LoginReply
+	(*GetAccessCodesReply)(nil),               // 2: api.auth.service.v1.GetAccessCodesReply
+	(*CheckAuthorizationRequest)(nil),         // 3: api.auth.service.v1.CheckAuthorizationRequest
+	(*CheckAuthorizationReply)(nil),           // 4: api.auth.service.v1.CheckAuthorizationReply
+	(*WalkRouteItem)(nil),                     // 5: api.auth.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),                 // 6: api.auth.service.v1.GetWalkRouteReply
+	(*PolicyRoleResource)(nil),                // 7: api.auth.service.v1.PolicyRoleResource
+	(*PolicyRole)(nil),                        // 8: api.auth.service.v1.PolicyRole
+	(*PolicyApi)(nil),                         // 9: api.auth.service.v1.PolicyApi
+	(*PolicyUserRoleBinding)(nil),             // 10: api.auth.service.v1.PolicyUserRoleBinding
+	(*RegisterPermissionSnapshotRequest)(nil), // 11: api.auth.service.v1.RegisterPermissionSnapshotRequest
+	(*ApplyRoleDeltaRequest)(nil),             // 12: api.auth.service.v1.ApplyRoleDeltaRequest
+	(*ApplyApiDeltaRequest)(nil),              // 13: api.auth.service.v1.ApplyApiDeltaRequest
+	(*ApplyUserRoleBindingDeltaRequest)(nil),  // 14: api.auth.service.v1.ApplyUserRoleBindingDeltaRequest
+	(*emptypb.Empty)(nil),                     // 15: google.protobuf.Empty
 }
 var file_auth_service_v1_auth_proto_depIdxs = []int32{
-	7,  // 0: api.auth.service.v1.GetWalkRouteReply.items:type_name -> api.auth.service.v1.WalkRouteItem
-	10, // 1: api.auth.service.v1.GetRoleListByPageReply.items:type_name -> api.auth.service.v1.RoleListItem
-	14, // 2: api.auth.service.v1.GetApiListByPageReply.items:type_name -> api.auth.service.v1.ApiListItem
-	18, // 3: api.auth.service.v1.GetResourceListByPageReply.items:type_name -> api.auth.service.v1.ResourceListItem
-	0,  // 4: api.auth.service.v1.AuthService.Login:input_type -> api.auth.service.v1.LoginRequest
-	21, // 5: api.auth.service.v1.AuthService.GetAccessCodes:input_type -> google.protobuf.Empty
-	3,  // 6: api.auth.service.v1.AuthService.GetCurrentUserMenuAuthority:input_type -> api.auth.service.v1.GetCurrentUserMenuAuthorityRequest
-	5,  // 7: api.auth.service.v1.AuthService.CheckAuthorization:input_type -> api.auth.service.v1.CheckAuthorizationRequest
-	21, // 8: api.auth.service.v1.AuthService.GetWalkRoute:input_type -> google.protobuf.Empty
-	21, // 9: api.auth.service.v1.AuthService.Logout:input_type -> google.protobuf.Empty
-	21, // 10: api.auth.service.v1.AuthService.RefreshToken:input_type -> google.protobuf.Empty
-	21, // 11: api.auth.service.v1.AuthService.ReLoadPolicy:input_type -> google.protobuf.Empty
-	9,  // 12: api.auth.service.v1.AuthService.GetRoleList:input_type -> api.auth.service.v1.RolePageParams
-	10, // 13: api.auth.service.v1.AuthService.AddRole:input_type -> api.auth.service.v1.RoleListItem
-	10, // 14: api.auth.service.v1.AuthService.UpdateRole:input_type -> api.auth.service.v1.RoleListItem
-	12, // 15: api.auth.service.v1.AuthService.DelRole:input_type -> api.auth.service.v1.DeleteRole
-	13, // 16: api.auth.service.v1.AuthService.GetApiList:input_type -> api.auth.service.v1.GetApiPageParams
-	14, // 17: api.auth.service.v1.AuthService.AddApi:input_type -> api.auth.service.v1.ApiListItem
-	14, // 18: api.auth.service.v1.AuthService.UpdateApi:input_type -> api.auth.service.v1.ApiListItem
-	16, // 19: api.auth.service.v1.AuthService.DelApi:input_type -> api.auth.service.v1.DeleteApi
-	17, // 20: api.auth.service.v1.AuthService.GetResourceList:input_type -> api.auth.service.v1.GetResourcePageParams
-	18, // 21: api.auth.service.v1.AuthService.AddResource:input_type -> api.auth.service.v1.ResourceListItem
-	18, // 22: api.auth.service.v1.AuthService.UpdateResource:input_type -> api.auth.service.v1.ResourceListItem
-	20, // 23: api.auth.service.v1.AuthService.DelResource:input_type -> api.auth.service.v1.DeleteResource
-	1,  // 24: api.auth.service.v1.AuthService.Login:output_type -> api.auth.service.v1.LoginReply
-	2,  // 25: api.auth.service.v1.AuthService.GetAccessCodes:output_type -> api.auth.service.v1.GetAccessCodesReply
-	4,  // 26: api.auth.service.v1.AuthService.GetCurrentUserMenuAuthority:output_type -> api.auth.service.v1.GetCurrentUserMenuAuthorityReply
-	6,  // 27: api.auth.service.v1.AuthService.CheckAuthorization:output_type -> api.auth.service.v1.CheckAuthorizationReply
-	8,  // 28: api.auth.service.v1.AuthService.GetWalkRoute:output_type -> api.auth.service.v1.GetWalkRouteReply
-	21, // 29: api.auth.service.v1.AuthService.Logout:output_type -> google.protobuf.Empty
-	1,  // 30: api.auth.service.v1.AuthService.RefreshToken:output_type -> api.auth.service.v1.LoginReply
-	21, // 31: api.auth.service.v1.AuthService.ReLoadPolicy:output_type -> google.protobuf.Empty
-	11, // 32: api.auth.service.v1.AuthService.GetRoleList:output_type -> api.auth.service.v1.GetRoleListByPageReply
-	10, // 33: api.auth.service.v1.AuthService.AddRole:output_type -> api.auth.service.v1.RoleListItem
-	10, // 34: api.auth.service.v1.AuthService.UpdateRole:output_type -> api.auth.service.v1.RoleListItem
-	21, // 35: api.auth.service.v1.AuthService.DelRole:output_type -> google.protobuf.Empty
-	15, // 36: api.auth.service.v1.AuthService.GetApiList:output_type -> api.auth.service.v1.GetApiListByPageReply
-	14, // 37: api.auth.service.v1.AuthService.AddApi:output_type -> api.auth.service.v1.ApiListItem
-	14, // 38: api.auth.service.v1.AuthService.UpdateApi:output_type -> api.auth.service.v1.ApiListItem
-	21, // 39: api.auth.service.v1.AuthService.DelApi:output_type -> google.protobuf.Empty
-	19, // 40: api.auth.service.v1.AuthService.GetResourceList:output_type -> api.auth.service.v1.GetResourceListByPageReply
-	18, // 41: api.auth.service.v1.AuthService.AddResource:output_type -> api.auth.service.v1.ResourceListItem
-	18, // 42: api.auth.service.v1.AuthService.UpdateResource:output_type -> api.auth.service.v1.ResourceListItem
-	21, // 43: api.auth.service.v1.AuthService.DelResource:output_type -> google.protobuf.Empty
-	24, // [24:44] is the sub-list for method output_type
-	4,  // [4:24] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	5,  // 0: api.auth.service.v1.GetWalkRouteReply.items:type_name -> api.auth.service.v1.WalkRouteItem
+	7,  // 1: api.auth.service.v1.PolicyRole.resources:type_name -> api.auth.service.v1.PolicyRoleResource
+	8,  // 2: api.auth.service.v1.RegisterPermissionSnapshotRequest.roles:type_name -> api.auth.service.v1.PolicyRole
+	9,  // 3: api.auth.service.v1.RegisterPermissionSnapshotRequest.apis:type_name -> api.auth.service.v1.PolicyApi
+	10, // 4: api.auth.service.v1.RegisterPermissionSnapshotRequest.bindings:type_name -> api.auth.service.v1.PolicyUserRoleBinding
+	8,  // 5: api.auth.service.v1.ApplyRoleDeltaRequest.before:type_name -> api.auth.service.v1.PolicyRole
+	8,  // 6: api.auth.service.v1.ApplyRoleDeltaRequest.after:type_name -> api.auth.service.v1.PolicyRole
+	9,  // 7: api.auth.service.v1.ApplyApiDeltaRequest.before:type_name -> api.auth.service.v1.PolicyApi
+	9,  // 8: api.auth.service.v1.ApplyApiDeltaRequest.after:type_name -> api.auth.service.v1.PolicyApi
+	10, // 9: api.auth.service.v1.ApplyUserRoleBindingDeltaRequest.before:type_name -> api.auth.service.v1.PolicyUserRoleBinding
+	10, // 10: api.auth.service.v1.ApplyUserRoleBindingDeltaRequest.after:type_name -> api.auth.service.v1.PolicyUserRoleBinding
+	0,  // 11: api.auth.service.v1.AuthService.Login:input_type -> api.auth.service.v1.LoginRequest
+	15, // 12: api.auth.service.v1.AuthService.GetAccessCodes:input_type -> google.protobuf.Empty
+	3,  // 13: api.auth.service.v1.AuthService.CheckAuthorization:input_type -> api.auth.service.v1.CheckAuthorizationRequest
+	15, // 14: api.auth.service.v1.AuthService.GetWalkRoute:input_type -> google.protobuf.Empty
+	15, // 15: api.auth.service.v1.AuthService.Logout:input_type -> google.protobuf.Empty
+	15, // 16: api.auth.service.v1.AuthService.RefreshToken:input_type -> google.protobuf.Empty
+	11, // 17: api.auth.service.v1.AuthService.RegisterPermissionSnapshot:input_type -> api.auth.service.v1.RegisterPermissionSnapshotRequest
+	12, // 18: api.auth.service.v1.AuthService.ApplyRoleDelta:input_type -> api.auth.service.v1.ApplyRoleDeltaRequest
+	13, // 19: api.auth.service.v1.AuthService.ApplyApiDelta:input_type -> api.auth.service.v1.ApplyApiDeltaRequest
+	14, // 20: api.auth.service.v1.AuthService.ApplyUserRoleBindingDelta:input_type -> api.auth.service.v1.ApplyUserRoleBindingDeltaRequest
+	1,  // 21: api.auth.service.v1.AuthService.Login:output_type -> api.auth.service.v1.LoginReply
+	2,  // 22: api.auth.service.v1.AuthService.GetAccessCodes:output_type -> api.auth.service.v1.GetAccessCodesReply
+	4,  // 23: api.auth.service.v1.AuthService.CheckAuthorization:output_type -> api.auth.service.v1.CheckAuthorizationReply
+	6,  // 24: api.auth.service.v1.AuthService.GetWalkRoute:output_type -> api.auth.service.v1.GetWalkRouteReply
+	15, // 25: api.auth.service.v1.AuthService.Logout:output_type -> google.protobuf.Empty
+	1,  // 26: api.auth.service.v1.AuthService.RefreshToken:output_type -> api.auth.service.v1.LoginReply
+	15, // 27: api.auth.service.v1.AuthService.RegisterPermissionSnapshot:output_type -> google.protobuf.Empty
+	15, // 28: api.auth.service.v1.AuthService.ApplyRoleDelta:output_type -> google.protobuf.Empty
+	15, // 29: api.auth.service.v1.AuthService.ApplyApiDelta:output_type -> google.protobuf.Empty
+	15, // 30: api.auth.service.v1.AuthService.ApplyUserRoleBindingDelta:output_type -> google.protobuf.Empty
+	21, // [21:31] is the sub-list for method output_type
+	11, // [11:21] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_auth_service_v1_auth_proto_init() }
@@ -1538,7 +1178,7 @@ func file_auth_service_v1_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_service_v1_auth_proto_rawDesc), len(file_auth_service_v1_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -10,6 +10,7 @@ import (
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
+	"base-server/pkg/data/ent/userrolebinding"
 	"base-server/pkg/data/schema"
 	"time"
 
@@ -236,4 +237,19 @@ func init() {
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
 	user.DefaultID = userDescID.Default.(func() uuid.UUID)
+	userrolebindingMixin := schema.UserRoleBinding{}.Mixin()
+	userrolebindingMixinFields0 := userrolebindingMixin[0].Fields()
+	_ = userrolebindingMixinFields0
+	userrolebindingFields := schema.UserRoleBinding{}.Fields()
+	_ = userrolebindingFields
+	// userrolebindingDescCreateTime is the schema descriptor for create_time field.
+	userrolebindingDescCreateTime := userrolebindingMixinFields0[0].Descriptor()
+	// userrolebinding.DefaultCreateTime holds the default value on creation for the create_time field.
+	userrolebinding.DefaultCreateTime = userrolebindingDescCreateTime.Default.(func() time.Time)
+	// userrolebindingDescUpdateTime is the schema descriptor for update_time field.
+	userrolebindingDescUpdateTime := userrolebindingMixinFields0[1].Descriptor()
+	// userrolebinding.DefaultUpdateTime holds the default value on creation for the update_time field.
+	userrolebinding.DefaultUpdateTime = userrolebindingDescUpdateTime.Default.(func() time.Time)
+	// userrolebinding.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	userrolebinding.UpdateDefaultUpdateTime = userrolebindingDescUpdateTime.UpdateDefault.(func() time.Time)
 }

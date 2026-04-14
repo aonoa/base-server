@@ -20,40 +20,82 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationAdminServiceAddApi = "/api.admin.service.v1.AdminService/AddApi"
 const OperationAdminServiceAddDept = "/api.admin.service.v1.AdminService/AddDept"
+const OperationAdminServiceAddResource = "/api.admin.service.v1.AdminService/AddResource"
+const OperationAdminServiceAddRole = "/api.admin.service.v1.AdminService/AddRole"
 const OperationAdminServiceCreateMenu = "/api.admin.service.v1.AdminService/CreateMenu"
+const OperationAdminServiceDelApi = "/api.admin.service.v1.AdminService/DelApi"
 const OperationAdminServiceDelDept = "/api.admin.service.v1.AdminService/DelDept"
+const OperationAdminServiceDelResource = "/api.admin.service.v1.AdminService/DelResource"
+const OperationAdminServiceDelRole = "/api.admin.service.v1.AdminService/DelRole"
 const OperationAdminServiceDeleteMenu = "/api.admin.service.v1.AdminService/DeleteMenu"
+const OperationAdminServiceDeleteUserRoleBinding = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
+const OperationAdminServiceGetApiList = "/api.admin.service.v1.AdminService/GetApiList"
 const OperationAdminServiceGetCurrentUserMenus = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
 const OperationAdminServiceGetDeptList = "/api.admin.service.v1.AdminService/GetDeptList"
+const OperationAdminServiceGetResourceList = "/api.admin.service.v1.AdminService/GetResourceList"
+const OperationAdminServiceGetRoleList = "/api.admin.service.v1.AdminService/GetRoleList"
 const OperationAdminServiceGetSysLogInfo = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 const OperationAdminServiceGetSysLogList = "/api.admin.service.v1.AdminService/GetSysLogList"
 const OperationAdminServiceGetSysMenuList = "/api.admin.service.v1.AdminService/GetSysMenuList"
 const OperationAdminServiceGetWalkRoute = "/api.admin.service.v1.AdminService/GetWalkRoute"
 const OperationAdminServiceIsMenuNameExists = "/api.admin.service.v1.AdminService/IsMenuNameExists"
 const OperationAdminServiceIsMenuPathExists = "/api.admin.service.v1.AdminService/IsMenuPathExists"
+const OperationAdminServiceUpdateApi = "/api.admin.service.v1.AdminService/UpdateApi"
 const OperationAdminServiceUpdateDept = "/api.admin.service.v1.AdminService/UpdateDept"
 const OperationAdminServiceUpdateMenu = "/api.admin.service.v1.AdminService/UpdateMenu"
+const OperationAdminServiceUpdateResource = "/api.admin.service.v1.AdminService/UpdateResource"
+const OperationAdminServiceUpdateRole = "/api.admin.service.v1.AdminService/UpdateRole"
+const OperationAdminServiceUpsertUserRoleBinding = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
 
 type AdminServiceHTTPServer interface {
+	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
+	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
+	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
+	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
+	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
 	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
+	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
+	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
+	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
+	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
 }
 
 func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("/admin-api/v1/roles", _AdminService_GetRoleList0_HTTP_Handler(srv))
+	r.POST("/admin-api/v1/roles", _AdminService_AddRole0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/roles/{id}", _AdminService_UpdateRole0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/roles/{id}", _AdminService_DelRole0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/apis", _AdminService_GetApiList0_HTTP_Handler(srv))
+	r.POST("/admin-api/v1/apis", _AdminService_AddApi0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/apis/{id}", _AdminService_UpdateApi0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/apis/{id}", _AdminService_DelApi0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/resources", _AdminService_GetResourceList0_HTTP_Handler(srv))
+	r.POST("/admin-api/v1/resources", _AdminService_AddResource0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/resources/{id}", _AdminService_UpdateResource0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/resources/{id}", _AdminService_DelResource0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/user-role-bindings/{user_id}", _AdminService_UpsertUserRoleBinding0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/user-role-bindings/{user_id}", _AdminService_DeleteUserRoleBinding0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/depts", _AdminService_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/admin-api/v1/depts", _AdminService_AddDept0_HTTP_Handler(srv))
 	r.PUT("/admin-api/v1/depts/{id}", _AdminService_UpdateDept0_HTTP_Handler(srv))
@@ -68,6 +110,317 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 	r.DELETE("/admin-api/v1/menus/{id}", _AdminService_DeleteMenu0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/logs", _AdminService_GetSysLogList0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/logs/{id}", _AdminService_GetSysLogInfo0_HTTP_Handler(srv))
+}
+
+func _AdminService_GetRoleList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RolePageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetRoleList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetRoleList(ctx, req.(*RolePageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetRoleListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_AddRole0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RoleListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceAddRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddRole(ctx, req.(*RoleListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RoleListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpdateRole0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RoleListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpdateRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateRole(ctx, req.(*RoleListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RoleListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DelRole0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteRole
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDelRole)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelRole(ctx, req.(*DeleteRole))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetApiList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetApiPageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetApiList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetApiList(ctx, req.(*GetApiPageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetApiListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_AddApi0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ApiListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceAddApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddApi(ctx, req.(*ApiListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ApiListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpdateApi0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ApiListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpdateApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateApi(ctx, req.(*ApiListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ApiListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DelApi0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteApi
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDelApi)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelApi(ctx, req.(*DeleteApi))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetResourceList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetResourcePageParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetResourceList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetResourceList(ctx, req.(*GetResourcePageParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetResourceListByPageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_AddResource0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResourceListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceAddResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddResource(ctx, req.(*ResourceListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResourceListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpdateResource0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResourceListItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpdateResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateResource(ctx, req.(*ResourceListItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResourceListItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DelResource0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteResource
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDelResource)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelResource(ctx, req.(*DeleteResource))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpsertUserRoleBinding0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserRoleBindingItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpsertUserRoleBinding)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpsertUserRoleBinding(ctx, req.(*UserRoleBindingItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserRoleBindingItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DeleteUserRoleBinding0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUserRoleBindingRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDeleteUserRoleBinding)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteUserRoleBinding(ctx, req.(*DeleteUserRoleBindingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _AdminService_GetDeptList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
@@ -364,20 +717,34 @@ func _AdminService_GetSysLogInfo0_HTTP_Handler(srv AdminServiceHTTPServer) func(
 }
 
 type AdminServiceHTTPClient interface {
+	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
+	AddResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
+	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelResource(ctx context.Context, req *DeleteResource, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteUserRoleBinding(ctx context.Context, req *DeleteUserRoleBindingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetApiList(ctx context.Context, req *GetApiPageParams, opts ...http.CallOption) (rsp *GetApiListByPageReply, err error)
 	GetCurrentUserMenus(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetCurrentUserMenusReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
+	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
+	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	GetSysLogInfo(ctx context.Context, req *GetSysLogInfoParams, opts ...http.CallOption) (rsp *GetSysLogInfoReply, err error)
 	GetSysLogList(ctx context.Context, req *GetSysLogListParams, opts ...http.CallOption) (rsp *GetSysLogListReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
 	GetWalkRoute(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetWalkRouteReply, err error)
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
+	UpdateApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
+	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
+	UpsertUserRoleBinding(ctx context.Context, req *UserRoleBindingItem, opts ...http.CallOption) (rsp *UserRoleBindingItem, err error)
 }
 
 type AdminServiceHTTPClientImpl struct {
@@ -388,11 +755,50 @@ func NewAdminServiceHTTPClient(client *http.Client) AdminServiceHTTPClient {
 	return &AdminServiceHTTPClientImpl{client}
 }
 
+func (c *AdminServiceHTTPClientImpl) AddApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
+	var out ApiListItem
+	pattern := "/admin-api/v1/apis"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceAddApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) AddDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
 	pattern := "/admin-api/v1/depts"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceAddDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) AddResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
+	var out ResourceListItem
+	pattern := "/admin-api/v1/resources"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceAddResource))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) AddRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
+	var out RoleListItem
+	pattern := "/admin-api/v1/roles"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceAddRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -414,11 +820,50 @@ func (c *AdminServiceHTTPClientImpl) CreateMenu(ctx context.Context, in *SysMenu
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) DelApi(ctx context.Context, in *DeleteApi, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/apis/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDelApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/admin-api/v1/depts/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceDelDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) DelResource(ctx context.Context, in *DeleteResource, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/resources/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDelResource))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) DelRole(ctx context.Context, in *DeleteRole, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/roles/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDelRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -434,6 +879,32 @@ func (c *AdminServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteM
 	opts = append(opts, http.Operation(OperationAdminServiceDeleteMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/user-role-bindings/{user_id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDeleteUserRoleBinding))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...http.CallOption) (*GetApiListByPageReply, error) {
+	var out GetApiListByPageReply
+	pattern := "/admin-api/v1/apis"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetApiList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -458,6 +929,32 @@ func (c *AdminServiceHTTPClientImpl) GetDeptList(ctx context.Context, in *emptyp
 	pattern := "/admin-api/v1/depts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetDeptList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...http.CallOption) (*GetResourceListByPageReply, error) {
+	var out GetResourceListByPageReply
+	pattern := "/admin-api/v1/resources"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetResourceList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetRoleList(ctx context.Context, in *RolePageParams, opts ...http.CallOption) (*GetRoleListByPageReply, error) {
+	var out GetRoleListByPageReply
+	pattern := "/admin-api/v1/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetRoleList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -544,6 +1041,19 @@ func (c *AdminServiceHTTPClientImpl) IsMenuPathExists(ctx context.Context, in *I
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) UpdateApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
+	var out ApiListItem
+	pattern := "/admin-api/v1/apis/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpdateApi))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) UpdateDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
 	pattern := "/admin-api/v1/depts/{id}"
@@ -562,6 +1072,45 @@ func (c *AdminServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenu
 	pattern := "/admin-api/v1/menus/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceUpdateMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
+	var out ResourceListItem
+	pattern := "/admin-api/v1/resources/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpdateResource))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
+	var out RoleListItem
+	pattern := "/admin-api/v1/roles/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpdateRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) UpsertUserRoleBinding(ctx context.Context, in *UserRoleBindingItem, opts ...http.CallOption) (*UserRoleBindingItem, error) {
+	var out UserRoleBindingItem
+	pattern := "/admin-api/v1/user-role-bindings/{user_id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpsertUserRoleBinding))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

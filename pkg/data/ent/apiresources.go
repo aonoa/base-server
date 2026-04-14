@@ -76,7 +76,7 @@ func (*ApiResources) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the ApiResources fields.
-func (ar *ApiResources) assignValues(columns []string, values []any) error {
+func (_m *ApiResources) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -86,58 +86,58 @@ func (ar *ApiResources) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
-				ar.ID = value.String
+				_m.ID = value.String
 			}
 		case apiresources.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				ar.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case apiresources.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				ar.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case apiresources.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				ar.Description = value.String
+				_m.Description = value.String
 			}
 		case apiresources.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				ar.Path = value.String
+				_m.Path = value.String
 			}
 		case apiresources.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
-				ar.Method = value.String
+				_m.Method = value.String
 			}
 		case apiresources.FieldModule:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field module", values[i])
 			} else if value.Valid {
-				ar.Module = value.String
+				_m.Module = value.String
 			}
 		case apiresources.FieldModuleDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field module_description", values[i])
 			} else if value.Valid {
-				ar.ModuleDescription = value.String
+				_m.ModuleDescription = value.String
 			}
 		case apiresources.FieldResourcesGroup:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field resources_group", values[i])
 			} else if value.Valid {
-				ar.ResourcesGroup = value.String
+				_m.ResourcesGroup = value.String
 			}
 		default:
-			ar.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -145,61 +145,61 @@ func (ar *ApiResources) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the ApiResources.
 // This includes values selected through modifiers, order, etc.
-func (ar *ApiResources) Value(name string) (ent.Value, error) {
-	return ar.selectValues.Get(name)
+func (_m *ApiResources) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryRoles queries the "roles" edge of the ApiResources entity.
-func (ar *ApiResources) QueryRoles() *RoleQuery {
-	return NewApiResourcesClient(ar.config).QueryRoles(ar)
+func (_m *ApiResources) QueryRoles() *RoleQuery {
+	return NewApiResourcesClient(_m.config).QueryRoles(_m)
 }
 
 // Update returns a builder for updating this ApiResources.
 // Note that you need to call ApiResources.Unwrap() before calling this method if this ApiResources
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (ar *ApiResources) Update() *ApiResourcesUpdateOne {
-	return NewApiResourcesClient(ar.config).UpdateOne(ar)
+func (_m *ApiResources) Update() *ApiResourcesUpdateOne {
+	return NewApiResourcesClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the ApiResources entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (ar *ApiResources) Unwrap() *ApiResources {
-	_tx, ok := ar.config.driver.(*txDriver)
+func (_m *ApiResources) Unwrap() *ApiResources {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: ApiResources is not a transactional entity")
 	}
-	ar.config.driver = _tx.drv
-	return ar
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (ar *ApiResources) String() string {
+func (_m *ApiResources) String() string {
 	var builder strings.Builder
 	builder.WriteString("ApiResources(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", ar.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(ar.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(ar.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(ar.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("path=")
-	builder.WriteString(ar.Path)
+	builder.WriteString(_m.Path)
 	builder.WriteString(", ")
 	builder.WriteString("method=")
-	builder.WriteString(ar.Method)
+	builder.WriteString(_m.Method)
 	builder.WriteString(", ")
 	builder.WriteString("module=")
-	builder.WriteString(ar.Module)
+	builder.WriteString(_m.Module)
 	builder.WriteString(", ")
 	builder.WriteString("module_description=")
-	builder.WriteString(ar.ModuleDescription)
+	builder.WriteString(_m.ModuleDescription)
 	builder.WriteString(", ")
 	builder.WriteString("resources_group=")
-	builder.WriteString(ar.ResourcesGroup)
+	builder.WriteString(_m.ResourcesGroup)
 	builder.WriteByte(')')
 	return builder.String()
 }

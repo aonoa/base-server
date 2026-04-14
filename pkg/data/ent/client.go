@@ -18,6 +18,7 @@ import (
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
+	"base-server/pkg/data/ent/userrolebinding"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -45,6 +46,8 @@ type Client struct {
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserRoleBinding is the client for interacting with the UserRoleBinding builders.
+	UserRoleBinding *UserRoleBindingClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -63,6 +66,7 @@ func (c *Client) init() {
 	c.Role = NewRoleClient(c.config)
 	c.SysLogRecord = NewSysLogRecordClient(c.config)
 	c.User = NewUserClient(c.config)
+	c.UserRoleBinding = NewUserRoleBindingClient(c.config)
 }
 
 type (
@@ -153,15 +157,16 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		ApiResources: NewApiResourcesClient(cfg),
-		Dept:         NewDeptClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Resource:     NewResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysLogRecord: NewSysLogRecordClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:             ctx,
+		config:          cfg,
+		ApiResources:    NewApiResourcesClient(cfg),
+		Dept:            NewDeptClient(cfg),
+		Menu:            NewMenuClient(cfg),
+		Resource:        NewResourceClient(cfg),
+		Role:            NewRoleClient(cfg),
+		SysLogRecord:    NewSysLogRecordClient(cfg),
+		User:            NewUserClient(cfg),
+		UserRoleBinding: NewUserRoleBindingClient(cfg),
 	}, nil
 }
 
@@ -179,15 +184,16 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		ApiResources: NewApiResourcesClient(cfg),
-		Dept:         NewDeptClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Resource:     NewResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysLogRecord: NewSysLogRecordClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:             ctx,
+		config:          cfg,
+		ApiResources:    NewApiResourcesClient(cfg),
+		Dept:            NewDeptClient(cfg),
+		Menu:            NewMenuClient(cfg),
+		Resource:        NewResourceClient(cfg),
+		Role:            NewRoleClient(cfg),
+		SysLogRecord:    NewSysLogRecordClient(cfg),
+		User:            NewUserClient(cfg),
+		UserRoleBinding: NewUserRoleBindingClient(cfg),
 	}, nil
 }
 
@@ -218,6 +224,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.UserRoleBinding,
 	} {
 		n.Use(hooks...)
 	}
@@ -228,6 +235,7 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.UserRoleBinding,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -250,6 +258,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.SysLogRecord.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
+	case *UserRoleBindingMutation:
+		return c.UserRoleBinding.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -310,8 +320,8 @@ func (c *ApiResourcesClient) Update() *ApiResourcesUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ApiResourcesClient) UpdateOne(ar *ApiResources) *ApiResourcesUpdateOne {
-	mutation := newApiResourcesMutation(c.config, OpUpdateOne, withApiResources(ar))
+func (c *ApiResourcesClient) UpdateOne(_m *ApiResources) *ApiResourcesUpdateOne {
+	mutation := newApiResourcesMutation(c.config, OpUpdateOne, withApiResources(_m))
 	return &ApiResourcesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -328,8 +338,8 @@ func (c *ApiResourcesClient) Delete() *ApiResourcesDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ApiResourcesClient) DeleteOne(ar *ApiResources) *ApiResourcesDeleteOne {
-	return c.DeleteOneID(ar.ID)
+func (c *ApiResourcesClient) DeleteOne(_m *ApiResources) *ApiResourcesDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -364,16 +374,16 @@ func (c *ApiResourcesClient) GetX(ctx context.Context, id string) *ApiResources 
 }
 
 // QueryRoles queries the roles edge of a ApiResources.
-func (c *ApiResourcesClient) QueryRoles(ar *ApiResources) *RoleQuery {
+func (c *ApiResourcesClient) QueryRoles(_m *ApiResources) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := ar.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(apiresources.Table, apiresources.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, apiresources.RolesTable, apiresources.RolesPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(ar.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -459,8 +469,8 @@ func (c *DeptClient) Update() *DeptUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *DeptClient) UpdateOne(d *Dept) *DeptUpdateOne {
-	mutation := newDeptMutation(c.config, OpUpdateOne, withDept(d))
+func (c *DeptClient) UpdateOne(_m *Dept) *DeptUpdateOne {
+	mutation := newDeptMutation(c.config, OpUpdateOne, withDept(_m))
 	return &DeptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -477,8 +487,8 @@ func (c *DeptClient) Delete() *DeptDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *DeptClient) DeleteOne(d *Dept) *DeptDeleteOne {
-	return c.DeleteOneID(d.ID)
+func (c *DeptClient) DeleteOne(_m *Dept) *DeptDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -513,32 +523,32 @@ func (c *DeptClient) GetX(ctx context.Context, id int64) *Dept {
 }
 
 // QueryParent queries the parent edge of a Dept.
-func (c *DeptClient) QueryParent(d *Dept) *DeptQuery {
+func (c *DeptClient) QueryParent(_m *Dept) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, dept.ParentTable, dept.ParentColumn),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryChildren queries the children edge of a Dept.
-func (c *DeptClient) QueryChildren(d *Dept) *DeptQuery {
+func (c *DeptClient) QueryChildren(_m *Dept) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, dept.ChildrenTable, dept.ChildrenColumn),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -624,8 +634,8 @@ func (c *MenuClient) Update() *MenuUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *MenuClient) UpdateOne(m *Menu) *MenuUpdateOne {
-	mutation := newMenuMutation(c.config, OpUpdateOne, withMenu(m))
+func (c *MenuClient) UpdateOne(_m *Menu) *MenuUpdateOne {
+	mutation := newMenuMutation(c.config, OpUpdateOne, withMenu(_m))
 	return &MenuUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -642,8 +652,8 @@ func (c *MenuClient) Delete() *MenuDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *MenuClient) DeleteOne(m *Menu) *MenuDeleteOne {
-	return c.DeleteOneID(m.ID)
+func (c *MenuClient) DeleteOne(_m *Menu) *MenuDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -757,8 +767,8 @@ func (c *ResourceClient) Update() *ResourceUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ResourceClient) UpdateOne(r *Resource) *ResourceUpdateOne {
-	mutation := newResourceMutation(c.config, OpUpdateOne, withResource(r))
+func (c *ResourceClient) UpdateOne(_m *Resource) *ResourceUpdateOne {
+	mutation := newResourceMutation(c.config, OpUpdateOne, withResource(_m))
 	return &ResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -775,8 +785,8 @@ func (c *ResourceClient) Delete() *ResourceDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ResourceClient) DeleteOne(r *Resource) *ResourceDeleteOne {
-	return c.DeleteOneID(r.ID)
+func (c *ResourceClient) DeleteOne(_m *Resource) *ResourceDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -811,16 +821,16 @@ func (c *ResourceClient) GetX(ctx context.Context, id string) *Resource {
 }
 
 // QueryRoles queries the roles edge of a Resource.
-func (c *ResourceClient) QueryRoles(r *Resource) *RoleQuery {
+func (c *ResourceClient) QueryRoles(_m *Resource) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, resource.RolesTable, resource.RolesPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -906,8 +916,8 @@ func (c *RoleClient) Update() *RoleUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *RoleClient) UpdateOne(r *Role) *RoleUpdateOne {
-	mutation := newRoleMutation(c.config, OpUpdateOne, withRole(r))
+func (c *RoleClient) UpdateOne(_m *Role) *RoleUpdateOne {
+	mutation := newRoleMutation(c.config, OpUpdateOne, withRole(_m))
 	return &RoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -924,8 +934,8 @@ func (c *RoleClient) Delete() *RoleDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *RoleClient) DeleteOne(r *Role) *RoleDeleteOne {
-	return c.DeleteOneID(r.ID)
+func (c *RoleClient) DeleteOne(_m *Role) *RoleDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -960,32 +970,32 @@ func (c *RoleClient) GetX(ctx context.Context, id int64) *Role {
 }
 
 // QueryAPI queries the api edge of a Role.
-func (c *RoleClient) QueryAPI(r *Role) *ApiResourcesQuery {
+func (c *RoleClient) QueryAPI(_m *Role) *ApiResourcesQuery {
 	query := (&ApiResourcesClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(apiresources.Table, apiresources.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.APITable, role.APIPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryResource queries the resource edge of a Role.
-func (c *RoleClient) QueryResource(r *Role) *ResourceQuery {
+func (c *RoleClient) QueryResource(_m *Role) *ResourceQuery {
 	query := (&ResourceClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.ResourceTable, role.ResourcePrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1071,8 +1081,8 @@ func (c *SysLogRecordClient) Update() *SysLogRecordUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *SysLogRecordClient) UpdateOne(slr *SysLogRecord) *SysLogRecordUpdateOne {
-	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecord(slr))
+func (c *SysLogRecordClient) UpdateOne(_m *SysLogRecord) *SysLogRecordUpdateOne {
+	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecord(_m))
 	return &SysLogRecordUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1089,8 +1099,8 @@ func (c *SysLogRecordClient) Delete() *SysLogRecordDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *SysLogRecordClient) DeleteOne(slr *SysLogRecord) *SysLogRecordDeleteOne {
-	return c.DeleteOneID(slr.ID)
+func (c *SysLogRecordClient) DeleteOne(_m *SysLogRecord) *SysLogRecordDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1204,8 +1214,8 @@ func (c *UserClient) Update() *UserUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
+func (c *UserClient) UpdateOne(_m *User) *UserUpdateOne {
+	mutation := newUserMutation(c.config, OpUpdateOne, withUser(_m))
 	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1222,8 +1232,8 @@ func (c *UserClient) Delete() *UserDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *UserClient) DeleteOne(_m *User) *UserDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1282,12 +1292,147 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 	}
 }
 
+// UserRoleBindingClient is a client for the UserRoleBinding schema.
+type UserRoleBindingClient struct {
+	config
+}
+
+// NewUserRoleBindingClient returns a client for the UserRoleBinding from the given config.
+func NewUserRoleBindingClient(c config) *UserRoleBindingClient {
+	return &UserRoleBindingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `userrolebinding.Hooks(f(g(h())))`.
+func (c *UserRoleBindingClient) Use(hooks ...Hook) {
+	c.hooks.UserRoleBinding = append(c.hooks.UserRoleBinding, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `userrolebinding.Intercept(f(g(h())))`.
+func (c *UserRoleBindingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.UserRoleBinding = append(c.inters.UserRoleBinding, interceptors...)
+}
+
+// Create returns a builder for creating a UserRoleBinding entity.
+func (c *UserRoleBindingClient) Create() *UserRoleBindingCreate {
+	mutation := newUserRoleBindingMutation(c.config, OpCreate)
+	return &UserRoleBindingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of UserRoleBinding entities.
+func (c *UserRoleBindingClient) CreateBulk(builders ...*UserRoleBindingCreate) *UserRoleBindingCreateBulk {
+	return &UserRoleBindingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UserRoleBindingClient) MapCreateBulk(slice any, setFunc func(*UserRoleBindingCreate, int)) *UserRoleBindingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UserRoleBindingCreateBulk{err: fmt.Errorf("calling to UserRoleBindingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UserRoleBindingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UserRoleBindingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for UserRoleBinding.
+func (c *UserRoleBindingClient) Update() *UserRoleBindingUpdate {
+	mutation := newUserRoleBindingMutation(c.config, OpUpdate)
+	return &UserRoleBindingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UserRoleBindingClient) UpdateOne(_m *UserRoleBinding) *UserRoleBindingUpdateOne {
+	mutation := newUserRoleBindingMutation(c.config, OpUpdateOne, withUserRoleBinding(_m))
+	return &UserRoleBindingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UserRoleBindingClient) UpdateOneID(id int64) *UserRoleBindingUpdateOne {
+	mutation := newUserRoleBindingMutation(c.config, OpUpdateOne, withUserRoleBindingID(id))
+	return &UserRoleBindingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for UserRoleBinding.
+func (c *UserRoleBindingClient) Delete() *UserRoleBindingDelete {
+	mutation := newUserRoleBindingMutation(c.config, OpDelete)
+	return &UserRoleBindingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UserRoleBindingClient) DeleteOne(_m *UserRoleBinding) *UserRoleBindingDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UserRoleBindingClient) DeleteOneID(id int64) *UserRoleBindingDeleteOne {
+	builder := c.Delete().Where(userrolebinding.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UserRoleBindingDeleteOne{builder}
+}
+
+// Query returns a query builder for UserRoleBinding.
+func (c *UserRoleBindingClient) Query() *UserRoleBindingQuery {
+	return &UserRoleBindingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUserRoleBinding},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a UserRoleBinding entity by its id.
+func (c *UserRoleBindingClient) Get(ctx context.Context, id int64) (*UserRoleBinding, error) {
+	return c.Query().Where(userrolebinding.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UserRoleBindingClient) GetX(ctx context.Context, id int64) *UserRoleBinding {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *UserRoleBindingClient) Hooks() []Hook {
+	return c.hooks.UserRoleBinding
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserRoleBindingClient) Interceptors() []Interceptor {
+	return c.inters.UserRoleBinding
+}
+
+func (c *UserRoleBindingClient) mutate(ctx context.Context, m *UserRoleBindingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserRoleBindingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserRoleBindingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserRoleBindingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserRoleBindingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown UserRoleBinding mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Hook
+		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User,
+		UserRoleBinding []ent.Hook
 	}
 	inters struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Interceptor
+		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User,
+		UserRoleBinding []ent.Interceptor
 	}
 )

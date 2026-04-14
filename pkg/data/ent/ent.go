@@ -10,6 +10,7 @@ import (
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
+	"base-server/pkg/data/ent/userrolebinding"
 	"context"
 	"errors"
 	"fmt"
@@ -76,19 +77,20 @@ var (
 )
 
 // checkColumn checks if the column exists in the given table.
-func checkColumn(table, column string) error {
+func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			apiresources.Table: apiresources.ValidColumn,
-			dept.Table:         dept.ValidColumn,
-			menu.Table:         menu.ValidColumn,
-			resource.Table:     resource.ValidColumn,
-			role.Table:         role.ValidColumn,
-			syslogrecord.Table: syslogrecord.ValidColumn,
-			user.Table:         user.ValidColumn,
+			apiresources.Table:    apiresources.ValidColumn,
+			dept.Table:            dept.ValidColumn,
+			menu.Table:            menu.ValidColumn,
+			resource.Table:        resource.ValidColumn,
+			role.Table:            role.ValidColumn,
+			syslogrecord.Table:    syslogrecord.ValidColumn,
+			user.Table:            user.ValidColumn,
+			userrolebinding.Table: userrolebinding.ValidColumn,
 		})
 	})
-	return columnCheck(table, column)
+	return columnCheck(t, c)
 }
 
 // Asc applies the given fields in ASC order.

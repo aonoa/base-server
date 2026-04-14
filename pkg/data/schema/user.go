@@ -37,7 +37,6 @@ func (User) Fields() []ent.Field {
 		field.String("avatar").Comment("头像"),
 		field.String("desc").Comment("备注"),
 		field.String("extension").Comment("扩展信息"),
-		field.Int64("role_id").Optional().Nillable().Comment("角色ID"),
 	}
 }
 

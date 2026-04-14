@@ -24,7 +24,6 @@ type UserRepo interface {
 	IsUserExistsByUserName(context.Context, *v1.IsUserExistsRequest) (*ent.User, error)
 	ChangePassword(context.Context, *uuid.UUID, string, string) error
 	ValidateUserAuth(context.Context, string, string) (*ent.User, error)
-	ListUserAuthBindings(context.Context) ([]*ent.User, error)
 }
 
 type UserUsecase struct {
@@ -57,9 +56,6 @@ func (uc *UserUsecase) GetUserInfo(ctx context.Context, userID string) (*v1.GetU
 	}
 	_ = json.Unmarshal([]byte(user.Extension), &extension)
 	res.Email = extension.Email
-	if user.RoleID != nil {
-		res.Roles = append(res.Roles, &v1.RoleInfo{Id: *user.RoleID})
-	}
 	return res, nil
 }
 
@@ -74,16 +70,11 @@ func (uc *UserUsecase) GetUserList(ctx context.Context, req *v1.GetUserParams) (
 			Email string `json:"email"`
 		}
 		_ = json.Unmarshal([]byte(user.Extension), &extension)
-		roleID := int64(0)
-		if user.RoleID != nil {
-			roleID = *user.RoleID
-		}
 		res.Items = append(res.Items, &v1.UserListItem{
 			Id:         user.ID.String(),
 			Username:   user.Username,
 			Email:      extension.Email,
 			Nickname:   user.Nickname,
-			Role:       roleID,
 			CreateTime: user.CreateTime.Format(time.DateTime),
 			Remark:     user.Desc,
 			Status:     int32(user.Status),
@@ -106,7 +97,6 @@ func (uc *UserUsecase) AddUser(ctx context.Context, req *v1.UserListItem) (*v1.U
 		Status:     int32(user.Status),
 		Avatar:     user.Avatar,
 		CreateTime: user.CreateTime.Format(time.DateTime),
-		Role:       req.Role,
 	}, nil
 }
 
@@ -167,30 +157,8 @@ func (uc *UserUsecase) GetUserAuthInfo(ctx context.Context, userID string) (*v1.
 		UserId:   user.ID.String(),
 		Username: user.Username,
 	}
-	if user.RoleID != nil {
-		res.RoleId = *user.RoleID
-	}
 	for _, item := range parseAccessCodes(user.Extension) {
 		res.AccessCodes = append(res.AccessCodes, item)
-	}
-	return res, nil
-}
-
-func (uc *UserUsecase) ListUserAuthBindings(ctx context.Context) (*v1.ListUserAuthBindingsReply, error) {
-	users, err := uc.repo.ListUserAuthBindings(ctx)
-	if err != nil {
-		return nil, err
-	}
-	res := &v1.ListUserAuthBindingsReply{}
-	for _, user := range users {
-		roleID := int64(0)
-		if user.RoleID != nil {
-			roleID = *user.RoleID
-		}
-		res.Items = append(res.Items, &v1.UserAuthBinding{
-			UserId: user.ID.String(),
-			RoleId: roleID,
-		})
 	}
 	return res, nil
 }

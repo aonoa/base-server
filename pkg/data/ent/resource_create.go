@@ -22,106 +22,106 @@ type ResourceCreate struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (rc *ResourceCreate) SetCreateTime(t time.Time) *ResourceCreate {
-	rc.mutation.SetCreateTime(t)
-	return rc
+func (_c *ResourceCreate) SetCreateTime(v time.Time) *ResourceCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableCreateTime(t *time.Time) *ResourceCreate {
-	if t != nil {
-		rc.SetCreateTime(*t)
+func (_c *ResourceCreate) SetNillableCreateTime(v *time.Time) *ResourceCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (rc *ResourceCreate) SetUpdateTime(t time.Time) *ResourceCreate {
-	rc.mutation.SetUpdateTime(t)
-	return rc
+func (_c *ResourceCreate) SetUpdateTime(v time.Time) *ResourceCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
 }
 
 // SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableUpdateTime(t *time.Time) *ResourceCreate {
-	if t != nil {
-		rc.SetUpdateTime(*t)
+func (_c *ResourceCreate) SetNillableUpdateTime(v *time.Time) *ResourceCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetName sets the "name" field.
-func (rc *ResourceCreate) SetName(s string) *ResourceCreate {
-	rc.mutation.SetName(s)
-	return rc
+func (_c *ResourceCreate) SetName(v string) *ResourceCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetType sets the "type" field.
-func (rc *ResourceCreate) SetType(s string) *ResourceCreate {
-	rc.mutation.SetType(s)
-	return rc
+func (_c *ResourceCreate) SetType(v string) *ResourceCreate {
+	_c.mutation.SetType(v)
+	return _c
 }
 
 // SetValue sets the "value" field.
-func (rc *ResourceCreate) SetValue(s string) *ResourceCreate {
-	rc.mutation.SetValue(s)
-	return rc
+func (_c *ResourceCreate) SetValue(v string) *ResourceCreate {
+	_c.mutation.SetValue(v)
+	return _c
 }
 
 // SetMethod sets the "method" field.
-func (rc *ResourceCreate) SetMethod(s string) *ResourceCreate {
-	rc.mutation.SetMethod(s)
-	return rc
+func (_c *ResourceCreate) SetMethod(v string) *ResourceCreate {
+	_c.mutation.SetMethod(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (rc *ResourceCreate) SetDescription(s string) *ResourceCreate {
-	rc.mutation.SetDescription(s)
-	return rc
+func (_c *ResourceCreate) SetDescription(v string) *ResourceCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetID sets the "id" field.
-func (rc *ResourceCreate) SetID(s string) *ResourceCreate {
-	rc.mutation.SetID(s)
-	return rc
+func (_c *ResourceCreate) SetID(v string) *ResourceCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableID(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetID(*s)
+func (_c *ResourceCreate) SetNillableID(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return rc
+	return _c
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (rc *ResourceCreate) AddRoleIDs(ids ...int64) *ResourceCreate {
-	rc.mutation.AddRoleIDs(ids...)
-	return rc
+func (_c *ResourceCreate) AddRoleIDs(ids ...int64) *ResourceCreate {
+	_c.mutation.AddRoleIDs(ids...)
+	return _c
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
-func (rc *ResourceCreate) AddRoles(r ...*Role) *ResourceCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *ResourceCreate) AddRoles(v ...*Role) *ResourceCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return rc.AddRoleIDs(ids...)
+	return _c.AddRoleIDs(ids...)
 }
 
 // Mutation returns the ResourceMutation object of the builder.
-func (rc *ResourceCreate) Mutation() *ResourceMutation {
-	return rc.mutation
+func (_c *ResourceCreate) Mutation() *ResourceMutation {
+	return _c.mutation
 }
 
 // Save creates the Resource in the database.
-func (rc *ResourceCreate) Save(ctx context.Context) (*Resource, error) {
-	rc.defaults()
-	return withHooks(ctx, rc.sqlSave, rc.mutation, rc.hooks)
+func (_c *ResourceCreate) Save(ctx context.Context) (*Resource, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (rc *ResourceCreate) SaveX(ctx context.Context) *Resource {
-	v, err := rc.Save(ctx)
+func (_c *ResourceCreate) SaveX(ctx context.Context) *Resource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -129,66 +129,66 @@ func (rc *ResourceCreate) SaveX(ctx context.Context) *Resource {
 }
 
 // Exec executes the query.
-func (rc *ResourceCreate) Exec(ctx context.Context) error {
-	_, err := rc.Save(ctx)
+func (_c *ResourceCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rc *ResourceCreate) ExecX(ctx context.Context) {
-	if err := rc.Exec(ctx); err != nil {
+func (_c *ResourceCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (rc *ResourceCreate) defaults() {
-	if _, ok := rc.mutation.CreateTime(); !ok {
+func (_c *ResourceCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := resource.DefaultCreateTime()
-		rc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := rc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		v := resource.DefaultUpdateTime()
-		rc.mutation.SetUpdateTime(v)
+		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := rc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := resource.DefaultID()
-		rc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (rc *ResourceCreate) check() error {
-	if _, ok := rc.mutation.CreateTime(); !ok {
+func (_c *ResourceCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Resource.create_time"`)}
 	}
-	if _, ok := rc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Resource.update_time"`)}
 	}
-	if _, ok := rc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Resource.name"`)}
 	}
-	if _, ok := rc.mutation.GetType(); !ok {
+	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Resource.type"`)}
 	}
-	if _, ok := rc.mutation.Value(); !ok {
+	if _, ok := _c.mutation.Value(); !ok {
 		return &ValidationError{Name: "value", err: errors.New(`ent: missing required field "Resource.value"`)}
 	}
-	if _, ok := rc.mutation.Method(); !ok {
+	if _, ok := _c.mutation.Method(); !ok {
 		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "Resource.method"`)}
 	}
-	if _, ok := rc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Resource.description"`)}
 	}
 	return nil
 }
 
-func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
-	if err := rc.check(); err != nil {
+func (_c *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := rc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, rc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -201,49 +201,49 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 			return nil, fmt.Errorf("unexpected Resource.ID type: %T", _spec.ID.Value)
 		}
 	}
-	rc.mutation.id = &_node.ID
-	rc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
+func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Resource{config: rc.config}
+		_node = &Resource{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
 	)
-	if id, ok := rc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := rc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(resource.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := rc.mutation.UpdateTime(); ok {
+	if value, ok := _c.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := rc.mutation.Name(); ok {
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(resource.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := rc.mutation.GetType(); ok {
+	if value, ok := _c.mutation.GetType(); ok {
 		_spec.SetField(resource.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
-	if value, ok := rc.mutation.Value(); ok {
+	if value, ok := _c.mutation.Value(); ok {
 		_spec.SetField(resource.FieldValue, field.TypeString, value)
 		_node.Value = value
 	}
-	if value, ok := rc.mutation.Method(); ok {
+	if value, ok := _c.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
-	if value, ok := rc.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if nodes := rc.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -270,16 +270,16 @@ type ResourceCreateBulk struct {
 }
 
 // Save creates the Resource entities in the database.
-func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
-	if rcb.err != nil {
-		return nil, rcb.err
+func (_c *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
-	nodes := make([]*Resource, len(rcb.builders))
-	mutators := make([]Mutator, len(rcb.builders))
-	for i := range rcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Resource, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := rcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ResourceMutation)
@@ -293,11 +293,11 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, rcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, rcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -317,7 +317,7 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, rcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -325,8 +325,8 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (rcb *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
-	v, err := rcb.Save(ctx)
+func (_c *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -334,14 +334,14 @@ func (rcb *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
 }
 
 // Exec executes the query.
-func (rcb *ResourceCreateBulk) Exec(ctx context.Context) error {
-	_, err := rcb.Save(ctx)
+func (_c *ResourceCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rcb *ResourceCreateBulk) ExecX(ctx context.Context) {
-	if err := rcb.Exec(ctx); err != nil {
+func (_c *ResourceCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

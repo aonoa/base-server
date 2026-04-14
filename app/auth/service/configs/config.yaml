@@ -19,8 +19,17 @@ auth:
   whitelist:
     - /api.auth.service.v1.AuthService/Login
     - /api.auth.service.v1.AuthService/Logout
+    - /api.auth.service.v1.AuthService/RegisterPermissionSnapshot
+    - /api.auth.service.v1.AuthService/ApplyRoleDelta
+    - /api.auth.service.v1.AuthService/ApplyApiDelta
+    - /api.auth.service.v1.AuthService/ApplyUserRoleBindingDelta
 services:
   user:
     grpc_endpoint: 127.0.0.1:9010
-  admin:
-    grpc_endpoint: 127.0.0.1:9030
+logger:
+  level: info
+  filename: logs/auth-service.log
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  compress: false

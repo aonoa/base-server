@@ -10,6 +10,7 @@ message Bootstrap {
   Data data = 2;
   Auth auth = 3;
   Services services = 4;
+  Logger logger = 5;
 }
 
 message Server {
@@ -60,4 +61,13 @@ message Services {
   User user = 1;
   Auth auth = 2;
   Common common = 3;
+}
+
+message Logger {
+  string level = 1;
+  string filename = 2;
+  int32 max_size = 3;
+  int32 max_backups = 4;
+  int32 max_age = 5;
+  bool compress = 6;
 }

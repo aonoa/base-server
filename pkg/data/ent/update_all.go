@@ -159,10 +159,18 @@ func (u *UserUpdateOne) UpdateAll(user *User) *UserUpdateOne {
 	update = update.SetAvatar(user.Avatar)
 	update = update.SetDesc(user.Desc)
 	update = update.SetExtension(user.Extension)
-	if user.RoleID != nil {
-		update = update.SetRoleID(*user.RoleID)
-	} else {
-		update = update.ClearRoleID()
+	return update
+}
+
+// UpdateAll updates all mutable fields of the UserRoleBinding entity (excluding create_time, update_time and immutable fields).
+func (u *UserRoleBindingUpdateOne) UpdateAll(userrolebinding *UserRoleBinding) *UserRoleBindingUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if userrolebinding == nil {
+		return u
 	}
+
+	update := u
+	update = update.SetUserID(userrolebinding.UserID)
+	update = update.SetRoleID(userrolebinding.RoleID)
 	return update
 }

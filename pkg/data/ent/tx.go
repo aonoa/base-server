@@ -26,6 +26,8 @@ type Tx struct {
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserRoleBinding is the client for interacting with the UserRoleBinding builders.
+	UserRoleBinding *UserRoleBindingClient
 
 	// lazily loaded.
 	client     *Client
@@ -164,6 +166,7 @@ func (tx *Tx) init() {
 	tx.Role = NewRoleClient(tx.config)
 	tx.SysLogRecord = NewSysLogRecordClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserRoleBinding = NewUserRoleBindingClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

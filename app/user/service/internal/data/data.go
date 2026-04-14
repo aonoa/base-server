@@ -100,18 +100,12 @@ func getUserListQuery(params *v1.GetUserParams, isPage bool) func(s *sql.Selecto
 
 func (r *userRepo) GetUserList(ctx context.Context, req *v1.GetUserParams) ([]*ent.User, int64, error) {
 	query := r.data.db.User.Query()
-	if req.Role > 0 {
-		query.Where(user.RoleIDEQ(req.Role))
-	}
 	query.Modify(getUserListQuery(req, true))
 	res, err := query.All(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
 	queryCount := r.data.db.User.Query()
-	if req.Role > 0 {
-		queryCount.Where(user.RoleIDEQ(req.Role))
-	}
 	count, err := queryCount.Modify(getUserListQuery(req, false)).Count(ctx)
 	return res, int64(count), err
 }
@@ -128,9 +122,6 @@ func (r *userRepo) AddUser(ctx context.Context, req *v1.UserListItem) (*ent.User
 		SetStatus(int8(req.Status)).
 		SetDesc(req.Remark).
 		SetExtension(string(payload))
-	if req.Role > 0 {
-		cmd = cmd.SetRoleID(req.Role)
-	}
 	return cmd.Save(ctx)
 }
 
@@ -142,11 +133,6 @@ func (r *userRepo) UpdateUser(ctx context.Context, id *uuid.UUID, req *v1.UserLi
 		SetAvatar(defaultAvatar(req.Avatar)).
 		SetStatus(int8(req.Status)).
 		SetDesc(req.Remark)
-	if req.Role > 0 {
-		cmd = cmd.SetRoleID(req.Role)
-	} else {
-		cmd = cmd.ClearRoleID()
-	}
 	return cmd.Save(ctx)
 }
 
@@ -180,10 +166,6 @@ func (r *userRepo) ValidateUserAuth(ctx context.Context, username, password stri
 		Unique(false).
 		Where(user.And(user.UsernameEQ(username), user.PasswordEQ(password))).
 		First(ctx)
-}
-
-func (r *userRepo) ListUserAuthBindings(ctx context.Context) ([]*ent.User, error) {
-	return r.data.db.User.Query().All(ctx)
 }
 
 func defaultAvatar(avatar string) string {

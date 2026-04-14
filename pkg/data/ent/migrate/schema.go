@@ -246,7 +246,6 @@ var (
 		{Name: "avatar", Type: field.TypeString, Comment: "头像"},
 		{Name: "desc", Type: field.TypeString, Comment: "备注"},
 		{Name: "extension", Type: field.TypeString, Comment: "扩展信息"},
-		{Name: "role_id", Type: field.TypeInt64, Nullable: true, Comment: "角色ID"},
 	}
 	// SysUserTable holds the schema information for the "sys_user" table.
 	SysUserTable = &schema.Table{
@@ -254,6 +253,21 @@ var (
 		Comment:    "用户信息表",
 		Columns:    SysUserColumns,
 		PrimaryKey: []*schema.Column{SysUserColumns[0]},
+	}
+	// SysUserRoleBindingColumns holds the columns for the "sys_user_role_binding" table.
+	SysUserRoleBindingColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "user_id", Type: field.TypeString, Unique: true, Comment: "用户ID"},
+		{Name: "role_id", Type: field.TypeInt64, Comment: "角色ID"},
+	}
+	// SysUserRoleBindingTable holds the schema information for the "sys_user_role_binding" table.
+	SysUserRoleBindingTable = &schema.Table{
+		Name:       "sys_user_role_binding",
+		Comment:    "业务用户角色绑定表",
+		Columns:    SysUserRoleBindingColumns,
+		PrimaryKey: []*schema.Column{SysUserRoleBindingColumns[0]},
 	}
 	// APIResourcesRolesColumns holds the columns for the "api_resources_roles" table.
 	APIResourcesRolesColumns = []*schema.Column{
@@ -314,6 +328,7 @@ var (
 		SysRoleTable,
 		SysLogTable,
 		SysUserTable,
+		SysUserRoleBindingTable,
 		APIResourcesRolesTable,
 		ResourceRolesTable,
 	}
@@ -341,6 +356,9 @@ func init() {
 	}
 	SysUserTable.Annotation = &entsql.Annotation{
 		Table: "sys_user",
+	}
+	SysUserRoleBindingTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_role_binding",
 	}
 	APIResourcesRolesTable.ForeignKeys[0].RefTable = SysAPIResourcesTable
 	APIResourcesRolesTable.ForeignKeys[1].RefTable = SysRoleTable

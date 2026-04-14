@@ -26,3 +26,6 @@ type SysLogRecord func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// UserRoleBinding is the predicate function for userrolebinding builders.
+type UserRoleBinding func(*sql.Selector)

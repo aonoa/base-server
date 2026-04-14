@@ -10,6 +10,7 @@ message Bootstrap {
   Data data = 2;
   Auth auth = 3;
   Services services = 4;
+  Logger logger = 5;
 }
 
 message Server {
@@ -52,9 +53,14 @@ message Services {
   message User {
     string grpc_endpoint = 1;
   }
-  message Admin {
-    string grpc_endpoint = 1;
-  }
   User user = 1;
-  Admin admin = 2;
+}
+
+message Logger {
+  string level = 1;
+  string filename = 2;
+  int32 max_size = 3;
+  int32 max_backups = 4;
+  int32 max_age = 5;
+  bool compress = 6;
 }

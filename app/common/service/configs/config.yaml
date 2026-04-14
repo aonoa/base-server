@@ -22,3 +22,10 @@ llm:
 auth:
   api_key: auth-service-secret
   whitelist: []
+logger:
+  level: info
+  filename: logs/common-service.log
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  compress: false

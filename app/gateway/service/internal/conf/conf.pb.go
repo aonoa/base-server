@@ -77,6 +77,7 @@ type Bootstrap struct {
 	Server        *Server                `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
 	Gateway       *Gateway               `protobuf:"bytes,2,opt,name=gateway,proto3" json:"gateway,omitempty"`
 	Services      *Services              `protobuf:"bytes,3,opt,name=services,proto3" json:"services,omitempty"`
+	Logger        *Logger                `protobuf:"bytes,4,opt,name=logger,proto3" json:"logger,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -128,6 +129,13 @@ func (x *Bootstrap) GetGateway() *Gateway {
 func (x *Bootstrap) GetServices() *Services {
 	if x != nil {
 		return x.Services
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetLogger() *Logger {
+	if x != nil {
+		return x.Logger
 	}
 	return nil
 }
@@ -834,6 +842,90 @@ func (*Condition_ByStatusCode) isCondition_Condition() {}
 
 func (*Condition_ByHeader) isCondition_Condition() {}
 
+type Logger struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Level         string                 `protobuf:"bytes,1,opt,name=level,proto3" json:"level,omitempty"`
+	Filename      string                 `protobuf:"bytes,2,opt,name=filename,proto3" json:"filename,omitempty"`
+	MaxSize       int32                  `protobuf:"varint,3,opt,name=max_size,json=maxSize,proto3" json:"max_size,omitempty"`
+	MaxBackups    int32                  `protobuf:"varint,4,opt,name=max_backups,json=maxBackups,proto3" json:"max_backups,omitempty"`
+	MaxAge        int32                  `protobuf:"varint,5,opt,name=max_age,json=maxAge,proto3" json:"max_age,omitempty"`
+	Compress      bool                   `protobuf:"varint,6,opt,name=compress,proto3" json:"compress,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Logger) Reset() {
+	*x = Logger{}
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Logger) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Logger) ProtoMessage() {}
+
+func (x *Logger) ProtoReflect() protoreflect.Message {
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Logger.ProtoReflect.Descriptor instead.
+func (*Logger) Descriptor() ([]byte, []int) {
+	return file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *Logger) GetLevel() string {
+	if x != nil {
+		return x.Level
+	}
+	return ""
+}
+
+func (x *Logger) GetFilename() string {
+	if x != nil {
+		return x.Filename
+	}
+	return ""
+}
+
+func (x *Logger) GetMaxSize() int32 {
+	if x != nil {
+		return x.MaxSize
+	}
+	return 0
+}
+
+func (x *Logger) GetMaxBackups() int32 {
+	if x != nil {
+		return x.MaxBackups
+	}
+	return 0
+}
+
+func (x *Logger) GetMaxAge() int32 {
+	if x != nil {
+		return x.MaxAge
+	}
+	return 0
+}
+
+func (x *Logger) GetCompress() bool {
+	if x != nil {
+		return x.Compress
+	}
+	return false
+}
+
 type Server_HTTP struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Network           string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
@@ -847,7 +939,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -859,7 +951,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[11]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -919,7 +1011,7 @@ type Services_Auth struct {
 
 func (x *Services_Auth) Reset() {
 	*x = Services_Auth{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[13]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -931,7 +1023,7 @@ func (x *Services_Auth) String() string {
 func (*Services_Auth) ProtoMessage() {}
 
 func (x *Services_Auth) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[13]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -963,7 +1055,7 @@ type Services_Admin struct {
 
 func (x *Services_Admin) Reset() {
 	*x = Services_Admin{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -975,7 +1067,7 @@ func (x *Services_Admin) String() string {
 func (*Services_Admin) ProtoMessage() {}
 
 func (x *Services_Admin) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[14]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1008,7 +1100,7 @@ type Condition_Header struct {
 
 func (x *Condition_Header) Reset() {
 	*x = Condition_Header{}
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[17]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1020,7 +1112,7 @@ func (x *Condition_Header) String() string {
 func (*Condition_Header) ProtoMessage() {}
 
 func (x *Condition_Header) ProtoReflect() protoreflect.Message {
-	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[17]
+	mi := &file_app_gateway_service_internal_conf_conf_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1055,11 +1147,12 @@ var File_app_gateway_service_internal_conf_conf_proto protoreflect.FileDescripto
 const file_app_gateway_service_internal_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	",app/gateway/service/internal/conf/conf.proto\x12\n" +
-	"kratos.api\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\"\x98\x01\n" +
+	"kratos.api\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\"\xc4\x01\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12-\n" +
 	"\agateway\x18\x02 \x01(\v2\x13.kratos.api.GatewayR\agateway\x120\n" +
-	"\bservices\x18\x03 \x01(\v2\x14.kratos.api.ServicesR\bservices\"\xb3\x02\n" +
+	"\bservices\x18\x03 \x01(\v2\x14.kratos.api.ServicesR\bservices\x12*\n" +
+	"\x06logger\x18\x04 \x01(\v2\x12.kratos.api.LoggerR\x06logger\"\xb3\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x1a\xfb\x01\n" +
 	"\x04HTTP\x12\x18\n" +
@@ -1139,7 +1232,15 @@ const file_app_gateway_service_internal_conf_conf_proto_rawDesc = "" +
 	"\x06Header\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05valueB\v\n" +
-	"\tcondition*/\n" +
+	"\tcondition\"\xab\x01\n" +
+	"\x06Logger\x12\x14\n" +
+	"\x05level\x18\x01 \x01(\tR\x05level\x12\x1a\n" +
+	"\bfilename\x18\x02 \x01(\tR\bfilename\x12\x19\n" +
+	"\bmax_size\x18\x03 \x01(\x05R\amaxSize\x12\x1f\n" +
+	"\vmax_backups\x18\x04 \x01(\x05R\n" +
+	"maxBackups\x12\x17\n" +
+	"\amax_age\x18\x05 \x01(\x05R\x06maxAge\x12\x1a\n" +
+	"\bcompress\x18\x06 \x01(\bR\bcompress*/\n" +
 	"\bProtocol\x12\x0f\n" +
 	"\vUNSPECIFIED\x10\x00\x12\b\n" +
 	"\x04HTTP\x10\x01\x12\b\n" +
@@ -1158,7 +1259,7 @@ func file_app_gateway_service_internal_conf_conf_proto_rawDescGZIP() []byte {
 }
 
 var file_app_gateway_service_internal_conf_conf_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_app_gateway_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_app_gateway_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_app_gateway_service_internal_conf_conf_proto_goTypes = []any{
 	(Protocol)(0),               // 0: kratos.api.Protocol
 	(*Bootstrap)(nil),           // 1: kratos.api.Bootstrap
@@ -1172,47 +1273,49 @@ var file_app_gateway_service_internal_conf_conf_proto_goTypes = []any{
 	(*HealthCheck)(nil),         // 9: kratos.api.HealthCheck
 	(*Retry)(nil),               // 10: kratos.api.Retry
 	(*Condition)(nil),           // 11: kratos.api.Condition
-	(*Server_HTTP)(nil),         // 12: kratos.api.Server.HTTP
-	nil,                         // 13: kratos.api.Gateway.TlsStoreEntry
-	(*Services_Auth)(nil),       // 14: kratos.api.Services.Auth
-	(*Services_Admin)(nil),      // 15: kratos.api.Services.Admin
-	nil,                         // 16: kratos.api.Endpoint.MetadataEntry
-	nil,                         // 17: kratos.api.Backend.MetadataEntry
-	(*Condition_Header)(nil),    // 18: kratos.api.Condition.Header
-	(*durationpb.Duration)(nil), // 19: google.protobuf.Duration
-	(*anypb.Any)(nil),           // 20: google.protobuf.Any
+	(*Logger)(nil),              // 12: kratos.api.Logger
+	(*Server_HTTP)(nil),         // 13: kratos.api.Server.HTTP
+	nil,                         // 14: kratos.api.Gateway.TlsStoreEntry
+	(*Services_Auth)(nil),       // 15: kratos.api.Services.Auth
+	(*Services_Admin)(nil),      // 16: kratos.api.Services.Admin
+	nil,                         // 17: kratos.api.Endpoint.MetadataEntry
+	nil,                         // 18: kratos.api.Backend.MetadataEntry
+	(*Condition_Header)(nil),    // 19: kratos.api.Condition.Header
+	(*durationpb.Duration)(nil), // 20: google.protobuf.Duration
+	(*anypb.Any)(nil),           // 21: google.protobuf.Any
 }
 var file_app_gateway_service_internal_conf_conf_proto_depIdxs = []int32{
 	2,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
 	3,  // 1: kratos.api.Bootstrap.gateway:type_name -> kratos.api.Gateway
 	4,  // 2: kratos.api.Bootstrap.services:type_name -> kratos.api.Services
-	12, // 3: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	6,  // 4: kratos.api.Gateway.endpoints:type_name -> kratos.api.Endpoint
-	7,  // 5: kratos.api.Gateway.middlewares:type_name -> kratos.api.Middleware
-	13, // 6: kratos.api.Gateway.tls_store:type_name -> kratos.api.Gateway.TlsStoreEntry
-	14, // 7: kratos.api.Services.auth:type_name -> kratos.api.Services.Auth
-	15, // 8: kratos.api.Services.admin:type_name -> kratos.api.Services.Admin
-	0,  // 9: kratos.api.Endpoint.protocol:type_name -> kratos.api.Protocol
-	19, // 10: kratos.api.Endpoint.timeout:type_name -> google.protobuf.Duration
-	7,  // 11: kratos.api.Endpoint.middlewares:type_name -> kratos.api.Middleware
-	8,  // 12: kratos.api.Endpoint.backends:type_name -> kratos.api.Backend
-	10, // 13: kratos.api.Endpoint.retry:type_name -> kratos.api.Retry
-	16, // 14: kratos.api.Endpoint.metadata:type_name -> kratos.api.Endpoint.MetadataEntry
-	20, // 15: kratos.api.Middleware.options:type_name -> google.protobuf.Any
-	9,  // 16: kratos.api.Backend.health_check:type_name -> kratos.api.HealthCheck
-	17, // 17: kratos.api.Backend.metadata:type_name -> kratos.api.Backend.MetadataEntry
-	19, // 18: kratos.api.Retry.per_try_timeout:type_name -> google.protobuf.Duration
-	11, // 19: kratos.api.Retry.conditions:type_name -> kratos.api.Condition
-	18, // 20: kratos.api.Condition.by_header:type_name -> kratos.api.Condition.Header
-	19, // 21: kratos.api.Server.HTTP.read_timeout:type_name -> google.protobuf.Duration
-	19, // 22: kratos.api.Server.HTTP.read_header_timeout:type_name -> google.protobuf.Duration
-	19, // 23: kratos.api.Server.HTTP.idle_timeout:type_name -> google.protobuf.Duration
-	5,  // 24: kratos.api.Gateway.TlsStoreEntry.value:type_name -> kratos.api.TLS
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	12, // 3: kratos.api.Bootstrap.logger:type_name -> kratos.api.Logger
+	13, // 4: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	6,  // 5: kratos.api.Gateway.endpoints:type_name -> kratos.api.Endpoint
+	7,  // 6: kratos.api.Gateway.middlewares:type_name -> kratos.api.Middleware
+	14, // 7: kratos.api.Gateway.tls_store:type_name -> kratos.api.Gateway.TlsStoreEntry
+	15, // 8: kratos.api.Services.auth:type_name -> kratos.api.Services.Auth
+	16, // 9: kratos.api.Services.admin:type_name -> kratos.api.Services.Admin
+	0,  // 10: kratos.api.Endpoint.protocol:type_name -> kratos.api.Protocol
+	20, // 11: kratos.api.Endpoint.timeout:type_name -> google.protobuf.Duration
+	7,  // 12: kratos.api.Endpoint.middlewares:type_name -> kratos.api.Middleware
+	8,  // 13: kratos.api.Endpoint.backends:type_name -> kratos.api.Backend
+	10, // 14: kratos.api.Endpoint.retry:type_name -> kratos.api.Retry
+	17, // 15: kratos.api.Endpoint.metadata:type_name -> kratos.api.Endpoint.MetadataEntry
+	21, // 16: kratos.api.Middleware.options:type_name -> google.protobuf.Any
+	9,  // 17: kratos.api.Backend.health_check:type_name -> kratos.api.HealthCheck
+	18, // 18: kratos.api.Backend.metadata:type_name -> kratos.api.Backend.MetadataEntry
+	20, // 19: kratos.api.Retry.per_try_timeout:type_name -> google.protobuf.Duration
+	11, // 20: kratos.api.Retry.conditions:type_name -> kratos.api.Condition
+	19, // 21: kratos.api.Condition.by_header:type_name -> kratos.api.Condition.Header
+	20, // 22: kratos.api.Server.HTTP.read_timeout:type_name -> google.protobuf.Duration
+	20, // 23: kratos.api.Server.HTTP.read_header_timeout:type_name -> google.protobuf.Duration
+	20, // 24: kratos.api.Server.HTTP.idle_timeout:type_name -> google.protobuf.Duration
+	5,  // 25: kratos.api.Gateway.TlsStoreEntry.value:type_name -> kratos.api.TLS
+	26, // [26:26] is the sub-list for method output_type
+	26, // [26:26] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_app_gateway_service_internal_conf_conf_proto_init() }
@@ -1231,7 +1334,7 @@ func file_app_gateway_service_internal_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_app_gateway_service_internal_conf_conf_proto_rawDesc), len(file_app_gateway_service_internal_conf_conf_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   18,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

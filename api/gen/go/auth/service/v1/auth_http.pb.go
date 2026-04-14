@@ -20,42 +20,16 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthServiceAddApi = "/api.auth.service.v1.AuthService/AddApi"
-const OperationAuthServiceAddResource = "/api.auth.service.v1.AuthService/AddResource"
-const OperationAuthServiceAddRole = "/api.auth.service.v1.AuthService/AddRole"
-const OperationAuthServiceDelApi = "/api.auth.service.v1.AuthService/DelApi"
-const OperationAuthServiceDelResource = "/api.auth.service.v1.AuthService/DelResource"
-const OperationAuthServiceDelRole = "/api.auth.service.v1.AuthService/DelRole"
 const OperationAuthServiceGetAccessCodes = "/api.auth.service.v1.AuthService/GetAccessCodes"
-const OperationAuthServiceGetApiList = "/api.auth.service.v1.AuthService/GetApiList"
-const OperationAuthServiceGetResourceList = "/api.auth.service.v1.AuthService/GetResourceList"
-const OperationAuthServiceGetRoleList = "/api.auth.service.v1.AuthService/GetRoleList"
 const OperationAuthServiceLogin = "/api.auth.service.v1.AuthService/Login"
 const OperationAuthServiceLogout = "/api.auth.service.v1.AuthService/Logout"
-const OperationAuthServiceReLoadPolicy = "/api.auth.service.v1.AuthService/ReLoadPolicy"
 const OperationAuthServiceRefreshToken = "/api.auth.service.v1.AuthService/RefreshToken"
-const OperationAuthServiceUpdateApi = "/api.auth.service.v1.AuthService/UpdateApi"
-const OperationAuthServiceUpdateResource = "/api.auth.service.v1.AuthService/UpdateResource"
-const OperationAuthServiceUpdateRole = "/api.auth.service.v1.AuthService/UpdateRole"
 
 type AuthServiceHTTPServer interface {
-	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
-	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
-	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
-	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
-	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
-	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
-	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
-	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
-	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
 }
 
 func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
@@ -64,19 +38,6 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.GET("/auth-api/v1/access-codes", _AuthService_GetAccessCodes0_HTTP_Handler(srv))
 	r.POST("/auth-api/v1/logout", _AuthService_Logout0_HTTP_Handler(srv))
 	r.POST("/auth-api/v1/refresh", _AuthService_RefreshToken0_HTTP_Handler(srv))
-	r.POST("/auth-api/v1/reload-policy", _AuthService_ReLoadPolicy0_HTTP_Handler(srv))
-	r.GET("/auth-api/v1/roles", _AuthService_GetRoleList0_HTTP_Handler(srv))
-	r.POST("/auth-api/v1/roles", _AuthService_AddRole0_HTTP_Handler(srv))
-	r.PUT("/auth-api/v1/roles/{id}", _AuthService_UpdateRole0_HTTP_Handler(srv))
-	r.DELETE("/auth-api/v1/roles/{id}", _AuthService_DelRole0_HTTP_Handler(srv))
-	r.GET("/auth-api/v1/apis", _AuthService_GetApiList0_HTTP_Handler(srv))
-	r.POST("/auth-api/v1/apis", _AuthService_AddApi0_HTTP_Handler(srv))
-	r.PUT("/auth-api/v1/apis/{id}", _AuthService_UpdateApi0_HTTP_Handler(srv))
-	r.DELETE("/auth-api/v1/apis/{id}", _AuthService_DelApi0_HTTP_Handler(srv))
-	r.GET("/auth-api/v1/resources", _AuthService_GetResourceList0_HTTP_Handler(srv))
-	r.POST("/auth-api/v1/resources", _AuthService_AddResource0_HTTP_Handler(srv))
-	r.PUT("/auth-api/v1/resources/{id}", _AuthService_UpdateResource0_HTTP_Handler(srv))
-	r.DELETE("/auth-api/v1/resources/{id}", _AuthService_DelResource0_HTTP_Handler(srv))
 }
 
 func _AuthService_Login0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -164,310 +125,11 @@ func _AuthService_RefreshToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx
 	}
 }
 
-func _AuthService_ReLoadPolicy0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceReLoadPolicy)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ReLoadPolicy(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_GetRoleList0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RolePageParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceGetRoleList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetRoleList(ctx, req.(*RolePageParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetRoleListByPageReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_AddRole0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RoleListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceAddRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddRole(ctx, req.(*RoleListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RoleListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_UpdateRole0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in RoleListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceUpdateRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateRole(ctx, req.(*RoleListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RoleListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_DelRole0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteRole
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceDelRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DelRole(ctx, req.(*DeleteRole))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_GetApiList0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetApiPageParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceGetApiList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetApiList(ctx, req.(*GetApiPageParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetApiListByPageReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_AddApi0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ApiListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceAddApi)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddApi(ctx, req.(*ApiListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ApiListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_UpdateApi0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ApiListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceUpdateApi)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateApi(ctx, req.(*ApiListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ApiListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_DelApi0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteApi
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceDelApi)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DelApi(ctx, req.(*DeleteApi))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_GetResourceList0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetResourcePageParams
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceGetResourceList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetResourceList(ctx, req.(*GetResourcePageParams))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetResourceListByPageReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_AddResource0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ResourceListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceAddResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddResource(ctx, req.(*ResourceListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ResourceListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_UpdateResource0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ResourceListItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceUpdateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateResource(ctx, req.(*ResourceListItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ResourceListItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_DelResource0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteResource
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceDelResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DelResource(ctx, req.(*DeleteResource))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
 type AuthServiceHTTPClient interface {
-	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
-	AddResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
-	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
-	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DelResource(ctx context.Context, req *DeleteResource, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
-	GetApiList(ctx context.Context, req *GetApiPageParams, opts ...http.CallOption) (rsp *GetApiListByPageReply, err error)
-	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
-	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
-	UpdateApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
-	UpdateResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
-	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 }
 
 type AuthServiceHTTPClientImpl struct {
@@ -478,128 +140,11 @@ func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 	return &AuthServiceHTTPClientImpl{client}
 }
 
-func (c *AuthServiceHTTPClientImpl) AddApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
-	var out ApiListItem
-	pattern := "/auth-api/v1/apis"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceAddApi))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) AddResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
-	var out ResourceListItem
-	pattern := "/auth-api/v1/resources"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceAddResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) AddRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
-	var out RoleListItem
-	pattern := "/auth-api/v1/roles"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceAddRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) DelApi(ctx context.Context, in *DeleteApi, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/auth-api/v1/apis/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceDelApi))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) DelResource(ctx context.Context, in *DeleteResource, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/auth-api/v1/resources/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceDelResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) DelRole(ctx context.Context, in *DeleteRole, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/auth-api/v1/roles/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceDelRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AuthServiceHTTPClientImpl) GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetAccessCodesReply, error) {
 	var out GetAccessCodesReply
 	pattern := "/auth-api/v1/access-codes"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceGetAccessCodes))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...http.CallOption) (*GetApiListByPageReply, error) {
-	var out GetApiListByPageReply
-	pattern := "/auth-api/v1/apis"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceGetApiList))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...http.CallOption) (*GetResourceListByPageReply, error) {
-	var out GetResourceListByPageReply
-	pattern := "/auth-api/v1/resources"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceGetResourceList))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) GetRoleList(ctx context.Context, in *RolePageParams, opts ...http.CallOption) (*GetRoleListByPageReply, error) {
-	var out GetRoleListByPageReply
-	pattern := "/auth-api/v1/roles"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceGetRoleList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -634,19 +179,6 @@ func (c *AuthServiceHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empt
 	return &out, nil
 }
 
-func (c *AuthServiceHTTPClientImpl) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/auth-api/v1/reload-policy"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceReLoadPolicy))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*LoginReply, error) {
 	var out LoginReply
 	pattern := "/auth-api/v1/refresh"
@@ -654,45 +186,6 @@ func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *emptyp
 	opts = append(opts, http.Operation(OperationAuthServiceRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) UpdateApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
-	var out ApiListItem
-	pattern := "/auth-api/v1/apis/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceUpdateApi))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
-	var out ResourceListItem
-	pattern := "/auth-api/v1/resources/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceUpdateResource))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AuthServiceHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleListItem, opts ...http.CallOption) (*RoleListItem, error) {
-	var out RoleListItem
-	pattern := "/auth-api/v1/roles/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceUpdateRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

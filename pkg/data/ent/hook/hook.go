@@ -92,6 +92,18 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
 }
 
+// The UserRoleBindingFunc type is an adapter to allow the use of ordinary
+// function as UserRoleBinding mutator.
+type UserRoleBindingFunc func(context.Context, *ent.UserRoleBindingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserRoleBindingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserRoleBindingMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserRoleBindingMutation", m)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

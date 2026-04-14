@@ -10,6 +10,7 @@ message Bootstrap {
   Data data = 2;
   Llm llm = 3;
   Auth auth = 4;
+  Logger logger = 5;
 }
 
 message Server {
@@ -57,4 +58,13 @@ message Llm {
 message Auth {
   string api_key = 1;
   repeated string whitelist = 2;
+}
+
+message Logger {
+  string level = 1;
+  string filename = 2;
+  int32 max_size = 3;
+  int32 max_backups = 4;
+  int32 max_age = 5;
+  bool compress = 6;
 }

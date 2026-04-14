@@ -151,6 +151,21 @@ run-admin:
 run-common:
 	go run ./app/common/service/cmd/service -conf ./app/common/service/configs
 
+.PHONY: migrate-auth-permissions-to-admin
+# migrate permission tables from auth DB to admin DB
+migrate-auth-permissions-to-admin:
+	bash ./scripts/migrate_auth_permissions_to_admin.sh
+
+.PHONY: migrate-user-role-bindings-to-admin
+# migrate user role bindings from user DB to admin DB
+migrate-user-role-bindings-to-admin:
+	bash ./scripts/migrate_user_role_bindings_to_admin.sh
+
+.PHONY: drop-user-role-id-column
+# drop deprecated user.role_id column from user DB
+drop-user-role-id-column:
+	bash ./scripts/drop_user_role_id_column.sh
+
 .PHONY: generate
 # generate
 generate:

@@ -10,6 +10,109 @@ option java_multiple_files = true;
 option java_package = "api.admin.service.v1";
 
 service AdminService {
+  rpc GetRoleList(RolePageParams) returns (GetRoleListByPageReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/roles"
+    };
+  }
+
+  rpc AddRole(RoleListItem) returns (RoleListItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/roles"
+      body: "*"
+    };
+  }
+
+  rpc UpdateRole(RoleListItem) returns (RoleListItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/roles/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelRole(DeleteRole) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/roles/{id}"
+    };
+  }
+
+  rpc GetApiList(GetApiPageParams) returns (GetApiListByPageReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/apis"
+    };
+  }
+
+  rpc AddApi(ApiListItem) returns (ApiListItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/apis"
+      body: "*"
+    };
+  }
+
+  rpc UpdateApi(ApiListItem) returns (ApiListItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/apis/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelApi(DeleteApi) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/apis/{id}"
+    };
+  }
+
+  rpc GetResourceList(GetResourcePageParams) returns (GetResourceListByPageReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/resources"
+    };
+  }
+
+  rpc AddResource(ResourceListItem) returns (ResourceListItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/resources"
+      body: "*"
+    };
+  }
+
+  rpc UpdateResource(ResourceListItem) returns (ResourceListItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/resources/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelResource(DeleteResource) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/resources/{id}"
+    };
+  }
+
+  rpc GetAuthRoleCatalog(google.protobuf.Empty) returns (GetAuthRoleCatalogReply);
+
+  rpc GetAuthApiCatalog(google.protobuf.Empty) returns (GetAuthApiCatalogReply);
+
+  rpc GetAuthRole(GetAuthRoleRequest) returns (AuthRoleItem);
+
+  rpc ResolveRoleValues(ResolveRoleValuesRequest) returns (ResolveRoleValuesReply);
+
+  rpc GetUserRoleBinding(GetUserRoleBindingRequest) returns (UserRoleBindingItem);
+
+  rpc ListUserRoleBindings(google.protobuf.Empty) returns (ListUserRoleBindingsReply);
+
+  rpc UpsertUserRoleBinding(UserRoleBindingItem) returns (UserRoleBindingItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/user-role-bindings/{user_id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUserRoleBinding(DeleteUserRoleBindingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/user-role-bindings/{user_id}"
+    };
+  }
+
   rpc GetDeptList(google.protobuf.Empty) returns (GetDeptListReply) {
     option (google.api.http) = {
       get: "/admin-api/v1/depts"
@@ -124,6 +227,164 @@ message DeleteDept {
 message GetDeptListReply {
   repeated DeptListItem items = 1;
   int64 total = 2;
+}
+
+message RolePageParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string name = 3;
+  int64 status = 4;
+  string dept_id = 5;
+}
+
+message RoleListItem {
+  string id = 1;
+  string name = 2;
+  string value = 3;
+  int32 status = 4;
+  string order_no = 5;
+  string create_time = 6;
+  string remark = 7;
+  repeated int32 permissions = 8;
+  string dept = 9;
+  repeated string api_permissions = 10;
+}
+
+message GetRoleListByPageReply {
+  repeated RoleListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteRole {
+  string id = 1;
+}
+
+message GetApiPageParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string path = 3;
+  string description = 4;
+  string method = 5;
+  string resources_group = 6;
+}
+
+message ApiListItem {
+  string id = 1;
+  string path = 2;
+  string method = 3;
+  string description = 4;
+  string module = 5;
+  string module_description = 6;
+  string resources_group = 7;
+}
+
+message GetApiListByPageReply {
+  repeated ApiListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteApi {
+  string id = 1;
+}
+
+message GetResourcePageParams {
+  int64 current_page = 7;
+  int64 page_size = 8;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+  string method = 5;
+  string description = 6;
+}
+
+message ResourceListItem {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+  string method = 5;
+  string description = 6;
+}
+
+message GetResourceListByPageReply {
+  repeated ResourceListItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteResource {
+  string id = 1;
+}
+
+message AuthRoleResourceItem {
+  string id = 1;
+  string type = 2;
+  string value = 3;
+  string method = 4;
+}
+
+message AuthRoleItem {
+  int64 id = 1;
+  string name = 2;
+  string value = 3;
+  bool status = 4;
+  string remark = 5;
+  repeated int32 menu_ids = 6;
+  repeated AuthRoleResourceItem resources = 7;
+}
+
+message GetAuthRoleCatalogReply {
+  repeated AuthRoleItem items = 1;
+}
+
+message AuthApiItem {
+  string id = 1;
+  string path = 2;
+  string method = 3;
+  string description = 4;
+  string module = 5;
+  string module_description = 6;
+  string resources_group = 7;
+}
+
+message GetAuthApiCatalogReply {
+  repeated AuthApiItem items = 1;
+}
+
+message GetAuthRoleRequest {
+  int64 id = 1;
+}
+
+message ResolveRoleValuesRequest {
+  repeated int64 role_ids = 1;
+}
+
+message ResolveRoleValueItem {
+  int64 role_id = 1;
+  string value = 2;
+}
+
+message ResolveRoleValuesReply {
+  repeated ResolveRoleValueItem items = 1;
+}
+
+message GetUserRoleBindingRequest {
+  string user_id = 1;
+}
+
+message UserRoleBindingItem {
+  string id = 1;
+  string user_id = 2;
+  int64 role_id = 3;
+  string create_time = 4;
+  string update_time = 5;
+}
+
+message ListUserRoleBindingsReply {
+  repeated UserRoleBindingItem items = 1;
+}
+
+message DeleteUserRoleBindingRequest {
+  string user_id = 1;
 }
 
 message MenuParams {

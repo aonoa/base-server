@@ -34,8 +34,6 @@ const (
 	FieldDesc = "desc"
 	// FieldExtension holds the string denoting the extension field in the database.
 	FieldExtension = "extension"
-	// FieldRoleID holds the string denoting the role_id field in the database.
-	FieldRoleID = "role_id"
 	// Table holds the table name of the user in the database.
 	Table = "sys_user"
 )
@@ -53,7 +51,6 @@ var Columns = []string{
 	FieldAvatar,
 	FieldDesc,
 	FieldExtension,
-	FieldRoleID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -133,9 +130,4 @@ func ByDesc(opts ...sql.OrderTermOption) OrderOption {
 // ByExtension orders the results by the extension field.
 func ByExtension(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldExtension, opts...).ToFunc()
-}
-
-// ByRoleID orders the results by the role_id field.
-func ByRoleID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRoleID, opts...).ToFunc()
 }

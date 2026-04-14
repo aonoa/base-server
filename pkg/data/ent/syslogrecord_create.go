@@ -21,167 +21,167 @@ type SysLogRecordCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (slrc *SysLogRecordCreate) SetUserID(s string) *SysLogRecordCreate {
-	slrc.mutation.SetUserID(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetUserID(v string) *SysLogRecordCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetUserName sets the "user_name" field.
-func (slrc *SysLogRecordCreate) SetUserName(s string) *SysLogRecordCreate {
-	slrc.mutation.SetUserName(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetUserName(v string) *SysLogRecordCreate {
+	_c.mutation.SetUserName(v)
+	return _c
 }
 
 // SetIsLogin sets the "is_login" field.
-func (slrc *SysLogRecordCreate) SetIsLogin(b bool) *SysLogRecordCreate {
-	slrc.mutation.SetIsLogin(b)
-	return slrc
+func (_c *SysLogRecordCreate) SetIsLogin(v bool) *SysLogRecordCreate {
+	_c.mutation.SetIsLogin(v)
+	return _c
 }
 
 // SetSessionID sets the "session_id" field.
-func (slrc *SysLogRecordCreate) SetSessionID(s string) *SysLogRecordCreate {
-	slrc.mutation.SetSessionID(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetSessionID(v string) *SysLogRecordCreate {
+	_c.mutation.SetSessionID(v)
+	return _c
 }
 
 // SetMethod sets the "method" field.
-func (slrc *SysLogRecordCreate) SetMethod(s string) *SysLogRecordCreate {
-	slrc.mutation.SetMethod(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetMethod(v string) *SysLogRecordCreate {
+	_c.mutation.SetMethod(v)
+	return _c
 }
 
 // SetPath sets the "path" field.
-func (slrc *SysLogRecordCreate) SetPath(s string) *SysLogRecordCreate {
-	slrc.mutation.SetPath(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetPath(v string) *SysLogRecordCreate {
+	_c.mutation.SetPath(v)
+	return _c
 }
 
 // SetRequestTime sets the "request_time" field.
-func (slrc *SysLogRecordCreate) SetRequestTime(t time.Time) *SysLogRecordCreate {
-	slrc.mutation.SetRequestTime(t)
-	return slrc
+func (_c *SysLogRecordCreate) SetRequestTime(v time.Time) *SysLogRecordCreate {
+	_c.mutation.SetRequestTime(v)
+	return _c
 }
 
 // SetIPAddress sets the "ip_address" field.
-func (slrc *SysLogRecordCreate) SetIPAddress(s string) *SysLogRecordCreate {
-	slrc.mutation.SetIPAddress(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetIPAddress(v string) *SysLogRecordCreate {
+	_c.mutation.SetIPAddress(v)
+	return _c
 }
 
 // SetIPLocation sets the "ip_location" field.
-func (slrc *SysLogRecordCreate) SetIPLocation(s string) *SysLogRecordCreate {
-	slrc.mutation.SetIPLocation(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetIPLocation(v string) *SysLogRecordCreate {
+	_c.mutation.SetIPLocation(v)
+	return _c
 }
 
 // SetLatency sets the "latency" field.
-func (slrc *SysLogRecordCreate) SetLatency(i int64) *SysLogRecordCreate {
-	slrc.mutation.SetLatency(i)
-	return slrc
+func (_c *SysLogRecordCreate) SetLatency(v int64) *SysLogRecordCreate {
+	_c.mutation.SetLatency(v)
+	return _c
 }
 
 // SetOs sets the "os" field.
-func (slrc *SysLogRecordCreate) SetOs(s string) *SysLogRecordCreate {
-	slrc.mutation.SetOs(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetOs(v string) *SysLogRecordCreate {
+	_c.mutation.SetOs(v)
+	return _c
 }
 
 // SetBrowser sets the "browser" field.
-func (slrc *SysLogRecordCreate) SetBrowser(s string) *SysLogRecordCreate {
-	slrc.mutation.SetBrowser(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetBrowser(v string) *SysLogRecordCreate {
+	_c.mutation.SetBrowser(v)
+	return _c
 }
 
 // SetUserAgent sets the "user_agent" field.
-func (slrc *SysLogRecordCreate) SetUserAgent(s string) *SysLogRecordCreate {
-	slrc.mutation.SetUserAgent(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetUserAgent(v string) *SysLogRecordCreate {
+	_c.mutation.SetUserAgent(v)
+	return _c
 }
 
 // SetHeader sets the "header" field.
-func (slrc *SysLogRecordCreate) SetHeader(s string) *SysLogRecordCreate {
-	slrc.mutation.SetHeader(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetHeader(v string) *SysLogRecordCreate {
+	_c.mutation.SetHeader(v)
+	return _c
 }
 
 // SetGetParams sets the "get_params" field.
-func (slrc *SysLogRecordCreate) SetGetParams(s string) *SysLogRecordCreate {
-	slrc.mutation.SetGetParams(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetGetParams(v string) *SysLogRecordCreate {
+	_c.mutation.SetGetParams(v)
+	return _c
 }
 
 // SetPostData sets the "post_data" field.
-func (slrc *SysLogRecordCreate) SetPostData(s string) *SysLogRecordCreate {
-	slrc.mutation.SetPostData(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetPostData(v string) *SysLogRecordCreate {
+	_c.mutation.SetPostData(v)
+	return _c
 }
 
 // SetResCode sets the "res_code" field.
-func (slrc *SysLogRecordCreate) SetResCode(i int32) *SysLogRecordCreate {
-	slrc.mutation.SetResCode(i)
-	return slrc
+func (_c *SysLogRecordCreate) SetResCode(v int32) *SysLogRecordCreate {
+	_c.mutation.SetResCode(v)
+	return _c
 }
 
 // SetReason sets the "reason" field.
-func (slrc *SysLogRecordCreate) SetReason(s string) *SysLogRecordCreate {
-	slrc.mutation.SetReason(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetReason(v string) *SysLogRecordCreate {
+	_c.mutation.SetReason(v)
+	return _c
 }
 
 // SetResStatus sets the "res_status" field.
-func (slrc *SysLogRecordCreate) SetResStatus(b bool) *SysLogRecordCreate {
-	slrc.mutation.SetResStatus(b)
-	return slrc
+func (_c *SysLogRecordCreate) SetResStatus(v bool) *SysLogRecordCreate {
+	_c.mutation.SetResStatus(v)
+	return _c
 }
 
 // SetStack sets the "stack" field.
-func (slrc *SysLogRecordCreate) SetStack(s string) *SysLogRecordCreate {
-	slrc.mutation.SetStack(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetStack(v string) *SysLogRecordCreate {
+	_c.mutation.SetStack(v)
+	return _c
 }
 
 // SetCreateTime sets the "create_time" field.
-func (slrc *SysLogRecordCreate) SetCreateTime(t time.Time) *SysLogRecordCreate {
-	slrc.mutation.SetCreateTime(t)
-	return slrc
+func (_c *SysLogRecordCreate) SetCreateTime(v time.Time) *SysLogRecordCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (slrc *SysLogRecordCreate) SetNillableCreateTime(t *time.Time) *SysLogRecordCreate {
-	if t != nil {
-		slrc.SetCreateTime(*t)
+func (_c *SysLogRecordCreate) SetNillableCreateTime(v *time.Time) *SysLogRecordCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return slrc
+	return _c
 }
 
 // SetID sets the "id" field.
-func (slrc *SysLogRecordCreate) SetID(s string) *SysLogRecordCreate {
-	slrc.mutation.SetID(s)
-	return slrc
+func (_c *SysLogRecordCreate) SetID(v string) *SysLogRecordCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (slrc *SysLogRecordCreate) SetNillableID(s *string) *SysLogRecordCreate {
-	if s != nil {
-		slrc.SetID(*s)
+func (_c *SysLogRecordCreate) SetNillableID(v *string) *SysLogRecordCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return slrc
+	return _c
 }
 
 // Mutation returns the SysLogRecordMutation object of the builder.
-func (slrc *SysLogRecordCreate) Mutation() *SysLogRecordMutation {
-	return slrc.mutation
+func (_c *SysLogRecordCreate) Mutation() *SysLogRecordMutation {
+	return _c.mutation
 }
 
 // Save creates the SysLogRecord in the database.
-func (slrc *SysLogRecordCreate) Save(ctx context.Context) (*SysLogRecord, error) {
-	slrc.defaults()
-	return withHooks(ctx, slrc.sqlSave, slrc.mutation, slrc.hooks)
+func (_c *SysLogRecordCreate) Save(ctx context.Context) (*SysLogRecord, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (slrc *SysLogRecordCreate) SaveX(ctx context.Context) *SysLogRecord {
-	v, err := slrc.Save(ctx)
+func (_c *SysLogRecordCreate) SaveX(ctx context.Context) *SysLogRecord {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -189,104 +189,104 @@ func (slrc *SysLogRecordCreate) SaveX(ctx context.Context) *SysLogRecord {
 }
 
 // Exec executes the query.
-func (slrc *SysLogRecordCreate) Exec(ctx context.Context) error {
-	_, err := slrc.Save(ctx)
+func (_c *SysLogRecordCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slrc *SysLogRecordCreate) ExecX(ctx context.Context) {
-	if err := slrc.Exec(ctx); err != nil {
+func (_c *SysLogRecordCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (slrc *SysLogRecordCreate) defaults() {
-	if _, ok := slrc.mutation.CreateTime(); !ok {
+func (_c *SysLogRecordCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := syslogrecord.DefaultCreateTime()
-		slrc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := slrc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := syslogrecord.DefaultID()
-		slrc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (slrc *SysLogRecordCreate) check() error {
-	if _, ok := slrc.mutation.UserID(); !ok {
+func (_c *SysLogRecordCreate) check() error {
+	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "SysLogRecord.user_id"`)}
 	}
-	if _, ok := slrc.mutation.UserName(); !ok {
+	if _, ok := _c.mutation.UserName(); !ok {
 		return &ValidationError{Name: "user_name", err: errors.New(`ent: missing required field "SysLogRecord.user_name"`)}
 	}
-	if _, ok := slrc.mutation.IsLogin(); !ok {
+	if _, ok := _c.mutation.IsLogin(); !ok {
 		return &ValidationError{Name: "is_login", err: errors.New(`ent: missing required field "SysLogRecord.is_login"`)}
 	}
-	if _, ok := slrc.mutation.SessionID(); !ok {
+	if _, ok := _c.mutation.SessionID(); !ok {
 		return &ValidationError{Name: "session_id", err: errors.New(`ent: missing required field "SysLogRecord.session_id"`)}
 	}
-	if _, ok := slrc.mutation.Method(); !ok {
+	if _, ok := _c.mutation.Method(); !ok {
 		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "SysLogRecord.method"`)}
 	}
-	if _, ok := slrc.mutation.Path(); !ok {
+	if _, ok := _c.mutation.Path(); !ok {
 		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "SysLogRecord.path"`)}
 	}
-	if _, ok := slrc.mutation.RequestTime(); !ok {
+	if _, ok := _c.mutation.RequestTime(); !ok {
 		return &ValidationError{Name: "request_time", err: errors.New(`ent: missing required field "SysLogRecord.request_time"`)}
 	}
-	if _, ok := slrc.mutation.IPAddress(); !ok {
+	if _, ok := _c.mutation.IPAddress(); !ok {
 		return &ValidationError{Name: "ip_address", err: errors.New(`ent: missing required field "SysLogRecord.ip_address"`)}
 	}
-	if _, ok := slrc.mutation.IPLocation(); !ok {
+	if _, ok := _c.mutation.IPLocation(); !ok {
 		return &ValidationError{Name: "ip_location", err: errors.New(`ent: missing required field "SysLogRecord.ip_location"`)}
 	}
-	if _, ok := slrc.mutation.Latency(); !ok {
+	if _, ok := _c.mutation.Latency(); !ok {
 		return &ValidationError{Name: "latency", err: errors.New(`ent: missing required field "SysLogRecord.latency"`)}
 	}
-	if _, ok := slrc.mutation.Os(); !ok {
+	if _, ok := _c.mutation.Os(); !ok {
 		return &ValidationError{Name: "os", err: errors.New(`ent: missing required field "SysLogRecord.os"`)}
 	}
-	if _, ok := slrc.mutation.Browser(); !ok {
+	if _, ok := _c.mutation.Browser(); !ok {
 		return &ValidationError{Name: "browser", err: errors.New(`ent: missing required field "SysLogRecord.browser"`)}
 	}
-	if _, ok := slrc.mutation.UserAgent(); !ok {
+	if _, ok := _c.mutation.UserAgent(); !ok {
 		return &ValidationError{Name: "user_agent", err: errors.New(`ent: missing required field "SysLogRecord.user_agent"`)}
 	}
-	if _, ok := slrc.mutation.Header(); !ok {
+	if _, ok := _c.mutation.Header(); !ok {
 		return &ValidationError{Name: "header", err: errors.New(`ent: missing required field "SysLogRecord.header"`)}
 	}
-	if _, ok := slrc.mutation.GetParams(); !ok {
+	if _, ok := _c.mutation.GetParams(); !ok {
 		return &ValidationError{Name: "get_params", err: errors.New(`ent: missing required field "SysLogRecord.get_params"`)}
 	}
-	if _, ok := slrc.mutation.PostData(); !ok {
+	if _, ok := _c.mutation.PostData(); !ok {
 		return &ValidationError{Name: "post_data", err: errors.New(`ent: missing required field "SysLogRecord.post_data"`)}
 	}
-	if _, ok := slrc.mutation.ResCode(); !ok {
+	if _, ok := _c.mutation.ResCode(); !ok {
 		return &ValidationError{Name: "res_code", err: errors.New(`ent: missing required field "SysLogRecord.res_code"`)}
 	}
-	if _, ok := slrc.mutation.Reason(); !ok {
+	if _, ok := _c.mutation.Reason(); !ok {
 		return &ValidationError{Name: "reason", err: errors.New(`ent: missing required field "SysLogRecord.reason"`)}
 	}
-	if _, ok := slrc.mutation.ResStatus(); !ok {
+	if _, ok := _c.mutation.ResStatus(); !ok {
 		return &ValidationError{Name: "res_status", err: errors.New(`ent: missing required field "SysLogRecord.res_status"`)}
 	}
-	if _, ok := slrc.mutation.Stack(); !ok {
+	if _, ok := _c.mutation.Stack(); !ok {
 		return &ValidationError{Name: "stack", err: errors.New(`ent: missing required field "SysLogRecord.stack"`)}
 	}
-	if _, ok := slrc.mutation.CreateTime(); !ok {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "SysLogRecord.create_time"`)}
 	}
 	return nil
 }
 
-func (slrc *SysLogRecordCreate) sqlSave(ctx context.Context) (*SysLogRecord, error) {
-	if err := slrc.check(); err != nil {
+func (_c *SysLogRecordCreate) sqlSave(ctx context.Context) (*SysLogRecord, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := slrc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, slrc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -299,101 +299,101 @@ func (slrc *SysLogRecordCreate) sqlSave(ctx context.Context) (*SysLogRecord, err
 			return nil, fmt.Errorf("unexpected SysLogRecord.ID type: %T", _spec.ID.Value)
 		}
 	}
-	slrc.mutation.id = &_node.ID
-	slrc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (slrc *SysLogRecordCreate) createSpec() (*SysLogRecord, *sqlgraph.CreateSpec) {
+func (_c *SysLogRecordCreate) createSpec() (*SysLogRecord, *sqlgraph.CreateSpec) {
 	var (
-		_node = &SysLogRecord{config: slrc.config}
+		_node = &SysLogRecord{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(syslogrecord.Table, sqlgraph.NewFieldSpec(syslogrecord.FieldID, field.TypeString))
 	)
-	if id, ok := slrc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := slrc.mutation.UserID(); ok {
+	if value, ok := _c.mutation.UserID(); ok {
 		_spec.SetField(syslogrecord.FieldUserID, field.TypeString, value)
 		_node.UserID = value
 	}
-	if value, ok := slrc.mutation.UserName(); ok {
+	if value, ok := _c.mutation.UserName(); ok {
 		_spec.SetField(syslogrecord.FieldUserName, field.TypeString, value)
 		_node.UserName = value
 	}
-	if value, ok := slrc.mutation.IsLogin(); ok {
+	if value, ok := _c.mutation.IsLogin(); ok {
 		_spec.SetField(syslogrecord.FieldIsLogin, field.TypeBool, value)
 		_node.IsLogin = value
 	}
-	if value, ok := slrc.mutation.SessionID(); ok {
+	if value, ok := _c.mutation.SessionID(); ok {
 		_spec.SetField(syslogrecord.FieldSessionID, field.TypeString, value)
 		_node.SessionID = value
 	}
-	if value, ok := slrc.mutation.Method(); ok {
+	if value, ok := _c.mutation.Method(); ok {
 		_spec.SetField(syslogrecord.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
-	if value, ok := slrc.mutation.Path(); ok {
+	if value, ok := _c.mutation.Path(); ok {
 		_spec.SetField(syslogrecord.FieldPath, field.TypeString, value)
 		_node.Path = value
 	}
-	if value, ok := slrc.mutation.RequestTime(); ok {
+	if value, ok := _c.mutation.RequestTime(); ok {
 		_spec.SetField(syslogrecord.FieldRequestTime, field.TypeTime, value)
 		_node.RequestTime = value
 	}
-	if value, ok := slrc.mutation.IPAddress(); ok {
+	if value, ok := _c.mutation.IPAddress(); ok {
 		_spec.SetField(syslogrecord.FieldIPAddress, field.TypeString, value)
 		_node.IPAddress = value
 	}
-	if value, ok := slrc.mutation.IPLocation(); ok {
+	if value, ok := _c.mutation.IPLocation(); ok {
 		_spec.SetField(syslogrecord.FieldIPLocation, field.TypeString, value)
 		_node.IPLocation = value
 	}
-	if value, ok := slrc.mutation.Latency(); ok {
+	if value, ok := _c.mutation.Latency(); ok {
 		_spec.SetField(syslogrecord.FieldLatency, field.TypeInt64, value)
 		_node.Latency = value
 	}
-	if value, ok := slrc.mutation.Os(); ok {
+	if value, ok := _c.mutation.Os(); ok {
 		_spec.SetField(syslogrecord.FieldOs, field.TypeString, value)
 		_node.Os = value
 	}
-	if value, ok := slrc.mutation.Browser(); ok {
+	if value, ok := _c.mutation.Browser(); ok {
 		_spec.SetField(syslogrecord.FieldBrowser, field.TypeString, value)
 		_node.Browser = value
 	}
-	if value, ok := slrc.mutation.UserAgent(); ok {
+	if value, ok := _c.mutation.UserAgent(); ok {
 		_spec.SetField(syslogrecord.FieldUserAgent, field.TypeString, value)
 		_node.UserAgent = value
 	}
-	if value, ok := slrc.mutation.Header(); ok {
+	if value, ok := _c.mutation.Header(); ok {
 		_spec.SetField(syslogrecord.FieldHeader, field.TypeString, value)
 		_node.Header = value
 	}
-	if value, ok := slrc.mutation.GetParams(); ok {
+	if value, ok := _c.mutation.GetParams(); ok {
 		_spec.SetField(syslogrecord.FieldGetParams, field.TypeString, value)
 		_node.GetParams = value
 	}
-	if value, ok := slrc.mutation.PostData(); ok {
+	if value, ok := _c.mutation.PostData(); ok {
 		_spec.SetField(syslogrecord.FieldPostData, field.TypeString, value)
 		_node.PostData = value
 	}
-	if value, ok := slrc.mutation.ResCode(); ok {
+	if value, ok := _c.mutation.ResCode(); ok {
 		_spec.SetField(syslogrecord.FieldResCode, field.TypeInt32, value)
 		_node.ResCode = value
 	}
-	if value, ok := slrc.mutation.Reason(); ok {
+	if value, ok := _c.mutation.Reason(); ok {
 		_spec.SetField(syslogrecord.FieldReason, field.TypeString, value)
 		_node.Reason = value
 	}
-	if value, ok := slrc.mutation.ResStatus(); ok {
+	if value, ok := _c.mutation.ResStatus(); ok {
 		_spec.SetField(syslogrecord.FieldResStatus, field.TypeBool, value)
 		_node.ResStatus = value
 	}
-	if value, ok := slrc.mutation.Stack(); ok {
+	if value, ok := _c.mutation.Stack(); ok {
 		_spec.SetField(syslogrecord.FieldStack, field.TypeString, value)
 		_node.Stack = value
 	}
-	if value, ok := slrc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(syslogrecord.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
@@ -408,16 +408,16 @@ type SysLogRecordCreateBulk struct {
 }
 
 // Save creates the SysLogRecord entities in the database.
-func (slrcb *SysLogRecordCreateBulk) Save(ctx context.Context) ([]*SysLogRecord, error) {
-	if slrcb.err != nil {
-		return nil, slrcb.err
+func (_c *SysLogRecordCreateBulk) Save(ctx context.Context) ([]*SysLogRecord, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(slrcb.builders))
-	nodes := make([]*SysLogRecord, len(slrcb.builders))
-	mutators := make([]Mutator, len(slrcb.builders))
-	for i := range slrcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*SysLogRecord, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := slrcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*SysLogRecordMutation)
@@ -431,11 +431,11 @@ func (slrcb *SysLogRecordCreateBulk) Save(ctx context.Context) ([]*SysLogRecord,
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, slrcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, slrcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -455,7 +455,7 @@ func (slrcb *SysLogRecordCreateBulk) Save(ctx context.Context) ([]*SysLogRecord,
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, slrcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -463,8 +463,8 @@ func (slrcb *SysLogRecordCreateBulk) Save(ctx context.Context) ([]*SysLogRecord,
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (slrcb *SysLogRecordCreateBulk) SaveX(ctx context.Context) []*SysLogRecord {
-	v, err := slrcb.Save(ctx)
+func (_c *SysLogRecordCreateBulk) SaveX(ctx context.Context) []*SysLogRecord {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -472,14 +472,14 @@ func (slrcb *SysLogRecordCreateBulk) SaveX(ctx context.Context) []*SysLogRecord 
 }
 
 // Exec executes the query.
-func (slrcb *SysLogRecordCreateBulk) Exec(ctx context.Context) error {
-	_, err := slrcb.Save(ctx)
+func (_c *SysLogRecordCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slrcb *SysLogRecordCreateBulk) ExecX(ctx context.Context) {
-	if err := slrcb.Exec(ctx); err != nil {
+func (_c *SysLogRecordCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

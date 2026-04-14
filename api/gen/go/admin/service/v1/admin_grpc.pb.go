@@ -20,29 +20,69 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AdminService_GetDeptList_FullMethodName         = "/api.admin.service.v1.AdminService/GetDeptList"
-	AdminService_AddDept_FullMethodName             = "/api.admin.service.v1.AdminService/AddDept"
-	AdminService_UpdateDept_FullMethodName          = "/api.admin.service.v1.AdminService/UpdateDept"
-	AdminService_DelDept_FullMethodName             = "/api.admin.service.v1.AdminService/DelDept"
-	AdminService_GetCurrentUserMenus_FullMethodName = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
-	AdminService_GetSysMenuList_FullMethodName      = "/api.admin.service.v1.AdminService/GetSysMenuList"
-	AdminService_ListMenus_FullMethodName           = "/api.admin.service.v1.AdminService/ListMenus"
-	AdminService_GetWalkRoute_FullMethodName        = "/api.admin.service.v1.AdminService/GetWalkRoute"
-	AdminService_GetSelfWalkRoute_FullMethodName    = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
-	AdminService_IsMenuNameExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuNameExists"
-	AdminService_IsMenuPathExists_FullMethodName    = "/api.admin.service.v1.AdminService/IsMenuPathExists"
-	AdminService_CreateMenu_FullMethodName          = "/api.admin.service.v1.AdminService/CreateMenu"
-	AdminService_UpdateMenu_FullMethodName          = "/api.admin.service.v1.AdminService/UpdateMenu"
-	AdminService_DeleteMenu_FullMethodName          = "/api.admin.service.v1.AdminService/DeleteMenu"
-	AdminService_CreateSysLog_FullMethodName        = "/api.admin.service.v1.AdminService/CreateSysLog"
-	AdminService_GetSysLogList_FullMethodName       = "/api.admin.service.v1.AdminService/GetSysLogList"
-	AdminService_GetSysLogInfo_FullMethodName       = "/api.admin.service.v1.AdminService/GetSysLogInfo"
+	AdminService_GetRoleList_FullMethodName           = "/api.admin.service.v1.AdminService/GetRoleList"
+	AdminService_AddRole_FullMethodName               = "/api.admin.service.v1.AdminService/AddRole"
+	AdminService_UpdateRole_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateRole"
+	AdminService_DelRole_FullMethodName               = "/api.admin.service.v1.AdminService/DelRole"
+	AdminService_GetApiList_FullMethodName            = "/api.admin.service.v1.AdminService/GetApiList"
+	AdminService_AddApi_FullMethodName                = "/api.admin.service.v1.AdminService/AddApi"
+	AdminService_UpdateApi_FullMethodName             = "/api.admin.service.v1.AdminService/UpdateApi"
+	AdminService_DelApi_FullMethodName                = "/api.admin.service.v1.AdminService/DelApi"
+	AdminService_GetResourceList_FullMethodName       = "/api.admin.service.v1.AdminService/GetResourceList"
+	AdminService_AddResource_FullMethodName           = "/api.admin.service.v1.AdminService/AddResource"
+	AdminService_UpdateResource_FullMethodName        = "/api.admin.service.v1.AdminService/UpdateResource"
+	AdminService_DelResource_FullMethodName           = "/api.admin.service.v1.AdminService/DelResource"
+	AdminService_GetAuthRoleCatalog_FullMethodName    = "/api.admin.service.v1.AdminService/GetAuthRoleCatalog"
+	AdminService_GetAuthApiCatalog_FullMethodName     = "/api.admin.service.v1.AdminService/GetAuthApiCatalog"
+	AdminService_GetAuthRole_FullMethodName           = "/api.admin.service.v1.AdminService/GetAuthRole"
+	AdminService_ResolveRoleValues_FullMethodName     = "/api.admin.service.v1.AdminService/ResolveRoleValues"
+	AdminService_GetUserRoleBinding_FullMethodName    = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
+	AdminService_ListUserRoleBindings_FullMethodName  = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
+	AdminService_UpsertUserRoleBinding_FullMethodName = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
+	AdminService_DeleteUserRoleBinding_FullMethodName = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
+	AdminService_GetDeptList_FullMethodName           = "/api.admin.service.v1.AdminService/GetDeptList"
+	AdminService_AddDept_FullMethodName               = "/api.admin.service.v1.AdminService/AddDept"
+	AdminService_UpdateDept_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateDept"
+	AdminService_DelDept_FullMethodName               = "/api.admin.service.v1.AdminService/DelDept"
+	AdminService_GetCurrentUserMenus_FullMethodName   = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
+	AdminService_GetSysMenuList_FullMethodName        = "/api.admin.service.v1.AdminService/GetSysMenuList"
+	AdminService_ListMenus_FullMethodName             = "/api.admin.service.v1.AdminService/ListMenus"
+	AdminService_GetWalkRoute_FullMethodName          = "/api.admin.service.v1.AdminService/GetWalkRoute"
+	AdminService_GetSelfWalkRoute_FullMethodName      = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
+	AdminService_IsMenuNameExists_FullMethodName      = "/api.admin.service.v1.AdminService/IsMenuNameExists"
+	AdminService_IsMenuPathExists_FullMethodName      = "/api.admin.service.v1.AdminService/IsMenuPathExists"
+	AdminService_CreateMenu_FullMethodName            = "/api.admin.service.v1.AdminService/CreateMenu"
+	AdminService_UpdateMenu_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateMenu"
+	AdminService_DeleteMenu_FullMethodName            = "/api.admin.service.v1.AdminService/DeleteMenu"
+	AdminService_CreateSysLog_FullMethodName          = "/api.admin.service.v1.AdminService/CreateSysLog"
+	AdminService_GetSysLogList_FullMethodName         = "/api.admin.service.v1.AdminService/GetSysLogList"
+	AdminService_GetSysLogInfo_FullMethodName         = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 )
 
 // AdminServiceClient is the client API for AdminService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminServiceClient interface {
+	GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
+	AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
+	UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
+	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error)
+	AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
+	UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
+	DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error)
+	AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
+	UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
+	DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetAuthRoleCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAuthRoleCatalogReply, error)
+	GetAuthApiCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAuthApiCatalogReply, error)
+	GetAuthRole(ctx context.Context, in *GetAuthRoleRequest, opts ...grpc.CallOption) (*AuthRoleItem, error)
+	ResolveRoleValues(ctx context.Context, in *ResolveRoleValuesRequest, opts ...grpc.CallOption) (*ResolveRoleValuesReply, error)
+	GetUserRoleBinding(ctx context.Context, in *GetUserRoleBindingRequest, opts ...grpc.CallOption) (*UserRoleBindingItem, error)
+	ListUserRoleBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleBindingsReply, error)
+	UpsertUserRoleBinding(ctx context.Context, in *UserRoleBindingItem, opts ...grpc.CallOption) (*UserRoleBindingItem, error)
+	DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
 	AddDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	UpdateDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
@@ -68,6 +108,206 @@ type adminServiceClient struct {
 
 func NewAdminServiceClient(cc grpc.ClientConnInterface) AdminServiceClient {
 	return &adminServiceClient{cc}
+}
+
+func (c *adminServiceClient) GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRoleListByPageReply)
+	err := c.cc.Invoke(ctx, AdminService_GetRoleList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleListItem)
+	err := c.cc.Invoke(ctx, AdminService_AddRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RoleListItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DelRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetApiListByPageReply)
+	err := c.cc.Invoke(ctx, AdminService_GetApiList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ApiListItem)
+	err := c.cc.Invoke(ctx, AdminService_AddApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ApiListItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DelApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetResourceListByPageReply)
+	err := c.cc.Invoke(ctx, AdminService_GetResourceList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResourceListItem)
+	err := c.cc.Invoke(ctx, AdminService_AddResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResourceListItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DelResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetAuthRoleCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAuthRoleCatalogReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAuthRoleCatalogReply)
+	err := c.cc.Invoke(ctx, AdminService_GetAuthRoleCatalog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetAuthApiCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAuthApiCatalogReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAuthApiCatalogReply)
+	err := c.cc.Invoke(ctx, AdminService_GetAuthApiCatalog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetAuthRole(ctx context.Context, in *GetAuthRoleRequest, opts ...grpc.CallOption) (*AuthRoleItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthRoleItem)
+	err := c.cc.Invoke(ctx, AdminService_GetAuthRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ResolveRoleValues(ctx context.Context, in *ResolveRoleValuesRequest, opts ...grpc.CallOption) (*ResolveRoleValuesReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResolveRoleValuesReply)
+	err := c.cc.Invoke(ctx, AdminService_ResolveRoleValues_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetUserRoleBinding(ctx context.Context, in *GetUserRoleBindingRequest, opts ...grpc.CallOption) (*UserRoleBindingItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserRoleBindingItem)
+	err := c.cc.Invoke(ctx, AdminService_GetUserRoleBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListUserRoleBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleBindingsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserRoleBindingsReply)
+	err := c.cc.Invoke(ctx, AdminService_ListUserRoleBindings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpsertUserRoleBinding(ctx context.Context, in *UserRoleBindingItem, opts ...grpc.CallOption) (*UserRoleBindingItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserRoleBindingItem)
+	err := c.cc.Invoke(ctx, AdminService_UpsertUserRoleBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DeleteUserRoleBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *adminServiceClient) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error) {
@@ -244,6 +484,26 @@ func (c *adminServiceClient) GetSysLogInfo(ctx context.Context, in *GetSysLogInf
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility.
 type AdminServiceServer interface {
+	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
+	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
+	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
+	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
+	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
+	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
+	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
+	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
+	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
+	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
+	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
+	GetAuthRoleCatalog(context.Context, *emptypb.Empty) (*GetAuthRoleCatalogReply, error)
+	GetAuthApiCatalog(context.Context, *emptypb.Empty) (*GetAuthApiCatalogReply, error)
+	GetAuthRole(context.Context, *GetAuthRoleRequest) (*AuthRoleItem, error)
+	ResolveRoleValues(context.Context, *ResolveRoleValuesRequest) (*ResolveRoleValuesReply, error)
+	GetUserRoleBinding(context.Context, *GetUserRoleBindingRequest) (*UserRoleBindingItem, error)
+	ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error)
+	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
+	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
@@ -271,6 +531,66 @@ type AdminServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAdminServiceServer struct{}
 
+func (UnimplementedAdminServiceServer) GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddRole(context.Context, *RoleListItem) (*RoleListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddRole not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
+}
+func (UnimplementedAdminServiceServer) DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelRole not implemented")
+}
+func (UnimplementedAdminServiceServer) GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetApiList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddApi(context.Context, *ApiListItem) (*ApiListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddApi not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApi not implemented")
+}
+func (UnimplementedAdminServiceServer) DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelApi not implemented")
+}
+func (UnimplementedAdminServiceServer) GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResourceList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddResource not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
+}
+func (UnimplementedAdminServiceServer) DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelResource not implemented")
+}
+func (UnimplementedAdminServiceServer) GetAuthRoleCatalog(context.Context, *emptypb.Empty) (*GetAuthRoleCatalogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthRoleCatalog not implemented")
+}
+func (UnimplementedAdminServiceServer) GetAuthApiCatalog(context.Context, *emptypb.Empty) (*GetAuthApiCatalogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthApiCatalog not implemented")
+}
+func (UnimplementedAdminServiceServer) GetAuthRole(context.Context, *GetAuthRoleRequest) (*AuthRoleItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthRole not implemented")
+}
+func (UnimplementedAdminServiceServer) ResolveRoleValues(context.Context, *ResolveRoleValuesRequest) (*ResolveRoleValuesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResolveRoleValues not implemented")
+}
+func (UnimplementedAdminServiceServer) GetUserRoleBinding(context.Context, *GetUserRoleBindingRequest) (*UserRoleBindingItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoleBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleBindings not implemented")
+}
+func (UnimplementedAdminServiceServer) UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertUserRoleBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserRoleBinding not implemented")
+}
 func (UnimplementedAdminServiceServer) GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeptList not implemented")
 }
@@ -341,6 +661,366 @@ func RegisterAdminServiceServer(s grpc.ServiceRegistrar, srv AdminServiceServer)
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&AdminService_ServiceDesc, srv)
+}
+
+func _AdminService_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolePageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetRoleList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetRoleList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetRoleList(ctx, req.(*RolePageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RoleListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddRole(ctx, req.(*RoleListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RoleListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateRole(ctx, req.(*RoleListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DelRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRole)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DelRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DelRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DelRole(ctx, req.(*DeleteRole))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetApiList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetApiPageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetApiList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetApiList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetApiList(ctx, req.(*GetApiPageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddApi(ctx, req.(*ApiListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateApi(ctx, req.(*ApiListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DelApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteApi)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DelApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DelApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DelApi(ctx, req.(*DeleteApi))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetResourceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourcePageParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetResourceList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetResourceList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetResourceList(ctx, req.(*GetResourcePageParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourceListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddResource(ctx, req.(*ResourceListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourceListItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateResource(ctx, req.(*ResourceListItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DelResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteResource)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DelResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DelResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DelResource(ctx, req.(*DeleteResource))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetAuthRoleCatalog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetAuthRoleCatalog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetAuthRoleCatalog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetAuthRoleCatalog(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetAuthApiCatalog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetAuthApiCatalog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetAuthApiCatalog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetAuthApiCatalog(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetAuthRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAuthRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetAuthRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetAuthRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetAuthRole(ctx, req.(*GetAuthRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ResolveRoleValues_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResolveRoleValuesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ResolveRoleValues(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ResolveRoleValues_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ResolveRoleValues(ctx, req.(*ResolveRoleValuesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetUserRoleBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRoleBindingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetUserRoleBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetUserRoleBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetUserRoleBinding(ctx, req.(*GetUserRoleBindingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListUserRoleBindings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListUserRoleBindings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListUserRoleBindings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListUserRoleBindings(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpsertUserRoleBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRoleBindingItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpsertUserRoleBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpsertUserRoleBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpsertUserRoleBinding(ctx, req.(*UserRoleBindingItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteUserRoleBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserRoleBindingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteUserRoleBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteUserRoleBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteUserRoleBinding(ctx, req.(*DeleteUserRoleBindingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetDeptList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -656,6 +1336,86 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.admin.service.v1.AdminService",
 	HandlerType: (*AdminServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetRoleList",
+			Handler:    _AdminService_GetRoleList_Handler,
+		},
+		{
+			MethodName: "AddRole",
+			Handler:    _AdminService_AddRole_Handler,
+		},
+		{
+			MethodName: "UpdateRole",
+			Handler:    _AdminService_UpdateRole_Handler,
+		},
+		{
+			MethodName: "DelRole",
+			Handler:    _AdminService_DelRole_Handler,
+		},
+		{
+			MethodName: "GetApiList",
+			Handler:    _AdminService_GetApiList_Handler,
+		},
+		{
+			MethodName: "AddApi",
+			Handler:    _AdminService_AddApi_Handler,
+		},
+		{
+			MethodName: "UpdateApi",
+			Handler:    _AdminService_UpdateApi_Handler,
+		},
+		{
+			MethodName: "DelApi",
+			Handler:    _AdminService_DelApi_Handler,
+		},
+		{
+			MethodName: "GetResourceList",
+			Handler:    _AdminService_GetResourceList_Handler,
+		},
+		{
+			MethodName: "AddResource",
+			Handler:    _AdminService_AddResource_Handler,
+		},
+		{
+			MethodName: "UpdateResource",
+			Handler:    _AdminService_UpdateResource_Handler,
+		},
+		{
+			MethodName: "DelResource",
+			Handler:    _AdminService_DelResource_Handler,
+		},
+		{
+			MethodName: "GetAuthRoleCatalog",
+			Handler:    _AdminService_GetAuthRoleCatalog_Handler,
+		},
+		{
+			MethodName: "GetAuthApiCatalog",
+			Handler:    _AdminService_GetAuthApiCatalog_Handler,
+		},
+		{
+			MethodName: "GetAuthRole",
+			Handler:    _AdminService_GetAuthRole_Handler,
+		},
+		{
+			MethodName: "ResolveRoleValues",
+			Handler:    _AdminService_ResolveRoleValues_Handler,
+		},
+		{
+			MethodName: "GetUserRoleBinding",
+			Handler:    _AdminService_GetUserRoleBinding_Handler,
+		},
+		{
+			MethodName: "ListUserRoleBindings",
+			Handler:    _AdminService_ListUserRoleBindings_Handler,
+		},
+		{
+			MethodName: "UpsertUserRoleBinding",
+			Handler:    _AdminService_UpsertUserRoleBinding_Handler,
+		},
+		{
+			MethodName: "DeleteUserRoleBinding",
+			Handler:    _AdminService_DeleteUserRoleBinding_Handler,
+		},
 		{
 			MethodName: "GetDeptList",
 			Handler:    _AdminService_GetDeptList_Handler,

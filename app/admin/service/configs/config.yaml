@@ -17,6 +17,12 @@ auth:
   api_key: auth-service-secret
   whitelist:
     - /api.admin.service.v1.AdminService/CreateSysLog
+    - /api.admin.service.v1.AdminService/GetAuthRoleCatalog
+    - /api.admin.service.v1.AdminService/GetAuthApiCatalog
+    - /api.admin.service.v1.AdminService/GetAuthRole
+    - /api.admin.service.v1.AdminService/ResolveRoleValues
+    - /api.admin.service.v1.AdminService/GetUserRoleBinding
+    - /api.admin.service.v1.AdminService/ListUserRoleBindings
 services:
   user:
     grpc_endpoint: 127.0.0.1:9010
@@ -24,3 +30,10 @@ services:
     grpc_endpoint: 127.0.0.1:9020
   common:
     grpc_endpoint: 127.0.0.1:9040
+logger:
+  level: info
+  filename: logs/admin-service.log
+  max_size: 100
+  max_backups: 10
+  max_age: 30
+  compress: false

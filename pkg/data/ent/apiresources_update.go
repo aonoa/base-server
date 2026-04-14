@@ -25,151 +25,151 @@ type ApiResourcesUpdate struct {
 }
 
 // Where appends a list predicates to the ApiResourcesUpdate builder.
-func (aru *ApiResourcesUpdate) Where(ps ...predicate.ApiResources) *ApiResourcesUpdate {
-	aru.mutation.Where(ps...)
-	return aru
+func (_u *ApiResourcesUpdate) Where(ps ...predicate.ApiResources) *ApiResourcesUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (aru *ApiResourcesUpdate) SetUpdateTime(t time.Time) *ApiResourcesUpdate {
-	aru.mutation.SetUpdateTime(t)
-	return aru
+func (_u *ApiResourcesUpdate) SetUpdateTime(v time.Time) *ApiResourcesUpdate {
+	_u.mutation.SetUpdateTime(v)
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (aru *ApiResourcesUpdate) SetDescription(s string) *ApiResourcesUpdate {
-	aru.mutation.SetDescription(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetDescription(v string) *ApiResourcesUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillableDescription(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetDescription(*s)
+func (_u *ApiResourcesUpdate) SetNillableDescription(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return aru
+	return _u
 }
 
 // SetPath sets the "path" field.
-func (aru *ApiResourcesUpdate) SetPath(s string) *ApiResourcesUpdate {
-	aru.mutation.SetPath(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetPath(v string) *ApiResourcesUpdate {
+	_u.mutation.SetPath(v)
+	return _u
 }
 
 // SetNillablePath sets the "path" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillablePath(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetPath(*s)
+func (_u *ApiResourcesUpdate) SetNillablePath(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetPath(*v)
 	}
-	return aru
+	return _u
 }
 
 // SetMethod sets the "method" field.
-func (aru *ApiResourcesUpdate) SetMethod(s string) *ApiResourcesUpdate {
-	aru.mutation.SetMethod(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetMethod(v string) *ApiResourcesUpdate {
+	_u.mutation.SetMethod(v)
+	return _u
 }
 
 // SetNillableMethod sets the "method" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillableMethod(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetMethod(*s)
+func (_u *ApiResourcesUpdate) SetNillableMethod(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetMethod(*v)
 	}
-	return aru
+	return _u
 }
 
 // SetModule sets the "module" field.
-func (aru *ApiResourcesUpdate) SetModule(s string) *ApiResourcesUpdate {
-	aru.mutation.SetModule(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetModule(v string) *ApiResourcesUpdate {
+	_u.mutation.SetModule(v)
+	return _u
 }
 
 // SetNillableModule sets the "module" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillableModule(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetModule(*s)
+func (_u *ApiResourcesUpdate) SetNillableModule(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetModule(*v)
 	}
-	return aru
+	return _u
 }
 
 // SetModuleDescription sets the "module_description" field.
-func (aru *ApiResourcesUpdate) SetModuleDescription(s string) *ApiResourcesUpdate {
-	aru.mutation.SetModuleDescription(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetModuleDescription(v string) *ApiResourcesUpdate {
+	_u.mutation.SetModuleDescription(v)
+	return _u
 }
 
 // SetNillableModuleDescription sets the "module_description" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillableModuleDescription(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetModuleDescription(*s)
+func (_u *ApiResourcesUpdate) SetNillableModuleDescription(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetModuleDescription(*v)
 	}
-	return aru
+	return _u
 }
 
 // SetResourcesGroup sets the "resources_group" field.
-func (aru *ApiResourcesUpdate) SetResourcesGroup(s string) *ApiResourcesUpdate {
-	aru.mutation.SetResourcesGroup(s)
-	return aru
+func (_u *ApiResourcesUpdate) SetResourcesGroup(v string) *ApiResourcesUpdate {
+	_u.mutation.SetResourcesGroup(v)
+	return _u
 }
 
 // SetNillableResourcesGroup sets the "resources_group" field if the given value is not nil.
-func (aru *ApiResourcesUpdate) SetNillableResourcesGroup(s *string) *ApiResourcesUpdate {
-	if s != nil {
-		aru.SetResourcesGroup(*s)
+func (_u *ApiResourcesUpdate) SetNillableResourcesGroup(v *string) *ApiResourcesUpdate {
+	if v != nil {
+		_u.SetResourcesGroup(*v)
 	}
-	return aru
+	return _u
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (aru *ApiResourcesUpdate) AddRoleIDs(ids ...int64) *ApiResourcesUpdate {
-	aru.mutation.AddRoleIDs(ids...)
-	return aru
+func (_u *ApiResourcesUpdate) AddRoleIDs(ids ...int64) *ApiResourcesUpdate {
+	_u.mutation.AddRoleIDs(ids...)
+	return _u
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
-func (aru *ApiResourcesUpdate) AddRoles(r ...*Role) *ApiResourcesUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_u *ApiResourcesUpdate) AddRoles(v ...*Role) *ApiResourcesUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return aru.AddRoleIDs(ids...)
+	return _u.AddRoleIDs(ids...)
 }
 
 // Mutation returns the ApiResourcesMutation object of the builder.
-func (aru *ApiResourcesUpdate) Mutation() *ApiResourcesMutation {
-	return aru.mutation
+func (_u *ApiResourcesUpdate) Mutation() *ApiResourcesMutation {
+	return _u.mutation
 }
 
 // ClearRoles clears all "roles" edges to the Role entity.
-func (aru *ApiResourcesUpdate) ClearRoles() *ApiResourcesUpdate {
-	aru.mutation.ClearRoles()
-	return aru
+func (_u *ApiResourcesUpdate) ClearRoles() *ApiResourcesUpdate {
+	_u.mutation.ClearRoles()
+	return _u
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (aru *ApiResourcesUpdate) RemoveRoleIDs(ids ...int64) *ApiResourcesUpdate {
-	aru.mutation.RemoveRoleIDs(ids...)
-	return aru
+func (_u *ApiResourcesUpdate) RemoveRoleIDs(ids ...int64) *ApiResourcesUpdate {
+	_u.mutation.RemoveRoleIDs(ids...)
+	return _u
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
-func (aru *ApiResourcesUpdate) RemoveRoles(r ...*Role) *ApiResourcesUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_u *ApiResourcesUpdate) RemoveRoles(v ...*Role) *ApiResourcesUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return aru.RemoveRoleIDs(ids...)
+	return _u.RemoveRoleIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (aru *ApiResourcesUpdate) Save(ctx context.Context) (int, error) {
-	aru.defaults()
-	return withHooks(ctx, aru.sqlSave, aru.mutation, aru.hooks)
+func (_u *ApiResourcesUpdate) Save(ctx context.Context) (int, error) {
+	_u.defaults()
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (aru *ApiResourcesUpdate) SaveX(ctx context.Context) int {
-	affected, err := aru.Save(ctx)
+func (_u *ApiResourcesUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -177,63 +177,63 @@ func (aru *ApiResourcesUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (aru *ApiResourcesUpdate) Exec(ctx context.Context) error {
-	_, err := aru.Save(ctx)
+func (_u *ApiResourcesUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (aru *ApiResourcesUpdate) ExecX(ctx context.Context) {
-	if err := aru.Exec(ctx); err != nil {
+func (_u *ApiResourcesUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (aru *ApiResourcesUpdate) defaults() {
-	if _, ok := aru.mutation.UpdateTime(); !ok {
+func (_u *ApiResourcesUpdate) defaults() {
+	if _, ok := _u.mutation.UpdateTime(); !ok {
 		v := apiresources.UpdateDefaultUpdateTime()
-		aru.mutation.SetUpdateTime(v)
+		_u.mutation.SetUpdateTime(v)
 	}
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (aru *ApiResourcesUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *ApiResourcesUpdate {
-	aru.modifiers = append(aru.modifiers, modifiers...)
-	return aru
+func (_u *ApiResourcesUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *ApiResourcesUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (aru *ApiResourcesUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (_u *ApiResourcesUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(apiresources.Table, apiresources.Columns, sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString))
-	if ps := aru.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := aru.mutation.UpdateTime(); ok {
+	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(apiresources.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := aru.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(apiresources.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := aru.mutation.Path(); ok {
+	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(apiresources.FieldPath, field.TypeString, value)
 	}
-	if value, ok := aru.mutation.Method(); ok {
+	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(apiresources.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := aru.mutation.Module(); ok {
+	if value, ok := _u.mutation.Module(); ok {
 		_spec.SetField(apiresources.FieldModule, field.TypeString, value)
 	}
-	if value, ok := aru.mutation.ModuleDescription(); ok {
+	if value, ok := _u.mutation.ModuleDescription(); ok {
 		_spec.SetField(apiresources.FieldModuleDescription, field.TypeString, value)
 	}
-	if value, ok := aru.mutation.ResourcesGroup(); ok {
+	if value, ok := _u.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
 	}
-	if aru.mutation.RolesCleared() {
+	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -246,7 +246,7 @@ func (aru *ApiResourcesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := aru.mutation.RemovedRolesIDs(); len(nodes) > 0 && !aru.mutation.RolesCleared() {
+	if nodes := _u.mutation.RemovedRolesIDs(); len(nodes) > 0 && !_u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -262,7 +262,7 @@ func (aru *ApiResourcesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := aru.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -278,8 +278,8 @@ func (aru *ApiResourcesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(aru.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, aru.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{apiresources.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -287,8 +287,8 @@ func (aru *ApiResourcesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	aru.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // ApiResourcesUpdateOne is the builder for updating a single ApiResources entity.
@@ -301,158 +301,158 @@ type ApiResourcesUpdateOne struct {
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (aruo *ApiResourcesUpdateOne) SetUpdateTime(t time.Time) *ApiResourcesUpdateOne {
-	aruo.mutation.SetUpdateTime(t)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetUpdateTime(v time.Time) *ApiResourcesUpdateOne {
+	_u.mutation.SetUpdateTime(v)
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (aruo *ApiResourcesUpdateOne) SetDescription(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetDescription(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetDescription(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillableDescription(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetDescription(*s)
+func (_u *ApiResourcesUpdateOne) SetNillableDescription(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return aruo
+	return _u
 }
 
 // SetPath sets the "path" field.
-func (aruo *ApiResourcesUpdateOne) SetPath(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetPath(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetPath(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetPath(v)
+	return _u
 }
 
 // SetNillablePath sets the "path" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillablePath(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetPath(*s)
+func (_u *ApiResourcesUpdateOne) SetNillablePath(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetPath(*v)
 	}
-	return aruo
+	return _u
 }
 
 // SetMethod sets the "method" field.
-func (aruo *ApiResourcesUpdateOne) SetMethod(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetMethod(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetMethod(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetMethod(v)
+	return _u
 }
 
 // SetNillableMethod sets the "method" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillableMethod(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetMethod(*s)
+func (_u *ApiResourcesUpdateOne) SetNillableMethod(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetMethod(*v)
 	}
-	return aruo
+	return _u
 }
 
 // SetModule sets the "module" field.
-func (aruo *ApiResourcesUpdateOne) SetModule(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetModule(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetModule(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetModule(v)
+	return _u
 }
 
 // SetNillableModule sets the "module" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillableModule(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetModule(*s)
+func (_u *ApiResourcesUpdateOne) SetNillableModule(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetModule(*v)
 	}
-	return aruo
+	return _u
 }
 
 // SetModuleDescription sets the "module_description" field.
-func (aruo *ApiResourcesUpdateOne) SetModuleDescription(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetModuleDescription(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetModuleDescription(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetModuleDescription(v)
+	return _u
 }
 
 // SetNillableModuleDescription sets the "module_description" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillableModuleDescription(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetModuleDescription(*s)
+func (_u *ApiResourcesUpdateOne) SetNillableModuleDescription(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetModuleDescription(*v)
 	}
-	return aruo
+	return _u
 }
 
 // SetResourcesGroup sets the "resources_group" field.
-func (aruo *ApiResourcesUpdateOne) SetResourcesGroup(s string) *ApiResourcesUpdateOne {
-	aruo.mutation.SetResourcesGroup(s)
-	return aruo
+func (_u *ApiResourcesUpdateOne) SetResourcesGroup(v string) *ApiResourcesUpdateOne {
+	_u.mutation.SetResourcesGroup(v)
+	return _u
 }
 
 // SetNillableResourcesGroup sets the "resources_group" field if the given value is not nil.
-func (aruo *ApiResourcesUpdateOne) SetNillableResourcesGroup(s *string) *ApiResourcesUpdateOne {
-	if s != nil {
-		aruo.SetResourcesGroup(*s)
+func (_u *ApiResourcesUpdateOne) SetNillableResourcesGroup(v *string) *ApiResourcesUpdateOne {
+	if v != nil {
+		_u.SetResourcesGroup(*v)
 	}
-	return aruo
+	return _u
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (aruo *ApiResourcesUpdateOne) AddRoleIDs(ids ...int64) *ApiResourcesUpdateOne {
-	aruo.mutation.AddRoleIDs(ids...)
-	return aruo
+func (_u *ApiResourcesUpdateOne) AddRoleIDs(ids ...int64) *ApiResourcesUpdateOne {
+	_u.mutation.AddRoleIDs(ids...)
+	return _u
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
-func (aruo *ApiResourcesUpdateOne) AddRoles(r ...*Role) *ApiResourcesUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_u *ApiResourcesUpdateOne) AddRoles(v ...*Role) *ApiResourcesUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return aruo.AddRoleIDs(ids...)
+	return _u.AddRoleIDs(ids...)
 }
 
 // Mutation returns the ApiResourcesMutation object of the builder.
-func (aruo *ApiResourcesUpdateOne) Mutation() *ApiResourcesMutation {
-	return aruo.mutation
+func (_u *ApiResourcesUpdateOne) Mutation() *ApiResourcesMutation {
+	return _u.mutation
 }
 
 // ClearRoles clears all "roles" edges to the Role entity.
-func (aruo *ApiResourcesUpdateOne) ClearRoles() *ApiResourcesUpdateOne {
-	aruo.mutation.ClearRoles()
-	return aruo
+func (_u *ApiResourcesUpdateOne) ClearRoles() *ApiResourcesUpdateOne {
+	_u.mutation.ClearRoles()
+	return _u
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (aruo *ApiResourcesUpdateOne) RemoveRoleIDs(ids ...int64) *ApiResourcesUpdateOne {
-	aruo.mutation.RemoveRoleIDs(ids...)
-	return aruo
+func (_u *ApiResourcesUpdateOne) RemoveRoleIDs(ids ...int64) *ApiResourcesUpdateOne {
+	_u.mutation.RemoveRoleIDs(ids...)
+	return _u
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
-func (aruo *ApiResourcesUpdateOne) RemoveRoles(r ...*Role) *ApiResourcesUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_u *ApiResourcesUpdateOne) RemoveRoles(v ...*Role) *ApiResourcesUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return aruo.RemoveRoleIDs(ids...)
+	return _u.RemoveRoleIDs(ids...)
 }
 
 // Where appends a list predicates to the ApiResourcesUpdate builder.
-func (aruo *ApiResourcesUpdateOne) Where(ps ...predicate.ApiResources) *ApiResourcesUpdateOne {
-	aruo.mutation.Where(ps...)
-	return aruo
+func (_u *ApiResourcesUpdateOne) Where(ps ...predicate.ApiResources) *ApiResourcesUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (aruo *ApiResourcesUpdateOne) Select(field string, fields ...string) *ApiResourcesUpdateOne {
-	aruo.fields = append([]string{field}, fields...)
-	return aruo
+func (_u *ApiResourcesUpdateOne) Select(field string, fields ...string) *ApiResourcesUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated ApiResources entity.
-func (aruo *ApiResourcesUpdateOne) Save(ctx context.Context) (*ApiResources, error) {
-	aruo.defaults()
-	return withHooks(ctx, aruo.sqlSave, aruo.mutation, aruo.hooks)
+func (_u *ApiResourcesUpdateOne) Save(ctx context.Context) (*ApiResources, error) {
+	_u.defaults()
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (aruo *ApiResourcesUpdateOne) SaveX(ctx context.Context) *ApiResources {
-	node, err := aruo.Save(ctx)
+func (_u *ApiResourcesUpdateOne) SaveX(ctx context.Context) *ApiResources {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -460,40 +460,40 @@ func (aruo *ApiResourcesUpdateOne) SaveX(ctx context.Context) *ApiResources {
 }
 
 // Exec executes the query on the entity.
-func (aruo *ApiResourcesUpdateOne) Exec(ctx context.Context) error {
-	_, err := aruo.Save(ctx)
+func (_u *ApiResourcesUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (aruo *ApiResourcesUpdateOne) ExecX(ctx context.Context) {
-	if err := aruo.Exec(ctx); err != nil {
+func (_u *ApiResourcesUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (aruo *ApiResourcesUpdateOne) defaults() {
-	if _, ok := aruo.mutation.UpdateTime(); !ok {
+func (_u *ApiResourcesUpdateOne) defaults() {
+	if _, ok := _u.mutation.UpdateTime(); !ok {
 		v := apiresources.UpdateDefaultUpdateTime()
-		aruo.mutation.SetUpdateTime(v)
+		_u.mutation.SetUpdateTime(v)
 	}
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (aruo *ApiResourcesUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *ApiResourcesUpdateOne {
-	aruo.modifiers = append(aruo.modifiers, modifiers...)
-	return aruo
+func (_u *ApiResourcesUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *ApiResourcesUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResources, err error) {
+func (_u *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResources, err error) {
 	_spec := sqlgraph.NewUpdateSpec(apiresources.Table, apiresources.Columns, sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString))
-	id, ok := aruo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "ApiResources.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := aruo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, apiresources.FieldID)
 		for _, f := range fields {
@@ -505,35 +505,35 @@ func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResou
 			}
 		}
 	}
-	if ps := aruo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := aruo.mutation.UpdateTime(); ok {
+	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(apiresources.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := aruo.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(apiresources.FieldDescription, field.TypeString, value)
 	}
-	if value, ok := aruo.mutation.Path(); ok {
+	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(apiresources.FieldPath, field.TypeString, value)
 	}
-	if value, ok := aruo.mutation.Method(); ok {
+	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(apiresources.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := aruo.mutation.Module(); ok {
+	if value, ok := _u.mutation.Module(); ok {
 		_spec.SetField(apiresources.FieldModule, field.TypeString, value)
 	}
-	if value, ok := aruo.mutation.ModuleDescription(); ok {
+	if value, ok := _u.mutation.ModuleDescription(); ok {
 		_spec.SetField(apiresources.FieldModuleDescription, field.TypeString, value)
 	}
-	if value, ok := aruo.mutation.ResourcesGroup(); ok {
+	if value, ok := _u.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
 	}
-	if aruo.mutation.RolesCleared() {
+	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -546,7 +546,7 @@ func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResou
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := aruo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !aruo.mutation.RolesCleared() {
+	if nodes := _u.mutation.RemovedRolesIDs(); len(nodes) > 0 && !_u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -562,7 +562,7 @@ func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResou
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := aruo.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -578,11 +578,11 @@ func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResou
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(aruo.modifiers...)
-	_node = &ApiResources{config: aruo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &ApiResources{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, aruo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{apiresources.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -590,6 +590,6 @@ func (aruo *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResou
 		}
 		return nil, err
 	}
-	aruo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

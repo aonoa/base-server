@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"sort"
 	"strconv"
@@ -10,13 +11,14 @@ import (
 	"time"
 
 	v1 "base-server/api/gen/go/admin/service/v1"
-	authv1 "base-server/api/gen/go/auth/service/v1"
 	userv1 "base-server/api/gen/go/user/service/v1"
 	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
 	"base-server/pkg/tools"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -26,7 +28,31 @@ var ProviderSet = wire.NewSet(NewAdminUsecase)
 type AdminRepo interface {
 	GetMenuList(context.Context) ([]*ent.Menu, error)
 	GetUserAuthInfo(context.Context, string) (*userv1.GetUserAuthInfoReply, error)
-	GetCurrentUserMenuAuthority(context.Context, string) (*authv1.GetCurrentUserMenuAuthorityReply, error)
+	ListRoles(context.Context, *v1.RolePageParams) ([]*ent.Role, error)
+	ListAllRoles(context.Context) ([]*ent.Role, error)
+	GetRole(context.Context, int64) (*ent.Role, error)
+	ResolveRoleValues(context.Context, []int64) (map[int64]string, error)
+	GetUserRoleBinding(context.Context, string) (*ent.UserRoleBinding, error)
+	ListUserRoleBindings(context.Context) ([]*ent.UserRoleBinding, error)
+	UpsertUserRoleBinding(context.Context, string, int64) (*ent.UserRoleBinding, error)
+	DeleteUserRoleBinding(context.Context, string) error
+	AddRole(context.Context, *v1.RoleListItem) (*ent.Role, error)
+	UpdateRole(context.Context, int64, *v1.RoleListItem) (*ent.Role, error)
+	DelRole(context.Context, int64) error
+	GetApiList(context.Context, *v1.GetApiPageParams) ([]*ent.ApiResources, int64, error)
+	GetApi(context.Context, string) (*ent.ApiResources, error)
+	AddApi(context.Context, *ent.ApiResources) (*ent.ApiResources, error)
+	UpdateApi(context.Context, *ent.ApiResources) (*ent.ApiResources, error)
+	DelApi(context.Context, string) error
+	GetResourceList(context.Context, *v1.GetResourcePageParams) ([]*ent.Resource, int64, error)
+	GetResource(context.Context, string) (*ent.Resource, error)
+	AddResource(context.Context, *ent.Resource) (*ent.Resource, error)
+	UpdateResource(context.Context, *ent.Resource) (*ent.Resource, error)
+	DelResource(context.Context, string) error
+	RegisterPermissionSnapshot(context.Context) error
+	ApplyAuthRoleDelta(context.Context, *ent.Role, *ent.Role) error
+	ApplyAuthApiDelta(context.Context, *ent.ApiResources, *ent.ApiResources) error
+	ApplyAuthUserRoleBindingDelta(context.Context, *ent.UserRoleBinding, *ent.UserRoleBinding) error
 	ListAuthWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
 	ListUserWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
 	ListCommonWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
@@ -46,10 +72,344 @@ type AdminRepo interface {
 
 type AdminUsecase struct {
 	repo AdminRepo
+	log  *log.Helper
 }
 
-func NewAdminUsecase(repo AdminRepo) *AdminUsecase {
-	return &AdminUsecase{repo: repo}
+type currentUserMenuAuthority struct {
+	isRoot  bool
+	menuIDs []int32
+}
+
+func NewAdminUsecase(repo AdminRepo, logger log.Logger) *AdminUsecase {
+	return &AdminUsecase{repo: repo, log: log.NewHelper(logger)}
+}
+
+func (uc *AdminUsecase) RegisterPermissionSnapshot(ctx context.Context) error {
+	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
+		return err
+	}
+	uc.log.Info("auth projection snapshot registered")
+	return nil
+}
+
+func (uc *AdminUsecase) syncAuthProjection(ctx context.Context, label string, apply func() error) error {
+	if err := apply(); err != nil {
+		uc.log.Warnf("auth projection delta failed, fallback to snapshot: %s err=%v", label, err)
+		if snapshotErr := uc.repo.RegisterPermissionSnapshot(ctx); snapshotErr != nil {
+			return fmt.Errorf("apply auth projection update: %w; snapshot fallback failed: %v", err, snapshotErr)
+		}
+		uc.log.Infof("auth projection snapshot fallback succeeded: %s", label)
+		return nil
+	}
+	uc.log.Infof("auth projection delta applied: %s", label)
+	return nil
+}
+
+func (uc *AdminUsecase) loadRoleWithResources(ctx context.Context, roleID int64) (*ent.Role, error) {
+	roleItem, err := uc.repo.GetRole(ctx, roleID)
+	if err != nil {
+		return nil, err
+	}
+	resources, err := roleItem.QueryResource().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleItem.Edges.Resource = resources
+	return roleItem, nil
+}
+
+func (uc *AdminUsecase) GetAuthRoleCatalog(ctx context.Context) (*v1.GetAuthRoleCatalogReply, error) {
+	roleList, err := uc.repo.ListAllRoles(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetAuthRoleCatalogReply{Items: make([]*v1.AuthRoleItem, 0, len(roleList))}
+	for _, item := range roleList {
+		res.Items = append(res.Items, roleToAuthReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) GetAuthApiCatalog(ctx context.Context) (*v1.GetAuthApiCatalogReply, error) {
+	list, _, err := uc.repo.GetApiList(ctx, &v1.GetApiPageParams{})
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetAuthApiCatalogReply{Items: make([]*v1.AuthApiItem, 0, len(list))}
+	for _, item := range list {
+		res.Items = append(res.Items, apiToAuthReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) GetAuthRole(ctx context.Context, req *v1.GetAuthRoleRequest) (*v1.AuthRoleItem, error) {
+	roleItem, err := uc.repo.GetRole(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	resources, err := roleItem.QueryResource().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleItem.Edges.Resource = resources
+	return roleToAuthReply(roleItem), nil
+}
+
+func (uc *AdminUsecase) ResolveRoleValues(ctx context.Context, req *v1.ResolveRoleValuesRequest) (*v1.ResolveRoleValuesReply, error) {
+	values, err := uc.repo.ResolveRoleValues(ctx, req.RoleIds)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.ResolveRoleValuesReply{Items: make([]*v1.ResolveRoleValueItem, 0, len(values))}
+	for _, roleID := range req.RoleIds {
+		if value, ok := values[roleID]; ok {
+			res.Items = append(res.Items, &v1.ResolveRoleValueItem{RoleId: roleID, Value: value})
+		}
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) GetUserRoleBinding(ctx context.Context, req *v1.GetUserRoleBindingRequest) (*v1.UserRoleBindingItem, error) {
+	item, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return userRoleBindingToReply(item), nil
+}
+
+func (uc *AdminUsecase) ListUserRoleBindings(ctx context.Context) (*v1.ListUserRoleBindingsReply, error) {
+	list, err := uc.repo.ListUserRoleBindings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.ListUserRoleBindingsReply{Items: make([]*v1.UserRoleBindingItem, 0, len(list))}
+	for _, item := range list {
+		res.Items = append(res.Items, userRoleBindingToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) UpsertUserRoleBinding(ctx context.Context, req *v1.UserRoleBindingItem) (*v1.UserRoleBindingItem, error) {
+	if _, err := uc.repo.GetRole(ctx, req.RoleId); err != nil {
+		return nil, err
+	}
+	var before *ent.UserRoleBinding
+	before, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+	if ent.IsNotFound(err) {
+		before = nil
+	}
+	item, err := uc.repo.UpsertUserRoleBinding(ctx, req.UserId, req.RoleId)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("user-role-binding upsert user=%s role_id=%d", req.UserId, req.RoleId), func() error {
+		return uc.repo.ApplyAuthUserRoleBindingDelta(ctx, before, item)
+	}); err != nil {
+		return nil, err
+	}
+	return userRoleBindingToReply(item), nil
+}
+
+func (uc *AdminUsecase) DeleteUserRoleBinding(ctx context.Context, req *v1.DeleteUserRoleBindingRequest) error {
+	before, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
+	if err != nil {
+		return err
+	}
+	if err := uc.repo.DeleteUserRoleBinding(ctx, req.UserId); err != nil {
+		return err
+	}
+	return uc.syncAuthProjection(ctx, fmt.Sprintf("user-role-binding delete user=%s", req.UserId), func() error {
+		return uc.repo.ApplyAuthUserRoleBindingDelta(ctx, before, nil)
+	})
+}
+
+func (uc *AdminUsecase) GetRoleList(ctx context.Context, req *v1.RolePageParams) (*v1.GetRoleListByPageReply, error) {
+	roleList, err := uc.repo.ListRoles(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetRoleListByPageReply{Items: make([]*v1.RoleListItem, 0, len(roleList)), Total: int64(len(roleList))}
+	for i, item := range roleList {
+		res.Items = append(res.Items, roleToReply(item, i))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
+	roleItem, err := uc.repo.AddRole(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	resources, err := roleItem.QueryResource().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleItem.Edges.Resource = resources
+	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("role add id=%d value=%s", roleItem.ID, roleItem.Value), func() error {
+		return uc.repo.ApplyAuthRoleDelta(ctx, nil, roleItem)
+	}); err != nil {
+		return nil, err
+	}
+	return roleToReply(roleItem, 0), nil
+}
+
+func (uc *AdminUsecase) UpdateRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
+	roleID, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	before, err := uc.loadRoleWithResources(ctx, roleID)
+	if err != nil {
+		return nil, err
+	}
+	roleItem, err := uc.repo.UpdateRole(ctx, roleID, req)
+	if err != nil {
+		return nil, err
+	}
+	resources, err := roleItem.QueryResource().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleItem.Edges.Resource = resources
+	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("role update id=%d value=%s", roleItem.ID, roleItem.Value), func() error {
+		return uc.repo.ApplyAuthRoleDelta(ctx, before, roleItem)
+	}); err != nil {
+		return nil, err
+	}
+	return roleToReply(roleItem, 0), nil
+}
+
+func (uc *AdminUsecase) DelRole(ctx context.Context, roleID string) error {
+	id, err := strconv.ParseInt(roleID, 10, 64)
+	if err != nil {
+		return err
+	}
+	before, err := uc.loadRoleWithResources(ctx, id)
+	if err != nil {
+		return err
+	}
+	if _, err := uc.repo.GetRole(ctx, id); err != nil {
+		return err
+	}
+	if err := uc.repo.DelRole(ctx, id); err != nil {
+		return err
+	}
+	return uc.syncAuthProjection(ctx, fmt.Sprintf("role delete id=%d value=%s", before.ID, before.Value), func() error {
+		return uc.repo.ApplyAuthRoleDelta(ctx, before, nil)
+	})
+}
+
+func (uc *AdminUsecase) GetApiList(ctx context.Context, req *v1.GetApiPageParams) (*v1.GetApiListByPageReply, error) {
+	list, count, err := uc.repo.GetApiList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetApiListByPageReply{Items: make([]*v1.ApiListItem, 0, len(list)), Total: count}
+	for _, item := range list {
+		res.Items = append(res.Items, apiToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddApi(ctx context.Context, req *v1.ApiListItem) (*v1.ApiListItem, error) {
+	apiItem := &ent.ApiResources{}
+	copier.Copy(apiItem, req)
+	created, err := uc.repo.AddApi(ctx, apiItem)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("api add id=%s path=%s group=%s", created.ID, created.Path, created.ResourcesGroup), func() error {
+		return uc.repo.ApplyAuthApiDelta(ctx, nil, created)
+	}); err != nil {
+		return nil, err
+	}
+	return apiToReply(created), nil
+}
+
+func (uc *AdminUsecase) UpdateApi(ctx context.Context, req *v1.ApiListItem) (*v1.ApiListItem, error) {
+	before, err := uc.repo.GetApi(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	apiItem := &ent.ApiResources{}
+	copier.Copy(apiItem, req)
+	updated, err := uc.repo.UpdateApi(ctx, apiItem)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("api update id=%s path=%s group=%s", updated.ID, updated.Path, updated.ResourcesGroup), func() error {
+		return uc.repo.ApplyAuthApiDelta(ctx, before, updated)
+	}); err != nil {
+		return nil, err
+	}
+	return apiToReply(updated), nil
+}
+
+func (uc *AdminUsecase) DelApi(ctx context.Context, apiID string) error {
+	before, err := uc.repo.GetApi(ctx, apiID)
+	if err != nil {
+		return err
+	}
+	if err := uc.repo.DelApi(ctx, apiID); err != nil {
+		return err
+	}
+	return uc.syncAuthProjection(ctx, fmt.Sprintf("api delete id=%s path=%s group=%s", before.ID, before.Path, before.ResourcesGroup), func() error {
+		return uc.repo.ApplyAuthApiDelta(ctx, before, nil)
+	})
+}
+
+func (uc *AdminUsecase) GetResourceList(ctx context.Context, req *v1.GetResourcePageParams) (*v1.GetResourceListByPageReply, error) {
+	list, count, err := uc.repo.GetResourceList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetResourceListByPageReply{Items: make([]*v1.ResourceListItem, 0, len(list)), Total: count}
+	for _, item := range list {
+		res.Items = append(res.Items, resourceToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddResource(ctx context.Context, req *v1.ResourceListItem) (*v1.ResourceListItem, error) {
+	resourceItem := &ent.Resource{}
+	copier.Copy(resourceItem, req)
+	created, err := uc.repo.AddResource(ctx, resourceItem)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
+		return nil, err
+	}
+	return resourceToReply(created), nil
+}
+
+func (uc *AdminUsecase) UpdateResource(ctx context.Context, req *v1.ResourceListItem) (*v1.ResourceListItem, error) {
+	if _, err := uc.repo.GetResource(ctx, req.Id); err != nil {
+		return nil, err
+	}
+	resourceItem := &ent.Resource{}
+	copier.Copy(resourceItem, req)
+	updated, err := uc.repo.UpdateResource(ctx, resourceItem)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
+		return nil, err
+	}
+	return resourceToReply(updated), nil
+}
+
+func (uc *AdminUsecase) DelResource(ctx context.Context, resourceID string) error {
+	if _, err := uc.repo.GetResource(ctx, resourceID); err != nil {
+		return err
+	}
+	if err := uc.repo.DelResource(ctx, resourceID); err != nil {
+		return err
+	}
+	return uc.repo.RegisterPermissionSnapshot(ctx)
 }
 
 func (uc *AdminUsecase) GetDeptList(ctx context.Context) (*v1.GetDeptListReply, error) {
@@ -122,9 +482,17 @@ func (uc *AdminUsecase) GetCurrentUserMenus(ctx context.Context, userID string) 
 	if err != nil {
 		return nil, err
 	}
-	authority, err := uc.repo.GetCurrentUserMenuAuthority(ctx, userID)
+	binding, err := uc.repo.GetUserRoleBinding(ctx, userID)
 	if err != nil {
 		return nil, err
+	}
+	roleItem, err := uc.repo.GetRole(ctx, binding.RoleID)
+	if err != nil {
+		return nil, err
+	}
+	authority := &currentUserMenuAuthority{
+		isRoot:  roleItem.Value == "root",
+		menuIDs: append([]int32(nil), roleItem.Menus...),
 	}
 	menuList, err := uc.repo.GetMenuList(ctx)
 	if err != nil {
@@ -426,8 +794,8 @@ func buildMenuTree(menuList *[]*v1.SysMenuListItem, menu *ent.Menu) bool {
 	return false
 }
 
-func filterVisibleMenus(menuList []*ent.Menu, authority *authv1.GetCurrentUserMenuAuthorityReply) []*ent.Menu {
-	if authority.GetIsRoot() {
+func filterVisibleMenus(menuList []*ent.Menu, authority *currentUserMenuAuthority) []*ent.Menu {
+	if authority.isRoot {
 		items := make([]*ent.Menu, 0, len(menuList))
 		for _, item := range menuList {
 			if item.Status {
@@ -437,15 +805,15 @@ func filterVisibleMenus(menuList []*ent.Menu, authority *authv1.GetCurrentUserMe
 		sortMenus(items)
 		return items
 	}
-	allowed := make(map[int64]struct{}, len(authority.MenuIds))
-	for _, id := range authority.MenuIds {
+	allowed := make(map[int64]struct{}, len(authority.menuIDs))
+	for _, id := range authority.menuIDs {
 		allowed[int64(id)] = struct{}{}
 	}
 	menuByID := make(map[int64]*ent.Menu, len(menuList))
 	for _, item := range menuList {
 		menuByID[item.ID] = item
 	}
-	for _, id := range authority.MenuIds {
+	for _, id := range authority.menuIDs {
 		item, ok := menuByID[int64(id)]
 		if !ok {
 			continue
@@ -670,6 +1038,100 @@ func replaceBracesIfExists(str string) (bool, string) {
 	}
 	re := regexp.MustCompile(`{[^}]*}`)
 	return true, re.ReplaceAllString(str, "%")
+}
+
+func roleToReply(item *ent.Role, order int) *v1.RoleListItem {
+	apiPermissions := make([]string, 0)
+	if item.Edges.Resource != nil {
+		for _, resourceItem := range item.Edges.Resource {
+			if resourceItem.Type == "api" {
+				apiPermissions = append(apiPermissions, resourceItem.ID)
+			}
+		}
+	}
+	status := int32(0)
+	if item.Status {
+		status = 1
+	}
+	return &v1.RoleListItem{
+		Id:             strconv.FormatInt(item.ID, 10),
+		Name:           item.Name,
+		Value:          item.Value,
+		Status:         status,
+		OrderNo:        strconv.Itoa(order),
+		CreateTime:     item.CreateTime.Format(time.DateTime),
+		Remark:         item.Desc,
+		Permissions:    item.Menus,
+		ApiPermissions: apiPermissions,
+	}
+}
+
+func apiToReply(item *ent.ApiResources) *v1.ApiListItem {
+	return &v1.ApiListItem{
+		Id:                item.ID,
+		Path:              item.Path,
+		Method:            item.Method,
+		Description:       item.Description,
+		Module:            item.Module,
+		ModuleDescription: item.ModuleDescription,
+		ResourcesGroup:    item.ResourcesGroup,
+	}
+}
+
+func resourceToReply(item *ent.Resource) *v1.ResourceListItem {
+	return &v1.ResourceListItem{
+		Id:          item.ID,
+		Name:        item.Name,
+		Type:        item.Type,
+		Value:       item.Value,
+		Method:      item.Method,
+		Description: item.Description,
+	}
+}
+
+func roleToAuthReply(item *ent.Role) *v1.AuthRoleItem {
+	resources := make([]*v1.AuthRoleResourceItem, 0)
+	if item.Edges.Resource != nil {
+		for _, resourceItem := range item.Edges.Resource {
+			resources = append(resources, &v1.AuthRoleResourceItem{
+				Id:     resourceItem.ID,
+				Type:   resourceItem.Type,
+				Value:  resourceItem.Value,
+				Method: resourceItem.Method,
+			})
+		}
+	}
+	return &v1.AuthRoleItem{
+		Id:        item.ID,
+		Name:      item.Name,
+		Value:     item.Value,
+		Status:    item.Status,
+		Remark:    item.Desc,
+		MenuIds:   append([]int32(nil), item.Menus...),
+		Resources: resources,
+	}
+}
+
+func apiToAuthReply(item *ent.ApiResources) *v1.AuthApiItem {
+	return &v1.AuthApiItem{
+		Id:                item.ID,
+		Path:              item.Path,
+		Method:            item.Method,
+		Description:       item.Description,
+		Module:            item.Module,
+		ModuleDescription: item.ModuleDescription,
+		ResourcesGroup:    item.ResourcesGroup,
+	}
+}
+
+func userRoleBindingToReply(item *ent.UserRoleBinding) *v1.UserRoleBindingItem {
+	return &v1.UserRoleBindingItem{
+		Id:         strconv.FormatInt(item.ID, 10),
+		UserId:     item.UserID,
+		RoleId:     item.RoleID,
+		CreateTime: item.CreateTime.Format(time.DateTime),
+		UpdateTime: item.UpdateTime.Format(time.DateTime),
+	}
 }
 
 var _ = emptypb.Empty{}

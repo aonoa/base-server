@@ -20,26 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Login_FullMethodName                       = "/api.auth.service.v1.AuthService/Login"
-	AuthService_GetAccessCodes_FullMethodName              = "/api.auth.service.v1.AuthService/GetAccessCodes"
-	AuthService_GetCurrentUserMenuAuthority_FullMethodName = "/api.auth.service.v1.AuthService/GetCurrentUserMenuAuthority"
-	AuthService_CheckAuthorization_FullMethodName          = "/api.auth.service.v1.AuthService/CheckAuthorization"
-	AuthService_GetWalkRoute_FullMethodName                = "/api.auth.service.v1.AuthService/GetWalkRoute"
-	AuthService_Logout_FullMethodName                      = "/api.auth.service.v1.AuthService/Logout"
-	AuthService_RefreshToken_FullMethodName                = "/api.auth.service.v1.AuthService/RefreshToken"
-	AuthService_ReLoadPolicy_FullMethodName                = "/api.auth.service.v1.AuthService/ReLoadPolicy"
-	AuthService_GetRoleList_FullMethodName                 = "/api.auth.service.v1.AuthService/GetRoleList"
-	AuthService_AddRole_FullMethodName                     = "/api.auth.service.v1.AuthService/AddRole"
-	AuthService_UpdateRole_FullMethodName                  = "/api.auth.service.v1.AuthService/UpdateRole"
-	AuthService_DelRole_FullMethodName                     = "/api.auth.service.v1.AuthService/DelRole"
-	AuthService_GetApiList_FullMethodName                  = "/api.auth.service.v1.AuthService/GetApiList"
-	AuthService_AddApi_FullMethodName                      = "/api.auth.service.v1.AuthService/AddApi"
-	AuthService_UpdateApi_FullMethodName                   = "/api.auth.service.v1.AuthService/UpdateApi"
-	AuthService_DelApi_FullMethodName                      = "/api.auth.service.v1.AuthService/DelApi"
-	AuthService_GetResourceList_FullMethodName             = "/api.auth.service.v1.AuthService/GetResourceList"
-	AuthService_AddResource_FullMethodName                 = "/api.auth.service.v1.AuthService/AddResource"
-	AuthService_UpdateResource_FullMethodName              = "/api.auth.service.v1.AuthService/UpdateResource"
-	AuthService_DelResource_FullMethodName                 = "/api.auth.service.v1.AuthService/DelResource"
+	AuthService_Login_FullMethodName                      = "/api.auth.service.v1.AuthService/Login"
+	AuthService_GetAccessCodes_FullMethodName             = "/api.auth.service.v1.AuthService/GetAccessCodes"
+	AuthService_CheckAuthorization_FullMethodName         = "/api.auth.service.v1.AuthService/CheckAuthorization"
+	AuthService_GetWalkRoute_FullMethodName               = "/api.auth.service.v1.AuthService/GetWalkRoute"
+	AuthService_Logout_FullMethodName                     = "/api.auth.service.v1.AuthService/Logout"
+	AuthService_RefreshToken_FullMethodName               = "/api.auth.service.v1.AuthService/RefreshToken"
+	AuthService_RegisterPermissionSnapshot_FullMethodName = "/api.auth.service.v1.AuthService/RegisterPermissionSnapshot"
+	AuthService_ApplyRoleDelta_FullMethodName             = "/api.auth.service.v1.AuthService/ApplyRoleDelta"
+	AuthService_ApplyApiDelta_FullMethodName              = "/api.auth.service.v1.AuthService/ApplyApiDelta"
+	AuthService_ApplyUserRoleBindingDelta_FullMethodName  = "/api.auth.service.v1.AuthService/ApplyUserRoleBindingDelta"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -48,24 +38,14 @@ const (
 type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
 	GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAccessCodesReply, error)
-	GetCurrentUserMenuAuthority(ctx context.Context, in *GetCurrentUserMenuAuthorityRequest, opts ...grpc.CallOption) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(ctx context.Context, in *CheckAuthorizationRequest, opts ...grpc.CallOption) (*CheckAuthorizationReply, error)
 	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
 	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginReply, error)
-	ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error)
-	AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
-	UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error)
-	DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error)
-	AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
-	UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error)
-	DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error)
-	AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
-	UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error)
-	DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RegisterPermissionSnapshot(ctx context.Context, in *RegisterPermissionSnapshotRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ApplyRoleDelta(ctx context.Context, in *ApplyRoleDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ApplyApiDelta(ctx context.Context, in *ApplyApiDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ApplyUserRoleBindingDelta(ctx context.Context, in *ApplyUserRoleBindingDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authServiceClient struct {
@@ -90,16 +70,6 @@ func (c *authServiceClient) GetAccessCodes(ctx context.Context, in *emptypb.Empt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAccessCodesReply)
 	err := c.cc.Invoke(ctx, AuthService_GetAccessCodes_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) GetCurrentUserMenuAuthority(ctx context.Context, in *GetCurrentUserMenuAuthorityRequest, opts ...grpc.CallOption) (*GetCurrentUserMenuAuthorityReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCurrentUserMenuAuthorityReply)
-	err := c.cc.Invoke(ctx, AuthService_GetCurrentUserMenuAuthority_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -146,130 +116,40 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *emptypb.Empty,
 	return out, nil
 }
 
-func (c *authServiceClient) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) RegisterPermissionSnapshot(ctx context.Context, in *RegisterPermissionSnapshotRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_ReLoadPolicy_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_RegisterPermissionSnapshot_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) GetRoleList(ctx context.Context, in *RolePageParams, opts ...grpc.CallOption) (*GetRoleListByPageReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetRoleListByPageReply)
-	err := c.cc.Invoke(ctx, AuthService_GetRoleList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) AddRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleListItem)
-	err := c.cc.Invoke(ctx, AuthService_AddRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) UpdateRole(ctx context.Context, in *RoleListItem, opts ...grpc.CallOption) (*RoleListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RoleListItem)
-	err := c.cc.Invoke(ctx, AuthService_UpdateRole_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) DelRole(ctx context.Context, in *DeleteRole, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) ApplyRoleDelta(ctx context.Context, in *ApplyRoleDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_DelRole_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_ApplyRoleDelta_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) GetApiList(ctx context.Context, in *GetApiPageParams, opts ...grpc.CallOption) (*GetApiListByPageReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetApiListByPageReply)
-	err := c.cc.Invoke(ctx, AuthService_GetApiList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) AddApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiListItem)
-	err := c.cc.Invoke(ctx, AuthService_AddApi_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) UpdateApi(ctx context.Context, in *ApiListItem, opts ...grpc.CallOption) (*ApiListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ApiListItem)
-	err := c.cc.Invoke(ctx, AuthService_UpdateApi_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) DelApi(ctx context.Context, in *DeleteApi, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) ApplyApiDelta(ctx context.Context, in *ApplyApiDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_DelApi_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_ApplyApiDelta_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) GetResourceList(ctx context.Context, in *GetResourcePageParams, opts ...grpc.CallOption) (*GetResourceListByPageReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetResourceListByPageReply)
-	err := c.cc.Invoke(ctx, AuthService_GetResourceList_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) AddResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResourceListItem)
-	err := c.cc.Invoke(ctx, AuthService_AddResource_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...grpc.CallOption) (*ResourceListItem, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResourceListItem)
-	err := c.cc.Invoke(ctx, AuthService_UpdateResource_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) DelResource(ctx context.Context, in *DeleteResource, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) ApplyUserRoleBindingDelta(ctx context.Context, in *ApplyUserRoleBindingDeltaRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_DelResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_ApplyUserRoleBindingDelta_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -282,24 +162,14 @@ func (c *authServiceClient) DelResource(ctx context.Context, in *DeleteResource,
 type AuthServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
-	GetCurrentUserMenuAuthority(context.Context, *GetCurrentUserMenuAuthorityRequest) (*GetCurrentUserMenuAuthorityReply, error)
 	CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error)
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
-	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
-	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
-	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
-	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
-	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
-	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
-	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
-	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
+	RegisterPermissionSnapshot(context.Context, *RegisterPermissionSnapshotRequest) (*emptypb.Empty, error)
+	ApplyRoleDelta(context.Context, *ApplyRoleDeltaRequest) (*emptypb.Empty, error)
+	ApplyApiDelta(context.Context, *ApplyApiDeltaRequest) (*emptypb.Empty, error)
+	ApplyUserRoleBindingDelta(context.Context, *ApplyUserRoleBindingDeltaRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -316,9 +186,6 @@ func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*Lo
 func (UnimplementedAuthServiceServer) GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAccessCodes not implemented")
 }
-func (UnimplementedAuthServiceServer) GetCurrentUserMenuAuthority(context.Context, *GetCurrentUserMenuAuthorityRequest) (*GetCurrentUserMenuAuthorityReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUserMenuAuthority not implemented")
-}
 func (UnimplementedAuthServiceServer) CheckAuthorization(context.Context, *CheckAuthorizationRequest) (*CheckAuthorizationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuthorization not implemented")
 }
@@ -331,44 +198,17 @@ func (UnimplementedAuthServiceServer) Logout(context.Context, *emptypb.Empty) (*
 func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedAuthServiceServer) ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReLoadPolicy not implemented")
+func (UnimplementedAuthServiceServer) RegisterPermissionSnapshot(context.Context, *RegisterPermissionSnapshotRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterPermissionSnapshot not implemented")
 }
-func (UnimplementedAuthServiceServer) GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoleList not implemented")
+func (UnimplementedAuthServiceServer) ApplyRoleDelta(context.Context, *ApplyRoleDeltaRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApplyRoleDelta not implemented")
 }
-func (UnimplementedAuthServiceServer) AddRole(context.Context, *RoleListItem) (*RoleListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddRole not implemented")
+func (UnimplementedAuthServiceServer) ApplyApiDelta(context.Context, *ApplyApiDeltaRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApplyApiDelta not implemented")
 }
-func (UnimplementedAuthServiceServer) UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
-}
-func (UnimplementedAuthServiceServer) DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelRole not implemented")
-}
-func (UnimplementedAuthServiceServer) GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetApiList not implemented")
-}
-func (UnimplementedAuthServiceServer) AddApi(context.Context, *ApiListItem) (*ApiListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddApi not implemented")
-}
-func (UnimplementedAuthServiceServer) UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateApi not implemented")
-}
-func (UnimplementedAuthServiceServer) DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelApi not implemented")
-}
-func (UnimplementedAuthServiceServer) GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResourceList not implemented")
-}
-func (UnimplementedAuthServiceServer) AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddResource not implemented")
-}
-func (UnimplementedAuthServiceServer) UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
-}
-func (UnimplementedAuthServiceServer) DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelResource not implemented")
+func (UnimplementedAuthServiceServer) ApplyUserRoleBindingDelta(context.Context, *ApplyUserRoleBindingDeltaRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApplyUserRoleBindingDelta not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -423,24 +263,6 @@ func _AuthService_GetAccessCodes_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServiceServer).GetAccessCodes(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_GetCurrentUserMenuAuthority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCurrentUserMenuAuthorityRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).GetCurrentUserMenuAuthority(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_GetCurrentUserMenuAuthority_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetCurrentUserMenuAuthority(ctx, req.(*GetCurrentUserMenuAuthorityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -517,236 +339,74 @@ func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_ReLoadPolicy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _AuthService_RegisterPermissionSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterPermissionSnapshotRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).ReLoadPolicy(ctx, in)
+		return srv.(AuthServiceServer).RegisterPermissionSnapshot(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_ReLoadPolicy_FullMethodName,
+		FullMethod: AuthService_RegisterPermissionSnapshot_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ReLoadPolicy(ctx, req.(*emptypb.Empty))
+		return srv.(AuthServiceServer).RegisterPermissionSnapshot(ctx, req.(*RegisterPermissionSnapshotRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_GetRoleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RolePageParams)
+func _AuthService_ApplyRoleDelta_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApplyRoleDeltaRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).GetRoleList(ctx, in)
+		return srv.(AuthServiceServer).ApplyRoleDelta(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_GetRoleList_FullMethodName,
+		FullMethod: AuthService_ApplyRoleDelta_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetRoleList(ctx, req.(*RolePageParams))
+		return srv.(AuthServiceServer).ApplyRoleDelta(ctx, req.(*ApplyRoleDeltaRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_AddRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleListItem)
+func _AuthService_ApplyApiDelta_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApplyApiDeltaRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).AddRole(ctx, in)
+		return srv.(AuthServiceServer).ApplyApiDelta(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_AddRole_FullMethodName,
+		FullMethod: AuthService_ApplyApiDelta_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AddRole(ctx, req.(*RoleListItem))
+		return srv.(AuthServiceServer).ApplyApiDelta(ctx, req.(*ApplyApiDeltaRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleListItem)
+func _AuthService_ApplyUserRoleBindingDelta_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApplyUserRoleBindingDeltaRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).UpdateRole(ctx, in)
+		return srv.(AuthServiceServer).ApplyUserRoleBindingDelta(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_UpdateRole_FullMethodName,
+		FullMethod: AuthService_ApplyUserRoleBindingDelta_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UpdateRole(ctx, req.(*RoleListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_DelRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRole)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).DelRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_DelRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).DelRole(ctx, req.(*DeleteRole))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_GetApiList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetApiPageParams)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).GetApiList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_GetApiList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetApiList(ctx, req.(*GetApiPageParams))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_AddApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ApiListItem)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).AddApi(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_AddApi_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AddApi(ctx, req.(*ApiListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_UpdateApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ApiListItem)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).UpdateApi(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_UpdateApi_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UpdateApi(ctx, req.(*ApiListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_DelApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteApi)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).DelApi(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_DelApi_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).DelApi(ctx, req.(*DeleteApi))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_GetResourceList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetResourcePageParams)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).GetResourceList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_GetResourceList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetResourceList(ctx, req.(*GetResourcePageParams))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_AddResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResourceListItem)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).AddResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_AddResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AddResource(ctx, req.(*ResourceListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResourceListItem)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).UpdateResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_UpdateResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UpdateResource(ctx, req.(*ResourceListItem))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_DelResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteResource)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).DelResource(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_DelResource_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).DelResource(ctx, req.(*DeleteResource))
+		return srv.(AuthServiceServer).ApplyUserRoleBindingDelta(ctx, req.(*ApplyUserRoleBindingDeltaRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -767,10 +427,6 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_GetAccessCodes_Handler,
 		},
 		{
-			MethodName: "GetCurrentUserMenuAuthority",
-			Handler:    _AuthService_GetCurrentUserMenuAuthority_Handler,
-		},
-		{
 			MethodName: "CheckAuthorization",
 			Handler:    _AuthService_CheckAuthorization_Handler,
 		},
@@ -787,56 +443,20 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_RefreshToken_Handler,
 		},
 		{
-			MethodName: "ReLoadPolicy",
-			Handler:    _AuthService_ReLoadPolicy_Handler,
+			MethodName: "RegisterPermissionSnapshot",
+			Handler:    _AuthService_RegisterPermissionSnapshot_Handler,
 		},
 		{
-			MethodName: "GetRoleList",
-			Handler:    _AuthService_GetRoleList_Handler,
+			MethodName: "ApplyRoleDelta",
+			Handler:    _AuthService_ApplyRoleDelta_Handler,
 		},
 		{
-			MethodName: "AddRole",
-			Handler:    _AuthService_AddRole_Handler,
+			MethodName: "ApplyApiDelta",
+			Handler:    _AuthService_ApplyApiDelta_Handler,
 		},
 		{
-			MethodName: "UpdateRole",
-			Handler:    _AuthService_UpdateRole_Handler,
-		},
-		{
-			MethodName: "DelRole",
-			Handler:    _AuthService_DelRole_Handler,
-		},
-		{
-			MethodName: "GetApiList",
-			Handler:    _AuthService_GetApiList_Handler,
-		},
-		{
-			MethodName: "AddApi",
-			Handler:    _AuthService_AddApi_Handler,
-		},
-		{
-			MethodName: "UpdateApi",
-			Handler:    _AuthService_UpdateApi_Handler,
-		},
-		{
-			MethodName: "DelApi",
-			Handler:    _AuthService_DelApi_Handler,
-		},
-		{
-			MethodName: "GetResourceList",
-			Handler:    _AuthService_GetResourceList_Handler,
-		},
-		{
-			MethodName: "AddResource",
-			Handler:    _AuthService_AddResource_Handler,
-		},
-		{
-			MethodName: "UpdateResource",
-			Handler:    _AuthService_UpdateResource_Handler,
-		},
-		{
-			MethodName: "DelResource",
-			Handler:    _AuthService_DelResource_Handler,
+			MethodName: "ApplyUserRoleBindingDelta",
+			Handler:    _AuthService_ApplyUserRoleBindingDelta_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

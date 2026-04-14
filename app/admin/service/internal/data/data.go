@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"ariga.io/entcache"
 	v1 "base-server/api/gen/go/admin/service/v1"
@@ -16,10 +17,14 @@ import (
 	"base-server/app/admin/service/internal/conf"
 	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
+	"base-server/pkg/data/ent/apiresources"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/migrate"
+	"base-server/pkg/data/ent/resource"
+	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/syslogrecord"
+	"base-server/pkg/data/ent/userrolebinding"
 	"base-server/pkg/tools"
 
 	"entgo.io/ent/dialect"
@@ -114,6 +119,97 @@ func NewAdminRepo(data *Data, logger log.Logger) biz.AdminRepo {
 	return &adminRepo{data: data, log: log.NewHelper(logger)}
 }
 
+func (r *adminRepo) ListAllRoles(ctx context.Context) ([]*ent.Role, error) {
+	return r.data.db.Role.Query().
+		Where(role.StatusEQ(true)).
+		WithResource().
+		All(ctx)
+}
+
+func (r *adminRepo) ListRoles(ctx context.Context, req *v1.RolePageParams) ([]*ent.Role, error) {
+	query := r.data.db.Role.Query()
+	if req.Name != "" {
+		query = query.Where(role.NameEQ(req.Name))
+	}
+	if req.Status == 1 {
+		query = query.Where(role.StatusEQ(true))
+	}
+	query.WithResource(func(query *ent.ResourceQuery) {
+		query.Select(resource.FieldID, resource.FieldType, resource.FieldValue, resource.FieldMethod)
+	})
+	return query.All(ctx)
+}
+
+func (r *adminRepo) GetRole(ctx context.Context, id int64) (*ent.Role, error) {
+	return r.data.db.Role.Query().Where(role.IDEQ(id)).First(ctx)
+}
+
+func (r *adminRepo) ResolveRoleValues(ctx context.Context, roleIDs []int64) (map[int64]string, error) {
+	roles, err := r.data.db.Role.Query().
+		Where(role.IDIn(roleIDs...)).
+		Select(role.FieldID, role.FieldValue).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	values := make(map[int64]string, len(roles))
+	for _, item := range roles {
+		values[item.ID] = item.Value
+	}
+	return values, nil
+}
+
+func (r *adminRepo) GetUserRoleBinding(ctx context.Context, userID string) (*ent.UserRoleBinding, error) {
+	return r.data.db.UserRoleBinding.Query().Where(userrolebinding.UserIDEQ(userID)).First(ctx)
+}
+
+func (r *adminRepo) ListUserRoleBindings(ctx context.Context) ([]*ent.UserRoleBinding, error) {
+	return r.data.db.UserRoleBinding.Query().All(ctx)
+}
+
+func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, roleID int64) (*ent.UserRoleBinding, error) {
+	current, err := r.data.db.UserRoleBinding.Query().Where(userrolebinding.UserIDEQ(userID)).First(ctx)
+	if err == nil {
+		return r.data.db.UserRoleBinding.UpdateOneID(current.ID).SetRoleID(roleID).Save(ctx)
+	}
+	if !ent.IsNotFound(err) {
+		return nil, err
+	}
+	return r.data.db.UserRoleBinding.Create().SetUserID(userID).SetRoleID(roleID).Save(ctx)
+}
+
+func (r *adminRepo) DeleteUserRoleBinding(ctx context.Context, userID string) error {
+	_, err := r.data.db.UserRoleBinding.Delete().Where(userrolebinding.UserIDEQ(userID)).Exec(ctx)
+	return err
+}
+
+func (r *adminRepo) AddRole(ctx context.Context, req *v1.RoleListItem) (*ent.Role, error) {
+	return r.data.db.Role.Create().
+		SetName(req.Name).
+		SetValue(req.Value).
+		SetStatus(req.Status != 0).
+		SetDesc(req.Remark).
+		SetMenus(req.Permissions).
+		AddResourceIDs(req.ApiPermissions...).
+		Save(ctx)
+}
+
+func (r *adminRepo) UpdateRole(ctx context.Context, roleID int64, req *v1.RoleListItem) (*ent.Role, error) {
+	return r.data.db.Role.UpdateOneID(roleID).
+		SetName(req.Name).
+		SetValue(req.Value).
+		SetStatus(req.Status != 0).
+		SetDesc(req.Remark).
+		SetMenus(req.Permissions).
+		ClearResource().
+		AddResourceIDs(req.ApiPermissions...).
+		Save(ctx)
+}
+
+func (r *adminRepo) DelRole(ctx context.Context, id int64) error {
+	return r.data.db.Role.DeleteOneID(id).Exec(ctx)
+}
+
 func (r *adminRepo) GetMenuList(ctx context.Context) ([]*ent.Menu, error) {
 	return r.data.db.Menu.Query().Order(menu.ByPid(), menu.ByOrder()).All(ctx)
 }
@@ -123,9 +219,312 @@ func (r *adminRepo) GetUserAuthInfo(ctx context.Context, userID string) (*userv1
 	return r.data.userClient.GetUserAuthInfo(ctx, &userv1.GetUserAuthInfoRequest{UserId: userID})
 }
 
-func (r *adminRepo) GetCurrentUserMenuAuthority(ctx context.Context, userID string) (*authv1.GetCurrentUserMenuAuthorityReply, error) {
+func getAPIListQuery(params *v1.GetApiPageParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Path != "" {
+			s.Where(sql.EQ(apiresources.FieldPath, params.Path))
+		}
+		if params.ResourcesGroup != "" {
+			s.Where(sql.EQ(apiresources.FieldResourcesGroup, params.ResourcesGroup))
+		}
+		if params.Method != "" {
+			s.Where(sql.EQ(apiresources.FieldMethod, params.Method))
+		}
+		if params.Description != "" {
+			s.Where(sql.Like(apiresources.FieldDescription, "%"+params.Description+"%"))
+		}
+		if isPage {
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *adminRepo) GetApiList(ctx context.Context, req *v1.GetApiPageParams) ([]*ent.ApiResources, int64, error) {
+	list, err := r.data.db.ApiResources.Query().Modify(getAPIListQuery(req, true)).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.ApiResources.Query().Modify(getAPIListQuery(req, false)).Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return list, int64(count), nil
+}
+
+func (r *adminRepo) GetApi(ctx context.Context, id string) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.Query().Where(apiresources.IDEQ(id)).First(ctx)
+}
+
+func (r *adminRepo) AddApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.Create().CreateAll(req).Save(ctx)
+}
+
+func (r *adminRepo) UpdateApi(ctx context.Context, req *ent.ApiResources) (*ent.ApiResources, error) {
+	return r.data.db.ApiResources.UpdateOneID(req.ID).UpdateAll(req).Save(ctx)
+}
+
+func (r *adminRepo) DelApi(ctx context.Context, id string) error {
+	return r.data.db.ApiResources.DeleteOneID(id).Exec(ctx)
+}
+
+func getResourceListQuery(params *v1.GetResourcePageParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Name != "" {
+			s.Where(sql.Like(resource.FieldName, "%"+params.Name+"%"))
+		}
+		if params.Type != "" {
+			s.Where(sql.EQ(resource.FieldType, params.Type))
+		}
+		if params.Value != "" {
+			s.Where(sql.EQ(resource.FieldValue, params.Value))
+		}
+		if params.Method != "" {
+			s.Where(sql.Like(resource.FieldMethod, "%"+params.Method+"%"))
+		}
+		if params.Description != "" {
+			s.Where(sql.Like(resource.FieldDescription, "%"+params.Description+"%"))
+		}
+		if isPage {
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *adminRepo) GetResourceList(ctx context.Context, req *v1.GetResourcePageParams) ([]*ent.Resource, int64, error) {
+	list, err := r.data.db.Resource.Query().Modify(getResourceListQuery(req, true)).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.Resource.Query().Modify(getResourceListQuery(req, false)).Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return list, int64(count), nil
+}
+
+func (r *adminRepo) AddResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
+	return r.data.db.Resource.Create().CreateAll(req).Save(ctx)
+}
+
+func (r *adminRepo) GetResource(ctx context.Context, id string) (*ent.Resource, error) {
+	return r.data.db.Resource.Query().Where(resource.IDEQ(id)).First(ctx)
+}
+
+func (r *adminRepo) UpdateResource(ctx context.Context, req *ent.Resource) (*ent.Resource, error) {
+	return r.data.db.Resource.UpdateOneID(req.ID).UpdateAll(req).Save(ctx)
+}
+
+func (r *adminRepo) DelResource(ctx context.Context, id string) error {
+	return r.data.db.Resource.DeleteOneID(id).Exec(ctx)
+}
+
+func (r *adminRepo) RegisterPermissionSnapshot(ctx context.Context) error {
+	req, err := r.buildPermissionSnapshotRequest(ctx)
+	if err != nil {
+		return err
+	}
 	ctx = authx.ForwardAuthorizationContext(ctx)
-	return r.data.authClient.GetCurrentUserMenuAuthority(ctx, &authv1.GetCurrentUserMenuAuthorityRequest{UserId: userID})
+	_, err = r.data.authClient.RegisterPermissionSnapshot(ctx, req)
+	return err
+}
+
+func (r *adminRepo) ApplyAuthRoleDelta(ctx context.Context, before, after *ent.Role) error {
+	beforeRole, err := r.roleToPolicyRole(ctx, before)
+	if err != nil {
+		return err
+	}
+	afterRole, err := r.roleToPolicyRole(ctx, after)
+	if err != nil {
+		return err
+	}
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	_, err = r.data.authClient.ApplyRoleDelta(ctx, &authv1.ApplyRoleDeltaRequest{
+		SourceService: "admin",
+		Revision:      uint64(time.Now().UnixMilli()),
+		Before:        beforeRole,
+		After:         afterRole,
+	})
+	return err
+}
+
+func (r *adminRepo) ApplyAuthApiDelta(ctx context.Context, before, after *ent.ApiResources) error {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	_, err := r.data.authClient.ApplyApiDelta(ctx, &authv1.ApplyApiDeltaRequest{
+		SourceService: "admin",
+		Revision:      uint64(time.Now().UnixMilli()),
+		Before:        apiToPolicyAPI(before),
+		After:         apiToPolicyAPI(after),
+	})
+	return err
+}
+
+func (r *adminRepo) ApplyAuthUserRoleBindingDelta(ctx context.Context, before, after *ent.UserRoleBinding) error {
+	beforeBinding, err := r.bindingToPolicyBinding(ctx, before)
+	if err != nil {
+		return err
+	}
+	afterBinding, err := r.bindingToPolicyBinding(ctx, after)
+	if err != nil {
+		return err
+	}
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	_, err = r.data.authClient.ApplyUserRoleBindingDelta(ctx, &authv1.ApplyUserRoleBindingDeltaRequest{
+		SourceService: "admin",
+		Revision:      uint64(time.Now().UnixMilli()),
+		Before:        beforeBinding,
+		After:         afterBinding,
+	})
+	return err
+}
+
+func (r *adminRepo) buildPermissionSnapshotRequest(ctx context.Context) (*authv1.RegisterPermissionSnapshotRequest, error) {
+	roleList, err := r.ListAllRoles(ctx)
+	if err != nil {
+		return nil, err
+	}
+	apiList, _, err := r.GetApiList(ctx, &v1.GetApiPageParams{})
+	if err != nil {
+		return nil, err
+	}
+	bindingList, err := r.ListUserRoleBindings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roleValues, err := r.resolveBindingRoleValues(ctx, bindingList)
+	if err != nil {
+		return nil, err
+	}
+	req := &authv1.RegisterPermissionSnapshotRequest{
+		SourceService: "admin",
+		Revision:      uint64(time.Now().UnixMilli()),
+		Roles:         make([]*authv1.PolicyRole, 0, len(roleList)),
+		Apis:          make([]*authv1.PolicyApi, 0, len(apiList)),
+		Bindings:      make([]*authv1.PolicyUserRoleBinding, 0, len(bindingList)),
+	}
+	for _, roleItem := range roleList {
+		req.Roles = append(req.Roles, roleToPolicyRole(roleItem))
+	}
+	for _, apiItem := range apiList {
+		req.Apis = append(req.Apis, apiToPolicyAPI(apiItem))
+	}
+	for _, binding := range bindingList {
+		req.Bindings = append(req.Bindings, userRoleBindingToPolicyBinding(binding, roleValues[binding.RoleID]))
+	}
+	return req, nil
+}
+
+func (r *adminRepo) resolveBindingRoleValues(ctx context.Context, bindings []*ent.UserRoleBinding) (map[int64]string, error) {
+	roleIDs := make([]int64, 0, len(bindings))
+	seen := make(map[int64]struct{}, len(bindings))
+	for _, binding := range bindings {
+		if binding == nil || binding.RoleID == 0 {
+			continue
+		}
+		if _, ok := seen[binding.RoleID]; ok {
+			continue
+		}
+		seen[binding.RoleID] = struct{}{}
+		roleIDs = append(roleIDs, binding.RoleID)
+	}
+	if len(roleIDs) == 0 {
+		return map[int64]string{}, nil
+	}
+	return r.ResolveRoleValues(ctx, roleIDs)
+}
+
+func (r *adminRepo) roleToPolicyRole(ctx context.Context, item *ent.Role) (*authv1.PolicyRole, error) {
+	if item == nil {
+		return nil, nil
+	}
+	if item.Edges.Resource == nil {
+		roleItem, err := r.data.db.Role.Query().Where(role.IDEQ(item.ID)).WithResource().Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		item = roleItem
+	}
+	return roleToPolicyRole(item), nil
+}
+
+func (r *adminRepo) bindingToPolicyBinding(ctx context.Context, item *ent.UserRoleBinding) (*authv1.PolicyUserRoleBinding, error) {
+	if item == nil {
+		return nil, nil
+	}
+	roleValue := ""
+	if item.RoleID > 0 {
+		values, err := r.ResolveRoleValues(ctx, []int64{item.RoleID})
+		if err != nil {
+			return nil, err
+		}
+		roleValue = values[item.RoleID]
+	}
+	return userRoleBindingToPolicyBinding(item, roleValue), nil
+}
+
+func roleToPolicyRole(item *ent.Role) *authv1.PolicyRole {
+	if item == nil {
+		return nil
+	}
+	resources := make([]*authv1.PolicyRoleResource, 0, len(item.Edges.Resource))
+	for _, resourceItem := range item.Edges.Resource {
+		if resourceItem == nil {
+			continue
+		}
+		resources = append(resources, &authv1.PolicyRoleResource{
+			Id:     resourceItem.ID,
+			Type:   resourceItem.Type,
+			Value:  resourceItem.Value,
+			Method: resourceItem.Method,
+		})
+	}
+	return &authv1.PolicyRole{
+		Id:        item.ID,
+		Name:      item.Name,
+		Value:     item.Value,
+		Status:    item.Status,
+		Remark:    item.Desc,
+		MenuIds:   append([]int32(nil), item.Menus...),
+		Resources: resources,
+	}
+}
+
+func apiToPolicyAPI(item *ent.ApiResources) *authv1.PolicyApi {
+	if item == nil {
+		return nil
+	}
+	return &authv1.PolicyApi{
+		Id:                item.ID,
+		Path:              item.Path,
+		Method:            item.Method,
+		Description:       item.Description,
+		Module:            item.Module,
+		ModuleDescription: item.ModuleDescription,
+		ResourcesGroup:    item.ResourcesGroup,
+	}
+}
+
+func userRoleBindingToPolicyBinding(item *ent.UserRoleBinding, roleValue string) *authv1.PolicyUserRoleBinding {
+	if item == nil {
+		return nil
+	}
+	return &authv1.PolicyUserRoleBinding{
+		Id:         strconv.FormatInt(item.ID, 10),
+		UserId:     item.UserID,
+		RoleId:     item.RoleID,
+		RoleValue:  roleValue,
+		CreateTime: item.CreateTime.Format(time.RFC3339),
+		UpdateTime: item.UpdateTime.Format(time.RFC3339),
+	}
 }
 
 func (r *adminRepo) CreateMenu(ctx context.Context, item *ent.Menu) (*ent.Menu, error) {
@@ -261,6 +660,12 @@ func (r *adminRepo) CreateSysLog(ctx context.Context, item *ent.SysLogRecord) er
 
 func adminTables() []*schema.Table {
 	return []*schema.Table{
+		migrate.SysAPIResourcesTable,
+		migrate.SysResourcesTable,
+		migrate.SysRoleTable,
+		migrate.APIResourcesRolesTable,
+		migrate.ResourceRolesTable,
+		migrate.SysUserRoleBindingTable,
 		migrate.SysMenuTable,
 		migrate.SysDeptTable,
 		migrate.SysLogTable,

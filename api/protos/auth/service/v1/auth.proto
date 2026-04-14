@@ -23,8 +23,6 @@ service AuthService {
     };
   }
 
-  rpc GetCurrentUserMenuAuthority(GetCurrentUserMenuAuthorityRequest) returns (GetCurrentUserMenuAuthorityReply);
-
   rpc CheckAuthorization(CheckAuthorizationRequest) returns (CheckAuthorizationReply);
 
   rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
@@ -43,90 +41,13 @@ service AuthService {
     };
   }
 
-  rpc ReLoadPolicy(google.protobuf.Empty) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      post: "/auth-api/v1/reload-policy"
-      body: "*"
-    };
-  }
+  rpc RegisterPermissionSnapshot(RegisterPermissionSnapshotRequest) returns (google.protobuf.Empty);
 
-  rpc GetRoleList(RolePageParams) returns (GetRoleListByPageReply) {
-    option (google.api.http) = {
-      get: "/auth-api/v1/roles"
-    };
-  }
+  rpc ApplyRoleDelta(ApplyRoleDeltaRequest) returns (google.protobuf.Empty);
 
-  rpc AddRole(RoleListItem) returns (RoleListItem) {
-    option (google.api.http) = {
-      post: "/auth-api/v1/roles"
-      body: "*"
-    };
-  }
+  rpc ApplyApiDelta(ApplyApiDeltaRequest) returns (google.protobuf.Empty);
 
-  rpc UpdateRole(RoleListItem) returns (RoleListItem) {
-    option (google.api.http) = {
-      put: "/auth-api/v1/roles/{id}"
-      body: "*"
-    };
-  }
-
-  rpc DelRole(DeleteRole) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/auth-api/v1/roles/{id}"
-    };
-  }
-
-  rpc GetApiList(GetApiPageParams) returns (GetApiListByPageReply) {
-    option (google.api.http) = {
-      get: "/auth-api/v1/apis"
-    };
-  }
-
-  rpc AddApi(ApiListItem) returns (ApiListItem) {
-    option (google.api.http) = {
-      post: "/auth-api/v1/apis"
-      body: "*"
-    };
-  }
-
-  rpc UpdateApi(ApiListItem) returns (ApiListItem) {
-    option (google.api.http) = {
-      put: "/auth-api/v1/apis/{id}"
-      body: "*"
-    };
-  }
-
-  rpc DelApi(DeleteApi) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/auth-api/v1/apis/{id}"
-    };
-  }
-
-  rpc GetResourceList(GetResourcePageParams) returns (GetResourceListByPageReply) {
-    option (google.api.http) = {
-      get: "/auth-api/v1/resources"
-    };
-  }
-
-  rpc AddResource(ResourceListItem) returns (ResourceListItem) {
-    option (google.api.http) = {
-      post: "/auth-api/v1/resources"
-      body: "*"
-    };
-  }
-
-  rpc UpdateResource(ResourceListItem) returns (ResourceListItem) {
-    option (google.api.http) = {
-      put: "/auth-api/v1/resources/{id}"
-      body: "*"
-    };
-  }
-
-  rpc DelResource(DeleteResource) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/auth-api/v1/resources/{id}"
-    };
-  }
+  rpc ApplyUserRoleBindingDelta(ApplyUserRoleBindingDeltaRequest) returns (google.protobuf.Empty);
 }
 
 message LoginRequest {
@@ -143,15 +64,6 @@ message LoginReply {
 
 message GetAccessCodesReply {
   repeated string access_code_list = 1;
-}
-
-message GetCurrentUserMenuAuthorityRequest {
-  string user_id = 1;
-}
-
-message GetCurrentUserMenuAuthorityReply {
-  bool is_root = 1;
-  repeated int32 menu_ids = 2;
 }
 
 message CheckAuthorizationRequest {
@@ -173,46 +85,24 @@ message GetWalkRouteReply {
   repeated WalkRouteItem items = 1;
 }
 
-message RolePageParams {
-  int64 current_page = 1;
-  int64 page_size = 2;
-  string name = 3;
-  int64 status = 4;
-  string dept_id = 5;
+message PolicyRoleResource {
+  string id = 1;
+  string type = 2;
+  string value = 3;
+  string method = 4;
 }
 
-message RoleListItem {
-  string id = 1;
+message PolicyRole {
+  int64 id = 1;
   string name = 2;
   string value = 3;
-  int32 status = 4;
-  string order_no = 5;
-  string create_time = 6;
-  string remark = 7;
-  repeated int32 permissions = 8;
-  string dept = 9;
-  repeated string api_permissions = 10;
+  bool status = 4;
+  string remark = 5;
+  repeated int32 menu_ids = 6;
+  repeated PolicyRoleResource resources = 7;
 }
 
-message GetRoleListByPageReply {
-  repeated RoleListItem items = 1;
-  int64 total = 2;
-}
-
-message DeleteRole {
-  string id = 1;
-}
-
-message GetApiPageParams {
-  int64 current_page = 1;
-  int64 page_size = 2;
-  string path = 3;
-  string description = 4;
-  string method = 5;
-  string resources_group = 6;
-}
-
-message ApiListItem {
+message PolicyApi {
   string id = 1;
   string path = 2;
   string method = 3;
@@ -222,39 +112,40 @@ message ApiListItem {
   string resources_group = 7;
 }
 
-message GetApiListByPageReply {
-  repeated ApiListItem items = 1;
-  int64 total = 2;
-}
-
-message DeleteApi {
+message PolicyUserRoleBinding {
   string id = 1;
+  string user_id = 2;
+  int64 role_id = 3;
+  string role_value = 4;
+  string create_time = 5;
+  string update_time = 6;
 }
 
-message GetResourcePageParams {
-  int64 current_page = 7;
-  int64 page_size = 8;
-  string name = 2;
-  string type = 3;
-  string value = 4;
-  string method = 5;
-  string description = 6;
+message RegisterPermissionSnapshotRequest {
+  string source_service = 1;
+  uint64 revision = 2;
+  repeated PolicyRole roles = 3;
+  repeated PolicyApi apis = 4;
+  repeated PolicyUserRoleBinding bindings = 5;
 }
 
-message ResourceListItem {
-  string id = 1;
-  string name = 2;
-  string type = 3;
-  string value = 4;
-  string method = 5;
-  string description = 6;
+message ApplyRoleDeltaRequest {
+  string source_service = 1;
+  uint64 revision = 2;
+  PolicyRole before = 3;
+  PolicyRole after = 4;
 }
 
-message GetResourceListByPageReply {
-  repeated ResourceListItem items = 1;
-  int64 total = 2;
+message ApplyApiDeltaRequest {
+  string source_service = 1;
+  uint64 revision = 2;
+  PolicyApi before = 3;
+  PolicyApi after = 4;
 }
 
-message DeleteResource {
-  string id = 1;
+message ApplyUserRoleBindingDeltaRequest {
+  string source_service = 1;
+  uint64 revision = 2;
+  PolicyUserRoleBinding before = 3;
+  PolicyUserRoleBinding after = 4;
 }

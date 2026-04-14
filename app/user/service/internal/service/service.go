@@ -72,10 +72,6 @@ func (s *UserService) GetUserAuthInfo(ctx context.Context, req *v1.GetUserAuthIn
 	return s.uc.GetUserAuthInfo(ctx, req.UserId)
 }
 
-func (s *UserService) ListUserAuthBindings(ctx context.Context, req *emptypb.Empty) (*v1.ListUserAuthBindingsReply, error) {
-	return s.uc.ListUserAuthBindings(ctx)
-}
-
 func (s *UserService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
 	items, err := tools.WalkHTTPRoutes(s.RestServer)
 	if err != nil {

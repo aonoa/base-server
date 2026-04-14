@@ -20,17 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_GetUserInfo_FullMethodName          = "/api.user.service.v1.UserService/GetUserInfo"
-	UserService_GetUserList_FullMethodName          = "/api.user.service.v1.UserService/GetUserList"
-	UserService_AddUser_FullMethodName              = "/api.user.service.v1.UserService/AddUser"
-	UserService_UpdateUser_FullMethodName           = "/api.user.service.v1.UserService/UpdateUser"
-	UserService_DelUser_FullMethodName              = "/api.user.service.v1.UserService/DelUser"
-	UserService_IsUserExist_FullMethodName          = "/api.user.service.v1.UserService/IsUserExist"
-	UserService_ChangePassword_FullMethodName       = "/api.user.service.v1.UserService/ChangePassword"
-	UserService_ValidateUserAuth_FullMethodName     = "/api.user.service.v1.UserService/ValidateUserAuth"
-	UserService_GetUserAuthInfo_FullMethodName      = "/api.user.service.v1.UserService/GetUserAuthInfo"
-	UserService_ListUserAuthBindings_FullMethodName = "/api.user.service.v1.UserService/ListUserAuthBindings"
-	UserService_GetWalkRoute_FullMethodName         = "/api.user.service.v1.UserService/GetWalkRoute"
+	UserService_GetUserInfo_FullMethodName      = "/api.user.service.v1.UserService/GetUserInfo"
+	UserService_GetUserList_FullMethodName      = "/api.user.service.v1.UserService/GetUserList"
+	UserService_AddUser_FullMethodName          = "/api.user.service.v1.UserService/AddUser"
+	UserService_UpdateUser_FullMethodName       = "/api.user.service.v1.UserService/UpdateUser"
+	UserService_DelUser_FullMethodName          = "/api.user.service.v1.UserService/DelUser"
+	UserService_IsUserExist_FullMethodName      = "/api.user.service.v1.UserService/IsUserExist"
+	UserService_ChangePassword_FullMethodName   = "/api.user.service.v1.UserService/ChangePassword"
+	UserService_ValidateUserAuth_FullMethodName = "/api.user.service.v1.UserService/ValidateUserAuth"
+	UserService_GetUserAuthInfo_FullMethodName  = "/api.user.service.v1.UserService/GetUserAuthInfo"
+	UserService_GetWalkRoute_FullMethodName     = "/api.user.service.v1.UserService/GetWalkRoute"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -46,7 +45,6 @@ type UserServiceClient interface {
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ValidateUserAuth(ctx context.Context, in *ValidateUserAuthRequest, opts ...grpc.CallOption) (*ValidateUserAuthReply, error)
 	GetUserAuthInfo(ctx context.Context, in *GetUserAuthInfoRequest, opts ...grpc.CallOption) (*GetUserAuthInfoReply, error)
-	ListUserAuthBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthBindingsReply, error)
 	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
 }
 
@@ -148,16 +146,6 @@ func (c *userServiceClient) GetUserAuthInfo(ctx context.Context, in *GetUserAuth
 	return out, nil
 }
 
-func (c *userServiceClient) ListUserAuthBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserAuthBindingsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListUserAuthBindingsReply)
-	err := c.cc.Invoke(ctx, UserService_ListUserAuthBindings_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetWalkRouteReply)
@@ -181,7 +169,6 @@ type UserServiceServer interface {
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	ValidateUserAuth(context.Context, *ValidateUserAuthRequest) (*ValidateUserAuthReply, error)
 	GetUserAuthInfo(context.Context, *GetUserAuthInfoRequest) (*GetUserAuthInfoReply, error)
-	ListUserAuthBindings(context.Context, *emptypb.Empty) (*ListUserAuthBindingsReply, error)
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -219,9 +206,6 @@ func (UnimplementedUserServiceServer) ValidateUserAuth(context.Context, *Validat
 }
 func (UnimplementedUserServiceServer) GetUserAuthInfo(context.Context, *GetUserAuthInfoRequest) (*GetUserAuthInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserAuthInfo not implemented")
-}
-func (UnimplementedUserServiceServer) ListUserAuthBindings(context.Context, *emptypb.Empty) (*ListUserAuthBindingsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListUserAuthBindings not implemented")
 }
 func (UnimplementedUserServiceServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
@@ -409,24 +393,6 @@ func _UserService_GetUserAuthInfo_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ListUserAuthBindings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ListUserAuthBindings(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ListUserAuthBindings_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUserAuthBindings(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_GetWalkRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -487,10 +453,6 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserAuthInfo",
 			Handler:    _UserService_GetUserAuthInfo_Handler,
-		},
-		{
-			MethodName: "ListUserAuthBindings",
-			Handler:    _UserService_ListUserAuthBindings_Handler,
 		},
 		{
 			MethodName: "GetWalkRoute",
