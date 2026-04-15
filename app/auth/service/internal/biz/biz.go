@@ -246,14 +246,27 @@ func (uc *AuthUsecase) ApplyApiDelta(ctx context.Context, req *v1.ApplyApiDeltaR
 		return kratoserrors.BadRequest("BAD_REQUEST", "api delta requires before or after")
 	}
 	before, after := req.Before, req.After
-	if before != nil && before.Path != "" && before.ResourcesGroup != "" {
-		uc.removeApiGroup(before.Path, before.ResourcesGroup)
-	}
-	if after != nil {
+	switch {
+	case before == nil:
 		if after.Path == "" || after.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
 		}
 		uc.AddApiToGroup(after.Path, after.ResourcesGroup)
+	case after == nil:
+		if before.Path == "" || before.ResourcesGroup == "" {
+			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
+		}
+		uc.removeApiGroup(before.Path, before.ResourcesGroup)
+	default:
+		if before.Path == "" || before.ResourcesGroup == "" {
+			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
+		}
+		if after.Path == "" || after.ResourcesGroup == "" {
+			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
+		}
+		if before.Path != after.Path || before.ResourcesGroup != after.ResourcesGroup {
+			uc.updateApiGroup(before.Path, before.ResourcesGroup, after.Path, after.ResourcesGroup)
+		}
 	}
 	uc.log.Infof("api delta applied source=%s revision=%d before=%s after=%s", req.SourceService, req.Revision, apiDeltaValue(before), apiDeltaValue(after))
 	return nil
@@ -367,9 +380,16 @@ func (uc *AuthUsecase) removeRoleBindings(role string) {
 func (uc *AuthUsecase) updateApiGroup(oldPath, oldGroup, newPath, newGroup string) {
 	oldRule := []string{oldPath, "api:" + oldGroup}
 	newRule := []string{newPath, "api:" + newGroup}
-	if _, err := uc.e.UpdateNamedGroupingPolicy(ApiToGroup, oldRule, newRule); err != nil {
+	updated, err := uc.e.UpdateNamedGroupingPolicy(ApiToGroup, oldRule, newRule)
+	if err != nil {
 		uc.log.Error(err)
+		return
 	}
+	if updated {
+		return
+	}
+	uc.removeApiGroup(oldPath, oldGroup)
+	uc.AddApiToGroup(newPath, newGroup)
 }
 
 func (uc *AuthUsecase) removeApiGroup(apiPath, apiGroup string) {
