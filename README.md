@@ -343,6 +343,7 @@ seed 完成后默认账号：
 
 - `deploy/scripts/seed.sh` 可以重复执行：固定 ID 的基础角色、菜单、用户、API 资源会按 seed 内容更新，关联关系会跳过已存在记录
 - 默认账号 `jack` / `vben` 在重复 seed 时会被归一化到 seed 里的固定记录，避免同名默认账号重复累积
+- `sys_api_resources` 是 API 权限目录主数据；重复 seed 会按 seed 中的 `path/method/resources_group` 更新这张表，从而影响后续 `admin -> auth -> casbin` 投影
 - 如果想回到完全空白的本地环境，建议清理卷后重建：
 
 ```bash
@@ -384,6 +385,23 @@ SELECT MAX(id) FROM casbin_rules;
 SELECT last_value FROM pg_sequences WHERE schemaname = 'public' AND sequencename = 'casbin_rules_id_seq';
 ALTER SEQUENCE casbin_rules_id_seq RESTART WITH {max_id + 1};
 ```
+
+当前权限投影链路说明：
+
+- `auth` 启动时只会从本地 `casbin_rules` 执行 `LoadPolicy()`，不会主动回拉 `admin`
+- `admin` 启动后会主动向 `auth` 注册一次完整权限快照
+- `AddRole/UpdateRole/DelRole`、`AddApi/UpdateApi/DelApi`、`UpsertUserRoleBinding/DeleteUserRoleBinding` 会走增量同步；资源增删改当前仍回退到完整快照
+
+API 权限目录来源说明：
+
+- Casbin 的 API 映射来源于 `admin` 服务维护的 `sys_api_resources`
+- 前端编辑“API 资源列表”里的 `path` 或 `resources_group` 后，会通过 `ApplyApiDelta` 更新 `auth` 里的 `g2` 映射
+- 仅修改 proto、HTTP 路由或 `walk-routes` 返回值，不会自动修改 `sys_api_resources`，因此也不会自动修改 Casbin API 权限
+
+`walk-routes` 说明：
+
+- `/admin-api/v1/walk-routes` 返回的是路由发现结果，不是 Casbin API 主数据
+- 当前它会聚合 `auth/user/common` 的路由，并包含 `admin` 自身路由
 
 ## 故障排查
 
