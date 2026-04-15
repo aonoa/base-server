@@ -522,7 +522,7 @@ func (uc *AdminUsecase) ListMenus(ctx context.Context) (*v1.ListMenusReply, erro
 	return res, nil
 }
 
-func (uc *AdminUsecase) GetWalkRoute(ctx context.Context) (*v1.GetWalkRouteReply, error) {
+func (uc *AdminUsecase) GetWalkRoute(ctx context.Context, selfItems ...tools.WalkRouteItem) (*v1.GetWalkRouteReply, error) {
 	type walkRouteResult struct {
 		items []tools.WalkRouteItem
 		err   error
@@ -555,16 +555,25 @@ func (uc *AdminUsecase) GetWalkRoute(ctx context.Context) (*v1.GetWalkRouteReply
 		}
 		items = append(items, result.items...)
 	}
+	items = append(items, selfItems...)
+	return uc.buildWalkRouteReply(items), nil
+}
+
+func (uc *AdminUsecase) ListSelfWalkRoute(_ context.Context, items []tools.WalkRouteItem) ([]tools.WalkRouteItem, error) {
+	return tools.SortAndUniqueWalkRoutes(items), nil
+}
+
+func (uc *AdminUsecase) BuildWalkRouteReply(items []tools.WalkRouteItem) *v1.GetWalkRouteReply {
+	return uc.buildWalkRouteReply(items)
+}
+
+func (uc *AdminUsecase) buildWalkRouteReply(items []tools.WalkRouteItem) *v1.GetWalkRouteReply {
 	items = tools.SortAndUniqueWalkRoutes(items)
 	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
 	for _, item := range items {
 		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
 	}
-	return res, nil
-}
-
-func (uc *AdminUsecase) ListSelfWalkRoute(ctx context.Context) ([]tools.WalkRouteItem, error) {
-	return nil, nil
+	return res
 }
 
 func (uc *AdminUsecase) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (bool, error) {

@@ -136,7 +136,11 @@ func (s *AdminService) ListMenus(ctx context.Context, req *emptypb.Empty) (*v1.L
 }
 
 func (s *AdminService) GetWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
-	return s.uc.GetWalkRoute(ctx)
+	selfItems, err := tools.WalkHTTPRoutes(s.RestServer)
+	if err != nil {
+		return nil, err
+	}
+	return s.uc.GetWalkRoute(ctx, selfItems...)
 }
 
 func (s *AdminService) GetSelfWalkRoute(ctx context.Context, req *emptypb.Empty) (*v1.GetWalkRouteReply, error) {
@@ -144,11 +148,11 @@ func (s *AdminService) GetSelfWalkRoute(ctx context.Context, req *emptypb.Empty)
 	if err != nil {
 		return nil, err
 	}
-	res := &v1.GetWalkRouteReply{Items: make([]*v1.WalkRouteItem, 0, len(items))}
-	for _, item := range tools.SortAndUniqueWalkRoutes(items) {
-		res.Items = append(res.Items, &v1.WalkRouteItem{Url: item.URL, Method: item.Method})
+	items, err = s.uc.ListSelfWalkRoute(ctx, items)
+	if err != nil {
+		return nil, err
 	}
-	return res, nil
+	return s.uc.BuildWalkRouteReply(items), nil
 }
 
 func (s *AdminService) IsMenuNameExists(ctx context.Context, req *v1.IsMenuNameExistsRequest) (*v1.IsMenuNameExistsReply, error) {
