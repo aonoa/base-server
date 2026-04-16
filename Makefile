@@ -62,6 +62,13 @@ openapi:
 	       --openapi_out=fq_schema_naming=true,default_response=false:./cmd/base-server/assets \
 	       $(API_PROTO_FILES)
 
+.PHONY: frontend-api
+# generate frontend api code from openapi
+frontend-api:
+	cp ./cmd/base-server/assets/openapi.yaml ../vben-admin/openapi.yaml
+	cd ../vben-admin && pnpm run generate:api
+.PHONY: wire
+
 .PHONY: wire
 # wire generate code
 wire:

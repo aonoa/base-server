@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api.base_api.options;
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "base-server/api/base_api/options;options";
+
+// 服务级别的 HTTP 路径前缀
+// 使用示例:
+// service Dip {
+//   option (options.service_http_prefix) = "/basic-api/dip";
+//   rpc GetScheme(...) {
+//     option (google.api.http) = { get: "/scheme" }
+//   }
+// }
+// 最终路径: /basic-api/dip/scheme
+extend google.protobuf.ServiceOptions {
+  // 服务级别的 HTTP 路径前缀
+  optional string service_http_prefix = 50000;
+}
+
+// 方法级别的 HTTP 路径前缀覆盖（可选）
+extend google.protobuf.MethodOptions {
+  // 如果为 true，则不使用服务级别的前缀
+  optional bool skip_service_prefix = 50001;
+  // 方法级别的额外前缀
+  optional string method_http_prefix = 50002;
+}
