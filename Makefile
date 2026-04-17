@@ -69,7 +69,7 @@ openapi:
 .PHONY: frontend-api
 # generate frontend api code from openapi
 frontend-api:
-	cp ./cmd/base-server/assets/openapi.yaml ../vben-admin/openapi.yaml
+	cp ./api/openapi/openapi.yaml ../vben-admin/openapi.yaml
 	cd ../vben-admin && pnpm run generate:api
 .PHONY: wire
 
