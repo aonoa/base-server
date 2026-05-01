@@ -12,6 +12,23 @@ func (c *ApiResourcesCreate) CreateAll(ApiResources *ApiResources) *ApiResources
 	builder = builder.SetModule(ApiResources.Module)
 	builder = builder.SetModuleDescription(ApiResources.ModuleDescription)
 	builder = builder.SetResourcesGroup(ApiResources.ResourcesGroup)
+	builder = builder.SetServiceCode(ApiResources.ServiceCode)
+	builder = builder.SetDomainCode(ApiResources.DomainCode)
+	return builder
+}
+
+// CreateAll creates a new BusinessDomain entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *BusinessDomainCreate) CreateAll(BusinessDomain *BusinessDomain) *BusinessDomainCreate {
+	builder := c
+	builder = builder.SetCode(BusinessDomain.Code)
+	builder = builder.SetName(BusinessDomain.Name)
+	builder = builder.SetOwnerService(BusinessDomain.OwnerService)
+	builder = builder.SetOrgModelType(BusinessDomain.OrgModelType)
+	builder = builder.SetAuthScopeType(BusinessDomain.AuthScopeType)
+	builder = builder.SetStatus(BusinessDomain.Status)
+	builder = builder.SetDescription(BusinessDomain.Description)
+	builder = builder.SetMetaJSON(BusinessDomain.MetaJSON)
 	return builder
 }
 
@@ -68,6 +85,21 @@ func (c *MenuCreate) CreateAll(Menu *Menu) *MenuCreate {
 	return builder
 }
 
+// CreateAll creates a new ProjectionSourceStatus entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *ProjectionSourceStatusCreate) CreateAll(ProjectionSourceStatus *ProjectionSourceStatus) *ProjectionSourceStatusCreate {
+	builder := c
+	builder = builder.SetSourceService(ProjectionSourceStatus.SourceService)
+	builder = builder.SetDomainCode(ProjectionSourceStatus.DomainCode)
+	builder = builder.SetSyncMode(ProjectionSourceStatus.SyncMode)
+	builder = builder.SetState(ProjectionSourceStatus.State)
+	builder = builder.SetLastSnapshotRevision(ProjectionSourceStatus.LastSnapshotRevision)
+	builder = builder.SetLastSyncTime(ProjectionSourceStatus.LastSyncTime)
+	builder = builder.SetLastError(ProjectionSourceStatus.LastError)
+	builder = builder.SetDescription(ProjectionSourceStatus.Description)
+	return builder
+}
+
 // CreateAll creates a new Resource entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *ResourceCreate) CreateAll(Resource *Resource) *ResourceCreate {
@@ -89,6 +121,21 @@ func (c *RoleCreate) CreateAll(Role *Role) *RoleCreate {
 	builder = builder.SetStatus(Role.Status)
 	builder = builder.SetDesc(Role.Desc)
 	builder = builder.SetMenus(Role.Menus)
+	return builder
+}
+
+// CreateAll creates a new ServiceRegistry entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *ServiceRegistryCreate) CreateAll(ServiceRegistry *ServiceRegistry) *ServiceRegistryCreate {
+	builder := c
+	builder = builder.SetServiceCode(ServiceRegistry.ServiceCode)
+	builder = builder.SetServiceName(ServiceRegistry.ServiceName)
+	builder = builder.SetDomainCode(ServiceRegistry.DomainCode)
+	builder = builder.SetHTTPPrefix(ServiceRegistry.HTTPPrefix)
+	builder = builder.SetGrpcService(ServiceRegistry.GrpcService)
+	builder = builder.SetStatus(ServiceRegistry.Status)
+	builder = builder.SetProjectionEnabled(ServiceRegistry.ProjectionEnabled)
+	builder = builder.SetDescription(ServiceRegistry.Description)
 	return builder
 }
 

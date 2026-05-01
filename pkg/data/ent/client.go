@@ -12,10 +12,13 @@ import (
 	"base-server/pkg/data/ent/migrate"
 
 	"base-server/pkg/data/ent/apiresources"
+	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
+	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
+	"base-server/pkg/data/ent/serviceregistry"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -34,14 +37,20 @@ type Client struct {
 	Schema *migrate.Schema
 	// ApiResources is the client for interacting with the ApiResources builders.
 	ApiResources *ApiResourcesClient
+	// BusinessDomain is the client for interacting with the BusinessDomain builders.
+	BusinessDomain *BusinessDomainClient
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// ProjectionSourceStatus is the client for interacting with the ProjectionSourceStatus builders.
+	ProjectionSourceStatus *ProjectionSourceStatusClient
 	// Resource is the client for interacting with the Resource builders.
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// ServiceRegistry is the client for interacting with the ServiceRegistry builders.
+	ServiceRegistry *ServiceRegistryClient
 	// SysLogRecord is the client for interacting with the SysLogRecord builders.
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
@@ -60,10 +69,13 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.ApiResources = NewApiResourcesClient(c.config)
+	c.BusinessDomain = NewBusinessDomainClient(c.config)
 	c.Dept = NewDeptClient(c.config)
 	c.Menu = NewMenuClient(c.config)
+	c.ProjectionSourceStatus = NewProjectionSourceStatusClient(c.config)
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
+	c.ServiceRegistry = NewServiceRegistryClient(c.config)
 	c.SysLogRecord = NewSysLogRecordClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserRoleBinding = NewUserRoleBindingClient(c.config)
@@ -157,16 +169,19 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:             ctx,
-		config:          cfg,
-		ApiResources:    NewApiResourcesClient(cfg),
-		Dept:            NewDeptClient(cfg),
-		Menu:            NewMenuClient(cfg),
-		Resource:        NewResourceClient(cfg),
-		Role:            NewRoleClient(cfg),
-		SysLogRecord:    NewSysLogRecordClient(cfg),
-		User:            NewUserClient(cfg),
-		UserRoleBinding: NewUserRoleBindingClient(cfg),
+		ctx:                    ctx,
+		config:                 cfg,
+		ApiResources:           NewApiResourcesClient(cfg),
+		BusinessDomain:         NewBusinessDomainClient(cfg),
+		Dept:                   NewDeptClient(cfg),
+		Menu:                   NewMenuClient(cfg),
+		ProjectionSourceStatus: NewProjectionSourceStatusClient(cfg),
+		Resource:               NewResourceClient(cfg),
+		Role:                   NewRoleClient(cfg),
+		ServiceRegistry:        NewServiceRegistryClient(cfg),
+		SysLogRecord:           NewSysLogRecordClient(cfg),
+		User:                   NewUserClient(cfg),
+		UserRoleBinding:        NewUserRoleBindingClient(cfg),
 	}, nil
 }
 
@@ -184,16 +199,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:             ctx,
-		config:          cfg,
-		ApiResources:    NewApiResourcesClient(cfg),
-		Dept:            NewDeptClient(cfg),
-		Menu:            NewMenuClient(cfg),
-		Resource:        NewResourceClient(cfg),
-		Role:            NewRoleClient(cfg),
-		SysLogRecord:    NewSysLogRecordClient(cfg),
-		User:            NewUserClient(cfg),
-		UserRoleBinding: NewUserRoleBindingClient(cfg),
+		ctx:                    ctx,
+		config:                 cfg,
+		ApiResources:           NewApiResourcesClient(cfg),
+		BusinessDomain:         NewBusinessDomainClient(cfg),
+		Dept:                   NewDeptClient(cfg),
+		Menu:                   NewMenuClient(cfg),
+		ProjectionSourceStatus: NewProjectionSourceStatusClient(cfg),
+		Resource:               NewResourceClient(cfg),
+		Role:                   NewRoleClient(cfg),
+		ServiceRegistry:        NewServiceRegistryClient(cfg),
+		SysLogRecord:           NewSysLogRecordClient(cfg),
+		User:                   NewUserClient(cfg),
+		UserRoleBinding:        NewUserRoleBindingClient(cfg),
 	}, nil
 }
 
@@ -223,7 +241,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
+		c.Resource, c.Role, c.ServiceRegistry, c.SysLogRecord, c.User,
 		c.UserRoleBinding,
 	} {
 		n.Use(hooks...)
@@ -234,7 +253,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
+		c.Resource, c.Role, c.ServiceRegistry, c.SysLogRecord, c.User,
 		c.UserRoleBinding,
 	} {
 		n.Intercept(interceptors...)
@@ -246,14 +266,20 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *ApiResourcesMutation:
 		return c.ApiResources.mutate(ctx, m)
+	case *BusinessDomainMutation:
+		return c.BusinessDomain.mutate(ctx, m)
 	case *DeptMutation:
 		return c.Dept.mutate(ctx, m)
 	case *MenuMutation:
 		return c.Menu.mutate(ctx, m)
+	case *ProjectionSourceStatusMutation:
+		return c.ProjectionSourceStatus.mutate(ctx, m)
 	case *ResourceMutation:
 		return c.Resource.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
+	case *ServiceRegistryMutation:
+		return c.ServiceRegistry.mutate(ctx, m)
 	case *SysLogRecordMutation:
 		return c.SysLogRecord.mutate(ctx, m)
 	case *UserMutation:
@@ -411,6 +437,139 @@ func (c *ApiResourcesClient) mutate(ctx context.Context, m *ApiResourcesMutation
 		return (&ApiResourcesDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown ApiResources mutation op: %q", m.Op())
+	}
+}
+
+// BusinessDomainClient is a client for the BusinessDomain schema.
+type BusinessDomainClient struct {
+	config
+}
+
+// NewBusinessDomainClient returns a client for the BusinessDomain from the given config.
+func NewBusinessDomainClient(c config) *BusinessDomainClient {
+	return &BusinessDomainClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `businessdomain.Hooks(f(g(h())))`.
+func (c *BusinessDomainClient) Use(hooks ...Hook) {
+	c.hooks.BusinessDomain = append(c.hooks.BusinessDomain, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `businessdomain.Intercept(f(g(h())))`.
+func (c *BusinessDomainClient) Intercept(interceptors ...Interceptor) {
+	c.inters.BusinessDomain = append(c.inters.BusinessDomain, interceptors...)
+}
+
+// Create returns a builder for creating a BusinessDomain entity.
+func (c *BusinessDomainClient) Create() *BusinessDomainCreate {
+	mutation := newBusinessDomainMutation(c.config, OpCreate)
+	return &BusinessDomainCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of BusinessDomain entities.
+func (c *BusinessDomainClient) CreateBulk(builders ...*BusinessDomainCreate) *BusinessDomainCreateBulk {
+	return &BusinessDomainCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *BusinessDomainClient) MapCreateBulk(slice any, setFunc func(*BusinessDomainCreate, int)) *BusinessDomainCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &BusinessDomainCreateBulk{err: fmt.Errorf("calling to BusinessDomainClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*BusinessDomainCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &BusinessDomainCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for BusinessDomain.
+func (c *BusinessDomainClient) Update() *BusinessDomainUpdate {
+	mutation := newBusinessDomainMutation(c.config, OpUpdate)
+	return &BusinessDomainUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *BusinessDomainClient) UpdateOne(_m *BusinessDomain) *BusinessDomainUpdateOne {
+	mutation := newBusinessDomainMutation(c.config, OpUpdateOne, withBusinessDomain(_m))
+	return &BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *BusinessDomainClient) UpdateOneID(id string) *BusinessDomainUpdateOne {
+	mutation := newBusinessDomainMutation(c.config, OpUpdateOne, withBusinessDomainID(id))
+	return &BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for BusinessDomain.
+func (c *BusinessDomainClient) Delete() *BusinessDomainDelete {
+	mutation := newBusinessDomainMutation(c.config, OpDelete)
+	return &BusinessDomainDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *BusinessDomainClient) DeleteOne(_m *BusinessDomain) *BusinessDomainDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *BusinessDomainClient) DeleteOneID(id string) *BusinessDomainDeleteOne {
+	builder := c.Delete().Where(businessdomain.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &BusinessDomainDeleteOne{builder}
+}
+
+// Query returns a query builder for BusinessDomain.
+func (c *BusinessDomainClient) Query() *BusinessDomainQuery {
+	return &BusinessDomainQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeBusinessDomain},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a BusinessDomain entity by its id.
+func (c *BusinessDomainClient) Get(ctx context.Context, id string) (*BusinessDomain, error) {
+	return c.Query().Where(businessdomain.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *BusinessDomainClient) GetX(ctx context.Context, id string) *BusinessDomain {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *BusinessDomainClient) Hooks() []Hook {
+	return c.hooks.BusinessDomain
+}
+
+// Interceptors returns the client interceptors.
+func (c *BusinessDomainClient) Interceptors() []Interceptor {
+	return c.inters.BusinessDomain
+}
+
+func (c *BusinessDomainClient) mutate(ctx context.Context, m *BusinessDomainMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&BusinessDomainCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&BusinessDomainUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&BusinessDomainDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown BusinessDomain mutation op: %q", m.Op())
 	}
 }
 
@@ -709,6 +868,139 @@ func (c *MenuClient) mutate(ctx context.Context, m *MenuMutation) (Value, error)
 		return (&MenuDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Menu mutation op: %q", m.Op())
+	}
+}
+
+// ProjectionSourceStatusClient is a client for the ProjectionSourceStatus schema.
+type ProjectionSourceStatusClient struct {
+	config
+}
+
+// NewProjectionSourceStatusClient returns a client for the ProjectionSourceStatus from the given config.
+func NewProjectionSourceStatusClient(c config) *ProjectionSourceStatusClient {
+	return &ProjectionSourceStatusClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `projectionsourcestatus.Hooks(f(g(h())))`.
+func (c *ProjectionSourceStatusClient) Use(hooks ...Hook) {
+	c.hooks.ProjectionSourceStatus = append(c.hooks.ProjectionSourceStatus, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `projectionsourcestatus.Intercept(f(g(h())))`.
+func (c *ProjectionSourceStatusClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ProjectionSourceStatus = append(c.inters.ProjectionSourceStatus, interceptors...)
+}
+
+// Create returns a builder for creating a ProjectionSourceStatus entity.
+func (c *ProjectionSourceStatusClient) Create() *ProjectionSourceStatusCreate {
+	mutation := newProjectionSourceStatusMutation(c.config, OpCreate)
+	return &ProjectionSourceStatusCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ProjectionSourceStatus entities.
+func (c *ProjectionSourceStatusClient) CreateBulk(builders ...*ProjectionSourceStatusCreate) *ProjectionSourceStatusCreateBulk {
+	return &ProjectionSourceStatusCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ProjectionSourceStatusClient) MapCreateBulk(slice any, setFunc func(*ProjectionSourceStatusCreate, int)) *ProjectionSourceStatusCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ProjectionSourceStatusCreateBulk{err: fmt.Errorf("calling to ProjectionSourceStatusClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ProjectionSourceStatusCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ProjectionSourceStatusCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ProjectionSourceStatus.
+func (c *ProjectionSourceStatusClient) Update() *ProjectionSourceStatusUpdate {
+	mutation := newProjectionSourceStatusMutation(c.config, OpUpdate)
+	return &ProjectionSourceStatusUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ProjectionSourceStatusClient) UpdateOne(_m *ProjectionSourceStatus) *ProjectionSourceStatusUpdateOne {
+	mutation := newProjectionSourceStatusMutation(c.config, OpUpdateOne, withProjectionSourceStatus(_m))
+	return &ProjectionSourceStatusUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ProjectionSourceStatusClient) UpdateOneID(id string) *ProjectionSourceStatusUpdateOne {
+	mutation := newProjectionSourceStatusMutation(c.config, OpUpdateOne, withProjectionSourceStatusID(id))
+	return &ProjectionSourceStatusUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ProjectionSourceStatus.
+func (c *ProjectionSourceStatusClient) Delete() *ProjectionSourceStatusDelete {
+	mutation := newProjectionSourceStatusMutation(c.config, OpDelete)
+	return &ProjectionSourceStatusDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ProjectionSourceStatusClient) DeleteOne(_m *ProjectionSourceStatus) *ProjectionSourceStatusDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ProjectionSourceStatusClient) DeleteOneID(id string) *ProjectionSourceStatusDeleteOne {
+	builder := c.Delete().Where(projectionsourcestatus.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ProjectionSourceStatusDeleteOne{builder}
+}
+
+// Query returns a query builder for ProjectionSourceStatus.
+func (c *ProjectionSourceStatusClient) Query() *ProjectionSourceStatusQuery {
+	return &ProjectionSourceStatusQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeProjectionSourceStatus},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ProjectionSourceStatus entity by its id.
+func (c *ProjectionSourceStatusClient) Get(ctx context.Context, id string) (*ProjectionSourceStatus, error) {
+	return c.Query().Where(projectionsourcestatus.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ProjectionSourceStatusClient) GetX(ctx context.Context, id string) *ProjectionSourceStatus {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ProjectionSourceStatusClient) Hooks() []Hook {
+	return c.hooks.ProjectionSourceStatus
+}
+
+// Interceptors returns the client interceptors.
+func (c *ProjectionSourceStatusClient) Interceptors() []Interceptor {
+	return c.inters.ProjectionSourceStatus
+}
+
+func (c *ProjectionSourceStatusClient) mutate(ctx context.Context, m *ProjectionSourceStatusMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProjectionSourceStatusCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProjectionSourceStatusUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProjectionSourceStatusUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProjectionSourceStatusDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ProjectionSourceStatus mutation op: %q", m.Op())
 	}
 }
 
@@ -1023,6 +1315,139 @@ func (c *RoleClient) mutate(ctx context.Context, m *RoleMutation) (Value, error)
 		return (&RoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Role mutation op: %q", m.Op())
+	}
+}
+
+// ServiceRegistryClient is a client for the ServiceRegistry schema.
+type ServiceRegistryClient struct {
+	config
+}
+
+// NewServiceRegistryClient returns a client for the ServiceRegistry from the given config.
+func NewServiceRegistryClient(c config) *ServiceRegistryClient {
+	return &ServiceRegistryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `serviceregistry.Hooks(f(g(h())))`.
+func (c *ServiceRegistryClient) Use(hooks ...Hook) {
+	c.hooks.ServiceRegistry = append(c.hooks.ServiceRegistry, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `serviceregistry.Intercept(f(g(h())))`.
+func (c *ServiceRegistryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ServiceRegistry = append(c.inters.ServiceRegistry, interceptors...)
+}
+
+// Create returns a builder for creating a ServiceRegistry entity.
+func (c *ServiceRegistryClient) Create() *ServiceRegistryCreate {
+	mutation := newServiceRegistryMutation(c.config, OpCreate)
+	return &ServiceRegistryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ServiceRegistry entities.
+func (c *ServiceRegistryClient) CreateBulk(builders ...*ServiceRegistryCreate) *ServiceRegistryCreateBulk {
+	return &ServiceRegistryCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ServiceRegistryClient) MapCreateBulk(slice any, setFunc func(*ServiceRegistryCreate, int)) *ServiceRegistryCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ServiceRegistryCreateBulk{err: fmt.Errorf("calling to ServiceRegistryClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ServiceRegistryCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ServiceRegistryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ServiceRegistry.
+func (c *ServiceRegistryClient) Update() *ServiceRegistryUpdate {
+	mutation := newServiceRegistryMutation(c.config, OpUpdate)
+	return &ServiceRegistryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ServiceRegistryClient) UpdateOne(_m *ServiceRegistry) *ServiceRegistryUpdateOne {
+	mutation := newServiceRegistryMutation(c.config, OpUpdateOne, withServiceRegistry(_m))
+	return &ServiceRegistryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ServiceRegistryClient) UpdateOneID(id string) *ServiceRegistryUpdateOne {
+	mutation := newServiceRegistryMutation(c.config, OpUpdateOne, withServiceRegistryID(id))
+	return &ServiceRegistryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ServiceRegistry.
+func (c *ServiceRegistryClient) Delete() *ServiceRegistryDelete {
+	mutation := newServiceRegistryMutation(c.config, OpDelete)
+	return &ServiceRegistryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ServiceRegistryClient) DeleteOne(_m *ServiceRegistry) *ServiceRegistryDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ServiceRegistryClient) DeleteOneID(id string) *ServiceRegistryDeleteOne {
+	builder := c.Delete().Where(serviceregistry.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ServiceRegistryDeleteOne{builder}
+}
+
+// Query returns a query builder for ServiceRegistry.
+func (c *ServiceRegistryClient) Query() *ServiceRegistryQuery {
+	return &ServiceRegistryQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeServiceRegistry},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ServiceRegistry entity by its id.
+func (c *ServiceRegistryClient) Get(ctx context.Context, id string) (*ServiceRegistry, error) {
+	return c.Query().Where(serviceregistry.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ServiceRegistryClient) GetX(ctx context.Context, id string) *ServiceRegistry {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ServiceRegistryClient) Hooks() []Hook {
+	return c.hooks.ServiceRegistry
+}
+
+// Interceptors returns the client interceptors.
+func (c *ServiceRegistryClient) Interceptors() []Interceptor {
+	return c.inters.ServiceRegistry
+}
+
+func (c *ServiceRegistryClient) mutate(ctx context.Context, m *ServiceRegistryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ServiceRegistryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ServiceRegistryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ServiceRegistryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ServiceRegistryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ServiceRegistry mutation op: %q", m.Op())
 	}
 }
 
@@ -1428,11 +1853,11 @@ func (c *UserRoleBindingClient) mutate(ctx context.Context, m *UserRoleBindingMu
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User,
-		UserRoleBinding []ent.Hook
+		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
+		Role, ServiceRegistry, SysLogRecord, User, UserRoleBinding []ent.Hook
 	}
 	inters struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User,
-		UserRoleBinding []ent.Interceptor
+		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
+		Role, ServiceRegistry, SysLogRecord, User, UserRoleBinding []ent.Interceptor
 	}
 )

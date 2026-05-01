@@ -96,9 +96,17 @@ service AdminService {
 
   rpc ResolveRoleValues(ResolveRoleValuesRequest) returns (ResolveRoleValuesReply);
 
-  rpc GetUserRoleBinding(GetUserRoleBindingRequest) returns (UserRoleBindingItem);
+  rpc GetUserRoleBinding(GetUserRoleBindingRequest) returns (UserRoleBindingItem) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/user-role-bindings/{user_id}"
+    };
+  }
 
-  rpc ListUserRoleBindings(google.protobuf.Empty) returns (ListUserRoleBindingsReply);
+  rpc ListUserRoleBindings(google.protobuf.Empty) returns (ListUserRoleBindingsReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/user-role-bindings"
+    };
+  }
 
   rpc UpsertUserRoleBinding(UserRoleBindingItem) returns (UserRoleBindingItem) {
     option (google.api.http) = {
@@ -193,6 +201,91 @@ service AdminService {
     };
   }
 
+  rpc GetBusinessDomainList(google.protobuf.Empty) returns (GetBusinessDomainListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/platform/domains"
+    };
+  }
+
+  rpc AddBusinessDomain(BusinessDomainItem) returns (BusinessDomainItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/platform/domains"
+      body: "*"
+    };
+  }
+
+  rpc UpdateBusinessDomain(BusinessDomainItem) returns (BusinessDomainItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/platform/domains/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteBusinessDomain(DeleteBusinessDomainRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/platform/domains/{id}"
+    };
+  }
+
+  rpc GetServiceRegistryList(google.protobuf.Empty) returns (GetServiceRegistryListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/platform/services"
+    };
+  }
+
+  rpc AddServiceRegistry(ServiceRegistryItem) returns (ServiceRegistryItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/platform/services"
+      body: "*"
+    };
+  }
+
+  rpc UpdateServiceRegistry(ServiceRegistryItem) returns (ServiceRegistryItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/platform/services/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteServiceRegistry(DeleteServiceRegistryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/platform/services/{id}"
+    };
+  }
+
+  rpc GetProjectionSourceStatusList(google.protobuf.Empty) returns (GetProjectionSourceStatusListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/platform/projection-sources"
+    };
+  }
+
+  rpc AddProjectionSourceStatus(ProjectionSourceStatusItem) returns (ProjectionSourceStatusItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/platform/projection-sources"
+      body: "*"
+    };
+  }
+
+  rpc UpdateProjectionSourceStatus(ProjectionSourceStatusItem) returns (ProjectionSourceStatusItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/platform/projection-sources/{id}"
+      body: "*"
+    };
+  }
+
+  rpc ReportProjectionSourceStatus(ProjectionSourceStatusItem) returns (ProjectionSourceStatusItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/platform/projection-sources/report/{source_service}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteProjectionSourceStatus(DeleteProjectionSourceStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/platform/projection-sources/{id}"
+    };
+  }
+
   rpc CreateSysLog(CreateSysLogRequest) returns (google.protobuf.Empty);
 
   rpc GetSysLogList(GetSysLogListParams) returns (GetSysLogListReply) {
@@ -266,6 +359,8 @@ message GetApiPageParams {
   string description = 4;
   string method = 5;
   string resources_group = 6;
+  string service_code = 7;
+  string domain_code = 8;
 }
 
 message ApiListItem {
@@ -276,6 +371,8 @@ message ApiListItem {
   string module = 5;
   string module_description = 6;
   string resources_group = 7;
+  string service_code = 8;
+  string domain_code = 9;
 }
 
 message GetApiListByPageReply {
@@ -344,6 +441,8 @@ message AuthApiItem {
   string module = 5;
   string module_description = 6;
   string resources_group = 7;
+  string service_code = 8;
+  string domain_code = 9;
 }
 
 message GetAuthApiCatalogReply {
@@ -377,6 +476,7 @@ message UserRoleBindingItem {
   int64 role_id = 3;
   string create_time = 4;
   string update_time = 5;
+  repeated int64 role_ids = 6;
 }
 
 message ListUserRoleBindingsReply {
@@ -503,6 +603,72 @@ message IsMenuPathExistsReply {
 
 message DeleteMenuRequest {
   int64 id = 1;
+}
+
+message BusinessDomainItem {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  string owner_service = 4;
+  string org_model_type = 5;
+  string auth_scope_type = 6;
+  int32 status = 7;
+  string description = 8;
+  string meta_json = 9;
+  string create_time = 10;
+}
+
+message GetBusinessDomainListReply {
+  repeated BusinessDomainItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteBusinessDomainRequest {
+  string id = 1;
+}
+
+message ServiceRegistryItem {
+  string id = 1;
+  string service_code = 2;
+  string service_name = 3;
+  string domain_code = 4;
+  string http_prefix = 5;
+  string grpc_service = 6;
+  int32 status = 7;
+  bool projection_enabled = 8;
+  string description = 9;
+  string create_time = 10;
+}
+
+message GetServiceRegistryListReply {
+  repeated ServiceRegistryItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteServiceRegistryRequest {
+  string id = 1;
+}
+
+message ProjectionSourceStatusItem {
+  string id = 1;
+  string source_service = 2;
+  string domain_code = 3;
+  string sync_mode = 4;
+  string state = 5;
+  uint64 last_snapshot_revision = 6;
+  string last_sync_time = 7;
+  string last_error = 8;
+  string description = 9;
+  string create_time = 10;
+}
+
+message GetProjectionSourceStatusListReply {
+  repeated ProjectionSourceStatusItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteProjectionSourceStatusRequest {
+  string id = 1;
 }
 
 message CreateSysLogRequest {

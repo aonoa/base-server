@@ -20,43 +20,56 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AdminService_GetRoleList_FullMethodName           = "/api.admin.service.v1.AdminService/GetRoleList"
-	AdminService_AddRole_FullMethodName               = "/api.admin.service.v1.AdminService/AddRole"
-	AdminService_UpdateRole_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateRole"
-	AdminService_DelRole_FullMethodName               = "/api.admin.service.v1.AdminService/DelRole"
-	AdminService_GetApiList_FullMethodName            = "/api.admin.service.v1.AdminService/GetApiList"
-	AdminService_AddApi_FullMethodName                = "/api.admin.service.v1.AdminService/AddApi"
-	AdminService_UpdateApi_FullMethodName             = "/api.admin.service.v1.AdminService/UpdateApi"
-	AdminService_DelApi_FullMethodName                = "/api.admin.service.v1.AdminService/DelApi"
-	AdminService_GetResourceList_FullMethodName       = "/api.admin.service.v1.AdminService/GetResourceList"
-	AdminService_AddResource_FullMethodName           = "/api.admin.service.v1.AdminService/AddResource"
-	AdminService_UpdateResource_FullMethodName        = "/api.admin.service.v1.AdminService/UpdateResource"
-	AdminService_DelResource_FullMethodName           = "/api.admin.service.v1.AdminService/DelResource"
-	AdminService_GetAuthRoleCatalog_FullMethodName    = "/api.admin.service.v1.AdminService/GetAuthRoleCatalog"
-	AdminService_GetAuthApiCatalog_FullMethodName     = "/api.admin.service.v1.AdminService/GetAuthApiCatalog"
-	AdminService_GetAuthRole_FullMethodName           = "/api.admin.service.v1.AdminService/GetAuthRole"
-	AdminService_ResolveRoleValues_FullMethodName     = "/api.admin.service.v1.AdminService/ResolveRoleValues"
-	AdminService_GetUserRoleBinding_FullMethodName    = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
-	AdminService_ListUserRoleBindings_FullMethodName  = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
-	AdminService_UpsertUserRoleBinding_FullMethodName = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
-	AdminService_DeleteUserRoleBinding_FullMethodName = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
-	AdminService_GetDeptList_FullMethodName           = "/api.admin.service.v1.AdminService/GetDeptList"
-	AdminService_AddDept_FullMethodName               = "/api.admin.service.v1.AdminService/AddDept"
-	AdminService_UpdateDept_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateDept"
-	AdminService_DelDept_FullMethodName               = "/api.admin.service.v1.AdminService/DelDept"
-	AdminService_GetCurrentUserMenus_FullMethodName   = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
-	AdminService_GetSysMenuList_FullMethodName        = "/api.admin.service.v1.AdminService/GetSysMenuList"
-	AdminService_ListMenus_FullMethodName             = "/api.admin.service.v1.AdminService/ListMenus"
-	AdminService_GetWalkRoute_FullMethodName          = "/api.admin.service.v1.AdminService/GetWalkRoute"
-	AdminService_GetSelfWalkRoute_FullMethodName      = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
-	AdminService_IsMenuNameExists_FullMethodName      = "/api.admin.service.v1.AdminService/IsMenuNameExists"
-	AdminService_IsMenuPathExists_FullMethodName      = "/api.admin.service.v1.AdminService/IsMenuPathExists"
-	AdminService_CreateMenu_FullMethodName            = "/api.admin.service.v1.AdminService/CreateMenu"
-	AdminService_UpdateMenu_FullMethodName            = "/api.admin.service.v1.AdminService/UpdateMenu"
-	AdminService_DeleteMenu_FullMethodName            = "/api.admin.service.v1.AdminService/DeleteMenu"
-	AdminService_CreateSysLog_FullMethodName          = "/api.admin.service.v1.AdminService/CreateSysLog"
-	AdminService_GetSysLogList_FullMethodName         = "/api.admin.service.v1.AdminService/GetSysLogList"
-	AdminService_GetSysLogInfo_FullMethodName         = "/api.admin.service.v1.AdminService/GetSysLogInfo"
+	AdminService_GetRoleList_FullMethodName                   = "/api.admin.service.v1.AdminService/GetRoleList"
+	AdminService_AddRole_FullMethodName                       = "/api.admin.service.v1.AdminService/AddRole"
+	AdminService_UpdateRole_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateRole"
+	AdminService_DelRole_FullMethodName                       = "/api.admin.service.v1.AdminService/DelRole"
+	AdminService_GetApiList_FullMethodName                    = "/api.admin.service.v1.AdminService/GetApiList"
+	AdminService_AddApi_FullMethodName                        = "/api.admin.service.v1.AdminService/AddApi"
+	AdminService_UpdateApi_FullMethodName                     = "/api.admin.service.v1.AdminService/UpdateApi"
+	AdminService_DelApi_FullMethodName                        = "/api.admin.service.v1.AdminService/DelApi"
+	AdminService_GetResourceList_FullMethodName               = "/api.admin.service.v1.AdminService/GetResourceList"
+	AdminService_AddResource_FullMethodName                   = "/api.admin.service.v1.AdminService/AddResource"
+	AdminService_UpdateResource_FullMethodName                = "/api.admin.service.v1.AdminService/UpdateResource"
+	AdminService_DelResource_FullMethodName                   = "/api.admin.service.v1.AdminService/DelResource"
+	AdminService_GetAuthRoleCatalog_FullMethodName            = "/api.admin.service.v1.AdminService/GetAuthRoleCatalog"
+	AdminService_GetAuthApiCatalog_FullMethodName             = "/api.admin.service.v1.AdminService/GetAuthApiCatalog"
+	AdminService_GetAuthRole_FullMethodName                   = "/api.admin.service.v1.AdminService/GetAuthRole"
+	AdminService_ResolveRoleValues_FullMethodName             = "/api.admin.service.v1.AdminService/ResolveRoleValues"
+	AdminService_GetUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
+	AdminService_ListUserRoleBindings_FullMethodName          = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
+	AdminService_UpsertUserRoleBinding_FullMethodName         = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
+	AdminService_DeleteUserRoleBinding_FullMethodName         = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
+	AdminService_GetDeptList_FullMethodName                   = "/api.admin.service.v1.AdminService/GetDeptList"
+	AdminService_AddDept_FullMethodName                       = "/api.admin.service.v1.AdminService/AddDept"
+	AdminService_UpdateDept_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateDept"
+	AdminService_DelDept_FullMethodName                       = "/api.admin.service.v1.AdminService/DelDept"
+	AdminService_GetCurrentUserMenus_FullMethodName           = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
+	AdminService_GetSysMenuList_FullMethodName                = "/api.admin.service.v1.AdminService/GetSysMenuList"
+	AdminService_ListMenus_FullMethodName                     = "/api.admin.service.v1.AdminService/ListMenus"
+	AdminService_GetWalkRoute_FullMethodName                  = "/api.admin.service.v1.AdminService/GetWalkRoute"
+	AdminService_GetSelfWalkRoute_FullMethodName              = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
+	AdminService_IsMenuNameExists_FullMethodName              = "/api.admin.service.v1.AdminService/IsMenuNameExists"
+	AdminService_IsMenuPathExists_FullMethodName              = "/api.admin.service.v1.AdminService/IsMenuPathExists"
+	AdminService_CreateMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/CreateMenu"
+	AdminService_UpdateMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateMenu"
+	AdminService_DeleteMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/DeleteMenu"
+	AdminService_GetBusinessDomainList_FullMethodName         = "/api.admin.service.v1.AdminService/GetBusinessDomainList"
+	AdminService_AddBusinessDomain_FullMethodName             = "/api.admin.service.v1.AdminService/AddBusinessDomain"
+	AdminService_UpdateBusinessDomain_FullMethodName          = "/api.admin.service.v1.AdminService/UpdateBusinessDomain"
+	AdminService_DeleteBusinessDomain_FullMethodName          = "/api.admin.service.v1.AdminService/DeleteBusinessDomain"
+	AdminService_GetServiceRegistryList_FullMethodName        = "/api.admin.service.v1.AdminService/GetServiceRegistryList"
+	AdminService_AddServiceRegistry_FullMethodName            = "/api.admin.service.v1.AdminService/AddServiceRegistry"
+	AdminService_UpdateServiceRegistry_FullMethodName         = "/api.admin.service.v1.AdminService/UpdateServiceRegistry"
+	AdminService_DeleteServiceRegistry_FullMethodName         = "/api.admin.service.v1.AdminService/DeleteServiceRegistry"
+	AdminService_GetProjectionSourceStatusList_FullMethodName = "/api.admin.service.v1.AdminService/GetProjectionSourceStatusList"
+	AdminService_AddProjectionSourceStatus_FullMethodName     = "/api.admin.service.v1.AdminService/AddProjectionSourceStatus"
+	AdminService_UpdateProjectionSourceStatus_FullMethodName  = "/api.admin.service.v1.AdminService/UpdateProjectionSourceStatus"
+	AdminService_ReportProjectionSourceStatus_FullMethodName  = "/api.admin.service.v1.AdminService/ReportProjectionSourceStatus"
+	AdminService_DeleteProjectionSourceStatus_FullMethodName  = "/api.admin.service.v1.AdminService/DeleteProjectionSourceStatus"
+	AdminService_CreateSysLog_FullMethodName                  = "/api.admin.service.v1.AdminService/CreateSysLog"
+	AdminService_GetSysLogList_FullMethodName                 = "/api.admin.service.v1.AdminService/GetSysLogList"
+	AdminService_GetSysLogInfo_FullMethodName                 = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -97,6 +110,19 @@ type AdminServiceClient interface {
 	CreateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateMenu(ctx context.Context, in *SysMenuListItem, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetBusinessDomainList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetBusinessDomainListReply, error)
+	AddBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...grpc.CallOption) (*BusinessDomainItem, error)
+	UpdateBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...grpc.CallOption) (*BusinessDomainItem, error)
+	DeleteBusinessDomain(ctx context.Context, in *DeleteBusinessDomainRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetServiceRegistryList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetServiceRegistryListReply, error)
+	AddServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...grpc.CallOption) (*ServiceRegistryItem, error)
+	UpdateServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...grpc.CallOption) (*ServiceRegistryItem, error)
+	DeleteServiceRegistry(ctx context.Context, in *DeleteServiceRegistryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetProjectionSourceStatusList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetProjectionSourceStatusListReply, error)
+	AddProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error)
+	UpdateProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error)
+	ReportProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error)
+	DeleteProjectionSourceStatus(ctx context.Context, in *DeleteProjectionSourceStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateSysLog(ctx context.Context, in *CreateSysLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error)
 	GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...grpc.CallOption) (*GetSysLogInfoReply, error)
@@ -450,6 +476,136 @@ func (c *adminServiceClient) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 	return out, nil
 }
 
+func (c *adminServiceClient) GetBusinessDomainList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetBusinessDomainListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBusinessDomainListReply)
+	err := c.cc.Invoke(ctx, AdminService_GetBusinessDomainList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...grpc.CallOption) (*BusinessDomainItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BusinessDomainItem)
+	err := c.cc.Invoke(ctx, AdminService_AddBusinessDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...grpc.CallOption) (*BusinessDomainItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BusinessDomainItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateBusinessDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteBusinessDomain(ctx context.Context, in *DeleteBusinessDomainRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DeleteBusinessDomain_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetServiceRegistryList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetServiceRegistryListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetServiceRegistryListReply)
+	err := c.cc.Invoke(ctx, AdminService_GetServiceRegistryList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...grpc.CallOption) (*ServiceRegistryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ServiceRegistryItem)
+	err := c.cc.Invoke(ctx, AdminService_AddServiceRegistry_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...grpc.CallOption) (*ServiceRegistryItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ServiceRegistryItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateServiceRegistry_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteServiceRegistry(ctx context.Context, in *DeleteServiceRegistryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DeleteServiceRegistry_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetProjectionSourceStatusList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetProjectionSourceStatusListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProjectionSourceStatusListReply)
+	err := c.cc.Invoke(ctx, AdminService_GetProjectionSourceStatusList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectionSourceStatusItem)
+	err := c.cc.Invoke(ctx, AdminService_AddProjectionSourceStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectionSourceStatusItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateProjectionSourceStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ReportProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...grpc.CallOption) (*ProjectionSourceStatusItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProjectionSourceStatusItem)
+	err := c.cc.Invoke(ctx, AdminService_ReportProjectionSourceStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteProjectionSourceStatus(ctx context.Context, in *DeleteProjectionSourceStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DeleteProjectionSourceStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminServiceClient) CreateSysLog(ctx context.Context, in *CreateSysLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -518,6 +674,19 @@ type AdminServiceServer interface {
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	GetBusinessDomainList(context.Context, *emptypb.Empty) (*GetBusinessDomainListReply, error)
+	AddBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error)
+	UpdateBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error)
+	DeleteBusinessDomain(context.Context, *DeleteBusinessDomainRequest) (*emptypb.Empty, error)
+	GetServiceRegistryList(context.Context, *emptypb.Empty) (*GetServiceRegistryListReply, error)
+	AddServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error)
+	UpdateServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error)
+	DeleteServiceRegistry(context.Context, *DeleteServiceRegistryRequest) (*emptypb.Empty, error)
+	GetProjectionSourceStatusList(context.Context, *emptypb.Empty) (*GetProjectionSourceStatusListReply, error)
+	AddProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
+	UpdateProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
+	ReportProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
+	DeleteProjectionSourceStatus(context.Context, *DeleteProjectionSourceStatusRequest) (*emptypb.Empty, error)
 	CreateSysLog(context.Context, *CreateSysLogRequest) (*emptypb.Empty, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
@@ -632,6 +801,45 @@ func (UnimplementedAdminServiceServer) UpdateMenu(context.Context, *SysMenuListI
 }
 func (UnimplementedAdminServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedAdminServiceServer) GetBusinessDomainList(context.Context, *emptypb.Empty) (*GetBusinessDomainListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBusinessDomainList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBusinessDomain not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBusinessDomain not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteBusinessDomain(context.Context, *DeleteBusinessDomainRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBusinessDomain not implemented")
+}
+func (UnimplementedAdminServiceServer) GetServiceRegistryList(context.Context, *emptypb.Empty) (*GetServiceRegistryListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetServiceRegistryList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddServiceRegistry not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateServiceRegistry not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteServiceRegistry(context.Context, *DeleteServiceRegistryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteServiceRegistry not implemented")
+}
+func (UnimplementedAdminServiceServer) GetProjectionSourceStatusList(context.Context, *emptypb.Empty) (*GetProjectionSourceStatusListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProjectionSourceStatusList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddProjectionSourceStatus not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProjectionSourceStatus not implemented")
+}
+func (UnimplementedAdminServiceServer) ReportProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReportProjectionSourceStatus not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteProjectionSourceStatus(context.Context, *DeleteProjectionSourceStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProjectionSourceStatus not implemented")
 }
 func (UnimplementedAdminServiceServer) CreateSysLog(context.Context, *CreateSysLogRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSysLog not implemented")
@@ -1275,6 +1483,240 @@ func _AdminService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_GetBusinessDomainList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetBusinessDomainList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetBusinessDomainList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetBusinessDomainList(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddBusinessDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BusinessDomainItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddBusinessDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddBusinessDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddBusinessDomain(ctx, req.(*BusinessDomainItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateBusinessDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BusinessDomainItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateBusinessDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateBusinessDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateBusinessDomain(ctx, req.(*BusinessDomainItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteBusinessDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBusinessDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteBusinessDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteBusinessDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteBusinessDomain(ctx, req.(*DeleteBusinessDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetServiceRegistryList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetServiceRegistryList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetServiceRegistryList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetServiceRegistryList(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddServiceRegistry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ServiceRegistryItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddServiceRegistry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddServiceRegistry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddServiceRegistry(ctx, req.(*ServiceRegistryItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateServiceRegistry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ServiceRegistryItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateServiceRegistry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateServiceRegistry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateServiceRegistry(ctx, req.(*ServiceRegistryItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteServiceRegistry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteServiceRegistryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteServiceRegistry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteServiceRegistry_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteServiceRegistry(ctx, req.(*DeleteServiceRegistryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetProjectionSourceStatusList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetProjectionSourceStatusList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetProjectionSourceStatusList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetProjectionSourceStatusList(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddProjectionSourceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectionSourceStatusItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddProjectionSourceStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddProjectionSourceStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateProjectionSourceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectionSourceStatusItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateProjectionSourceStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateProjectionSourceStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ReportProjectionSourceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProjectionSourceStatusItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ReportProjectionSourceStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ReportProjectionSourceStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ReportProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteProjectionSourceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProjectionSourceStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteProjectionSourceStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteProjectionSourceStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteProjectionSourceStatus(ctx, req.(*DeleteProjectionSourceStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AdminService_CreateSysLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateSysLogRequest)
 	if err := dec(in); err != nil {
@@ -1471,6 +1913,58 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMenu",
 			Handler:    _AdminService_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "GetBusinessDomainList",
+			Handler:    _AdminService_GetBusinessDomainList_Handler,
+		},
+		{
+			MethodName: "AddBusinessDomain",
+			Handler:    _AdminService_AddBusinessDomain_Handler,
+		},
+		{
+			MethodName: "UpdateBusinessDomain",
+			Handler:    _AdminService_UpdateBusinessDomain_Handler,
+		},
+		{
+			MethodName: "DeleteBusinessDomain",
+			Handler:    _AdminService_DeleteBusinessDomain_Handler,
+		},
+		{
+			MethodName: "GetServiceRegistryList",
+			Handler:    _AdminService_GetServiceRegistryList_Handler,
+		},
+		{
+			MethodName: "AddServiceRegistry",
+			Handler:    _AdminService_AddServiceRegistry_Handler,
+		},
+		{
+			MethodName: "UpdateServiceRegistry",
+			Handler:    _AdminService_UpdateServiceRegistry_Handler,
+		},
+		{
+			MethodName: "DeleteServiceRegistry",
+			Handler:    _AdminService_DeleteServiceRegistry_Handler,
+		},
+		{
+			MethodName: "GetProjectionSourceStatusList",
+			Handler:    _AdminService_GetProjectionSourceStatusList_Handler,
+		},
+		{
+			MethodName: "AddProjectionSourceStatus",
+			Handler:    _AdminService_AddProjectionSourceStatus_Handler,
+		},
+		{
+			MethodName: "UpdateProjectionSourceStatus",
+			Handler:    _AdminService_UpdateProjectionSourceStatus_Handler,
+		},
+		{
+			MethodName: "ReportProjectionSourceStatus",
+			Handler:    _AdminService_ReportProjectionSourceStatus_Handler,
+		},
+		{
+			MethodName: "DeleteProjectionSourceStatus",
+			Handler:    _AdminService_DeleteProjectionSourceStatus_Handler,
 		},
 		{
 			MethodName: "CreateSysLog",

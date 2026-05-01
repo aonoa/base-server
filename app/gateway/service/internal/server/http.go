@@ -7,9 +7,9 @@ import (
 
 	adminv1 "base-server/api/gen/go/admin/service/v1"
 	authv1 "base-server/api/gen/go/auth/service/v1"
+	"base-server/app/gateway/service/internal/conf"
 	gwcasbin "base-server/app/gateway/service/internal/middleware/casbin"
 	gwhttplog "base-server/app/gateway/service/internal/middleware/httplog"
-	"base-server/app/gateway/service/internal/conf"
 
 	gwconfigv1 "github.com/go-kratos/gateway/api/gateway/config/v1"
 	"github.com/go-kratos/gateway/client"
@@ -39,6 +39,12 @@ func NewProxyServer(c *conf.Server, gc *conf.Gateway, services *conf.Services, c
 			return nil
 		}
 		return clients.Auth
+	})
+	gwcasbin.SetAdminClient(func() adminv1.AdminServiceClient {
+		if clients == nil {
+			return nil
+		}
+		return clients.Admin
 	})
 	gwhttplog.SetAdminClient(func() adminv1.AdminServiceClient {
 		if clients == nil {

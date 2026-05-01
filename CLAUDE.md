@@ -46,9 +46,9 @@ This is a Kratos-based Go backend with protobuf-first APIs, Ent for persistence,
 
 ### Active services
 - `gateway` — external HTTP entrypoint, endpoint routing, edge middleware
-- `auth` — login, refresh, Casbin policy rebuild, role/api/resource management
+- `auth` — login, refresh, Casbin policy execution, authorization projection loading
 - `user` — user CRUD, profile, password, auth identity data
-- `admin` — menu, dept, syslog
+- `admin` — platform governance, API catalog, projection source status, menu, dept, syslog
 - `common` — upload, SSE, LLM integration
 
 ### High-level flow
@@ -119,10 +119,11 @@ Edit these source locations instead:
 ## Common change workflows
 
 ### Adding or changing an API
-1. Choose the split service proto under `api/protos/*/service/v1/` that owns the domain.
+1. Choose the split service proto under `api/protos/*/service/v1/` that technically serves the API.
 2. Edit that proto file.
 3. Run `make api`.
 4. Update the matching handler under `app/*/service/internal/service/`.
+5. Keep API catalog ownership consistent: one `path + method` has exactly one business `domain_code` owner; `service_code` is only the technical serving/routing service. See `docs/api-ownership.md`.
 
 ### Changing config
 1. Edit the target service’s `app/<service>/service/internal/conf/conf.proto`.

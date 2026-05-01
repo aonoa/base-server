@@ -192,6 +192,11 @@ type CheckAuthorizationRequest struct {
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
 	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`
+	Service       string                 `protobuf:"bytes,4,opt,name=service,proto3" json:"service,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,5,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
+	DomainCode    string                 `protobuf:"bytes,6,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
+	ResourceGroup string                 `protobuf:"bytes,7,opt,name=resource_group,json=resourceGroup,proto3" json:"resource_group,omitempty"`
+	Action        string                 `protobuf:"bytes,8,opt,name=action,proto3" json:"action,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -243,6 +248,41 @@ func (x *CheckAuthorizationRequest) GetPath() string {
 func (x *CheckAuthorizationRequest) GetMethod() string {
 	if x != nil {
 		return x.Method
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetDomainCode() string {
+	if x != nil {
+		return x.DomainCode
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetResourceGroup() string {
+	if x != nil {
+		return x.ResourceGroup
+	}
+	return ""
+}
+
+func (x *CheckAuthorizationRequest) GetAction() string {
+	if x != nil {
+		return x.Action
 	}
 	return ""
 }
@@ -464,6 +504,8 @@ type PolicyRole struct {
 	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
 	MenuIds       []int32                `protobuf:"varint,6,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`
 	Resources     []*PolicyRoleResource  `protobuf:"bytes,7,rep,name=resources,proto3" json:"resources,omitempty"`
+	Service       string                 `protobuf:"bytes,8,opt,name=service,proto3" json:"service,omitempty"`
+	DomainCode    string                 `protobuf:"bytes,9,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -547,6 +589,20 @@ func (x *PolicyRole) GetResources() []*PolicyRoleResource {
 	return nil
 }
 
+func (x *PolicyRole) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *PolicyRole) GetDomainCode() string {
+	if x != nil {
+		return x.DomainCode
+	}
+	return ""
+}
+
 type PolicyApi struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -556,6 +612,8 @@ type PolicyApi struct {
 	Module            string                 `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`
 	ModuleDescription string                 `protobuf:"bytes,6,opt,name=module_description,json=moduleDescription,proto3" json:"module_description,omitempty"`
 	ResourcesGroup    string                 `protobuf:"bytes,7,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`
+	Service           string                 `protobuf:"bytes,8,opt,name=service,proto3" json:"service,omitempty"`
+	DomainCode        string                 `protobuf:"bytes,9,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -639,6 +697,20 @@ func (x *PolicyApi) GetResourcesGroup() string {
 	return ""
 }
 
+func (x *PolicyApi) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *PolicyApi) GetDomainCode() string {
+	if x != nil {
+		return x.DomainCode
+	}
+	return ""
+}
+
 type PolicyUserRoleBinding struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -647,6 +719,9 @@ type PolicyUserRoleBinding struct {
 	RoleValue     string                 `protobuf:"bytes,4,opt,name=role_value,json=roleValue,proto3" json:"role_value,omitempty"`
 	CreateTime    string                 `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	UpdateTime    string                 `protobuf:"bytes,6,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	Service       string                 `protobuf:"bytes,7,opt,name=service,proto3" json:"service,omitempty"`
+	ScopeId       string                 `protobuf:"bytes,8,opt,name=scope_id,json=scopeId,proto3" json:"scope_id,omitempty"`
+	DomainCode    string                 `protobuf:"bytes,9,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -719,6 +794,27 @@ func (x *PolicyUserRoleBinding) GetCreateTime() string {
 func (x *PolicyUserRoleBinding) GetUpdateTime() string {
 	if x != nil {
 		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetService() string {
+	if x != nil {
+		return x.Service
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetScopeId() string {
+	if x != nil {
+		return x.ScopeId
+	}
+	return ""
+}
+
+func (x *PolicyUserRoleBinding) GetDomainCode() string {
+	if x != nil {
+		return x.DomainCode
 	}
 	return ""
 }
@@ -1019,11 +1115,17 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x04 \x01(\tR\tsessionId\"?\n" +
 	"\x13GetAccessCodesReply\x12(\n" +
-	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"`\n" +
+	"\x10access_code_list\x18\x01 \x03(\tR\x0eaccessCodeList\"\xf5\x01\n" +
 	"\x19CheckAuthorizationRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
-	"\x06method\x18\x03 \x01(\tR\x06method\"3\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\x12\x18\n" +
+	"\aservice\x18\x04 \x01(\tR\aservice\x12\x19\n" +
+	"\bscope_id\x18\x05 \x01(\tR\ascopeId\x12\x1f\n" +
+	"\vdomain_code\x18\x06 \x01(\tR\n" +
+	"domainCode\x12%\n" +
+	"\x0eresource_group\x18\a \x01(\tR\rresourceGroup\x12\x16\n" +
+	"\x06action\x18\b \x01(\tR\x06action\"3\n" +
 	"\x17CheckAuthorizationReply\x12\x18\n" +
 	"\aallowed\x18\x01 \x01(\bR\aallowed\"9\n" +
 	"\rWalkRouteItem\x12\x10\n" +
@@ -1035,7 +1137,7 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\tR\x04type\x12\x14\n" +
 	"\x05value\x18\x03 \x01(\tR\x05value\x12\x16\n" +
-	"\x06method\x18\x04 \x01(\tR\x06method\"\xd8\x01\n" +
+	"\x06method\x18\x04 \x01(\tR\x06method\"\x93\x02\n" +
 	"\n" +
 	"PolicyRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
@@ -1044,7 +1146,10 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\x06status\x18\x04 \x01(\bR\x06status\x12\x16\n" +
 	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x19\n" +
 	"\bmenu_ids\x18\x06 \x03(\x05R\amenuIds\x12E\n" +
-	"\tresources\x18\a \x03(\v2'.api.auth.service.v1.PolicyRoleResourceR\tresources\"\xd9\x01\n" +
+	"\tresources\x18\a \x03(\v2'.api.auth.service.v1.PolicyRoleResourceR\tresources\x12\x18\n" +
+	"\aservice\x18\b \x01(\tR\aservice\x12\x1f\n" +
+	"\vdomain_code\x18\t \x01(\tR\n" +
+	"domainCode\"\x94\x02\n" +
 	"\tPolicyApi\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
@@ -1052,7 +1157,10 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06module\x18\x05 \x01(\tR\x06module\x12-\n" +
 	"\x12module_description\x18\x06 \x01(\tR\x11moduleDescription\x12'\n" +
-	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"\xba\x01\n" +
+	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\x12\x18\n" +
+	"\aservice\x18\b \x01(\tR\aservice\x12\x1f\n" +
+	"\vdomain_code\x18\t \x01(\tR\n" +
+	"domainCode\"\x90\x02\n" +
 	"\x15PolicyUserRoleBinding\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x17\n" +
@@ -1062,7 +1170,11 @@ const file_auth_service_v1_auth_proto_rawDesc = "" +
 	"\vcreate_time\x18\x05 \x01(\tR\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\x06 \x01(\tR\n" +
-	"updateTime\"\x99\x02\n" +
+	"updateTime\x12\x18\n" +
+	"\aservice\x18\a \x01(\tR\aservice\x12\x19\n" +
+	"\bscope_id\x18\b \x01(\tR\ascopeId\x12\x1f\n" +
+	"\vdomain_code\x18\t \x01(\tR\n" +
+	"domainCode\"\x99\x02\n" +
 	"!RegisterPermissionSnapshotRequest\x12%\n" +
 	"\x0esource_service\x18\x01 \x01(\tR\rsourceService\x12\x1a\n" +
 	"\brevision\x18\x02 \x01(\x04R\brevision\x125\n" +

@@ -4,10 +4,13 @@ package ent
 
 import (
 	"base-server/pkg/data/ent/apiresources"
+	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
+	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
+	"base-server/pkg/data/ent/serviceregistry"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -80,14 +83,17 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			apiresources.Table:    apiresources.ValidColumn,
-			dept.Table:            dept.ValidColumn,
-			menu.Table:            menu.ValidColumn,
-			resource.Table:        resource.ValidColumn,
-			role.Table:            role.ValidColumn,
-			syslogrecord.Table:    syslogrecord.ValidColumn,
-			user.Table:            user.ValidColumn,
-			userrolebinding.Table: userrolebinding.ValidColumn,
+			apiresources.Table:           apiresources.ValidColumn,
+			businessdomain.Table:         businessdomain.ValidColumn,
+			dept.Table:                   dept.ValidColumn,
+			menu.Table:                   menu.ValidColumn,
+			projectionsourcestatus.Table: projectionsourcestatus.ValidColumn,
+			resource.Table:               resource.ValidColumn,
+			role.Table:                   role.ValidColumn,
+			serviceregistry.Table:        serviceregistry.ValidColumn,
+			syslogrecord.Table:           syslogrecord.ValidColumn,
+			user.Table:                   user.ValidColumn,
+			userrolebinding.Table:        userrolebinding.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

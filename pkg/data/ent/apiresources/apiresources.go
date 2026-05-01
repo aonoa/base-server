@@ -30,6 +30,10 @@ const (
 	FieldModuleDescription = "module_description"
 	// FieldResourcesGroup holds the string denoting the resources_group field in the database.
 	FieldResourcesGroup = "resources_group"
+	// FieldServiceCode holds the string denoting the service_code field in the database.
+	FieldServiceCode = "service_code"
+	// FieldDomainCode holds the string denoting the domain_code field in the database.
+	FieldDomainCode = "domain_code"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// Table holds the table name of the apiresources in the database.
@@ -52,6 +56,8 @@ var Columns = []string{
 	FieldModule,
 	FieldModuleDescription,
 	FieldResourcesGroup,
+	FieldServiceCode,
+	FieldDomainCode,
 }
 
 var (
@@ -77,6 +83,10 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultServiceCode holds the default value on creation for the "service_code" field.
+	DefaultServiceCode string
+	// DefaultDomainCode holds the default value on creation for the "domain_code" field.
+	DefaultDomainCode string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )
@@ -127,6 +137,16 @@ func ByModuleDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByResourcesGroup orders the results by the resources_group field.
 func ByResourcesGroup(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldResourcesGroup, opts...).ToFunc()
+}
+
+// ByServiceCode orders the results by the service_code field.
+func ByServiceCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldServiceCode, opts...).ToFunc()
+}
+
+// ByDomainCode orders the results by the domain_code field.
+func ByDomainCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDomainCode, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

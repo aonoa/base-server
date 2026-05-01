@@ -36,6 +36,14 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: serviceCode
+                  in: query
+                  schema:
+                    type: string
+                - name: domainCode
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -378,6 +386,231 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/platform/domains:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetBusinessDomainList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetBusinessDomainListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_AddBusinessDomain
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.BusinessDomainItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.BusinessDomainItem'
+    /admin-api/v1/platform/domains/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateBusinessDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.BusinessDomainItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.BusinessDomainItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DeleteBusinessDomain
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin-api/v1/platform/projection-sources:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetProjectionSourceStatusList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetProjectionSourceStatusListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_AddProjectionSourceStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+    /admin-api/v1/platform/projection-sources/report/{sourceService}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_ReportProjectionSourceStatus
+            parameters:
+                - name: sourceService
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+    /admin-api/v1/platform/projection-sources/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateProjectionSourceStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DeleteProjectionSourceStatus
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin-api/v1/platform/services:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetServiceRegistryList
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetServiceRegistryListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_AddServiceRegistry
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.ServiceRegistryItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ServiceRegistryItem'
+    /admin-api/v1/platform/services/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateServiceRegistry
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.ServiceRegistryItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ServiceRegistryItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DeleteServiceRegistry
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /admin-api/v1/resources:
         get:
             tags:
@@ -562,7 +795,36 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/user-role-bindings:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_ListUserRoleBindings
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.ListUserRoleBindingsReply'
     /admin-api/v1/user-role-bindings/{userId}:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetUserRoleBinding
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.UserRoleBindingItem'
         put:
             tags:
                 - AdminService
@@ -879,6 +1141,34 @@ components:
                     type: string
                 resourcesGroup:
                     type: string
+                serviceCode:
+                    type: string
+                domainCode:
+                    type: string
+        api.admin.service.v1.BusinessDomainItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                code:
+                    type: string
+                name:
+                    type: string
+                ownerService:
+                    type: string
+                orgModelType:
+                    type: string
+                authScopeType:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                description:
+                    type: string
+                metaJson:
+                    type: string
+                createTime:
+                    type: string
         api.admin.service.v1.CurrentUserMenuItem:
             type: object
             properties:
@@ -944,6 +1234,15 @@ components:
                         $ref: '#/components/schemas/api.admin.service.v1.ApiListItem'
                 total:
                     type: string
+        api.admin.service.v1.GetBusinessDomainListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.BusinessDomainItem'
+                total:
+                    type: string
         api.admin.service.v1.GetCurrentUserMenusReply:
             type: object
             properties:
@@ -958,6 +1257,15 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetProjectionSourceStatusListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.ProjectionSourceStatusItem'
                 total:
                     type: string
         api.admin.service.v1.GetResourceListByPageReply:
@@ -976,6 +1284,15 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.RoleListItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetServiceRegistryListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.ServiceRegistryItem'
                 total:
                     type: string
         api.admin.service.v1.GetSysLogInfoReply:
@@ -1061,6 +1378,13 @@ components:
             properties:
                 data:
                     type: boolean
+        api.admin.service.v1.ListUserRoleBindingsReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.UserRoleBindingItem'
         api.admin.service.v1.Meta:
             type: object
             properties:
@@ -1110,6 +1434,29 @@ components:
                     type: array
                     items:
                         type: string
+        api.admin.service.v1.ProjectionSourceStatusItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                sourceService:
+                    type: string
+                domainCode:
+                    type: string
+                syncMode:
+                    type: string
+                state:
+                    type: string
+                lastSnapshotRevision:
+                    type: string
+                lastSyncTime:
+                    type: string
+                lastError:
+                    type: string
+                description:
+                    type: string
+                createTime:
+                    type: string
         api.admin.service.v1.ResourceListItem:
             type: object
             properties:
@@ -1154,6 +1501,30 @@ components:
                     type: array
                     items:
                         type: string
+        api.admin.service.v1.ServiceRegistryItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                serviceCode:
+                    type: string
+                serviceName:
+                    type: string
+                domainCode:
+                    type: string
+                httpPrefix:
+                    type: string
+                grpcService:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                projectionEnabled:
+                    type: boolean
+                description:
+                    type: string
+                createTime:
+                    type: string
         api.admin.service.v1.SysLogItem:
             type: object
             properties:
@@ -1228,6 +1599,10 @@ components:
                     type: string
                 updateTime:
                     type: string
+                roleIds:
+                    type: array
+                    items:
+                        type: string
         api.admin.service.v1.WalkRouteItem:
             type: object
             properties:

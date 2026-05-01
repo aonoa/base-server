@@ -85,6 +85,34 @@ func (_c *ApiResourcesCreate) SetResourcesGroup(v string) *ApiResourcesCreate {
 	return _c
 }
 
+// SetServiceCode sets the "service_code" field.
+func (_c *ApiResourcesCreate) SetServiceCode(v string) *ApiResourcesCreate {
+	_c.mutation.SetServiceCode(v)
+	return _c
+}
+
+// SetNillableServiceCode sets the "service_code" field if the given value is not nil.
+func (_c *ApiResourcesCreate) SetNillableServiceCode(v *string) *ApiResourcesCreate {
+	if v != nil {
+		_c.SetServiceCode(*v)
+	}
+	return _c
+}
+
+// SetDomainCode sets the "domain_code" field.
+func (_c *ApiResourcesCreate) SetDomainCode(v string) *ApiResourcesCreate {
+	_c.mutation.SetDomainCode(v)
+	return _c
+}
+
+// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
+func (_c *ApiResourcesCreate) SetNillableDomainCode(v *string) *ApiResourcesCreate {
+	if v != nil {
+		_c.SetDomainCode(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *ApiResourcesCreate) SetID(v string) *ApiResourcesCreate {
 	_c.mutation.SetID(v)
@@ -157,6 +185,14 @@ func (_c *ApiResourcesCreate) defaults() {
 		v := apiresources.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
+	if _, ok := _c.mutation.ServiceCode(); !ok {
+		v := apiresources.DefaultServiceCode
+		_c.mutation.SetServiceCode(v)
+	}
+	if _, ok := _c.mutation.DomainCode(); !ok {
+		v := apiresources.DefaultDomainCode
+		_c.mutation.SetDomainCode(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := apiresources.DefaultID()
 		_c.mutation.SetID(v)
@@ -188,6 +224,12 @@ func (_c *ApiResourcesCreate) check() error {
 	}
 	if _, ok := _c.mutation.ResourcesGroup(); !ok {
 		return &ValidationError{Name: "resources_group", err: errors.New(`ent: missing required field "ApiResources.resources_group"`)}
+	}
+	if _, ok := _c.mutation.ServiceCode(); !ok {
+		return &ValidationError{Name: "service_code", err: errors.New(`ent: missing required field "ApiResources.service_code"`)}
+	}
+	if _, ok := _c.mutation.DomainCode(); !ok {
+		return &ValidationError{Name: "domain_code", err: errors.New(`ent: missing required field "ApiResources.domain_code"`)}
 	}
 	return nil
 }
@@ -255,6 +297,14 @@ func (_c *ApiResourcesCreate) createSpec() (*ApiResources, *sqlgraph.CreateSpec)
 	if value, ok := _c.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
 		_node.ResourcesGroup = value
+	}
+	if value, ok := _c.mutation.ServiceCode(); ok {
+		_spec.SetField(apiresources.FieldServiceCode, field.TypeString, value)
+		_node.ServiceCode = value
+	}
+	if value, ok := _c.mutation.DomainCode(); ok {
+		_spec.SetField(apiresources.FieldDomainCode, field.TypeString, value)
+		_node.DomainCode = value
 	}
 	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

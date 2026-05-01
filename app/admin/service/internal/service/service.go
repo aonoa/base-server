@@ -183,6 +183,58 @@ func (s *AdminService) DeleteMenu(ctx context.Context, req *v1.DeleteMenuRequest
 	return &emptypb.Empty{}, s.uc.DeleteMenu(ctx, req)
 }
 
+func (s *AdminService) GetBusinessDomainList(ctx context.Context, req *emptypb.Empty) (*v1.GetBusinessDomainListReply, error) {
+	return s.uc.GetBusinessDomainList(ctx)
+}
+
+func (s *AdminService) AddBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
+	return s.uc.AddBusinessDomain(ctx, req)
+}
+
+func (s *AdminService) UpdateBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
+	return s.uc.UpdateBusinessDomain(ctx, req)
+}
+
+func (s *AdminService) DeleteBusinessDomain(ctx context.Context, req *v1.DeleteBusinessDomainRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DeleteBusinessDomain(ctx, req.Id)
+}
+
+func (s *AdminService) GetServiceRegistryList(ctx context.Context, req *emptypb.Empty) (*v1.GetServiceRegistryListReply, error) {
+	return s.uc.GetServiceRegistryList(ctx)
+}
+
+func (s *AdminService) AddServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
+	return s.uc.AddServiceRegistry(ctx, req)
+}
+
+func (s *AdminService) UpdateServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
+	return s.uc.UpdateServiceRegistry(ctx, req)
+}
+
+func (s *AdminService) DeleteServiceRegistry(ctx context.Context, req *v1.DeleteServiceRegistryRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DeleteServiceRegistry(ctx, req.Id)
+}
+
+func (s *AdminService) GetProjectionSourceStatusList(ctx context.Context, req *emptypb.Empty) (*v1.GetProjectionSourceStatusListReply, error) {
+	return s.uc.GetProjectionSourceStatusList(ctx)
+}
+
+func (s *AdminService) AddProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	return s.uc.AddProjectionSourceStatus(ctx, req)
+}
+
+func (s *AdminService) UpdateProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	return s.uc.UpdateProjectionSourceStatus(ctx, req)
+}
+
+func (s *AdminService) ReportProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	return s.uc.ReportProjectionSourceStatus(ctx, req)
+}
+
+func (s *AdminService) DeleteProjectionSourceStatus(ctx context.Context, req *v1.DeleteProjectionSourceStatusRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DeleteProjectionSourceStatus(ctx, req.Id)
+}
+
 func (s *AdminService) CreateSysLog(ctx context.Context, req *v1.CreateSysLogRequest) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.uc.CreateSysLog(ctx, req)
 }

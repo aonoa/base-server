@@ -16,6 +16,27 @@ func (u *ApiResourcesUpdateOne) UpdateAll(apiresources *ApiResources) *ApiResour
 	update = update.SetModule(apiresources.Module)
 	update = update.SetModuleDescription(apiresources.ModuleDescription)
 	update = update.SetResourcesGroup(apiresources.ResourcesGroup)
+	update = update.SetServiceCode(apiresources.ServiceCode)
+	update = update.SetDomainCode(apiresources.DomainCode)
+	return update
+}
+
+// UpdateAll updates all mutable fields of the BusinessDomain entity (excluding create_time, update_time and immutable fields).
+func (u *BusinessDomainUpdateOne) UpdateAll(businessdomain *BusinessDomain) *BusinessDomainUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if businessdomain == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetCode(businessdomain.Code)
+	update = update.SetName(businessdomain.Name)
+	update = update.SetOwnerService(businessdomain.OwnerService)
+	update = update.SetOrgModelType(businessdomain.OrgModelType)
+	update = update.SetAuthScopeType(businessdomain.AuthScopeType)
+	update = update.SetStatus(businessdomain.Status)
+	update = update.SetDescription(businessdomain.Description)
+	update = update.SetMetaJSON(businessdomain.MetaJSON)
 	return update
 }
 
@@ -80,6 +101,25 @@ func (u *MenuUpdateOne) UpdateAll(menu *Menu) *MenuUpdateOne {
 	return update
 }
 
+// UpdateAll updates all mutable fields of the ProjectionSourceStatus entity (excluding create_time, update_time and immutable fields).
+func (u *ProjectionSourceStatusUpdateOne) UpdateAll(projectionsourcestatus *ProjectionSourceStatus) *ProjectionSourceStatusUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if projectionsourcestatus == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetSourceService(projectionsourcestatus.SourceService)
+	update = update.SetDomainCode(projectionsourcestatus.DomainCode)
+	update = update.SetSyncMode(projectionsourcestatus.SyncMode)
+	update = update.SetState(projectionsourcestatus.State)
+	update = update.SetLastSnapshotRevision(projectionsourcestatus.LastSnapshotRevision)
+	update = update.SetLastSyncTime(projectionsourcestatus.LastSyncTime)
+	update = update.SetLastError(projectionsourcestatus.LastError)
+	update = update.SetDescription(projectionsourcestatus.Description)
+	return update
+}
+
 // UpdateAll updates all mutable fields of the Resource entity (excluding create_time, update_time and immutable fields).
 func (u *ResourceUpdateOne) UpdateAll(resource *Resource) *ResourceUpdateOne {
 	// Skip if the input entity is nil to avoid panic
@@ -109,6 +149,25 @@ func (u *RoleUpdateOne) UpdateAll(role *Role) *RoleUpdateOne {
 	update = update.SetStatus(role.Status)
 	update = update.SetDesc(role.Desc)
 	update = update.SetMenus(role.Menus)
+	return update
+}
+
+// UpdateAll updates all mutable fields of the ServiceRegistry entity (excluding create_time, update_time and immutable fields).
+func (u *ServiceRegistryUpdateOne) UpdateAll(serviceregistry *ServiceRegistry) *ServiceRegistryUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if serviceregistry == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetServiceCode(serviceregistry.ServiceCode)
+	update = update.SetServiceName(serviceregistry.ServiceName)
+	update = update.SetDomainCode(serviceregistry.DomainCode)
+	update = update.SetHTTPPrefix(serviceregistry.HTTPPrefix)
+	update = update.SetGrpcService(serviceregistry.GrpcService)
+	update = update.SetStatus(serviceregistry.Status)
+	update = update.SetProjectionEnabled(serviceregistry.ProjectionEnabled)
+	update = update.SetDescription(serviceregistry.Description)
 	return update
 }
 

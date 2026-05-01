@@ -34,6 +34,10 @@ type ApiResources struct {
 	ModuleDescription string `json:"module_description,omitempty"`
 	// 资源组
 	ResourcesGroup string `json:"resources_group,omitempty"`
+	// 归属服务编码
+	ServiceCode string `json:"service_code,omitempty"`
+	// 归属业务域编码
+	DomainCode string `json:"domain_code,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ApiResourcesQuery when eager-loading is set.
 	Edges        ApiResourcesEdges `json:"edges"`
@@ -63,7 +67,7 @@ func (*ApiResources) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case apiresources.FieldID, apiresources.FieldDescription, apiresources.FieldPath, apiresources.FieldMethod, apiresources.FieldModule, apiresources.FieldModuleDescription, apiresources.FieldResourcesGroup:
+		case apiresources.FieldID, apiresources.FieldDescription, apiresources.FieldPath, apiresources.FieldMethod, apiresources.FieldModule, apiresources.FieldModuleDescription, apiresources.FieldResourcesGroup, apiresources.FieldServiceCode, apiresources.FieldDomainCode:
 			values[i] = new(sql.NullString)
 		case apiresources.FieldCreateTime, apiresources.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -136,6 +140,18 @@ func (_m *ApiResources) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.ResourcesGroup = value.String
 			}
+		case apiresources.FieldServiceCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field service_code", values[i])
+			} else if value.Valid {
+				_m.ServiceCode = value.String
+			}
+		case apiresources.FieldDomainCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field domain_code", values[i])
+			} else if value.Valid {
+				_m.DomainCode = value.String
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -200,6 +216,12 @@ func (_m *ApiResources) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("resources_group=")
 	builder.WriteString(_m.ResourcesGroup)
+	builder.WriteString(", ")
+	builder.WriteString("service_code=")
+	builder.WriteString(_m.ServiceCode)
+	builder.WriteString(", ")
+	builder.WriteString("domain_code=")
+	builder.WriteString(_m.DomainCode)
 	builder.WriteByte(')')
 	return builder.String()
 }

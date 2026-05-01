@@ -14,14 +14,20 @@ type Tx struct {
 	config
 	// ApiResources is the client for interacting with the ApiResources builders.
 	ApiResources *ApiResourcesClient
+	// BusinessDomain is the client for interacting with the BusinessDomain builders.
+	BusinessDomain *BusinessDomainClient
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// ProjectionSourceStatus is the client for interacting with the ProjectionSourceStatus builders.
+	ProjectionSourceStatus *ProjectionSourceStatusClient
 	// Resource is the client for interacting with the Resource builders.
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// ServiceRegistry is the client for interacting with the ServiceRegistry builders.
+	ServiceRegistry *ServiceRegistryClient
 	// SysLogRecord is the client for interacting with the SysLogRecord builders.
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
@@ -160,10 +166,13 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.ApiResources = NewApiResourcesClient(tx.config)
+	tx.BusinessDomain = NewBusinessDomainClient(tx.config)
 	tx.Dept = NewDeptClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.ProjectionSourceStatus = NewProjectionSourceStatusClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
+	tx.ServiceRegistry = NewServiceRegistryClient(tx.config)
 	tx.SysLogRecord = NewSysLogRecordClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserRoleBinding = NewUserRoleBindingClient(tx.config)

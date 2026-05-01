@@ -4,11 +4,14 @@ package ent
 
 import (
 	"base-server/pkg/data/ent/apiresources"
+	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/predicate"
+	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
+	"base-server/pkg/data/ent/serviceregistry"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -32,14 +35,17 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeApiResources    = "ApiResources"
-	TypeDept            = "Dept"
-	TypeMenu            = "Menu"
-	TypeResource        = "Resource"
-	TypeRole            = "Role"
-	TypeSysLogRecord    = "SysLogRecord"
-	TypeUser            = "User"
-	TypeUserRoleBinding = "UserRoleBinding"
+	TypeApiResources           = "ApiResources"
+	TypeBusinessDomain         = "BusinessDomain"
+	TypeDept                   = "Dept"
+	TypeMenu                   = "Menu"
+	TypeProjectionSourceStatus = "ProjectionSourceStatus"
+	TypeResource               = "Resource"
+	TypeRole                   = "Role"
+	TypeServiceRegistry        = "ServiceRegistry"
+	TypeSysLogRecord           = "SysLogRecord"
+	TypeUser                   = "User"
+	TypeUserRoleBinding        = "UserRoleBinding"
 )
 
 // ApiResourcesMutation represents an operation that mutates the ApiResources nodes in the graph.
@@ -56,6 +62,8 @@ type ApiResourcesMutation struct {
 	module             *string
 	module_description *string
 	resources_group    *string
+	service_code       *string
+	domain_code        *string
 	clearedFields      map[string]struct{}
 	roles              map[int64]struct{}
 	removedroles       map[int64]struct{}
@@ -457,6 +465,78 @@ func (m *ApiResourcesMutation) ResetResourcesGroup() {
 	m.resources_group = nil
 }
 
+// SetServiceCode sets the "service_code" field.
+func (m *ApiResourcesMutation) SetServiceCode(s string) {
+	m.service_code = &s
+}
+
+// ServiceCode returns the value of the "service_code" field in the mutation.
+func (m *ApiResourcesMutation) ServiceCode() (r string, exists bool) {
+	v := m.service_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldServiceCode returns the old "service_code" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldServiceCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldServiceCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldServiceCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldServiceCode: %w", err)
+	}
+	return oldValue.ServiceCode, nil
+}
+
+// ResetServiceCode resets all changes to the "service_code" field.
+func (m *ApiResourcesMutation) ResetServiceCode() {
+	m.service_code = nil
+}
+
+// SetDomainCode sets the "domain_code" field.
+func (m *ApiResourcesMutation) SetDomainCode(s string) {
+	m.domain_code = &s
+}
+
+// DomainCode returns the value of the "domain_code" field in the mutation.
+func (m *ApiResourcesMutation) DomainCode() (r string, exists bool) {
+	v := m.domain_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDomainCode returns the old "domain_code" field's value of the ApiResources entity.
+// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ApiResourcesMutation) OldDomainCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDomainCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
+	}
+	return oldValue.DomainCode, nil
+}
+
+// ResetDomainCode resets all changes to the "domain_code" field.
+func (m *ApiResourcesMutation) ResetDomainCode() {
+	m.domain_code = nil
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *ApiResourcesMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -545,7 +625,7 @@ func (m *ApiResourcesMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ApiResourcesMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 10)
 	if m.create_time != nil {
 		fields = append(fields, apiresources.FieldCreateTime)
 	}
@@ -569,6 +649,12 @@ func (m *ApiResourcesMutation) Fields() []string {
 	}
 	if m.resources_group != nil {
 		fields = append(fields, apiresources.FieldResourcesGroup)
+	}
+	if m.service_code != nil {
+		fields = append(fields, apiresources.FieldServiceCode)
+	}
+	if m.domain_code != nil {
+		fields = append(fields, apiresources.FieldDomainCode)
 	}
 	return fields
 }
@@ -594,6 +680,10 @@ func (m *ApiResourcesMutation) Field(name string) (ent.Value, bool) {
 		return m.ModuleDescription()
 	case apiresources.FieldResourcesGroup:
 		return m.ResourcesGroup()
+	case apiresources.FieldServiceCode:
+		return m.ServiceCode()
+	case apiresources.FieldDomainCode:
+		return m.DomainCode()
 	}
 	return nil, false
 }
@@ -619,6 +709,10 @@ func (m *ApiResourcesMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldModuleDescription(ctx)
 	case apiresources.FieldResourcesGroup:
 		return m.OldResourcesGroup(ctx)
+	case apiresources.FieldServiceCode:
+		return m.OldServiceCode(ctx)
+	case apiresources.FieldDomainCode:
+		return m.OldDomainCode(ctx)
 	}
 	return nil, fmt.Errorf("unknown ApiResources field %s", name)
 }
@@ -683,6 +777,20 @@ func (m *ApiResourcesMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetResourcesGroup(v)
+		return nil
+	case apiresources.FieldServiceCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetServiceCode(v)
+		return nil
+	case apiresources.FieldDomainCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDomainCode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources field %s", name)
@@ -756,6 +864,12 @@ func (m *ApiResourcesMutation) ResetField(name string) error {
 		return nil
 	case apiresources.FieldResourcesGroup:
 		m.ResetResourcesGroup()
+		return nil
+	case apiresources.FieldServiceCode:
+		m.ResetServiceCode()
+		return nil
+	case apiresources.FieldDomainCode:
+		m.ResetDomainCode()
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources field %s", name)
@@ -843,6 +957,824 @@ func (m *ApiResourcesMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources edge %s", name)
+}
+
+// BusinessDomainMutation represents an operation that mutates the BusinessDomain nodes in the graph.
+type BusinessDomainMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *string
+	create_time     *time.Time
+	update_time     *time.Time
+	code            *string
+	name            *string
+	owner_service   *string
+	org_model_type  *string
+	auth_scope_type *string
+	status          *bool
+	description     *string
+	meta_json       *string
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*BusinessDomain, error)
+	predicates      []predicate.BusinessDomain
+}
+
+var _ ent.Mutation = (*BusinessDomainMutation)(nil)
+
+// businessdomainOption allows management of the mutation configuration using functional options.
+type businessdomainOption func(*BusinessDomainMutation)
+
+// newBusinessDomainMutation creates new mutation for the BusinessDomain entity.
+func newBusinessDomainMutation(c config, op Op, opts ...businessdomainOption) *BusinessDomainMutation {
+	m := &BusinessDomainMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeBusinessDomain,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withBusinessDomainID sets the ID field of the mutation.
+func withBusinessDomainID(id string) businessdomainOption {
+	return func(m *BusinessDomainMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *BusinessDomain
+		)
+		m.oldValue = func(ctx context.Context) (*BusinessDomain, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().BusinessDomain.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withBusinessDomain sets the old BusinessDomain of the mutation.
+func withBusinessDomain(node *BusinessDomain) businessdomainOption {
+	return func(m *BusinessDomainMutation) {
+		m.oldValue = func(context.Context) (*BusinessDomain, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m BusinessDomainMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m BusinessDomainMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of BusinessDomain entities.
+func (m *BusinessDomainMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *BusinessDomainMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *BusinessDomainMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().BusinessDomain.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *BusinessDomainMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *BusinessDomainMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *BusinessDomainMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *BusinessDomainMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *BusinessDomainMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *BusinessDomainMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetCode sets the "code" field.
+func (m *BusinessDomainMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *BusinessDomainMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *BusinessDomainMutation) ResetCode() {
+	m.code = nil
+}
+
+// SetName sets the "name" field.
+func (m *BusinessDomainMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *BusinessDomainMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *BusinessDomainMutation) ResetName() {
+	m.name = nil
+}
+
+// SetOwnerService sets the "owner_service" field.
+func (m *BusinessDomainMutation) SetOwnerService(s string) {
+	m.owner_service = &s
+}
+
+// OwnerService returns the value of the "owner_service" field in the mutation.
+func (m *BusinessDomainMutation) OwnerService() (r string, exists bool) {
+	v := m.owner_service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOwnerService returns the old "owner_service" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldOwnerService(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOwnerService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOwnerService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOwnerService: %w", err)
+	}
+	return oldValue.OwnerService, nil
+}
+
+// ResetOwnerService resets all changes to the "owner_service" field.
+func (m *BusinessDomainMutation) ResetOwnerService() {
+	m.owner_service = nil
+}
+
+// SetOrgModelType sets the "org_model_type" field.
+func (m *BusinessDomainMutation) SetOrgModelType(s string) {
+	m.org_model_type = &s
+}
+
+// OrgModelType returns the value of the "org_model_type" field in the mutation.
+func (m *BusinessDomainMutation) OrgModelType() (r string, exists bool) {
+	v := m.org_model_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrgModelType returns the old "org_model_type" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldOrgModelType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrgModelType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrgModelType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrgModelType: %w", err)
+	}
+	return oldValue.OrgModelType, nil
+}
+
+// ResetOrgModelType resets all changes to the "org_model_type" field.
+func (m *BusinessDomainMutation) ResetOrgModelType() {
+	m.org_model_type = nil
+}
+
+// SetAuthScopeType sets the "auth_scope_type" field.
+func (m *BusinessDomainMutation) SetAuthScopeType(s string) {
+	m.auth_scope_type = &s
+}
+
+// AuthScopeType returns the value of the "auth_scope_type" field in the mutation.
+func (m *BusinessDomainMutation) AuthScopeType() (r string, exists bool) {
+	v := m.auth_scope_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAuthScopeType returns the old "auth_scope_type" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldAuthScopeType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAuthScopeType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAuthScopeType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAuthScopeType: %w", err)
+	}
+	return oldValue.AuthScopeType, nil
+}
+
+// ResetAuthScopeType resets all changes to the "auth_scope_type" field.
+func (m *BusinessDomainMutation) ResetAuthScopeType() {
+	m.auth_scope_type = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *BusinessDomainMutation) SetStatus(b bool) {
+	m.status = &b
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *BusinessDomainMutation) Status() (r bool, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldStatus(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *BusinessDomainMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *BusinessDomainMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *BusinessDomainMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *BusinessDomainMutation) ResetDescription() {
+	m.description = nil
+}
+
+// SetMetaJSON sets the "meta_json" field.
+func (m *BusinessDomainMutation) SetMetaJSON(s string) {
+	m.meta_json = &s
+}
+
+// MetaJSON returns the value of the "meta_json" field in the mutation.
+func (m *BusinessDomainMutation) MetaJSON() (r string, exists bool) {
+	v := m.meta_json
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMetaJSON returns the old "meta_json" field's value of the BusinessDomain entity.
+// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *BusinessDomainMutation) OldMetaJSON(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMetaJSON is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMetaJSON requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMetaJSON: %w", err)
+	}
+	return oldValue.MetaJSON, nil
+}
+
+// ResetMetaJSON resets all changes to the "meta_json" field.
+func (m *BusinessDomainMutation) ResetMetaJSON() {
+	m.meta_json = nil
+}
+
+// Where appends a list predicates to the BusinessDomainMutation builder.
+func (m *BusinessDomainMutation) Where(ps ...predicate.BusinessDomain) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the BusinessDomainMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *BusinessDomainMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.BusinessDomain, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *BusinessDomainMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *BusinessDomainMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (BusinessDomain).
+func (m *BusinessDomainMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *BusinessDomainMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.create_time != nil {
+		fields = append(fields, businessdomain.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, businessdomain.FieldUpdateTime)
+	}
+	if m.code != nil {
+		fields = append(fields, businessdomain.FieldCode)
+	}
+	if m.name != nil {
+		fields = append(fields, businessdomain.FieldName)
+	}
+	if m.owner_service != nil {
+		fields = append(fields, businessdomain.FieldOwnerService)
+	}
+	if m.org_model_type != nil {
+		fields = append(fields, businessdomain.FieldOrgModelType)
+	}
+	if m.auth_scope_type != nil {
+		fields = append(fields, businessdomain.FieldAuthScopeType)
+	}
+	if m.status != nil {
+		fields = append(fields, businessdomain.FieldStatus)
+	}
+	if m.description != nil {
+		fields = append(fields, businessdomain.FieldDescription)
+	}
+	if m.meta_json != nil {
+		fields = append(fields, businessdomain.FieldMetaJSON)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *BusinessDomainMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case businessdomain.FieldCreateTime:
+		return m.CreateTime()
+	case businessdomain.FieldUpdateTime:
+		return m.UpdateTime()
+	case businessdomain.FieldCode:
+		return m.Code()
+	case businessdomain.FieldName:
+		return m.Name()
+	case businessdomain.FieldOwnerService:
+		return m.OwnerService()
+	case businessdomain.FieldOrgModelType:
+		return m.OrgModelType()
+	case businessdomain.FieldAuthScopeType:
+		return m.AuthScopeType()
+	case businessdomain.FieldStatus:
+		return m.Status()
+	case businessdomain.FieldDescription:
+		return m.Description()
+	case businessdomain.FieldMetaJSON:
+		return m.MetaJSON()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *BusinessDomainMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case businessdomain.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case businessdomain.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case businessdomain.FieldCode:
+		return m.OldCode(ctx)
+	case businessdomain.FieldName:
+		return m.OldName(ctx)
+	case businessdomain.FieldOwnerService:
+		return m.OldOwnerService(ctx)
+	case businessdomain.FieldOrgModelType:
+		return m.OldOrgModelType(ctx)
+	case businessdomain.FieldAuthScopeType:
+		return m.OldAuthScopeType(ctx)
+	case businessdomain.FieldStatus:
+		return m.OldStatus(ctx)
+	case businessdomain.FieldDescription:
+		return m.OldDescription(ctx)
+	case businessdomain.FieldMetaJSON:
+		return m.OldMetaJSON(ctx)
+	}
+	return nil, fmt.Errorf("unknown BusinessDomain field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *BusinessDomainMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case businessdomain.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case businessdomain.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case businessdomain.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	case businessdomain.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case businessdomain.FieldOwnerService:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOwnerService(v)
+		return nil
+	case businessdomain.FieldOrgModelType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrgModelType(v)
+		return nil
+	case businessdomain.FieldAuthScopeType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAuthScopeType(v)
+		return nil
+	case businessdomain.FieldStatus:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case businessdomain.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case businessdomain.FieldMetaJSON:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMetaJSON(v)
+		return nil
+	}
+	return fmt.Errorf("unknown BusinessDomain field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *BusinessDomainMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *BusinessDomainMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *BusinessDomainMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown BusinessDomain numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *BusinessDomainMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *BusinessDomainMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *BusinessDomainMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown BusinessDomain nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *BusinessDomainMutation) ResetField(name string) error {
+	switch name {
+	case businessdomain.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case businessdomain.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case businessdomain.FieldCode:
+		m.ResetCode()
+		return nil
+	case businessdomain.FieldName:
+		m.ResetName()
+		return nil
+	case businessdomain.FieldOwnerService:
+		m.ResetOwnerService()
+		return nil
+	case businessdomain.FieldOrgModelType:
+		m.ResetOrgModelType()
+		return nil
+	case businessdomain.FieldAuthScopeType:
+		m.ResetAuthScopeType()
+		return nil
+	case businessdomain.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case businessdomain.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case businessdomain.FieldMetaJSON:
+		m.ResetMetaJSON()
+		return nil
+	}
+	return fmt.Errorf("unknown BusinessDomain field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *BusinessDomainMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *BusinessDomainMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *BusinessDomainMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *BusinessDomainMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *BusinessDomainMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *BusinessDomainMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *BusinessDomainMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown BusinessDomain unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *BusinessDomainMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown BusinessDomain edge %s", name)
 }
 
 // DeptMutation represents an operation that mutates the Dept nodes in the graph.
@@ -4101,6 +5033,860 @@ func (m *MenuMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Menu edge %s", name)
 }
 
+// ProjectionSourceStatusMutation represents an operation that mutates the ProjectionSourceStatus nodes in the graph.
+type ProjectionSourceStatusMutation struct {
+	config
+	op                        Op
+	typ                       string
+	id                        *string
+	create_time               *time.Time
+	update_time               *time.Time
+	source_service            *string
+	domain_code               *string
+	sync_mode                 *string
+	state                     *string
+	last_snapshot_revision    *uint64
+	addlast_snapshot_revision *int64
+	last_sync_time            *string
+	last_error                *string
+	description               *string
+	clearedFields             map[string]struct{}
+	done                      bool
+	oldValue                  func(context.Context) (*ProjectionSourceStatus, error)
+	predicates                []predicate.ProjectionSourceStatus
+}
+
+var _ ent.Mutation = (*ProjectionSourceStatusMutation)(nil)
+
+// projectionsourcestatusOption allows management of the mutation configuration using functional options.
+type projectionsourcestatusOption func(*ProjectionSourceStatusMutation)
+
+// newProjectionSourceStatusMutation creates new mutation for the ProjectionSourceStatus entity.
+func newProjectionSourceStatusMutation(c config, op Op, opts ...projectionsourcestatusOption) *ProjectionSourceStatusMutation {
+	m := &ProjectionSourceStatusMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeProjectionSourceStatus,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withProjectionSourceStatusID sets the ID field of the mutation.
+func withProjectionSourceStatusID(id string) projectionsourcestatusOption {
+	return func(m *ProjectionSourceStatusMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ProjectionSourceStatus
+		)
+		m.oldValue = func(ctx context.Context) (*ProjectionSourceStatus, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ProjectionSourceStatus.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withProjectionSourceStatus sets the old ProjectionSourceStatus of the mutation.
+func withProjectionSourceStatus(node *ProjectionSourceStatus) projectionsourcestatusOption {
+	return func(m *ProjectionSourceStatusMutation) {
+		m.oldValue = func(context.Context) (*ProjectionSourceStatus, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ProjectionSourceStatusMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ProjectionSourceStatusMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ProjectionSourceStatus entities.
+func (m *ProjectionSourceStatusMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ProjectionSourceStatusMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ProjectionSourceStatusMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ProjectionSourceStatus.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *ProjectionSourceStatusMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *ProjectionSourceStatusMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *ProjectionSourceStatusMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *ProjectionSourceStatusMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *ProjectionSourceStatusMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *ProjectionSourceStatusMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetSourceService sets the "source_service" field.
+func (m *ProjectionSourceStatusMutation) SetSourceService(s string) {
+	m.source_service = &s
+}
+
+// SourceService returns the value of the "source_service" field in the mutation.
+func (m *ProjectionSourceStatusMutation) SourceService() (r string, exists bool) {
+	v := m.source_service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSourceService returns the old "source_service" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldSourceService(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSourceService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSourceService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSourceService: %w", err)
+	}
+	return oldValue.SourceService, nil
+}
+
+// ResetSourceService resets all changes to the "source_service" field.
+func (m *ProjectionSourceStatusMutation) ResetSourceService() {
+	m.source_service = nil
+}
+
+// SetDomainCode sets the "domain_code" field.
+func (m *ProjectionSourceStatusMutation) SetDomainCode(s string) {
+	m.domain_code = &s
+}
+
+// DomainCode returns the value of the "domain_code" field in the mutation.
+func (m *ProjectionSourceStatusMutation) DomainCode() (r string, exists bool) {
+	v := m.domain_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDomainCode returns the old "domain_code" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldDomainCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDomainCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
+	}
+	return oldValue.DomainCode, nil
+}
+
+// ResetDomainCode resets all changes to the "domain_code" field.
+func (m *ProjectionSourceStatusMutation) ResetDomainCode() {
+	m.domain_code = nil
+}
+
+// SetSyncMode sets the "sync_mode" field.
+func (m *ProjectionSourceStatusMutation) SetSyncMode(s string) {
+	m.sync_mode = &s
+}
+
+// SyncMode returns the value of the "sync_mode" field in the mutation.
+func (m *ProjectionSourceStatusMutation) SyncMode() (r string, exists bool) {
+	v := m.sync_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSyncMode returns the old "sync_mode" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldSyncMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSyncMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSyncMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSyncMode: %w", err)
+	}
+	return oldValue.SyncMode, nil
+}
+
+// ResetSyncMode resets all changes to the "sync_mode" field.
+func (m *ProjectionSourceStatusMutation) ResetSyncMode() {
+	m.sync_mode = nil
+}
+
+// SetState sets the "state" field.
+func (m *ProjectionSourceStatusMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *ProjectionSourceStatusMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *ProjectionSourceStatusMutation) ResetState() {
+	m.state = nil
+}
+
+// SetLastSnapshotRevision sets the "last_snapshot_revision" field.
+func (m *ProjectionSourceStatusMutation) SetLastSnapshotRevision(u uint64) {
+	m.last_snapshot_revision = &u
+	m.addlast_snapshot_revision = nil
+}
+
+// LastSnapshotRevision returns the value of the "last_snapshot_revision" field in the mutation.
+func (m *ProjectionSourceStatusMutation) LastSnapshotRevision() (r uint64, exists bool) {
+	v := m.last_snapshot_revision
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastSnapshotRevision returns the old "last_snapshot_revision" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldLastSnapshotRevision(ctx context.Context) (v uint64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastSnapshotRevision is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastSnapshotRevision requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastSnapshotRevision: %w", err)
+	}
+	return oldValue.LastSnapshotRevision, nil
+}
+
+// AddLastSnapshotRevision adds u to the "last_snapshot_revision" field.
+func (m *ProjectionSourceStatusMutation) AddLastSnapshotRevision(u int64) {
+	if m.addlast_snapshot_revision != nil {
+		*m.addlast_snapshot_revision += u
+	} else {
+		m.addlast_snapshot_revision = &u
+	}
+}
+
+// AddedLastSnapshotRevision returns the value that was added to the "last_snapshot_revision" field in this mutation.
+func (m *ProjectionSourceStatusMutation) AddedLastSnapshotRevision() (r int64, exists bool) {
+	v := m.addlast_snapshot_revision
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetLastSnapshotRevision resets all changes to the "last_snapshot_revision" field.
+func (m *ProjectionSourceStatusMutation) ResetLastSnapshotRevision() {
+	m.last_snapshot_revision = nil
+	m.addlast_snapshot_revision = nil
+}
+
+// SetLastSyncTime sets the "last_sync_time" field.
+func (m *ProjectionSourceStatusMutation) SetLastSyncTime(s string) {
+	m.last_sync_time = &s
+}
+
+// LastSyncTime returns the value of the "last_sync_time" field in the mutation.
+func (m *ProjectionSourceStatusMutation) LastSyncTime() (r string, exists bool) {
+	v := m.last_sync_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastSyncTime returns the old "last_sync_time" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldLastSyncTime(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastSyncTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastSyncTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastSyncTime: %w", err)
+	}
+	return oldValue.LastSyncTime, nil
+}
+
+// ResetLastSyncTime resets all changes to the "last_sync_time" field.
+func (m *ProjectionSourceStatusMutation) ResetLastSyncTime() {
+	m.last_sync_time = nil
+}
+
+// SetLastError sets the "last_error" field.
+func (m *ProjectionSourceStatusMutation) SetLastError(s string) {
+	m.last_error = &s
+}
+
+// LastError returns the value of the "last_error" field in the mutation.
+func (m *ProjectionSourceStatusMutation) LastError() (r string, exists bool) {
+	v := m.last_error
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLastError returns the old "last_error" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldLastError(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastError is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastError requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastError: %w", err)
+	}
+	return oldValue.LastError, nil
+}
+
+// ResetLastError resets all changes to the "last_error" field.
+func (m *ProjectionSourceStatusMutation) ResetLastError() {
+	m.last_error = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *ProjectionSourceStatusMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ProjectionSourceStatusMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the ProjectionSourceStatus entity.
+// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProjectionSourceStatusMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ProjectionSourceStatusMutation) ResetDescription() {
+	m.description = nil
+}
+
+// Where appends a list predicates to the ProjectionSourceStatusMutation builder.
+func (m *ProjectionSourceStatusMutation) Where(ps ...predicate.ProjectionSourceStatus) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ProjectionSourceStatusMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ProjectionSourceStatusMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ProjectionSourceStatus, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ProjectionSourceStatusMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ProjectionSourceStatusMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ProjectionSourceStatus).
+func (m *ProjectionSourceStatusMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ProjectionSourceStatusMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.create_time != nil {
+		fields = append(fields, projectionsourcestatus.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, projectionsourcestatus.FieldUpdateTime)
+	}
+	if m.source_service != nil {
+		fields = append(fields, projectionsourcestatus.FieldSourceService)
+	}
+	if m.domain_code != nil {
+		fields = append(fields, projectionsourcestatus.FieldDomainCode)
+	}
+	if m.sync_mode != nil {
+		fields = append(fields, projectionsourcestatus.FieldSyncMode)
+	}
+	if m.state != nil {
+		fields = append(fields, projectionsourcestatus.FieldState)
+	}
+	if m.last_snapshot_revision != nil {
+		fields = append(fields, projectionsourcestatus.FieldLastSnapshotRevision)
+	}
+	if m.last_sync_time != nil {
+		fields = append(fields, projectionsourcestatus.FieldLastSyncTime)
+	}
+	if m.last_error != nil {
+		fields = append(fields, projectionsourcestatus.FieldLastError)
+	}
+	if m.description != nil {
+		fields = append(fields, projectionsourcestatus.FieldDescription)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ProjectionSourceStatusMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case projectionsourcestatus.FieldCreateTime:
+		return m.CreateTime()
+	case projectionsourcestatus.FieldUpdateTime:
+		return m.UpdateTime()
+	case projectionsourcestatus.FieldSourceService:
+		return m.SourceService()
+	case projectionsourcestatus.FieldDomainCode:
+		return m.DomainCode()
+	case projectionsourcestatus.FieldSyncMode:
+		return m.SyncMode()
+	case projectionsourcestatus.FieldState:
+		return m.State()
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		return m.LastSnapshotRevision()
+	case projectionsourcestatus.FieldLastSyncTime:
+		return m.LastSyncTime()
+	case projectionsourcestatus.FieldLastError:
+		return m.LastError()
+	case projectionsourcestatus.FieldDescription:
+		return m.Description()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ProjectionSourceStatusMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case projectionsourcestatus.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case projectionsourcestatus.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case projectionsourcestatus.FieldSourceService:
+		return m.OldSourceService(ctx)
+	case projectionsourcestatus.FieldDomainCode:
+		return m.OldDomainCode(ctx)
+	case projectionsourcestatus.FieldSyncMode:
+		return m.OldSyncMode(ctx)
+	case projectionsourcestatus.FieldState:
+		return m.OldState(ctx)
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		return m.OldLastSnapshotRevision(ctx)
+	case projectionsourcestatus.FieldLastSyncTime:
+		return m.OldLastSyncTime(ctx)
+	case projectionsourcestatus.FieldLastError:
+		return m.OldLastError(ctx)
+	case projectionsourcestatus.FieldDescription:
+		return m.OldDescription(ctx)
+	}
+	return nil, fmt.Errorf("unknown ProjectionSourceStatus field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ProjectionSourceStatusMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case projectionsourcestatus.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case projectionsourcestatus.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case projectionsourcestatus.FieldSourceService:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSourceService(v)
+		return nil
+	case projectionsourcestatus.FieldDomainCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDomainCode(v)
+		return nil
+	case projectionsourcestatus.FieldSyncMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSyncMode(v)
+		return nil
+	case projectionsourcestatus.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		v, ok := value.(uint64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastSnapshotRevision(v)
+		return nil
+	case projectionsourcestatus.FieldLastSyncTime:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastSyncTime(v)
+		return nil
+	case projectionsourcestatus.FieldLastError:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLastError(v)
+		return nil
+	case projectionsourcestatus.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ProjectionSourceStatus field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ProjectionSourceStatusMutation) AddedFields() []string {
+	var fields []string
+	if m.addlast_snapshot_revision != nil {
+		fields = append(fields, projectionsourcestatus.FieldLastSnapshotRevision)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ProjectionSourceStatusMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		return m.AddedLastSnapshotRevision()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ProjectionSourceStatusMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLastSnapshotRevision(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ProjectionSourceStatus numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ProjectionSourceStatusMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ProjectionSourceStatusMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ProjectionSourceStatusMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ProjectionSourceStatus nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ProjectionSourceStatusMutation) ResetField(name string) error {
+	switch name {
+	case projectionsourcestatus.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case projectionsourcestatus.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case projectionsourcestatus.FieldSourceService:
+		m.ResetSourceService()
+		return nil
+	case projectionsourcestatus.FieldDomainCode:
+		m.ResetDomainCode()
+		return nil
+	case projectionsourcestatus.FieldSyncMode:
+		m.ResetSyncMode()
+		return nil
+	case projectionsourcestatus.FieldState:
+		m.ResetState()
+		return nil
+	case projectionsourcestatus.FieldLastSnapshotRevision:
+		m.ResetLastSnapshotRevision()
+		return nil
+	case projectionsourcestatus.FieldLastSyncTime:
+		m.ResetLastSyncTime()
+		return nil
+	case projectionsourcestatus.FieldLastError:
+		m.ResetLastError()
+		return nil
+	case projectionsourcestatus.FieldDescription:
+		m.ResetDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown ProjectionSourceStatus field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ProjectionSourceStatusMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ProjectionSourceStatusMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ProjectionSourceStatusMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ProjectionSourceStatusMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ProjectionSourceStatusMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ProjectionSourceStatusMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ProjectionSourceStatusMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown ProjectionSourceStatus unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ProjectionSourceStatusMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown ProjectionSourceStatus edge %s", name)
+}
+
 // ResourceMutation represents an operation that mutates the Resource nodes in the graph.
 type ResourceMutation struct {
 	config
@@ -5696,6 +7482,824 @@ func (m *RoleMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Role edge %s", name)
+}
+
+// ServiceRegistryMutation represents an operation that mutates the ServiceRegistry nodes in the graph.
+type ServiceRegistryMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *string
+	create_time        *time.Time
+	update_time        *time.Time
+	service_code       *string
+	service_name       *string
+	domain_code        *string
+	http_prefix        *string
+	grpc_service       *string
+	status             *bool
+	projection_enabled *bool
+	description        *string
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*ServiceRegistry, error)
+	predicates         []predicate.ServiceRegistry
+}
+
+var _ ent.Mutation = (*ServiceRegistryMutation)(nil)
+
+// serviceregistryOption allows management of the mutation configuration using functional options.
+type serviceregistryOption func(*ServiceRegistryMutation)
+
+// newServiceRegistryMutation creates new mutation for the ServiceRegistry entity.
+func newServiceRegistryMutation(c config, op Op, opts ...serviceregistryOption) *ServiceRegistryMutation {
+	m := &ServiceRegistryMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeServiceRegistry,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withServiceRegistryID sets the ID field of the mutation.
+func withServiceRegistryID(id string) serviceregistryOption {
+	return func(m *ServiceRegistryMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ServiceRegistry
+		)
+		m.oldValue = func(ctx context.Context) (*ServiceRegistry, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ServiceRegistry.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withServiceRegistry sets the old ServiceRegistry of the mutation.
+func withServiceRegistry(node *ServiceRegistry) serviceregistryOption {
+	return func(m *ServiceRegistryMutation) {
+		m.oldValue = func(context.Context) (*ServiceRegistry, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ServiceRegistryMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ServiceRegistryMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of ServiceRegistry entities.
+func (m *ServiceRegistryMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ServiceRegistryMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ServiceRegistryMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ServiceRegistry.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *ServiceRegistryMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *ServiceRegistryMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *ServiceRegistryMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *ServiceRegistryMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *ServiceRegistryMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *ServiceRegistryMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetServiceCode sets the "service_code" field.
+func (m *ServiceRegistryMutation) SetServiceCode(s string) {
+	m.service_code = &s
+}
+
+// ServiceCode returns the value of the "service_code" field in the mutation.
+func (m *ServiceRegistryMutation) ServiceCode() (r string, exists bool) {
+	v := m.service_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldServiceCode returns the old "service_code" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldServiceCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldServiceCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldServiceCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldServiceCode: %w", err)
+	}
+	return oldValue.ServiceCode, nil
+}
+
+// ResetServiceCode resets all changes to the "service_code" field.
+func (m *ServiceRegistryMutation) ResetServiceCode() {
+	m.service_code = nil
+}
+
+// SetServiceName sets the "service_name" field.
+func (m *ServiceRegistryMutation) SetServiceName(s string) {
+	m.service_name = &s
+}
+
+// ServiceName returns the value of the "service_name" field in the mutation.
+func (m *ServiceRegistryMutation) ServiceName() (r string, exists bool) {
+	v := m.service_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldServiceName returns the old "service_name" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldServiceName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldServiceName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldServiceName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldServiceName: %w", err)
+	}
+	return oldValue.ServiceName, nil
+}
+
+// ResetServiceName resets all changes to the "service_name" field.
+func (m *ServiceRegistryMutation) ResetServiceName() {
+	m.service_name = nil
+}
+
+// SetDomainCode sets the "domain_code" field.
+func (m *ServiceRegistryMutation) SetDomainCode(s string) {
+	m.domain_code = &s
+}
+
+// DomainCode returns the value of the "domain_code" field in the mutation.
+func (m *ServiceRegistryMutation) DomainCode() (r string, exists bool) {
+	v := m.domain_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDomainCode returns the old "domain_code" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldDomainCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDomainCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
+	}
+	return oldValue.DomainCode, nil
+}
+
+// ResetDomainCode resets all changes to the "domain_code" field.
+func (m *ServiceRegistryMutation) ResetDomainCode() {
+	m.domain_code = nil
+}
+
+// SetHTTPPrefix sets the "http_prefix" field.
+func (m *ServiceRegistryMutation) SetHTTPPrefix(s string) {
+	m.http_prefix = &s
+}
+
+// HTTPPrefix returns the value of the "http_prefix" field in the mutation.
+func (m *ServiceRegistryMutation) HTTPPrefix() (r string, exists bool) {
+	v := m.http_prefix
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHTTPPrefix returns the old "http_prefix" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldHTTPPrefix(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHTTPPrefix is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHTTPPrefix requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHTTPPrefix: %w", err)
+	}
+	return oldValue.HTTPPrefix, nil
+}
+
+// ResetHTTPPrefix resets all changes to the "http_prefix" field.
+func (m *ServiceRegistryMutation) ResetHTTPPrefix() {
+	m.http_prefix = nil
+}
+
+// SetGrpcService sets the "grpc_service" field.
+func (m *ServiceRegistryMutation) SetGrpcService(s string) {
+	m.grpc_service = &s
+}
+
+// GrpcService returns the value of the "grpc_service" field in the mutation.
+func (m *ServiceRegistryMutation) GrpcService() (r string, exists bool) {
+	v := m.grpc_service
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGrpcService returns the old "grpc_service" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldGrpcService(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGrpcService is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGrpcService requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGrpcService: %w", err)
+	}
+	return oldValue.GrpcService, nil
+}
+
+// ResetGrpcService resets all changes to the "grpc_service" field.
+func (m *ServiceRegistryMutation) ResetGrpcService() {
+	m.grpc_service = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *ServiceRegistryMutation) SetStatus(b bool) {
+	m.status = &b
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *ServiceRegistryMutation) Status() (r bool, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldStatus(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *ServiceRegistryMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetProjectionEnabled sets the "projection_enabled" field.
+func (m *ServiceRegistryMutation) SetProjectionEnabled(b bool) {
+	m.projection_enabled = &b
+}
+
+// ProjectionEnabled returns the value of the "projection_enabled" field in the mutation.
+func (m *ServiceRegistryMutation) ProjectionEnabled() (r bool, exists bool) {
+	v := m.projection_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProjectionEnabled returns the old "projection_enabled" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldProjectionEnabled(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProjectionEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProjectionEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProjectionEnabled: %w", err)
+	}
+	return oldValue.ProjectionEnabled, nil
+}
+
+// ResetProjectionEnabled resets all changes to the "projection_enabled" field.
+func (m *ServiceRegistryMutation) ResetProjectionEnabled() {
+	m.projection_enabled = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *ServiceRegistryMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ServiceRegistryMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the ServiceRegistry entity.
+// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceRegistryMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ServiceRegistryMutation) ResetDescription() {
+	m.description = nil
+}
+
+// Where appends a list predicates to the ServiceRegistryMutation builder.
+func (m *ServiceRegistryMutation) Where(ps ...predicate.ServiceRegistry) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ServiceRegistryMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ServiceRegistryMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ServiceRegistry, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ServiceRegistryMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ServiceRegistryMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ServiceRegistry).
+func (m *ServiceRegistryMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ServiceRegistryMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.create_time != nil {
+		fields = append(fields, serviceregistry.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, serviceregistry.FieldUpdateTime)
+	}
+	if m.service_code != nil {
+		fields = append(fields, serviceregistry.FieldServiceCode)
+	}
+	if m.service_name != nil {
+		fields = append(fields, serviceregistry.FieldServiceName)
+	}
+	if m.domain_code != nil {
+		fields = append(fields, serviceregistry.FieldDomainCode)
+	}
+	if m.http_prefix != nil {
+		fields = append(fields, serviceregistry.FieldHTTPPrefix)
+	}
+	if m.grpc_service != nil {
+		fields = append(fields, serviceregistry.FieldGrpcService)
+	}
+	if m.status != nil {
+		fields = append(fields, serviceregistry.FieldStatus)
+	}
+	if m.projection_enabled != nil {
+		fields = append(fields, serviceregistry.FieldProjectionEnabled)
+	}
+	if m.description != nil {
+		fields = append(fields, serviceregistry.FieldDescription)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ServiceRegistryMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case serviceregistry.FieldCreateTime:
+		return m.CreateTime()
+	case serviceregistry.FieldUpdateTime:
+		return m.UpdateTime()
+	case serviceregistry.FieldServiceCode:
+		return m.ServiceCode()
+	case serviceregistry.FieldServiceName:
+		return m.ServiceName()
+	case serviceregistry.FieldDomainCode:
+		return m.DomainCode()
+	case serviceregistry.FieldHTTPPrefix:
+		return m.HTTPPrefix()
+	case serviceregistry.FieldGrpcService:
+		return m.GrpcService()
+	case serviceregistry.FieldStatus:
+		return m.Status()
+	case serviceregistry.FieldProjectionEnabled:
+		return m.ProjectionEnabled()
+	case serviceregistry.FieldDescription:
+		return m.Description()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ServiceRegistryMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case serviceregistry.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case serviceregistry.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case serviceregistry.FieldServiceCode:
+		return m.OldServiceCode(ctx)
+	case serviceregistry.FieldServiceName:
+		return m.OldServiceName(ctx)
+	case serviceregistry.FieldDomainCode:
+		return m.OldDomainCode(ctx)
+	case serviceregistry.FieldHTTPPrefix:
+		return m.OldHTTPPrefix(ctx)
+	case serviceregistry.FieldGrpcService:
+		return m.OldGrpcService(ctx)
+	case serviceregistry.FieldStatus:
+		return m.OldStatus(ctx)
+	case serviceregistry.FieldProjectionEnabled:
+		return m.OldProjectionEnabled(ctx)
+	case serviceregistry.FieldDescription:
+		return m.OldDescription(ctx)
+	}
+	return nil, fmt.Errorf("unknown ServiceRegistry field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ServiceRegistryMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case serviceregistry.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case serviceregistry.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case serviceregistry.FieldServiceCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetServiceCode(v)
+		return nil
+	case serviceregistry.FieldServiceName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetServiceName(v)
+		return nil
+	case serviceregistry.FieldDomainCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDomainCode(v)
+		return nil
+	case serviceregistry.FieldHTTPPrefix:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHTTPPrefix(v)
+		return nil
+	case serviceregistry.FieldGrpcService:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGrpcService(v)
+		return nil
+	case serviceregistry.FieldStatus:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case serviceregistry.FieldProjectionEnabled:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProjectionEnabled(v)
+		return nil
+	case serviceregistry.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ServiceRegistry field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ServiceRegistryMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ServiceRegistryMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ServiceRegistryMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown ServiceRegistry numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ServiceRegistryMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ServiceRegistryMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ServiceRegistryMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ServiceRegistry nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ServiceRegistryMutation) ResetField(name string) error {
+	switch name {
+	case serviceregistry.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case serviceregistry.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case serviceregistry.FieldServiceCode:
+		m.ResetServiceCode()
+		return nil
+	case serviceregistry.FieldServiceName:
+		m.ResetServiceName()
+		return nil
+	case serviceregistry.FieldDomainCode:
+		m.ResetDomainCode()
+		return nil
+	case serviceregistry.FieldHTTPPrefix:
+		m.ResetHTTPPrefix()
+		return nil
+	case serviceregistry.FieldGrpcService:
+		m.ResetGrpcService()
+		return nil
+	case serviceregistry.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case serviceregistry.FieldProjectionEnabled:
+		m.ResetProjectionEnabled()
+		return nil
+	case serviceregistry.FieldDescription:
+		m.ResetDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown ServiceRegistry field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ServiceRegistryMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ServiceRegistryMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ServiceRegistryMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ServiceRegistryMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ServiceRegistryMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ServiceRegistryMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ServiceRegistryMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown ServiceRegistry unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ServiceRegistryMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown ServiceRegistry edge %s", name)
 }
 
 // SysLogRecordMutation represents an operation that mutates the SysLogRecord nodes in the graph.

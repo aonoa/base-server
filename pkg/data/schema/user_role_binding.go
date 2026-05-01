@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
 )
 
@@ -26,8 +27,14 @@ func (UserRoleBinding) Annotations() []schema.Annotation {
 func (UserRoleBinding) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.String("user_id").Unique().Comment("用户ID"),
+		field.String("user_id").Comment("用户ID"),
 		field.Int64("role_id").Comment("角色ID"),
+	}
+}
+
+func (UserRoleBinding) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("user_id", "role_id").Unique(),
 	}
 }
 

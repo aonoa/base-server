@@ -1,6 +1,10 @@
 GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
+COMPOSE_CMD:=$(shell if docker compose version >/dev/null 2>&1; then printf '%s' 'docker compose'; elif docker-compose version >/dev/null 2>&1; then printf '%s' 'docker-compose'; fi)
+COMPOSE_ENV_FILE:=./docker-compose-env.yml
+DEV_ENV_CONTAINERS:=base-postgres base-redis base-jaeger base-consul
+COMPOSE_NEEDS_RECREATE_WORKAROUND:=$(shell if docker compose version >/dev/null 2>&1; then printf '%s' '0'; elif docker-compose version >/dev/null 2>&1; then printf '%s' '1'; else printf '%s' '0'; fi)
 
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.
@@ -115,23 +119,49 @@ build-gateway:
 # build split services
 build: build-auth build-user build-admin build-common build-gateway
 
+.PHONY: ensure-compose
+# ensure docker compose command exists
+ensure-compose:
+	@if [ -z "$(COMPOSE_CMD)" ]; then \
+		echo "docker compose / docker-compose not found"; \
+		exit 1; \
+	fi
+
 .PHONY: dev-env-up
 # start local dependency services for IDE debugging
-dev-env-up:
+dev-env-up: ensure-compose
 	docker network inspect base_networks >/dev/null 2>&1 || docker network create base_networks
-	docker-compose -f ./docker-compose-env.yml up -d
+	@if [ "$(COMPOSE_NEEDS_RECREATE_WORKAROUND)" = "1" ]; then \
+		echo "docker-compose v1 detected, removing existing dependency containers to avoid recreate bug"; \
+		for name in $(DEV_ENV_CONTAINERS); do \
+			ids=$$(docker ps -aq --filter "name=$$name"); \
+			if [ -n "$$ids" ]; then \
+				docker rm -f $$ids >/dev/null 2>&1 || true; \
+			fi; \
+		done; \
+	fi
+	$(COMPOSE_CMD) -f $(COMPOSE_ENV_FILE) up -d
 
 .PHONY: dev-env-down
 # stop local dependency services for IDE debugging
-dev-env-down:
-	docker-compose -f ./docker-compose-env.yml down
+dev-env-down: ensure-compose
+	$(COMPOSE_CMD) -f $(COMPOSE_ENV_FILE) down
 
 .PHONY: dev-env-reset
 # recreate local dependency services after PostgreSQL major upgrades
-dev-env-reset:
-	docker-compose -f ./docker-compose-env.yml down -v
+dev-env-reset: ensure-compose
+	$(COMPOSE_CMD) -f $(COMPOSE_ENV_FILE) down -v
 	docker network inspect base_networks >/dev/null 2>&1 || docker network create base_networks
-	docker-compose -f ./docker-compose-env.yml up -d
+	@if [ "$(COMPOSE_NEEDS_RECREATE_WORKAROUND)" = "1" ]; then \
+		echo "docker-compose v1 detected, removing existing dependency containers to avoid recreate bug"; \
+		for name in $(DEV_ENV_CONTAINERS); do \
+			ids=$$(docker ps -aq --filter "name=$$name"); \
+			if [ -n "$$ids" ]; then \
+				docker rm -f $$ids >/dev/null 2>&1 || true; \
+			fi; \
+		done; \
+	fi
+	$(COMPOSE_CMD) -f $(COMPOSE_ENV_FILE) up -d
 
 .PHONY: run-gateway
 # run gateway service with local config
@@ -157,6 +187,11 @@ run-admin:
 # run common service with local config
 run-common:
 	go run ./app/common/service/cmd/service -conf ./app/common/service/configs
+
+.PHONY: sync-admin-projection
+# register admin permission snapshot to auth without restarting the service
+sync-admin-projection:
+	go run ./app/admin/service/cmd/projection-sync -conf ./app/admin/service/configs
 
 .PHONY: migrate-auth-permissions-to-admin
 # migrate permission tables from auth DB to admin DB

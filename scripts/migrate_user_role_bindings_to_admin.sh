@@ -39,7 +39,8 @@ psql "$ADMIN_DB_URL" -v ON_ERROR_STOP=1 -c "\\copy tmp_user_role_binding (user_i
 psql "$ADMIN_DB_URL" -v ON_ERROR_STOP=1 <<'SQL'
 INSERT INTO sys_user_role_binding (user_id, role_id, create_time, update_time)
 SELECT user_id, role_id, NOW(), NOW()
-FROM tmp_user_role_binding;
+FROM tmp_user_role_binding
+ON CONFLICT (user_id, role_id) DO NOTHING;
 SQL
 
 echo "Migration completed."

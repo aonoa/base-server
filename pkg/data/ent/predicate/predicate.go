@@ -9,17 +9,26 @@ import (
 // ApiResources is the predicate function for apiresources builders.
 type ApiResources func(*sql.Selector)
 
+// BusinessDomain is the predicate function for businessdomain builders.
+type BusinessDomain func(*sql.Selector)
+
 // Dept is the predicate function for dept builders.
 type Dept func(*sql.Selector)
 
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
 
+// ProjectionSourceStatus is the predicate function for projectionsourcestatus builders.
+type ProjectionSourceStatus func(*sql.Selector)
+
 // Resource is the predicate function for resource builders.
 type Resource func(*sql.Selector)
 
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)
+
+// ServiceRegistry is the predicate function for serviceregistry builders.
+type ServiceRegistry func(*sql.Selector)
 
 // SysLogRecord is the predicate function for syslogrecord builders.
 type SysLogRecord func(*sql.Selector)

@@ -20,6 +20,7 @@ const (
 
 	HeaderAuthorization = "Authorization"
 	HeaderAction        = "x-action"
+	HeaderScopeID       = "x-scope-id"
 	ActionRefreshToken  = "refreshToken"
 )
 
@@ -55,7 +56,7 @@ func SessionID(ctx context.Context) string {
 }
 
 func Action(ctx context.Context) string {
-		return strings.TrimSpace(RequestHeader(ctx, HeaderAction))
+	return strings.TrimSpace(RequestHeader(ctx, HeaderAction))
 }
 
 func ForwardAuthorizationContext(ctx context.Context) context.Context {

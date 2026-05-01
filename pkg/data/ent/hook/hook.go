@@ -20,6 +20,18 @@ func (f ApiResourcesFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ApiResourcesMutation", m)
 }
 
+// The BusinessDomainFunc type is an adapter to allow the use of ordinary
+// function as BusinessDomain mutator.
+type BusinessDomainFunc func(context.Context, *ent.BusinessDomainMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BusinessDomainFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.BusinessDomainMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BusinessDomainMutation", m)
+}
+
 // The DeptFunc type is an adapter to allow the use of ordinary
 // function as Dept mutator.
 type DeptFunc func(context.Context, *ent.DeptMutation) (ent.Value, error)
@@ -44,6 +56,18 @@ func (f MenuFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MenuMutation", m)
 }
 
+// The ProjectionSourceStatusFunc type is an adapter to allow the use of ordinary
+// function as ProjectionSourceStatus mutator.
+type ProjectionSourceStatusFunc func(context.Context, *ent.ProjectionSourceStatusMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ProjectionSourceStatusFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ProjectionSourceStatusMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ProjectionSourceStatusMutation", m)
+}
+
 // The ResourceFunc type is an adapter to allow the use of ordinary
 // function as Resource mutator.
 type ResourceFunc func(context.Context, *ent.ResourceMutation) (ent.Value, error)
@@ -66,6 +90,18 @@ func (f RoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoleMutation", m)
+}
+
+// The ServiceRegistryFunc type is an adapter to allow the use of ordinary
+// function as ServiceRegistry mutator.
+type ServiceRegistryFunc func(context.Context, *ent.ServiceRegistryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ServiceRegistryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ServiceRegistryMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ServiceRegistryMutation", m)
 }
 
 // The SysLogRecordFunc type is an adapter to allow the use of ordinary

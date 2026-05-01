@@ -32,9 +32,9 @@ type AdminRepo interface {
 	ListAllRoles(context.Context) ([]*ent.Role, error)
 	GetRole(context.Context, int64) (*ent.Role, error)
 	ResolveRoleValues(context.Context, []int64) (map[int64]string, error)
-	GetUserRoleBinding(context.Context, string) (*ent.UserRoleBinding, error)
+	GetUserRoleBindings(context.Context, string) ([]*ent.UserRoleBinding, error)
 	ListUserRoleBindings(context.Context) ([]*ent.UserRoleBinding, error)
-	UpsertUserRoleBinding(context.Context, string, int64) (*ent.UserRoleBinding, error)
+	UpsertUserRoleBinding(context.Context, string, []int64) ([]*ent.UserRoleBinding, error)
 	DeleteUserRoleBinding(context.Context, string) error
 	AddRole(context.Context, *v1.RoleListItem) (*ent.Role, error)
 	UpdateRole(context.Context, int64, *v1.RoleListItem) (*ent.Role, error)
@@ -49,10 +49,10 @@ type AdminRepo interface {
 	AddResource(context.Context, *ent.Resource) (*ent.Resource, error)
 	UpdateResource(context.Context, *ent.Resource) (*ent.Resource, error)
 	DelResource(context.Context, string) error
+	EnsurePermissionBootstrap(context.Context) error
 	RegisterPermissionSnapshot(context.Context) error
 	ApplyAuthRoleDelta(context.Context, *ent.Role, *ent.Role) error
 	ApplyAuthApiDelta(context.Context, *ent.ApiResources, *ent.ApiResources) error
-	ApplyAuthUserRoleBindingDelta(context.Context, *ent.UserRoleBinding, *ent.UserRoleBinding) error
 	ListAuthWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
 	ListUserWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
 	ListCommonWalkRoutes(context.Context) ([]tools.WalkRouteItem, error)
@@ -68,6 +68,23 @@ type AdminRepo interface {
 	CreateSysLog(context.Context, *ent.SysLogRecord) error
 	GetSysLogList(context.Context, *v1.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error)
 	GetSysLogInfo(context.Context, string) (*ent.SysLogRecord, error)
+	ListBusinessDomains(context.Context) ([]*ent.BusinessDomain, error)
+	GetBusinessDomain(context.Context, string) (*ent.BusinessDomain, error)
+	AddBusinessDomain(context.Context, *v1.BusinessDomainItem) (*ent.BusinessDomain, error)
+	UpdateBusinessDomain(context.Context, string, *v1.BusinessDomainItem) (*ent.BusinessDomain, error)
+	DeleteBusinessDomain(context.Context, string) error
+	ListServiceRegistries(context.Context) ([]*ent.ServiceRegistry, error)
+	GetServiceRegistry(context.Context, string) (*ent.ServiceRegistry, error)
+	AddServiceRegistry(context.Context, *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error)
+	UpdateServiceRegistry(context.Context, string, *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error)
+	DeleteServiceRegistry(context.Context, string) error
+	ListProjectionSourceStatuses(context.Context) ([]*ent.ProjectionSourceStatus, error)
+	GetProjectionSourceStatus(context.Context, string) (*ent.ProjectionSourceStatus, error)
+	GetProjectionSourceStatusBySourceService(context.Context, string) (*ent.ProjectionSourceStatus, error)
+	AddProjectionSourceStatus(context.Context, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
+	UpdateProjectionSourceStatus(context.Context, string, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
+	ReportProjectionSourceStatus(context.Context, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
+	DeleteProjectionSourceStatus(context.Context, string) error
 }
 
 type AdminUsecase struct {
@@ -85,6 +102,9 @@ func NewAdminUsecase(repo AdminRepo, logger log.Logger) *AdminUsecase {
 }
 
 func (uc *AdminUsecase) RegisterPermissionSnapshot(ctx context.Context) error {
+	if err := uc.repo.EnsurePermissionBootstrap(ctx); err != nil {
+		return err
+	}
 	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
 		return err
 	}
@@ -93,16 +113,7 @@ func (uc *AdminUsecase) RegisterPermissionSnapshot(ctx context.Context) error {
 }
 
 func (uc *AdminUsecase) syncAuthProjection(ctx context.Context, label string, apply func() error) error {
-	if err := apply(); err != nil {
-		uc.log.Warnf("auth projection delta failed, fallback to snapshot: %s err=%v", label, err)
-		if snapshotErr := uc.repo.RegisterPermissionSnapshot(ctx); snapshotErr != nil {
-			return fmt.Errorf("apply auth projection update: %w; snapshot fallback failed: %v", err, snapshotErr)
-		}
-		uc.log.Infof("auth projection snapshot fallback succeeded: %s", label)
-		return nil
-	}
-	uc.log.Infof("auth projection delta applied: %s", label)
-	return nil
+	return authx.SyncProjectionDelta(ctx, uc.log, label, apply, uc.RegisterPermissionSnapshot)
 }
 
 func (uc *AdminUsecase) loadRoleWithResources(ctx context.Context, roleID int64) (*ent.Role, error) {
@@ -170,11 +181,14 @@ func (uc *AdminUsecase) ResolveRoleValues(ctx context.Context, req *v1.ResolveRo
 }
 
 func (uc *AdminUsecase) GetUserRoleBinding(ctx context.Context, req *v1.GetUserRoleBindingRequest) (*v1.UserRoleBindingItem, error) {
-	item, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
+	items, err := uc.repo.GetUserRoleBindings(ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
-	return userRoleBindingToReply(item), nil
+	if len(items) == 0 {
+		return &v1.UserRoleBindingItem{UserId: req.UserId}, nil
+	}
+	return userRoleBindingsToReply(req.UserId, items), nil
 }
 
 func (uc *AdminUsecase) ListUserRoleBindings(ctx context.Context) (*v1.ListUserRoleBindingsReply, error) {
@@ -190,40 +204,32 @@ func (uc *AdminUsecase) ListUserRoleBindings(ctx context.Context) (*v1.ListUserR
 }
 
 func (uc *AdminUsecase) UpsertUserRoleBinding(ctx context.Context, req *v1.UserRoleBindingItem) (*v1.UserRoleBindingItem, error) {
-	if _, err := uc.repo.GetRole(ctx, req.RoleId); err != nil {
-		return nil, err
+	roleIDs := normalizeRoleIDs(req.RoleIds, req.RoleId)
+	for _, roleID := range roleIDs {
+		if _, err := uc.repo.GetRole(ctx, roleID); err != nil {
+			return nil, err
+		}
 	}
-	var before *ent.UserRoleBinding
-	before, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
-	if err != nil && !ent.IsNotFound(err) {
-		return nil, err
-	}
-	if ent.IsNotFound(err) {
-		before = nil
-	}
-	item, err := uc.repo.UpsertUserRoleBinding(ctx, req.UserId, req.RoleId)
+	items, err := uc.repo.UpsertUserRoleBinding(ctx, req.UserId, roleIDs)
 	if err != nil {
 		return nil, err
 	}
-	if err := uc.syncAuthProjection(ctx, fmt.Sprintf("user-role-binding upsert user=%s role_id=%d", req.UserId, req.RoleId), func() error {
-		return uc.repo.ApplyAuthUserRoleBindingDelta(ctx, before, item)
-	}); err != nil {
+	if err := uc.RegisterPermissionSnapshot(ctx); err != nil {
 		return nil, err
 	}
-	return userRoleBindingToReply(item), nil
+	uc.log.Infof("auth projection snapshot registered: user-role-binding upsert user=%s role_ids=%v", req.UserId, roleIDs)
+	return userRoleBindingsToReply(req.UserId, items), nil
 }
 
 func (uc *AdminUsecase) DeleteUserRoleBinding(ctx context.Context, req *v1.DeleteUserRoleBindingRequest) error {
-	before, err := uc.repo.GetUserRoleBinding(ctx, req.UserId)
-	if err != nil {
-		return err
-	}
 	if err := uc.repo.DeleteUserRoleBinding(ctx, req.UserId); err != nil {
 		return err
 	}
-	return uc.syncAuthProjection(ctx, fmt.Sprintf("user-role-binding delete user=%s", req.UserId), func() error {
-		return uc.repo.ApplyAuthUserRoleBindingDelta(ctx, before, nil)
-	})
+	if err := uc.RegisterPermissionSnapshot(ctx); err != nil {
+		return err
+	}
+	uc.log.Infof("auth projection snapshot registered: user-role-binding delete user=%s", req.UserId)
+	return nil
 }
 
 func (uc *AdminUsecase) GetRoleList(ctx context.Context, req *v1.RolePageParams) (*v1.GetRoleListByPageReply, error) {
@@ -315,6 +321,9 @@ func (uc *AdminUsecase) GetApiList(ctx context.Context, req *v1.GetApiPageParams
 }
 
 func (uc *AdminUsecase) AddApi(ctx context.Context, req *v1.ApiListItem) (*v1.ApiListItem, error) {
+	if err := uc.ensureUniqueAPIPathMethod(ctx, req.Id, req.Path, req.Method); err != nil {
+		return nil, err
+	}
 	apiItem := &ent.ApiResources{}
 	copier.Copy(apiItem, req)
 	created, err := uc.repo.AddApi(ctx, apiItem)
@@ -332,6 +341,9 @@ func (uc *AdminUsecase) AddApi(ctx context.Context, req *v1.ApiListItem) (*v1.Ap
 func (uc *AdminUsecase) UpdateApi(ctx context.Context, req *v1.ApiListItem) (*v1.ApiListItem, error) {
 	before, err := uc.repo.GetApi(ctx, req.Id)
 	if err != nil {
+		return nil, err
+	}
+	if err := uc.ensureUniqueAPIPathMethod(ctx, req.Id, req.Path, req.Method); err != nil {
 		return nil, err
 	}
 	apiItem := &ent.ApiResources{}
@@ -361,6 +373,27 @@ func (uc *AdminUsecase) DelApi(ctx context.Context, apiID string) error {
 	})
 }
 
+func (uc *AdminUsecase) ensureUniqueAPIPathMethod(ctx context.Context, currentID, path, method string) error {
+	path = strings.TrimSpace(path)
+	method = strings.TrimSpace(method)
+	if path == "" || method == "" {
+		return nil
+	}
+	list, _, err := uc.repo.GetApiList(ctx, &v1.GetApiPageParams{Path: path, Method: method})
+	if err != nil {
+		return err
+	}
+	for _, item := range list {
+		if item == nil {
+			continue
+		}
+		if currentID == "" || item.ID != currentID {
+			return fmt.Errorf("api path + method already exists: %s %s", method, path)
+		}
+	}
+	return nil
+}
+
 func (uc *AdminUsecase) GetResourceList(ctx context.Context, req *v1.GetResourcePageParams) (*v1.GetResourceListByPageReply, error) {
 	list, count, err := uc.repo.GetResourceList(ctx, req)
 	if err != nil {
@@ -380,7 +413,7 @@ func (uc *AdminUsecase) AddResource(ctx context.Context, req *v1.ResourceListIte
 	if err != nil {
 		return nil, err
 	}
-	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
+	if err := uc.RegisterPermissionSnapshot(ctx); err != nil {
 		return nil, err
 	}
 	return resourceToReply(created), nil
@@ -396,7 +429,7 @@ func (uc *AdminUsecase) UpdateResource(ctx context.Context, req *v1.ResourceList
 	if err != nil {
 		return nil, err
 	}
-	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
+	if err := uc.RegisterPermissionSnapshot(ctx); err != nil {
 		return nil, err
 	}
 	return resourceToReply(updated), nil
@@ -409,7 +442,7 @@ func (uc *AdminUsecase) DelResource(ctx context.Context, resourceID string) erro
 	if err := uc.repo.DelResource(ctx, resourceID); err != nil {
 		return err
 	}
-	return uc.repo.RegisterPermissionSnapshot(ctx)
+	return uc.RegisterPermissionSnapshot(ctx)
 }
 
 func (uc *AdminUsecase) GetDeptList(ctx context.Context) (*v1.GetDeptListReply, error) {
@@ -482,17 +515,32 @@ func (uc *AdminUsecase) GetCurrentUserMenus(ctx context.Context, userID string) 
 	if err != nil {
 		return nil, err
 	}
-	binding, err := uc.repo.GetUserRoleBinding(ctx, userID)
+	bindings, err := uc.repo.GetUserRoleBindings(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
-	roleItem, err := uc.repo.GetRole(ctx, binding.RoleID)
-	if err != nil {
-		return nil, err
+	isRoot := false
+	menuIDs := make([]int32, 0)
+	seenMenuIDs := make(map[int32]struct{})
+	for _, binding := range bindings {
+		roleItem, err := uc.repo.GetRole(ctx, binding.RoleID)
+		if err != nil {
+			return nil, err
+		}
+		if roleItem.Value == "root" {
+			isRoot = true
+		}
+		for _, menuID := range roleItem.Menus {
+			if _, ok := seenMenuIDs[menuID]; ok {
+				continue
+			}
+			seenMenuIDs[menuID] = struct{}{}
+			menuIDs = append(menuIDs, menuID)
+		}
 	}
 	authority := &currentUserMenuAuthority{
-		isRoot:  roleItem.Value == "root",
-		menuIDs: append([]int32(nil), roleItem.Menus...),
+		isRoot:  isRoot,
+		menuIDs: menuIDs,
 	}
 	menuList, err := uc.repo.GetMenuList(ctx)
 	if err != nil {
@@ -643,6 +691,131 @@ func (uc *AdminUsecase) CreateSysLog(ctx context.Context, req *v1.CreateSysLogRe
 		ResStatus:   req.ResStatus,
 		Stack:       req.Stack,
 	})
+}
+
+func (uc *AdminUsecase) GetBusinessDomainList(ctx context.Context) (*v1.GetBusinessDomainListReply, error) {
+	list, err := uc.repo.ListBusinessDomains(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetBusinessDomainListReply{Items: make([]*v1.BusinessDomainItem, 0, len(list)), Total: int64(len(list))}
+	for _, item := range list {
+		res.Items = append(res.Items, businessDomainToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
+	item, err := uc.repo.AddBusinessDomain(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return businessDomainToReply(item), nil
+}
+
+func (uc *AdminUsecase) UpdateBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
+	if _, err := uc.repo.GetBusinessDomain(ctx, req.Id); err != nil {
+		return nil, err
+	}
+	item, err := uc.repo.UpdateBusinessDomain(ctx, req.Id, req)
+	if err != nil {
+		return nil, err
+	}
+	return businessDomainToReply(item), nil
+}
+
+func (uc *AdminUsecase) DeleteBusinessDomain(ctx context.Context, id string) error {
+	if _, err := uc.repo.GetBusinessDomain(ctx, id); err != nil {
+		return err
+	}
+	return uc.repo.DeleteBusinessDomain(ctx, id)
+}
+
+func (uc *AdminUsecase) GetServiceRegistryList(ctx context.Context) (*v1.GetServiceRegistryListReply, error) {
+	list, err := uc.repo.ListServiceRegistries(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetServiceRegistryListReply{Items: make([]*v1.ServiceRegistryItem, 0, len(list)), Total: int64(len(list))}
+	for _, item := range list {
+		res.Items = append(res.Items, serviceRegistryToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
+	item, err := uc.repo.AddServiceRegistry(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return serviceRegistryToReply(item), nil
+}
+
+func (uc *AdminUsecase) UpdateServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
+	if _, err := uc.repo.GetServiceRegistry(ctx, req.Id); err != nil {
+		return nil, err
+	}
+	item, err := uc.repo.UpdateServiceRegistry(ctx, req.Id, req)
+	if err != nil {
+		return nil, err
+	}
+	return serviceRegistryToReply(item), nil
+}
+
+func (uc *AdminUsecase) DeleteServiceRegistry(ctx context.Context, id string) error {
+	if _, err := uc.repo.GetServiceRegistry(ctx, id); err != nil {
+		return err
+	}
+	return uc.repo.DeleteServiceRegistry(ctx, id)
+}
+
+func (uc *AdminUsecase) GetProjectionSourceStatusList(ctx context.Context) (*v1.GetProjectionSourceStatusListReply, error) {
+	list, err := uc.repo.ListProjectionSourceStatuses(ctx)
+	if err != nil {
+		return nil, err
+	}
+	res := &v1.GetProjectionSourceStatusListReply{Items: make([]*v1.ProjectionSourceStatusItem, 0, len(list)), Total: int64(len(list))}
+	for _, item := range list {
+		res.Items = append(res.Items, projectionSourceStatusToReply(item))
+	}
+	return res, nil
+}
+
+func (uc *AdminUsecase) AddProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	item, err := uc.repo.AddProjectionSourceStatus(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return projectionSourceStatusToReply(item), nil
+}
+
+func (uc *AdminUsecase) UpdateProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	if _, err := uc.repo.GetProjectionSourceStatus(ctx, req.Id); err != nil {
+		return nil, err
+	}
+	item, err := uc.repo.UpdateProjectionSourceStatus(ctx, req.Id, req)
+	if err != nil {
+		return nil, err
+	}
+	return projectionSourceStatusToReply(item), nil
+}
+
+func (uc *AdminUsecase) ReportProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
+	if req.SourceService == "" {
+		return nil, fmt.Errorf("source_service is required")
+	}
+	item, err := uc.repo.ReportProjectionSourceStatus(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return projectionSourceStatusToReply(item), nil
+}
+
+func (uc *AdminUsecase) DeleteProjectionSourceStatus(ctx context.Context, id string) error {
+	if _, err := uc.repo.GetProjectionSourceStatus(ctx, id); err != nil {
+		return err
+	}
+	return uc.repo.DeleteProjectionSourceStatus(ctx, id)
 }
 
 func (uc *AdminUsecase) GetSysLogList(ctx context.Context, req *v1.GetSysLogListParams) (*v1.GetSysLogListReply, error) {
@@ -1084,6 +1257,8 @@ func apiToReply(item *ent.ApiResources) *v1.ApiListItem {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourcesGroup,
+		ServiceCode:       item.ServiceCode,
+		DomainCode:        item.DomainCode,
 	}
 }
 
@@ -1130,16 +1305,125 @@ func apiToAuthReply(item *ent.ApiResources) *v1.AuthApiItem {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourcesGroup,
+		ServiceCode:       item.ServiceCode,
+		DomainCode:        item.DomainCode,
 	}
 }
 
+func normalizeRoleIDs(roleIDs []int64, fallbackRoleID int64) []int64 {
+	if len(roleIDs) == 0 {
+		roleIDs = []int64{fallbackRoleID}
+	}
+	items := make([]int64, 0, len(roleIDs))
+	seen := make(map[int64]struct{}, len(roleIDs))
+	for _, roleID := range roleIDs {
+		if roleID < 0 {
+			continue
+		}
+		if _, ok := seen[roleID]; ok {
+			continue
+		}
+		seen[roleID] = struct{}{}
+		items = append(items, roleID)
+	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i] < items[j]
+	})
+	return items
+}
+
 func userRoleBindingToReply(item *ent.UserRoleBinding) *v1.UserRoleBindingItem {
+	roleIDs := []int64(nil)
+	if item.RoleID >= 0 {
+		roleIDs = []int64{item.RoleID}
+	}
 	return &v1.UserRoleBindingItem{
 		Id:         strconv.FormatInt(item.ID, 10),
 		UserId:     item.UserID,
 		RoleId:     item.RoleID,
 		CreateTime: item.CreateTime.Format(time.DateTime),
 		UpdateTime: item.UpdateTime.Format(time.DateTime),
+		RoleIds:    roleIDs,
+	}
+}
+
+func userRoleBindingsToReply(userID string, items []*ent.UserRoleBinding) *v1.UserRoleBindingItem {
+	res := &v1.UserRoleBindingItem{
+		UserId:  userID,
+		RoleIds: make([]int64, 0, len(items)),
+	}
+	roleIDSet := false
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+		if res.Id == "" {
+			res.Id = strconv.FormatInt(item.ID, 10)
+			res.CreateTime = item.CreateTime.Format(time.DateTime)
+			res.UpdateTime = item.UpdateTime.Format(time.DateTime)
+		}
+		if res.UserId == "" {
+			res.UserId = item.UserID
+		}
+		if !roleIDSet {
+			res.RoleId = item.RoleID
+			roleIDSet = true
+		}
+		res.RoleIds = append(res.RoleIds, item.RoleID)
+	}
+	return res
+}
+
+func businessDomainToReply(item *ent.BusinessDomain) *v1.BusinessDomainItem {
+	status := int32(0)
+	if item.Status {
+		status = 1
+	}
+	return &v1.BusinessDomainItem{
+		Id:            item.ID,
+		Code:          item.Code,
+		Name:          item.Name,
+		OwnerService:  item.OwnerService,
+		OrgModelType:  item.OrgModelType,
+		AuthScopeType: item.AuthScopeType,
+		Status:        status,
+		Description:   item.Description,
+		MetaJson:      item.MetaJSON,
+		CreateTime:    item.CreateTime.Format(time.DateTime),
+	}
+}
+
+func serviceRegistryToReply(item *ent.ServiceRegistry) *v1.ServiceRegistryItem {
+	status := int32(0)
+	if item.Status {
+		status = 1
+	}
+	return &v1.ServiceRegistryItem{
+		Id:                item.ID,
+		ServiceCode:       item.ServiceCode,
+		ServiceName:       item.ServiceName,
+		DomainCode:        item.DomainCode,
+		HttpPrefix:        item.HTTPPrefix,
+		GrpcService:       item.GrpcService,
+		Status:            status,
+		ProjectionEnabled: item.ProjectionEnabled,
+		Description:       item.Description,
+		CreateTime:        item.CreateTime.Format(time.DateTime),
+	}
+}
+
+func projectionSourceStatusToReply(item *ent.ProjectionSourceStatus) *v1.ProjectionSourceStatusItem {
+	return &v1.ProjectionSourceStatusItem{
+		Id:                   item.ID,
+		SourceService:        item.SourceService,
+		DomainCode:           item.DomainCode,
+		SyncMode:             item.SyncMode,
+		State:                item.State,
+		LastSnapshotRevision: item.LastSnapshotRevision,
+		LastSyncTime:         item.LastSyncTime,
+		LastError:            item.LastError,
+		Description:          item.Description,
+		CreateTime:           item.CreateTime.Format(time.DateTime),
 	}
 }
 

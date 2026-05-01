@@ -105,6 +105,16 @@ func ResourcesGroup(v string) predicate.ApiResources {
 	return predicate.ApiResources(sql.FieldEQ(FieldResourcesGroup, v))
 }
 
+// ServiceCode applies equality check predicate on the "service_code" field. It's identical to ServiceCodeEQ.
+func ServiceCode(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEQ(FieldServiceCode, v))
+}
+
+// DomainCode applies equality check predicate on the "domain_code" field. It's identical to DomainCodeEQ.
+func DomainCode(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEQ(FieldDomainCode, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.ApiResources {
 	return predicate.ApiResources(sql.FieldEQ(FieldCreateTime, v))
@@ -573,6 +583,136 @@ func ResourcesGroupEqualFold(v string) predicate.ApiResources {
 // ResourcesGroupContainsFold applies the ContainsFold predicate on the "resources_group" field.
 func ResourcesGroupContainsFold(v string) predicate.ApiResources {
 	return predicate.ApiResources(sql.FieldContainsFold(FieldResourcesGroup, v))
+}
+
+// ServiceCodeEQ applies the EQ predicate on the "service_code" field.
+func ServiceCodeEQ(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEQ(FieldServiceCode, v))
+}
+
+// ServiceCodeNEQ applies the NEQ predicate on the "service_code" field.
+func ServiceCodeNEQ(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldNEQ(FieldServiceCode, v))
+}
+
+// ServiceCodeIn applies the In predicate on the "service_code" field.
+func ServiceCodeIn(vs ...string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldIn(FieldServiceCode, vs...))
+}
+
+// ServiceCodeNotIn applies the NotIn predicate on the "service_code" field.
+func ServiceCodeNotIn(vs ...string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldNotIn(FieldServiceCode, vs...))
+}
+
+// ServiceCodeGT applies the GT predicate on the "service_code" field.
+func ServiceCodeGT(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldGT(FieldServiceCode, v))
+}
+
+// ServiceCodeGTE applies the GTE predicate on the "service_code" field.
+func ServiceCodeGTE(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldGTE(FieldServiceCode, v))
+}
+
+// ServiceCodeLT applies the LT predicate on the "service_code" field.
+func ServiceCodeLT(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldLT(FieldServiceCode, v))
+}
+
+// ServiceCodeLTE applies the LTE predicate on the "service_code" field.
+func ServiceCodeLTE(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldLTE(FieldServiceCode, v))
+}
+
+// ServiceCodeContains applies the Contains predicate on the "service_code" field.
+func ServiceCodeContains(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldContains(FieldServiceCode, v))
+}
+
+// ServiceCodeHasPrefix applies the HasPrefix predicate on the "service_code" field.
+func ServiceCodeHasPrefix(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldHasPrefix(FieldServiceCode, v))
+}
+
+// ServiceCodeHasSuffix applies the HasSuffix predicate on the "service_code" field.
+func ServiceCodeHasSuffix(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldHasSuffix(FieldServiceCode, v))
+}
+
+// ServiceCodeEqualFold applies the EqualFold predicate on the "service_code" field.
+func ServiceCodeEqualFold(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEqualFold(FieldServiceCode, v))
+}
+
+// ServiceCodeContainsFold applies the ContainsFold predicate on the "service_code" field.
+func ServiceCodeContainsFold(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldContainsFold(FieldServiceCode, v))
+}
+
+// DomainCodeEQ applies the EQ predicate on the "domain_code" field.
+func DomainCodeEQ(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEQ(FieldDomainCode, v))
+}
+
+// DomainCodeNEQ applies the NEQ predicate on the "domain_code" field.
+func DomainCodeNEQ(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldNEQ(FieldDomainCode, v))
+}
+
+// DomainCodeIn applies the In predicate on the "domain_code" field.
+func DomainCodeIn(vs ...string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldIn(FieldDomainCode, vs...))
+}
+
+// DomainCodeNotIn applies the NotIn predicate on the "domain_code" field.
+func DomainCodeNotIn(vs ...string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldNotIn(FieldDomainCode, vs...))
+}
+
+// DomainCodeGT applies the GT predicate on the "domain_code" field.
+func DomainCodeGT(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldGT(FieldDomainCode, v))
+}
+
+// DomainCodeGTE applies the GTE predicate on the "domain_code" field.
+func DomainCodeGTE(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldGTE(FieldDomainCode, v))
+}
+
+// DomainCodeLT applies the LT predicate on the "domain_code" field.
+func DomainCodeLT(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldLT(FieldDomainCode, v))
+}
+
+// DomainCodeLTE applies the LTE predicate on the "domain_code" field.
+func DomainCodeLTE(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldLTE(FieldDomainCode, v))
+}
+
+// DomainCodeContains applies the Contains predicate on the "domain_code" field.
+func DomainCodeContains(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldContains(FieldDomainCode, v))
+}
+
+// DomainCodeHasPrefix applies the HasPrefix predicate on the "domain_code" field.
+func DomainCodeHasPrefix(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldHasPrefix(FieldDomainCode, v))
+}
+
+// DomainCodeHasSuffix applies the HasSuffix predicate on the "domain_code" field.
+func DomainCodeHasSuffix(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldHasSuffix(FieldDomainCode, v))
+}
+
+// DomainCodeEqualFold applies the EqualFold predicate on the "domain_code" field.
+func DomainCodeEqualFold(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldEqualFold(FieldDomainCode, v))
+}
+
+// DomainCodeContainsFold applies the ContainsFold predicate on the "domain_code" field.
+func DomainCodeContainsFold(v string) predicate.ApiResources {
+	return predicate.ApiResources(sql.FieldContainsFold(FieldDomainCode, v))
 }
 
 // HasRoles applies the HasEdge predicate on the "roles" edge.

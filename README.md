@@ -10,12 +10,14 @@ Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行
 ## 服务布局
 
 - `app/gateway/service`：统一公网入口，使用 `go-kratos/gateway` 原生 endpoints 配置转发到下游服务
-- `app/auth/service`：认证、JWT、Casbin 策略、角色/API/资源权限
+- `app/auth/service`：认证、JWT、Casbin 策略执行、授权投影
 - `app/user/service`：用户、密码、用户资料
-- `app/admin/service`：菜单、部门、系统日志
+- `app/admin/service`：平台治理、菜单、部门、系统日志、API 目录与投影源状态
 - `app/common/service`：上传、SSE、LLM 能力
 - `pkg/data`：共享 Ent schema / generated client / templates
 - `pkg/tools`：共享工具函数
+
+权限和接口归属口径：`auth` 不拥有角色、资源、API 目录等权限主数据，只执行认证、授权判定和投影加载；当前平台 API 目录主数据在 `admin.sys_api_resources`。同一个 `path + method` 只能有一个主业务域 `domain_code` owner，完整判定规则见 [docs/api-ownership.md](./docs/api-ownership.md)。
 
 ## 常用命令
 
@@ -316,13 +318,14 @@ Postgres 首次初始化时会自动执行：
 
 - `deploy/sql/init/00-create-databases.sql`
 
-它只负责创建四个数据库，不负责建表。表结构由服务启动后的 Ent 自动迁移完成：
+它只负责创建四个数据库，不负责建表。当前表结构和表归属以各服务启动时的迁移逻辑为准，而不是以 `pkg/data/schema/` 的目录位置或 seed 文件名为准。可同时参考 [docs/table-ownership.md](./docs/table-ownership.md)。
 
-- auth：创建 `sys_role`、`sys_api_resources`、`sys_resources`、`api_resources_roles`、`resource_roles`
-- user：创建 `sys_user`
-- admin：创建 `sys_menu`、`sys_dept`、`sys_log`
+- user：数据库 `user`，当前迁移 `sys_user`
+- admin：数据库 `admin`，当前迁移 `sys_api_resources`、`sys_resources`、`sys_role`、`api_resources_roles`、`resource_roles`、`sys_user_role_binding`、`sys_menu`、`sys_dept`、`sys_log`
+- auth：数据库 `auth`，当前主要持有 `casbin_rules` 授权投影，不负责权限主数据表迁移
+- common：数据库 `common`，当前没有 Ent 业务表迁移
 
-基础数据使用单独 seed 文件：
+基础初始化仍使用单独 seed 文件：
 
 - `deploy/sql/seed/auth.sql`
 - `deploy/sql/seed/admin.sql`
@@ -334,26 +337,39 @@ Postgres 首次初始化时会自动执行：
 ./deploy/scripts/seed.sh
 ```
 
+当前 `seed.sh` 会自动识别两种模式：
+
+- 容器模式：如果 `docker-compose.yml` 里的 `admin` 服务正在运行，则沿用容器模式，写入 seed 后重启容器内 `admin`
+- 开发模式：如果你是 `make dev-env-up` + 本地 `make run-*`，脚本会改连 `docker-compose-env.yml` 里的 PostgreSQL，并在写入 seed 后执行 `make sync-admin-projection`，不再依赖重启本地 `admin`
+
 seed 完成后默认账号：
 
 - `vben / 123456`：root
 - `jack / 123456`：admin
 
+如果你当前还没有真实业务服务，seed 也会先把“平台自身”初始化成第一个业务域：
+
+- 业务域：`platform`
+- 已注册基础服务：`admin`、`auth`、`user`、`common`、`gateway`
+- 现有平台 API 目录会自动补齐 `service_code/domain_code` 归属，便于直接验证控制面和网关服务归属解析链路；其中 `domain_code` 是接口唯一主业务域，`service_code` 是技术服务归属
+
 ### seed 说明
 
 - `deploy/scripts/seed.sh` 可以重复执行：固定 ID 的基础角色、菜单、用户、API 资源会按 seed 内容更新，关联关系会跳过已存在记录
 - 默认账号 `jack` / `vben` 在重复 seed 时会被归一化到 seed 里的固定记录，避免同名默认账号重复累积
-- `sys_api_resources` 是 API 权限目录主数据；重复 seed 会按 seed 中的 `path/method/resources_group` 更新这张表，从而影响后续 `admin -> auth -> casbin` 投影
-- 如果想回到完全空白的本地环境，建议清理卷后重建：
+- `sys_api_resources` 是 API 权限目录主数据；重复 seed 会按 seed 中的平台基础数据补齐 `path/method/resources_group/service_code/domain_code`，从而影响后续 `admin -> auth -> casbin` 投影
+- 同一个 `path + method` 不应在 `sys_api_resources` 中被多个业务域并列拥有；跨域调用、跨域聚合和迁移兼容都应保留唯一主 `domain_code`
+- 当前“表归属 / 当前 schema 模型”请以服务迁移代码和 [docs/table-ownership.md](./docs/table-ownership.md) 为准，不要根据 `deploy/sql/seed/*.sql` 的文件名或内容反推
+- 当前 seed 分工为：`deploy/sql/seed/admin.sql` 负责角色、资源、API 资源、业务域、服务注册、用户角色绑定、菜单、部门等 `admin` 主数据；`deploy/sql/seed/user.sql` 只负责 `sys_user`；`deploy/sql/seed/auth.sql` 保留为 no-op 占位，`auth` 侧权限来自 `admin -> auth -> casbin_rules` 投影
+- `deploy/scripts/seed.sh` 在写入 seed 后会自动触发一次 `admin -> auth` 权限快照同步：容器模式下重启 `admin` 容器，开发模式下执行 `make sync-admin-projection`
+- 如果想回到完全空白的本地依赖环境，建议重建依赖服务后再执行 seed：
 
 ```bash
-docker compose -f ./docker-compose.yml down -v
-./deploy/scripts/up.sh
+make dev-env-reset
 ./deploy/scripts/seed.sh
 ```
 
 - 当前 seed 已按拆分服务结构整理，不再直接整份导入旧的 `deploy/sql/pg_dump.sql`
-- 旧 dump 中的 `user_roles` 已转换为当前 `sys_user.role_id`
 - 旧 `basic-api` 路径已按当前拆分后的 `/auth-api/v1/*`、`/user-api/v1/*`、`/admin-api/v1/*`、`/common-api/v1/*` 重新整理
 
 ## Docker
@@ -389,8 +405,9 @@ ALTER SEQUENCE casbin_rules_id_seq RESTART WITH {max_id + 1};
 当前权限投影链路说明：
 
 - `auth` 启动时只会从本地 `casbin_rules` 执行 `LoadPolicy()`，不会主动回拉 `admin`
-- `admin` 启动后会主动向 `auth` 注册一次完整权限快照
+- 当前仓库里，`admin` 启动后会主动向 `auth` 注册一次完整权限快照
 - `AddRole/UpdateRole/DelRole`、`AddApi/UpdateApi/DelApi`、`UpsertUserRoleBinding/DeleteUserRoleBinding` 会走增量同步；资源增删改当前仍回退到完整快照
+- 投影发送逻辑已经抽到通用 sender，后续业务服务可以复用同一套 `auth` 注入链路
 
 API 权限目录来源说明：
 
