@@ -1,0 +1,4 @@
+interface:
+  display_name: "base-server"
+  short_description: "Go/Kratos backend plus paired frontend impact"
+  default_prompt: "Use $base-server to work on the Go/Kratos backend, starting with project docs and paired frontend impact."
