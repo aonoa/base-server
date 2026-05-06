@@ -16,6 +16,7 @@ For feature additions, modifications, or refactors, treat `base-server/master` a
 | Business | `internal/biz/` | Use cases and repo interfaces |
 | Services | `internal/service/` | Generated interface implementations |
 | Server | `internal/server/` | Middleware, response encoding, cron, transport wiring |
+| Logging | `internal/logx/` | Zap/Kratos logger adapter with JSON output and stdout/file sinks |
 | Deployment | `deploy/helm/base-server/` | Helm chart and runtime config |
 
 ## Generation Map

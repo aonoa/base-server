@@ -10,6 +10,7 @@
 | Data access | `internal/data/` and `internal/data/schema/` | Ent client, repositories, schemas, cache setup | Schema changes require regeneration |
 | Transport handlers | `internal/service/` | HTTP/gRPC service implementations | Must track proto changes |
 | Server wiring | `internal/server/` | Middleware, HTTP/gRPC setup, response encoding, cron worker | Changing middleware changes runtime policy |
+| Logging | `internal/logx/` | Zap/Kratos logger adapter, JSON encoder, stdout/file sink setup | Logger changes affect runtime observability |
 | Shared helpers | `internal/tools/`, `internal/types/`, `pkg/` | Utility functions and cross-layer helpers | Keep these lightweight and reusable |
 | Deployment | `deploy/helm/base-server/` | Helm chart, configmap, service, deployment | Contains sensitive config placeholders |
 | Runtime config | `configs/config.yaml` | Local default configuration | Must match `conf.proto` |

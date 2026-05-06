@@ -45,6 +45,7 @@
 - `api/protos/**`, `api/gen/go/**`
 - `internal/conf/conf.proto`, `internal/conf/conf.pb.go`
 - `internal/data/schema/**`, `internal/data/ent/**`
+- `internal/logx/**`
 - `cmd/base-server/main.go`, `cmd/base-server/wire.go`, `cmd/base-server/wire_gen.go`
 - `cmd/base-server/assets/openapi.yaml`
 - `internal/server/**`, especially middleware and response encoding
@@ -113,7 +114,7 @@ Ask before changing:
 
 ## Repo-Specific Risks
 
-- `configs/config.yaml` and Helm ConfigMap templates contain live-looking config values; treat them as placeholders and do not copy real credentials into git.
+- `configs/config.yaml` is a placeholder template; keep real database passwords, auth keys, and LLM API keys out of Git.
 - There are no `*_test.go` files in the scanned repository snapshot.
 - `logs/` is untracked and should remain outside source control.
 

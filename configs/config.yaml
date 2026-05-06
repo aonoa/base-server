@@ -9,7 +9,7 @@ server:
 # 日志配置
 logger:
   level: debug        # 日志等级 debug、info、warn、error
-  filename: ./log/app.log
+  filename: ./logx/app.log
   max_size: 100       # 单文件最大大小（MB）
   max_backups: 5      # 保留旧文件数量
   max_age: 30         # 保留天数
@@ -19,15 +19,16 @@ logger:
 data:
   database:
     driver: pgx
-    source: postgresql://postgres:postgres.666@43.142.238.199:25432/test1
+    # Git 中只保留示例 DSN；本地运行前替换 CHANGE_ME_DB_PASSWORD。
+    source: "postgresql://postgres:CHANGE_ME_DB_PASSWORD@127.0.0.1:5432/test1?sslmode=disable"
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
 
 auth:
-  service_key: some-secret-key
-  api_key: some-secret-key-for-forntend
+  service_key: CHANGE_ME_AUTH_SERVICE_KEY
+  api_key: CHANGE_ME_FRONTEND_API_KEY
 
 menus:
   default_menus: 1,2,3,10,4,5,6,7,8,9
@@ -36,7 +37,7 @@ llm:
   agent:
     openAI:
       model: GLM-4.5-Flash
-      api_key: xxxxxxxx
+      api_key: CHANGE_ME_LLM_API_KEY
       api_base_url: https://open.bigmodel.cn/api/paas/v4/
 
 #job:

@@ -12,7 +12,7 @@
 - `internal/biz/`: use cases, repositories interfaces, auth logic, menu/tree logic
 - `internal/service/`: transport handlers for HTTP/gRPC
 - `internal/server/`: server wiring, middleware, response encoding, cron worker
-- `internal/log/`: logger setup
+- `internal/logx/`: logger setup
 - `internal/tools/`: utility helpers
 - `internal/types/`: shared type aliases or DTO helpers
 - `pkg/`: shared helpers for transport/context handling
@@ -49,6 +49,6 @@
 ## Risks And Constraints
 
 - Generated code is a write-once output layer and should not be edited by hand
-- `configs/config.yaml` and Helm templates currently contain placeholder-like secrets and live credentials
+- `configs/config.yaml` uses placeholder secrets for Git; Helm templates can still contain sensitive runtime values
 - `internal/data/data.go` auto-creates schema on startup, so data-model changes affect runtime behavior immediately
 - gRPC is wired but not started, so the effective public surface is HTTP-first

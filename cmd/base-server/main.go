@@ -1,7 +1,7 @@
 package main
 
 import (
-	zaplogger "base-server/internal/log"
+	"base-server/internal/logx"
 	"base-server/internal/server"
 	"flag"
 	"fmt"
@@ -76,7 +76,7 @@ func main() {
 		panic(err)
 	}
 
-	logger := log.With(zaplogger.NewZapLogger(bc.Logger),
+	logger := log.With(logx.NewZapLogger(bc.Logger),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", id,

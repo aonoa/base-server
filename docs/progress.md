@@ -8,6 +8,8 @@
 - Project-specific skill has been generated in the repository at `.codex/skills/base-server/`
 - Root coordination docs now separate monolithic `master/main` and microservice `monorepo/monorepo` version lines
 - Full-stack feature work is now documented as the default rule for changes in the paired frontend/backend version line
+- Logger setup now lives under `internal/logx/` and keeps structured JSON output
+- `configs/config.yaml` now uses committed placeholder secrets instead of real database/auth/LLM credentials
 
 ## Active Blockers
 
