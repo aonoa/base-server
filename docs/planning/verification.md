@@ -4,6 +4,7 @@
 
 ```bash
 make init
+sh scripts/git/install-config-safety.sh
 ```
 
 ## Generate
@@ -45,3 +46,4 @@ helm template base-server ./deploy/helm/base-server
 - If deployment manifests changed, validate the Helm chart render.
 - For feature additions, modifications, or refactors, include the paired frontend verification that covers the affected user flow when frontend behavior, generated clients, request/response types, auth, upload, or SSE behavior can be affected.
 - If only backend verification is required, state why the paired frontend does not need a code or verification change.
+- Before committing `configs/config.yaml`, install the repo-local hook/filter and confirm the staged blob contains `CHANGE_ME_*` placeholders rather than local secrets.

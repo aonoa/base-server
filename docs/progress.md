@@ -9,7 +9,7 @@
 - Root coordination docs now separate monolithic `master/main` and microservice `monorepo/monorepo` version lines
 - Full-stack feature work is now documented as the default rule for changes in the paired frontend/backend version line
 - Logger setup now lives under `internal/logx/` and keeps structured JSON output
-- `configs/config.yaml` now uses committed placeholder secrets instead of real database/auth/LLM credentials
+- `configs/config.yaml` is protected by a repo-local clean filter and pre-commit hook so local secrets are redacted before entering Git
 
 ## Active Blockers
 

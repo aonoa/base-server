@@ -93,6 +93,7 @@ helm template base-server ./deploy/helm/base-server
 - Do not overwrite existing dirty files unless the task explicitly targets them.
 - Keep commits aligned with a single task boundary.
 - Do not commit generated artifacts, logs, build outputs, or secrets unless explicitly required.
+- `configs/config.yaml` may contain local secrets in the worktree; use the repo-local `redact-config` filter and pre-commit hook so only placeholder values enter Git.
 - Push only when the user asks.
 
 ## Worktree And Parallelism
@@ -114,7 +115,7 @@ Ask before changing:
 
 ## Repo-Specific Risks
 
-- `configs/config.yaml` is a placeholder template; keep real database passwords, auth keys, and LLM API keys out of Git.
+- `configs/config.yaml` may remain a real local config in the worktree, but committed content must be redacted by `scripts/git/redact-config-yaml.sh` and `.githooks/pre-commit`.
 - There are no `*_test.go` files in the scanned repository snapshot.
 - `logs/` is untracked and should remain outside source control.
 

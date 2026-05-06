@@ -9,7 +9,7 @@ server:
 # 日志配置
 logger:
   level: debug        # 日志等级 debug、info、warn、error
-  filename: ./logx/app.log
+  filename: ./logs/app.log
   max_size: 100       # 单文件最大大小（MB）
   max_backups: 5      # 保留旧文件数量
   max_age: 30         # 保留天数
@@ -19,7 +19,6 @@ logger:
 data:
   database:
     driver: pgx
-    # Git 中只保留示例 DSN；本地运行前替换 CHANGE_ME_DB_PASSWORD。
     source: "postgresql://postgres:CHANGE_ME_DB_PASSWORD@127.0.0.1:5432/test1?sslmode=disable"
   redis:
     addr: 127.0.0.1:6379

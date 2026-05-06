@@ -12,4 +12,4 @@
 - Refreshed root coordination docs to separate monolithic `master/main` and microservice `monorepo/monorepo` version lines.
 - Added the rule that feature additions, modifications, and refactors must assess both backend and paired frontend impact within the active version line.
 - Migrated the logger adapter to `internal/logx/` and kept JSON structured output.
-- Redacted `configs/config.yaml` by replacing database/auth/LLM secrets with `CHANGE_ME_*` placeholders before committing it.
+- Added a repo-local clean filter and pre-commit hook to redact `configs/config.yaml` into `CHANGE_ME_*` placeholders at commit time while preserving local worktree values.

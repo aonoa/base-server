@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+config_path="configs/config.yaml"
+sanitizer="scripts/git/redact-config-yaml.sh"
+
+if ! test -f "$sanitizer"; then
+  echo "pre-commit: missing $sanitizer" >&2
+  exit 1
+fi
+
+if git diff --cached --name-only -- "$config_path" | grep -qx "$config_path"; then
+  tmp=$(mktemp)
+  trap 'rm -f "$tmp"' EXIT HUP INT TERM
+
+  git show ":$config_path" | sh "$sanitizer" > "$tmp"
+  oid=$(git hash-object -w "$tmp")
+  git update-index --cacheinfo "100644,$oid,$config_path"
+fi
+
+if git cat-file -e ":$config_path" 2>/dev/null; then
+  if git show ":$config_path" | grep -E 'postgres\.666|postgres\*data|43\.142\.238\.199|some-secret-key|some-secret-key-for-forntend|xxxxxxxx' >/dev/null; then
+    echo "pre-commit: staged configs/config.yaml still contains a known secret or live endpoint" >&2
+    exit 1
+  fi
+
+  if git show ":$config_path" | grep -E 'postgresql://[^:]+:[^@]*@' | grep -v 'CHANGE_ME_DB_PASSWORD' >/dev/null; then
+    echo "pre-commit: staged configs/config.yaml contains a non-redacted PostgreSQL password" >&2
+    exit 1
+  fi
+fi
