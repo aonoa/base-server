@@ -39,6 +39,8 @@ bin/
 *.tar
 *.tar.gz
 
+logs/
+
 old/
 
 
