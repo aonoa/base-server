@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -22,6 +23,30 @@ import (
 type Base struct {
 	Hello string
 }
+
+type SiteMessageEnvelope struct {
+	Message *ent.SiteMessage
+	Receipt *ent.SiteMessageReceipt
+}
+
+const (
+	siteMessageInboxMenuPath    = "/messages"
+	siteMessageInboxMenuName    = "SiteMessageCenter"
+	siteMessageManageMenuPath   = "/system/site-message"
+	siteMessageManageMenuName   = "SiteMessageManage"
+	siteMessageMenuComponent    = "/_core/messages/index"
+	siteMessageManageParentPath = "/system"
+	siteMessageManageParentName = "System"
+
+	SiteMessageActionDraft    = "draft"
+	SiteMessageActionSchedule = "schedule"
+	SiteMessageActionPublish  = "publish"
+
+	SiteMessageStatusDraft     = "draft"
+	SiteMessageStatusScheduled = "scheduled"
+	SiteMessageStatusPublished = "published"
+	SiteMessageStatusRecalled  = "recalled"
+)
 
 // BaseRepo is a Base repo.
 type BaseRepo interface {
@@ -46,6 +71,7 @@ type BaseRepo interface {
 	GetRole(ctx context.Context, id int64) (*ent.Role, error)
 	AddRole(ctx context.Context, req *pb.RoleListItem) (*ent.Role, error)
 	UpdateRole(ctx context.Context, deptId int64, req *pb.RoleListItem) (*ent.Role, error)
+	UpdateRoleMenus(ctx context.Context, roleId int64, menus []int32) error
 	DelRole(ctx context.Context, id int64) error
 
 	GetMenuList(ctx context.Context) ([]*ent.Menu, error)
@@ -75,6 +101,17 @@ type BaseRepo interface {
 	CreateSysLog(ctx context.Context, req *ent.SysLogRecord) error
 	GetSysLogList(ctx context.Context, req *pb.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error)
 	GetSysLogInfo(ctx context.Context, id string) (*ent.SysLogRecord, error)
+
+	CreateSiteMessage(ctx context.Context, senderID, senderName string, req *pb.CreateSiteMessageRequest) (*ent.SiteMessage, error)
+	GetMySiteMessageList(ctx context.Context, userID string, req *pb.GetMySiteMessageListParams) ([]*SiteMessageEnvelope, int64, error)
+	GetMySiteMessageUnreadCount(ctx context.Context, userID string) (int64, error)
+	MarkSiteMessageRead(ctx context.Context, userID, messageID string) error
+	MarkSiteMessageUnread(ctx context.Context, userID, messageID string) error
+	MarkAllSiteMessagesRead(ctx context.Context, userID string) (int64, error)
+	GetPublishedSiteMessageList(ctx context.Context, req *pb.GetPublishedSiteMessageListParams) ([]*ent.SiteMessage, int64, error)
+	RecallSiteMessage(ctx context.Context, messageID string) error
+	DeletePendingSiteMessage(ctx context.Context, messageID string) error
+	PromoteDueScheduledSiteMessages(ctx context.Context) error
 }
 
 // BaseUsecase is a Base usecase.
@@ -86,11 +123,290 @@ type BaseUsecase struct {
 
 // NewBaseUsecase new a Base usecase.
 func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase) *BaseUsecase {
-	return &BaseUsecase{repo: repo, auth: auth, log: log.NewHelper(logger)}
+	uc := &BaseUsecase{repo: repo, auth: auth, log: log.NewHelper(logger)}
+	if err := uc.ensureBuiltinSiteMessageRouteData(context.Background()); err != nil {
+		uc.log.Errorf("ensure builtin site message route data failed: %v", err)
+	}
+	return uc
 }
 
 func (uc *BaseUsecase) ReLoadPolicy(ctx context.Context) error {
 	return uc.auth.ReLoadPolicy()
+}
+
+func (uc *BaseUsecase) currentUserRoles(ctx context.Context) (*ent.User, []*ent.Role, error) {
+	user, err := uc.GetUserInfo(ctx, tools.GetUserId(ctx))
+	if err != nil {
+		return nil, nil, err
+	}
+	roles, err := uc.GetUserRoles(ctx, user)
+	if err != nil {
+		return nil, nil, err
+	}
+	return user, roles, nil
+}
+
+func (uc *BaseUsecase) GetUserRoles(ctx context.Context, user *ent.User) ([]*ent.Role, error) {
+	return uc.repo.GetRolesFromUser(ctx, user)
+}
+
+func (uc *BaseUsecase) GetUserRoleInfos(ctx context.Context, user *ent.User) ([]*pb.RoleInfo, error) {
+	roles, err := uc.GetUserRoles(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
+	roleInfos := make([]*pb.RoleInfo, 0, len(roles))
+	for _, role := range roles {
+		roleInfos = append(roleInfos, &pb.RoleInfo{
+			RoleName: role.Name,
+			Value:    role.Value,
+		})
+	}
+
+	return roleInfos, nil
+}
+
+func (uc *BaseUsecase) ensureSiteMessageManageAccess(ctx context.Context) (*ent.User, error) {
+	user, roles, err := uc.currentUserRoles(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, role := range roles {
+		if role.Value == "root" || role.Value == "admin" {
+			return user, nil
+		}
+	}
+	return nil, kerrors.Forbidden("FORBIDDEN", "site message manage access denied")
+}
+
+func normalizeSiteMessageReceiverType(receiverType string) string {
+	if receiverType == "user" {
+		return "user"
+	}
+	return "all"
+}
+
+func normalizeSiteMessageAction(action string) string {
+	switch action {
+	case SiteMessageActionDraft:
+		return SiteMessageActionDraft
+	case SiteMessageActionSchedule:
+		return SiteMessageActionSchedule
+	default:
+		return SiteMessageActionPublish
+	}
+}
+
+func normalizeSiteMessageStatus(status string) string {
+	switch status {
+	case SiteMessageStatusDraft:
+		return SiteMessageStatusDraft
+	case SiteMessageStatusScheduled:
+		return SiteMessageStatusScheduled
+	case SiteMessageStatusPublished:
+		return SiteMessageStatusPublished
+	case SiteMessageStatusRecalled:
+		return SiteMessageStatusRecalled
+	default:
+		return ""
+	}
+}
+
+func parseScheduledPublishTime(value string) (time.Time, error) {
+	parsed, err := time.ParseInLocation(time.DateTime, value, time.Local)
+	if err != nil {
+		return time.Time{}, kerrors.BadRequest("BAD_REQUEST", "scheduledPublishTime must use YYYY-MM-DD HH:mm:ss")
+	}
+	return parsed, nil
+}
+
+func formatSiteMessageTime(value *time.Time) string {
+	if value == nil || value.IsZero() {
+		return ""
+	}
+	return value.Format(time.DateTime)
+}
+
+func siteMessageInboxCreatedTime(message *ent.SiteMessage) string {
+	if message.PublishedTime != nil && !message.PublishedTime.IsZero() {
+		return message.PublishedTime.Format(time.DateTime)
+	}
+	return message.CreateTime.Format(time.DateTime)
+}
+
+func (uc *BaseUsecase) promoteDueScheduledSiteMessages(ctx context.Context) error {
+	return uc.repo.PromoteDueScheduledSiteMessages(ctx)
+}
+
+func (uc *BaseUsecase) ensureBuiltinSiteMessageRouteData(ctx context.Context) error {
+	inboxMenu, manageMenu, err := uc.ensureBuiltinSiteMessageMenus(ctx)
+	if err != nil {
+		return err
+	}
+
+	roles, err := uc.repo.GetAllRoleList(ctx, &pb.RolePageParams{})
+	if err != nil {
+		return err
+	}
+
+	for _, role := range roles {
+		nextMenus := normalizeSiteMessageMenuIDs(
+			role.Value,
+			role.Menus,
+			int32(inboxMenu.ID),
+			int32(manageMenu.ID),
+		)
+		if equalMenuIDs(nextMenus, role.Menus) {
+			continue
+		}
+		if err := uc.repo.UpdateRoleMenus(ctx, role.ID, nextMenus); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (uc *BaseUsecase) ensureBuiltinSiteMessageMenus(ctx context.Context) (*ent.Menu, *ent.Menu, error) {
+	menuList, err := uc.repo.GetMenuList(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	inboxMenu := findMenuByPathOrName(menuList, siteMessageInboxMenuPath, siteMessageInboxMenuName)
+	if inboxMenu == nil {
+		inboxMenu, err = uc.repo.CreateMenu(ctx, builtinSiteMessageMenu(0, siteMessageInboxMenuPath, siteMessageInboxMenuName, "站内信", true))
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	manageMenu := findMenuByPathOrName(menuList, siteMessageManageMenuPath, siteMessageManageMenuName)
+	if manageMenu == nil {
+		systemMenu := findMenuByPathOrName(menuList, siteMessageManageParentPath, siteMessageManageParentName)
+		if systemMenu == nil {
+			return nil, nil, fmt.Errorf("site message manage parent menu %s not found", siteMessageManageParentPath)
+		}
+
+		manageMenu, err = uc.repo.CreateMenu(ctx, builtinSiteMessageMenu(systemMenu.ID, siteMessageManageMenuPath, siteMessageManageMenuName, "站内信管理", false))
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	return inboxMenu, manageMenu, nil
+}
+
+func builtinSiteMessageMenu(pid int64, path, name, title string, hideInMenu bool) *ent.Menu {
+	return &ent.Menu{
+		Pid:                      pid,
+		Type:                     "menu",
+		Status:                   true,
+		Path:                     path,
+		Redirect:                 "",
+		Alias:                    "",
+		Name:                     name,
+		Component:                siteMessageMenuComponent,
+		Icon:                     "lucide:mail",
+		Title:                    title,
+		Order:                    9999,
+		OpenInNewWindow:          false,
+		NoBasicLayout:            false,
+		MenuVisibleWithForbidden: false,
+		Link:                     "",
+		IframeSrc:                "",
+		ActiveIcon:               "",
+		ActivePath:               path,
+		MaxNumOfOpenTab:          -1,
+		Keepalive:                false,
+		IgnoreAccess:             false,
+		Authority:                "",
+		AffixTab:                 false,
+		AffixTabOrder:            0,
+		HideInMenu:               hideInMenu,
+		HideInTab:                false,
+		HideInBreadcrumb:         false,
+		HideChildrenInMenu:       false,
+		FullPathKey:              true,
+		Badge:                    "",
+		BadgeType:                "normal",
+		BadgeVariants:            "success",
+	}
+}
+
+func findMenuByPathOrName(menuList []*ent.Menu, path, name string) *ent.Menu {
+	for _, item := range menuList {
+		if item.Path == path || item.Name == name {
+			return item
+		}
+	}
+	return nil
+}
+
+func (uc *BaseUsecase) normalizeSiteMessageMenuPermissions(
+	ctx context.Context,
+	roleValue string,
+	permissions []int32,
+) ([]int32, error) {
+	inboxMenu, manageMenu, err := uc.ensureBuiltinSiteMessageMenus(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return normalizeSiteMessageMenuIDs(roleValue, permissions, int32(inboxMenu.ID), int32(manageMenu.ID)), nil
+}
+
+func normalizeSiteMessageMenuIDs(
+	roleValue string,
+	permissions []int32,
+	inboxMenuID, manageMenuID int32,
+) []int32 {
+	next := removeMenuIDs(permissions, inboxMenuID, manageMenuID)
+	next = appendMenuID(next, inboxMenuID)
+	if roleValue == "admin" || roleValue == "root" {
+		next = appendMenuID(next, manageMenuID)
+	}
+	return next
+}
+
+func removeMenuIDs(menuIDs []int32, removeIDs ...int32) []int32 {
+	removeSet := make(map[int32]struct{}, len(removeIDs))
+	for _, removeID := range removeIDs {
+		removeSet[removeID] = struct{}{}
+	}
+
+	next := make([]int32, 0, len(menuIDs))
+	for _, menuID := range menuIDs {
+		if _, exists := removeSet[menuID]; exists {
+			continue
+		}
+		next = append(next, menuID)
+	}
+	return next
+}
+
+func equalMenuIDs(left, right []int32) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for index := range left {
+		if left[index] != right[index] {
+			return false
+		}
+	}
+	return true
+}
+
+func appendMenuID(menuIDs []int32, menuID int32) []int32 {
+	for _, item := range menuIDs {
+		if item == menuID {
+			return menuIDs
+		}
+	}
+	next := make([]int32, 0, len(menuIDs)+1)
+	next = append(next, menuIDs...)
+	next = append(next, menuID)
+	return next
 }
 
 // Login 登陆，存在返回Id
@@ -696,6 +1012,12 @@ func (uc *BaseUsecase) GetAllRoleList(ctx context.Context, req *pb.RolePageParam
 
 // AddRole 添加角色
 func (uc *BaseUsecase) AddRole(ctx context.Context, req *pb.RoleListItem) error {
+	permissions, err := uc.normalizeSiteMessageMenuPermissions(ctx, req.Value, req.Permissions)
+	if err != nil {
+		return err
+	}
+	req.Permissions = permissions
+
 	role, err := uc.repo.AddRole(ctx, req)
 	if err != nil {
 		return err
@@ -744,6 +1066,12 @@ func (uc *BaseUsecase) DelRole(ctx context.Context, roleId string) error {
 
 // UpdateRole 更新角色
 func (uc *BaseUsecase) UpdateRole(ctx context.Context, req *pb.RoleListItem) error {
+	permissions, err := uc.normalizeSiteMessageMenuPermissions(ctx, req.Value, req.Permissions)
+	if err != nil {
+		return err
+	}
+	req.Permissions = permissions
+
 	roleId, err := strconv.ParseInt(req.Id, 10, 32)
 	if err != nil {
 		return err
@@ -1209,4 +1537,182 @@ func (uc *BaseUsecase) GetSysLogInfo(ctx context.Context, req *pb.GetSysLogInfoP
 	res.RequestTime = info.RequestTime.Format(time.DateTime)
 	res.CreateTime = info.CreateTime.Format(time.DateTime)
 	return res, nil
+}
+
+func (uc *BaseUsecase) GetMySiteMessageList(ctx context.Context, req *pb.GetMySiteMessageListParams) (*pb.GetMySiteMessageListReply, error) {
+	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
+		return nil, err
+	}
+	items, total, err := uc.repo.GetMySiteMessageList(ctx, tools.GetUserId(ctx), req)
+	if err != nil {
+		return nil, err
+	}
+	reply := &pb.GetMySiteMessageListReply{
+		Items: make([]*pb.SiteMessageItem, 0, len(items)),
+		Total: total,
+	}
+	for _, item := range items {
+		readTime := ""
+		if !item.Receipt.ReadTime.IsZero() {
+			readTime = item.Receipt.ReadTime.Format(time.DateTime)
+		}
+		reply.Items = append(reply.Items, &pb.SiteMessageItem{
+			Id:          item.Message.ID,
+			Title:       item.Message.Title,
+			Content:     item.Message.Content,
+			Category:    item.Message.Category,
+			IsRead:      item.Receipt.IsRead,
+			Link:        item.Message.Link,
+			SenderId:    item.Message.SenderID,
+			SenderName:  item.Message.SenderName,
+			CreatedTime: siteMessageInboxCreatedTime(item.Message),
+			ReadTime:    readTime,
+		})
+	}
+	return reply, nil
+}
+
+func (uc *BaseUsecase) GetMySiteMessageUnreadCount(ctx context.Context) (*pb.GetMySiteMessageUnreadCountReply, error) {
+	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
+		return nil, err
+	}
+	count, err := uc.repo.GetMySiteMessageUnreadCount(ctx, tools.GetUserId(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetMySiteMessageUnreadCountReply{UnreadCount: count}, nil
+}
+
+func (uc *BaseUsecase) MarkSiteMessageRead(ctx context.Context, req *pb.MarkSiteMessageReadRequest) error {
+	if req.MessageId == "" {
+		return kerrors.BadRequest("BAD_REQUEST", "messageId is required")
+	}
+	return uc.repo.MarkSiteMessageRead(ctx, tools.GetUserId(ctx), req.MessageId)
+}
+
+func (uc *BaseUsecase) MarkSiteMessageUnread(ctx context.Context, req *pb.MarkSiteMessageReadRequest) error {
+	if req.MessageId == "" {
+		return kerrors.BadRequest("BAD_REQUEST", "messageId is required")
+	}
+	return uc.repo.MarkSiteMessageUnread(ctx, tools.GetUserId(ctx), req.MessageId)
+}
+
+func (uc *BaseUsecase) MarkAllSiteMessagesRead(ctx context.Context) (*pb.MarkAllSiteMessagesReadReply, error) {
+	count, err := uc.repo.MarkAllSiteMessagesRead(ctx, tools.GetUserId(ctx))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.MarkAllSiteMessagesReadReply{UpdatedCount: count}, nil
+}
+
+func (uc *BaseUsecase) GetPublishedSiteMessageList(ctx context.Context, req *pb.GetPublishedSiteMessageListParams) (*pb.GetPublishedSiteMessageListReply, error) {
+	_, err := uc.ensureSiteMessageManageAccess(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
+		return nil, err
+	}
+	req.Status = normalizeSiteMessageStatus(req.Status)
+	items, total, err := uc.repo.GetPublishedSiteMessageList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	reply := &pb.GetPublishedSiteMessageListReply{
+		Items: make([]*pb.PublishedSiteMessageItem, 0, len(items)),
+		Total: total,
+	}
+	for _, item := range items {
+		reply.Items = append(reply.Items, &pb.PublishedSiteMessageItem{
+			Id:                   item.ID,
+			Title:                item.Title,
+			Content:              item.Content,
+			Category:             item.Category,
+			ReceiverType:         item.ReceiverType,
+			ReceiverIds:          item.ReceiverIds,
+			ReceiverCount:        item.ReceiverCount,
+			Link:                 item.Link,
+			SenderId:             item.SenderID,
+			SenderName:           item.SenderName,
+			CreatedTime:          item.CreateTime.Format(time.DateTime),
+			Status:               item.Status,
+			ScheduledPublishTime: formatSiteMessageTime(item.ScheduledPublishTime),
+			PublishedTime:        formatSiteMessageTime(item.PublishedTime),
+			RecalledTime:         formatSiteMessageTime(item.RecalledTime),
+			UpdatedTime:          item.UpdateTime.Format(time.DateTime),
+		})
+	}
+	return reply, nil
+}
+
+func (uc *BaseUsecase) CreateSiteMessage(ctx context.Context, req *pb.CreateSiteMessageRequest) (*pb.CreateSiteMessageReply, error) {
+	user, err := uc.ensureSiteMessageManageAccess(ctx)
+	if err != nil {
+		return nil, err
+	}
+	req.Action = normalizeSiteMessageAction(req.Action)
+	req.ReceiverType = normalizeSiteMessageReceiverType(req.ReceiverType)
+	if req.Category == "" {
+		req.Category = "system"
+	}
+
+	if strings.TrimSpace(req.Title) == "" {
+		return nil, kerrors.BadRequest("BAD_REQUEST", "title is required")
+	}
+	if strings.TrimSpace(req.Content) == "" {
+		return nil, kerrors.BadRequest("BAD_REQUEST", "content is required")
+	}
+	if req.Action != SiteMessageActionDraft && req.ReceiverType == "user" && len(req.ReceiverIds) == 0 {
+		return nil, kerrors.BadRequest("BAD_REQUEST", "receiverIds is required when receiverType=user")
+	}
+	if req.Action == SiteMessageActionSchedule {
+		if strings.TrimSpace(req.ScheduledPublishTime) == "" {
+			return nil, kerrors.BadRequest("BAD_REQUEST", "scheduledPublishTime is required")
+		}
+		scheduledTime, err := parseScheduledPublishTime(req.ScheduledPublishTime)
+		if err != nil {
+			return nil, err
+		}
+		if !scheduledTime.After(time.Now()) {
+			return nil, kerrors.BadRequest("BAD_REQUEST", "scheduledPublishTime must be in the future")
+		}
+	}
+
+	senderName := user.Nickname
+	if senderName == "" {
+		senderName = user.Username
+	}
+	message, err := uc.repo.CreateSiteMessage(ctx, user.ID.String(), senderName, req)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateSiteMessageReply{
+		Id:                   message.ID,
+		ReceiverCount:        message.ReceiverCount,
+		Status:               message.Status,
+		ScheduledPublishTime: formatSiteMessageTime(message.ScheduledPublishTime),
+		PublishedTime:        formatSiteMessageTime(message.PublishedTime),
+	}, nil
+}
+
+func (uc *BaseUsecase) RecallSiteMessage(ctx context.Context, req *pb.RecallSiteMessageRequest) error {
+	_, err := uc.ensureSiteMessageManageAccess(ctx)
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(req.Id) == "" {
+		return kerrors.BadRequest("BAD_REQUEST", "id is required")
+	}
+	return uc.repo.RecallSiteMessage(ctx, req.Id)
+}
+
+func (uc *BaseUsecase) DeletePendingSiteMessage(ctx context.Context, req *pb.DeletePendingSiteMessageRequest) error {
+	_, err := uc.ensureSiteMessageManageAccess(ctx)
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(req.Id) == "" {
+		return kerrors.BadRequest("BAD_REQUEST", "id is required")
+	}
+	return uc.repo.DeletePendingSiteMessage(ctx, req.Id)
 }

@@ -20,56 +20,56 @@ type ApiResourcesDelete struct {
 }
 
 // Where appends a list predicates to the ApiResourcesDelete builder.
-func (ard *ApiResourcesDelete) Where(ps ...predicate.ApiResources) *ApiResourcesDelete {
-	ard.mutation.Where(ps...)
-	return ard
+func (_d *ApiResourcesDelete) Where(ps ...predicate.ApiResources) *ApiResourcesDelete {
+	_d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (ard *ApiResourcesDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks(ctx, ard.sqlExec, ard.mutation, ard.hooks)
+func (_d *ApiResourcesDelete) Exec(ctx context.Context) (int, error) {
+	return withHooks(ctx, _d.sqlExec, _d.mutation, _d.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ard *ApiResourcesDelete) ExecX(ctx context.Context) int {
-	n, err := ard.Exec(ctx)
+func (_d *ApiResourcesDelete) ExecX(ctx context.Context) int {
+	n, err := _d.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (ard *ApiResourcesDelete) sqlExec(ctx context.Context) (int, error) {
+func (_d *ApiResourcesDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := sqlgraph.NewDeleteSpec(apiresources.Table, sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString))
-	if ps := ard.mutation.predicates; len(ps) > 0 {
+	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	affected, err := sqlgraph.DeleteNodes(ctx, ard.driver, _spec)
+	affected, err := sqlgraph.DeleteNodes(ctx, _d.driver, _spec)
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
-	ard.mutation.done = true
+	_d.mutation.done = true
 	return affected, err
 }
 
 // ApiResourcesDeleteOne is the builder for deleting a single ApiResources entity.
 type ApiResourcesDeleteOne struct {
-	ard *ApiResourcesDelete
+	_d *ApiResourcesDelete
 }
 
 // Where appends a list predicates to the ApiResourcesDelete builder.
-func (ardo *ApiResourcesDeleteOne) Where(ps ...predicate.ApiResources) *ApiResourcesDeleteOne {
-	ardo.ard.mutation.Where(ps...)
-	return ardo
+func (_d *ApiResourcesDeleteOne) Where(ps ...predicate.ApiResources) *ApiResourcesDeleteOne {
+	_d._d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query.
-func (ardo *ApiResourcesDeleteOne) Exec(ctx context.Context) error {
-	n, err := ardo.ard.Exec(ctx)
+func (_d *ApiResourcesDeleteOne) Exec(ctx context.Context) error {
+	n, err := _d._d.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -81,8 +81,8 @@ func (ardo *ApiResourcesDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ardo *ApiResourcesDeleteOne) ExecX(ctx context.Context) {
-	if err := ardo.Exec(ctx); err != nil {
+func (_d *ApiResourcesDeleteOne) ExecX(ctx context.Context) {
+	if err := _d.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

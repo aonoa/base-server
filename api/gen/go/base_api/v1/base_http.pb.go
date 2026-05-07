@@ -27,16 +27,21 @@ const OperationBaseAddRole = "/api.base_api.v1.Base/AddRole"
 const OperationBaseAddUser = "/api.base_api.v1.Base/AddUser"
 const OperationBaseChangePassword = "/api.base_api.v1.Base/ChangePassword"
 const OperationBaseCreateMenu = "/api.base_api.v1.Base/CreateMenu"
+const OperationBaseCreateSiteMessage = "/api.base_api.v1.Base/CreateSiteMessage"
 const OperationBaseDelApi = "/api.base_api.v1.Base/DelApi"
 const OperationBaseDelDept = "/api.base_api.v1.Base/DelDept"
 const OperationBaseDelResource = "/api.base_api.v1.Base/DelResource"
 const OperationBaseDelRole = "/api.base_api.v1.Base/DelRole"
 const OperationBaseDelUser = "/api.base_api.v1.Base/DelUser"
 const OperationBaseDeleteMenu = "/api.base_api.v1.Base/DeleteMenu"
+const OperationBaseDeletePendingSiteMessage = "/api.base_api.v1.Base/DeletePendingSiteMessage"
 const OperationBaseGetAccessCodes = "/api.base_api.v1.Base/GetAccessCodes"
 const OperationBaseGetApiList = "/api.base_api.v1.Base/GetApiList"
 const OperationBaseGetDeptList = "/api.base_api.v1.Base/GetDeptList"
 const OperationBaseGetMenuList = "/api.base_api.v1.Base/GetMenuList"
+const OperationBaseGetMySiteMessageList = "/api.base_api.v1.Base/GetMySiteMessageList"
+const OperationBaseGetMySiteMessageUnreadCount = "/api.base_api.v1.Base/GetMySiteMessageUnreadCount"
+const OperationBaseGetPublishedSiteMessageList = "/api.base_api.v1.Base/GetPublishedSiteMessageList"
 const OperationBaseGetResourceList = "/api.base_api.v1.Base/GetResourceList"
 const OperationBaseGetRoleList = "/api.base_api.v1.Base/GetRoleList"
 const OperationBaseGetSysLogInfo = "/api.base_api.v1.Base/GetSysLogInfo"
@@ -50,7 +55,11 @@ const OperationBaseIsMenuPathExists = "/api.base_api.v1.Base/IsMenuPathExists"
 const OperationBaseIsUserExist = "/api.base_api.v1.Base/IsUserExist"
 const OperationBaseLogin = "/api.base_api.v1.Base/Login"
 const OperationBaseLogout = "/api.base_api.v1.Base/Logout"
+const OperationBaseMarkAllSiteMessagesRead = "/api.base_api.v1.Base/MarkAllSiteMessagesRead"
+const OperationBaseMarkSiteMessageRead = "/api.base_api.v1.Base/MarkSiteMessageRead"
+const OperationBaseMarkSiteMessageUnread = "/api.base_api.v1.Base/MarkSiteMessageUnread"
 const OperationBaseReLoadPolicy = "/api.base_api.v1.Base/ReLoadPolicy"
+const OperationBaseRecallSiteMessage = "/api.base_api.v1.Base/RecallSiteMessage"
 const OperationBaseRefreshToken = "/api.base_api.v1.Base/RefreshToken"
 const OperationBaseSetRoleStatus = "/api.base_api.v1.Base/SetRoleStatus"
 const OperationBaseUpdateApi = "/api.base_api.v1.Base/UpdateApi"
@@ -75,6 +84,8 @@ type BaseHTTPServer interface {
 	ChangePassword(context.Context, *ChangePasswordRequest) (*emptypb.Empty, error)
 	// CreateMenu 创建菜单
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	// CreateSiteMessage 保存/定时/发布站内信
+	CreateSiteMessage(context.Context, *CreateSiteMessageRequest) (*CreateSiteMessageReply, error)
 	// DelApi 删除api资源
 	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
 	// DelDept 删除部门
@@ -87,6 +98,8 @@ type BaseHTTPServer interface {
 	DelUser(context.Context, *DeleteUser) (*emptypb.Empty, error)
 	// DeleteMenu 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	// DeletePendingSiteMessage 删除未发布站内信
+	DeletePendingSiteMessage(context.Context, *DeletePendingSiteMessageRequest) (*emptypb.Empty, error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(context.Context, *emptypb.Empty) (*GetAccessCodesReply, error)
 	// GetApiList//////////////////////////////// api资源管理
@@ -97,6 +110,13 @@ type BaseHTTPServer interface {
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(context.Context, *emptypb.Empty) (*GetSysMenuListReply, error)
+	// GetMySiteMessageList////////////////////////////////////////////// 站内信
+	// 获取当前用户站内信列表
+	GetMySiteMessageList(context.Context, *GetMySiteMessageListParams) (*GetMySiteMessageListReply, error)
+	// GetMySiteMessageUnreadCount 获取当前用户未读站内信数量
+	GetMySiteMessageUnreadCount(context.Context, *emptypb.Empty) (*GetMySiteMessageUnreadCountReply, error)
+	// GetPublishedSiteMessageList 获取已发布站内信列表
+	GetPublishedSiteMessageList(context.Context, *GetPublishedSiteMessageListParams) (*GetPublishedSiteMessageListReply, error)
 	// GetResourceList//////////////////////////////// resource 资源管理
 	// 获取resource资源
 	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
@@ -127,8 +147,16 @@ type BaseHTTPServer interface {
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	// Logout 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// MarkAllSiteMessagesRead 标记全部站内信已读
+	MarkAllSiteMessagesRead(context.Context, *emptypb.Empty) (*MarkAllSiteMessagesReadReply, error)
+	// MarkSiteMessageRead 标记单条站内信已读
+	MarkSiteMessageRead(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
+	// MarkSiteMessageUnread 标记单条站内信未读
+	MarkSiteMessageUnread(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
 	// ReLoadPolicy////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// RecallSiteMessage 撤回已发布站内信
+	RecallSiteMessage(context.Context, *RecallSiteMessageRequest) (*emptypb.Empty, error)
 	// RefreshToken 使用refreshToken换取accessToken
 	RefreshToken(context.Context, *emptypb.Empty) (*LoginReply, error)
 	// SetRoleStatus 设置角色状态 (未使用)
@@ -188,6 +216,15 @@ func RegisterBaseHTTPServer(s *http.Server, srv BaseHTTPServer) {
 	r.DELETE("/basic-api/system/resource/{id}", _Base_DelResource0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/log/list", _Base_GetSysLogList0_HTTP_Handler(srv))
 	r.GET("/basic-api/system/log/{id}", _Base_GetSysLogInfo0_HTTP_Handler(srv))
+	r.GET("/basic-api/notice/my/list", _Base_GetMySiteMessageList0_HTTP_Handler(srv))
+	r.GET("/basic-api/notice/my/unread-count", _Base_GetMySiteMessageUnreadCount0_HTTP_Handler(srv))
+	r.POST("/basic-api/notice/my/read/{messageId}", _Base_MarkSiteMessageRead0_HTTP_Handler(srv))
+	r.POST("/basic-api/notice/my/unread/{messageId}", _Base_MarkSiteMessageUnread0_HTTP_Handler(srv))
+	r.POST("/basic-api/notice/my/read-all", _Base_MarkAllSiteMessagesRead0_HTTP_Handler(srv))
+	r.GET("/basic-api/notice/admin/list", _Base_GetPublishedSiteMessageList0_HTTP_Handler(srv))
+	r.POST("/basic-api/notice/admin", _Base_CreateSiteMessage0_HTTP_Handler(srv))
+	r.POST("/basic-api/notice/admin/recall/{id}", _Base_RecallSiteMessage0_HTTP_Handler(srv))
+	r.DELETE("/basic-api/notice/admin/{id}", _Base_DeletePendingSiteMessage0_HTTP_Handler(srv))
 }
 
 func _Base_Login0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
@@ -1027,6 +1064,204 @@ func _Base_GetSysLogInfo0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context
 	}
 }
 
+func _Base_GetMySiteMessageList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMySiteMessageListParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetMySiteMessageList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMySiteMessageList(ctx, req.(*GetMySiteMessageListParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMySiteMessageListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_GetMySiteMessageUnreadCount0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetMySiteMessageUnreadCount)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMySiteMessageUnreadCount(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMySiteMessageUnreadCountReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_MarkSiteMessageRead0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in MarkSiteMessageReadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseMarkSiteMessageRead)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MarkSiteMessageRead(ctx, req.(*MarkSiteMessageReadRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_MarkSiteMessageUnread0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in MarkSiteMessageReadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseMarkSiteMessageUnread)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MarkSiteMessageUnread(ctx, req.(*MarkSiteMessageReadRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_MarkAllSiteMessagesRead0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseMarkAllSiteMessagesRead)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MarkAllSiteMessagesRead(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MarkAllSiteMessagesReadReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_GetPublishedSiteMessageList0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetPublishedSiteMessageListParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseGetPublishedSiteMessageList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetPublishedSiteMessageList(ctx, req.(*GetPublishedSiteMessageListParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetPublishedSiteMessageListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_CreateSiteMessage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateSiteMessageRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseCreateSiteMessage)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateSiteMessage(ctx, req.(*CreateSiteMessageRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateSiteMessageReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_RecallSiteMessage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RecallSiteMessageRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseRecallSiteMessage)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RecallSiteMessage(ctx, req.(*RecallSiteMessageRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Base_DeletePendingSiteMessage0_HTTP_Handler(srv BaseHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeletePendingSiteMessageRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationBaseDeletePendingSiteMessage)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeletePendingSiteMessage(ctx, req.(*DeletePendingSiteMessageRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type BaseHTTPClient interface {
 	// AddApi 添加api资源
 	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
@@ -1042,6 +1277,8 @@ type BaseHTTPClient interface {
 	ChangePassword(ctx context.Context, req *ChangePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// CreateMenu 创建菜单
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// CreateSiteMessage 保存/定时/发布站内信
+	CreateSiteMessage(ctx context.Context, req *CreateSiteMessageRequest, opts ...http.CallOption) (rsp *CreateSiteMessageReply, err error)
 	// DelApi 删除api资源
 	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// DelDept 删除部门
@@ -1054,6 +1291,8 @@ type BaseHTTPClient interface {
 	DelUser(ctx context.Context, req *DeleteUser, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// DeleteMenu 删除菜单
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// DeletePendingSiteMessage 删除未发布站内信
+	DeletePendingSiteMessage(ctx context.Context, req *DeletePendingSiteMessageRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// GetAccessCodes 获取权限code
 	GetAccessCodes(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetAccessCodesReply, err error)
 	// GetApiList//////////////////////////////// api资源管理
@@ -1064,6 +1303,13 @@ type BaseHTTPClient interface {
 	// GetMenuList 获取路由菜单列表
 	//	rpc GetMenuList (google.protobuf.Empty) returns (GetMenuListReply) {
 	GetMenuList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
+	// GetMySiteMessageList////////////////////////////////////////////// 站内信
+	// 获取当前用户站内信列表
+	GetMySiteMessageList(ctx context.Context, req *GetMySiteMessageListParams, opts ...http.CallOption) (rsp *GetMySiteMessageListReply, err error)
+	// GetMySiteMessageUnreadCount 获取当前用户未读站内信数量
+	GetMySiteMessageUnreadCount(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMySiteMessageUnreadCountReply, err error)
+	// GetPublishedSiteMessageList 获取已发布站内信列表
+	GetPublishedSiteMessageList(ctx context.Context, req *GetPublishedSiteMessageListParams, opts ...http.CallOption) (rsp *GetPublishedSiteMessageListReply, err error)
 	// GetResourceList//////////////////////////////// resource 资源管理
 	// 获取resource资源
 	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
@@ -1094,8 +1340,16 @@ type BaseHTTPClient interface {
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	// Logout 注销登陆 (仅靠jwt无法实现退出功能)(未实现，主要靠前端删凭证)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// MarkAllSiteMessagesRead 标记全部站内信已读
+	MarkAllSiteMessagesRead(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *MarkAllSiteMessagesReadReply, err error)
+	// MarkSiteMessageRead 标记单条站内信已读
+	MarkSiteMessageRead(ctx context.Context, req *MarkSiteMessageReadRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// MarkSiteMessageUnread 标记单条站内信未读
+	MarkSiteMessageUnread(ctx context.Context, req *MarkSiteMessageReadRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// ReLoadPolicy////////////////////////////////////////////////// (重新加载casbin权限数据)
 	ReLoadPolicy(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// RecallSiteMessage 撤回已发布站内信
+	RecallSiteMessage(ctx context.Context, req *RecallSiteMessageRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// RefreshToken 使用refreshToken换取accessToken
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginReply, err error)
 	// SetRoleStatus 设置角色状态 (未使用)
@@ -1220,6 +1474,20 @@ func (c *BaseHTTPClientImpl) CreateMenu(ctx context.Context, in *SysMenuListItem
 	return &out, nil
 }
 
+// CreateSiteMessage 保存/定时/发布站内信
+func (c *BaseHTTPClientImpl) CreateSiteMessage(ctx context.Context, in *CreateSiteMessageRequest, opts ...http.CallOption) (*CreateSiteMessageReply, error) {
+	var out CreateSiteMessageReply
+	pattern := "/basic-api/notice/admin"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseCreateSiteMessage))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // DelApi 删除api资源
 func (c *BaseHTTPClientImpl) DelApi(ctx context.Context, in *DeleteApi, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
@@ -1304,6 +1572,20 @@ func (c *BaseHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 	return &out, nil
 }
 
+// DeletePendingSiteMessage 删除未发布站内信
+func (c *BaseHTTPClientImpl) DeletePendingSiteMessage(ctx context.Context, in *DeletePendingSiteMessageRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/notice/admin/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseDeletePendingSiteMessage))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetAccessCodes 获取权限code
 func (c *BaseHTTPClientImpl) GetAccessCodes(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetAccessCodesReply, error) {
 	var out GetAccessCodesReply
@@ -1356,6 +1638,49 @@ func (c *BaseHTTPClientImpl) GetMenuList(ctx context.Context, in *emptypb.Empty,
 	opts = append(opts, http.Operation(OperationBaseGetMenuList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Items, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetMySiteMessageList////////////////////////////////////////////// 站内信
+// 获取当前用户站内信列表
+func (c *BaseHTTPClientImpl) GetMySiteMessageList(ctx context.Context, in *GetMySiteMessageListParams, opts ...http.CallOption) (*GetMySiteMessageListReply, error) {
+	var out GetMySiteMessageListReply
+	pattern := "/basic-api/notice/my/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetMySiteMessageList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetMySiteMessageUnreadCount 获取当前用户未读站内信数量
+func (c *BaseHTTPClientImpl) GetMySiteMessageUnreadCount(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMySiteMessageUnreadCountReply, error) {
+	var out GetMySiteMessageUnreadCountReply
+	pattern := "/basic-api/notice/my/unread-count"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetMySiteMessageUnreadCount))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// GetPublishedSiteMessageList 获取已发布站内信列表
+func (c *BaseHTTPClientImpl) GetPublishedSiteMessageList(ctx context.Context, in *GetPublishedSiteMessageListParams, opts ...http.CallOption) (*GetPublishedSiteMessageListReply, error) {
+	var out GetPublishedSiteMessageListReply
+	pattern := "/basic-api/notice/admin/list"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationBaseGetPublishedSiteMessageList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1548,12 +1873,68 @@ func (c *BaseHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts
 	return &out, nil
 }
 
+// MarkAllSiteMessagesRead 标记全部站内信已读
+func (c *BaseHTTPClientImpl) MarkAllSiteMessagesRead(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*MarkAllSiteMessagesReadReply, error) {
+	var out MarkAllSiteMessagesReadReply
+	pattern := "/basic-api/notice/my/read-all"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseMarkAllSiteMessagesRead))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// MarkSiteMessageRead 标记单条站内信已读
+func (c *BaseHTTPClientImpl) MarkSiteMessageRead(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/notice/my/read/{messageId}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseMarkSiteMessageRead))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// MarkSiteMessageUnread 标记单条站内信未读
+func (c *BaseHTTPClientImpl) MarkSiteMessageUnread(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/notice/my/unread/{messageId}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseMarkSiteMessageUnread))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ReLoadPolicy////////////////////////////////////////////////// (重新加载casbin权限数据)
 func (c *BaseHTTPClientImpl) ReLoadPolicy(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/basic-api/auth/reloadPolicy"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBaseReLoadPolicy))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// RecallSiteMessage 撤回已发布站内信
+func (c *BaseHTTPClientImpl) RecallSiteMessage(ctx context.Context, in *RecallSiteMessageRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/basic-api/notice/admin/recall/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationBaseRecallSiteMessage))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

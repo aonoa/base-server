@@ -74,7 +74,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Resource fields.
-func (r *Resource) assignValues(columns []string, values []any) error {
+func (_m *Resource) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -84,52 +84,52 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
-				r.ID = value.String
+				_m.ID = value.String
 			}
 		case resource.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				r.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case resource.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				r.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case resource.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = value.String
+				_m.Name = value.String
 			}
 		case resource.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				r.Type = value.String
+				_m.Type = value.String
 			}
 		case resource.FieldValue:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field value", values[i])
 			} else if value.Valid {
-				r.Value = value.String
+				_m.Value = value.String
 			}
 		case resource.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
-				r.Method = value.String
+				_m.Method = value.String
 			}
 		case resource.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				r.Description = value.String
+				_m.Description = value.String
 			}
 		default:
-			r.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -137,58 +137,58 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 
 // GetValue returns the ent.Value that was dynamically selected and assigned to the Resource.
 // This includes values selected through modifiers, order, etc.
-func (r *Resource) GetValue(name string) (ent.Value, error) {
-	return r.selectValues.Get(name)
+func (_m *Resource) GetValue(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryRoles queries the "roles" edge of the Resource entity.
-func (r *Resource) QueryRoles() *RoleQuery {
-	return NewResourceClient(r.config).QueryRoles(r)
+func (_m *Resource) QueryRoles() *RoleQuery {
+	return NewResourceClient(_m.config).QueryRoles(_m)
 }
 
 // Update returns a builder for updating this Resource.
 // Note that you need to call Resource.Unwrap() before calling this method if this Resource
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (r *Resource) Update() *ResourceUpdateOne {
-	return NewResourceClient(r.config).UpdateOne(r)
+func (_m *Resource) Update() *ResourceUpdateOne {
+	return NewResourceClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Resource entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (r *Resource) Unwrap() *Resource {
-	_tx, ok := r.config.driver.(*txDriver)
+func (_m *Resource) Unwrap() *Resource {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Resource is not a transactional entity")
 	}
-	r.config.driver = _tx.drv
-	return r
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (r *Resource) String() string {
+func (_m *Resource) String() string {
 	var builder strings.Builder
 	builder.WriteString("Resource(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", r.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(r.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(r.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(r.Type)
+	builder.WriteString(_m.Type)
 	builder.WriteString(", ")
 	builder.WriteString("value=")
-	builder.WriteString(r.Value)
+	builder.WriteString(_m.Value)
 	builder.WriteString(", ")
 	builder.WriteString("method=")
-	builder.WriteString(r.Method)
+	builder.WriteString(_m.Method)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(r.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -13,7 +13,11 @@ func (c *{{ $node.Name }}Create) CreateAll({{ $node.Name }} *{{ $node.Name }}) *
         {{- if and (not (eq $field.Name "id"))
                     (not (eq $field.Name "create_time"))
                     (not (eq $field.Name "update_time")) }}
+            {{- if $field.Nillable }}
+    builder = builder.SetNillable{{ $field.StructField }}({{ $node.Name }}.{{ $field.StructField }})
+            {{- else }}
     builder = builder.Set{{ $field.StructField }}({{ $node.Name }}.{{ $field.StructField }})
+            {{- end }}
         {{- end }}
     {{- end }}
     return builder

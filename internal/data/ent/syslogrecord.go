@@ -85,7 +85,7 @@ func (*SysLogRecord) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the SysLogRecord fields.
-func (slr *SysLogRecord) assignValues(columns []string, values []any) error {
+func (_m *SysLogRecord) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -95,136 +95,136 @@ func (slr *SysLogRecord) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
-				slr.ID = value.String
+				_m.ID = value.String
 			}
 		case syslogrecord.FieldUserID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				slr.UserID = value.String
+				_m.UserID = value.String
 			}
 		case syslogrecord.FieldUserName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_name", values[i])
 			} else if value.Valid {
-				slr.UserName = value.String
+				_m.UserName = value.String
 			}
 		case syslogrecord.FieldIsLogin:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_login", values[i])
 			} else if value.Valid {
-				slr.IsLogin = value.Bool
+				_m.IsLogin = value.Bool
 			}
 		case syslogrecord.FieldSessionID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field session_id", values[i])
 			} else if value.Valid {
-				slr.SessionID = value.String
+				_m.SessionID = value.String
 			}
 		case syslogrecord.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
-				slr.Method = value.String
+				_m.Method = value.String
 			}
 		case syslogrecord.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				slr.Path = value.String
+				_m.Path = value.String
 			}
 		case syslogrecord.FieldRequestTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field request_time", values[i])
 			} else if value.Valid {
-				slr.RequestTime = value.Time
+				_m.RequestTime = value.Time
 			}
 		case syslogrecord.FieldIPAddress:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field ip_address", values[i])
 			} else if value.Valid {
-				slr.IPAddress = value.String
+				_m.IPAddress = value.String
 			}
 		case syslogrecord.FieldIPLocation:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field ip_location", values[i])
 			} else if value.Valid {
-				slr.IPLocation = value.String
+				_m.IPLocation = value.String
 			}
 		case syslogrecord.FieldLatency:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field latency", values[i])
 			} else if value.Valid {
-				slr.Latency = value.Int64
+				_m.Latency = value.Int64
 			}
 		case syslogrecord.FieldOs:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field os", values[i])
 			} else if value.Valid {
-				slr.Os = value.String
+				_m.Os = value.String
 			}
 		case syslogrecord.FieldBrowser:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field browser", values[i])
 			} else if value.Valid {
-				slr.Browser = value.String
+				_m.Browser = value.String
 			}
 		case syslogrecord.FieldUserAgent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_agent", values[i])
 			} else if value.Valid {
-				slr.UserAgent = value.String
+				_m.UserAgent = value.String
 			}
 		case syslogrecord.FieldHeader:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field header", values[i])
 			} else if value.Valid {
-				slr.Header = value.String
+				_m.Header = value.String
 			}
 		case syslogrecord.FieldGetParams:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field get_params", values[i])
 			} else if value.Valid {
-				slr.GetParams = value.String
+				_m.GetParams = value.String
 			}
 		case syslogrecord.FieldPostData:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field post_data", values[i])
 			} else if value.Valid {
-				slr.PostData = value.String
+				_m.PostData = value.String
 			}
 		case syslogrecord.FieldResCode:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field res_code", values[i])
 			} else if value.Valid {
-				slr.ResCode = int32(value.Int64)
+				_m.ResCode = int32(value.Int64)
 			}
 		case syslogrecord.FieldReason:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field reason", values[i])
 			} else if value.Valid {
-				slr.Reason = value.String
+				_m.Reason = value.String
 			}
 		case syslogrecord.FieldResStatus:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field res_status", values[i])
 			} else if value.Valid {
-				slr.ResStatus = value.Bool
+				_m.ResStatus = value.Bool
 			}
 		case syslogrecord.FieldStack:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field stack", values[i])
 			} else if value.Valid {
-				slr.Stack = value.String
+				_m.Stack = value.String
 			}
 		case syslogrecord.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				slr.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		default:
-			slr.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -232,95 +232,95 @@ func (slr *SysLogRecord) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the SysLogRecord.
 // This includes values selected through modifiers, order, etc.
-func (slr *SysLogRecord) Value(name string) (ent.Value, error) {
-	return slr.selectValues.Get(name)
+func (_m *SysLogRecord) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // Update returns a builder for updating this SysLogRecord.
 // Note that you need to call SysLogRecord.Unwrap() before calling this method if this SysLogRecord
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (slr *SysLogRecord) Update() *SysLogRecordUpdateOne {
-	return NewSysLogRecordClient(slr.config).UpdateOne(slr)
+func (_m *SysLogRecord) Update() *SysLogRecordUpdateOne {
+	return NewSysLogRecordClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the SysLogRecord entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (slr *SysLogRecord) Unwrap() *SysLogRecord {
-	_tx, ok := slr.config.driver.(*txDriver)
+func (_m *SysLogRecord) Unwrap() *SysLogRecord {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: SysLogRecord is not a transactional entity")
 	}
-	slr.config.driver = _tx.drv
-	return slr
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (slr *SysLogRecord) String() string {
+func (_m *SysLogRecord) String() string {
 	var builder strings.Builder
 	builder.WriteString("SysLogRecord(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", slr.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(slr.UserID)
+	builder.WriteString(_m.UserID)
 	builder.WriteString(", ")
 	builder.WriteString("user_name=")
-	builder.WriteString(slr.UserName)
+	builder.WriteString(_m.UserName)
 	builder.WriteString(", ")
 	builder.WriteString("is_login=")
-	builder.WriteString(fmt.Sprintf("%v", slr.IsLogin))
+	builder.WriteString(fmt.Sprintf("%v", _m.IsLogin))
 	builder.WriteString(", ")
 	builder.WriteString("session_id=")
-	builder.WriteString(slr.SessionID)
+	builder.WriteString(_m.SessionID)
 	builder.WriteString(", ")
 	builder.WriteString("method=")
-	builder.WriteString(slr.Method)
+	builder.WriteString(_m.Method)
 	builder.WriteString(", ")
 	builder.WriteString("path=")
-	builder.WriteString(slr.Path)
+	builder.WriteString(_m.Path)
 	builder.WriteString(", ")
 	builder.WriteString("request_time=")
-	builder.WriteString(slr.RequestTime.Format(time.ANSIC))
+	builder.WriteString(_m.RequestTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("ip_address=")
-	builder.WriteString(slr.IPAddress)
+	builder.WriteString(_m.IPAddress)
 	builder.WriteString(", ")
 	builder.WriteString("ip_location=")
-	builder.WriteString(slr.IPLocation)
+	builder.WriteString(_m.IPLocation)
 	builder.WriteString(", ")
 	builder.WriteString("latency=")
-	builder.WriteString(fmt.Sprintf("%v", slr.Latency))
+	builder.WriteString(fmt.Sprintf("%v", _m.Latency))
 	builder.WriteString(", ")
 	builder.WriteString("os=")
-	builder.WriteString(slr.Os)
+	builder.WriteString(_m.Os)
 	builder.WriteString(", ")
 	builder.WriteString("browser=")
-	builder.WriteString(slr.Browser)
+	builder.WriteString(_m.Browser)
 	builder.WriteString(", ")
 	builder.WriteString("user_agent=")
-	builder.WriteString(slr.UserAgent)
+	builder.WriteString(_m.UserAgent)
 	builder.WriteString(", ")
 	builder.WriteString("header=")
-	builder.WriteString(slr.Header)
+	builder.WriteString(_m.Header)
 	builder.WriteString(", ")
 	builder.WriteString("get_params=")
-	builder.WriteString(slr.GetParams)
+	builder.WriteString(_m.GetParams)
 	builder.WriteString(", ")
 	builder.WriteString("post_data=")
-	builder.WriteString(slr.PostData)
+	builder.WriteString(_m.PostData)
 	builder.WriteString(", ")
 	builder.WriteString("res_code=")
-	builder.WriteString(fmt.Sprintf("%v", slr.ResCode))
+	builder.WriteString(fmt.Sprintf("%v", _m.ResCode))
 	builder.WriteString(", ")
 	builder.WriteString("reason=")
-	builder.WriteString(slr.Reason)
+	builder.WriteString(_m.Reason)
 	builder.WriteString(", ")
 	builder.WriteString("res_status=")
-	builder.WriteString(fmt.Sprintf("%v", slr.ResStatus))
+	builder.WriteString(fmt.Sprintf("%v", _m.ResStatus))
 	builder.WriteString(", ")
 	builder.WriteString("stack=")
-	builder.WriteString(slr.Stack)
+	builder.WriteString(_m.Stack)
 	builder.WriteString(", ")
 	builder.WriteString("create_time=")
-	builder.WriteString(slr.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

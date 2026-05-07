@@ -112,6 +112,57 @@ func (u *RoleUpdateOne) UpdateAll(role *Role) *RoleUpdateOne {
 	return update
 }
 
+// UpdateAll updates all mutable fields of the SiteMessage entity (excluding create_time, update_time and immutable fields).
+func (u *SiteMessageUpdateOne) UpdateAll(sitemessage *SiteMessage) *SiteMessageUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if sitemessage == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetTitle(sitemessage.Title)
+	update = update.SetContent(sitemessage.Content)
+	update = update.SetCategory(sitemessage.Category)
+	update = update.SetStatus(sitemessage.Status)
+	update = update.SetReceiverType(sitemessage.ReceiverType)
+	update = update.SetReceiverIds(sitemessage.ReceiverIds)
+	update = update.SetReceiverCount(sitemessage.ReceiverCount)
+	update = update.SetLink(sitemessage.Link)
+	update = update.SetSenderID(sitemessage.SenderID)
+	update = update.SetSenderName(sitemessage.SenderName)
+	if sitemessage.ScheduledPublishTime == nil {
+		update = update.ClearScheduledPublishTime()
+	} else {
+		update = update.SetScheduledPublishTime(*sitemessage.ScheduledPublishTime)
+	}
+	if sitemessage.PublishedTime == nil {
+		update = update.ClearPublishedTime()
+	} else {
+		update = update.SetPublishedTime(*sitemessage.PublishedTime)
+	}
+	if sitemessage.RecalledTime == nil {
+		update = update.ClearRecalledTime()
+	} else {
+		update = update.SetRecalledTime(*sitemessage.RecalledTime)
+	}
+	return update
+}
+
+// UpdateAll updates all mutable fields of the SiteMessageReceipt entity (excluding create_time, update_time and immutable fields).
+func (u *SiteMessageReceiptUpdateOne) UpdateAll(sitemessagereceipt *SiteMessageReceipt) *SiteMessageReceiptUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if sitemessagereceipt == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetMessageID(sitemessagereceipt.MessageID)
+	update = update.SetUserID(sitemessagereceipt.UserID)
+	update = update.SetIsRead(sitemessagereceipt.IsRead)
+	update = update.SetReadTime(sitemessagereceipt.ReadTime)
+	return update
+}
+
 // UpdateAll updates all mutable fields of the SysLogRecord entity (excluding create_time, update_time and immutable fields).
 func (u *SysLogRecordUpdateOne) UpdateAll(syslogrecord *SysLogRecord) *SysLogRecordUpdateOne {
 	// Skip if the input entity is nil to avoid panic

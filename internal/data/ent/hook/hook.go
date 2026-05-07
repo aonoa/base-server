@@ -68,6 +68,30 @@ func (f RoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoleMutation", m)
 }
 
+// The SiteMessageFunc type is an adapter to allow the use of ordinary
+// function as SiteMessage mutator.
+type SiteMessageFunc func(context.Context, *ent.SiteMessageMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SiteMessageFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.SiteMessageMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SiteMessageMutation", m)
+}
+
+// The SiteMessageReceiptFunc type is an adapter to allow the use of ordinary
+// function as SiteMessageReceipt mutator.
+type SiteMessageReceiptFunc func(context.Context, *ent.SiteMessageReceiptMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SiteMessageReceiptFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.SiteMessageReceiptMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SiteMessageReceiptMutation", m)
+}
+
 // The SysLogRecordFunc type is an adapter to allow the use of ordinary
 // function as SysLogRecord mutator.
 type SysLogRecordFunc func(context.Context, *ent.SysLogRecordMutation) (ent.Value, error)

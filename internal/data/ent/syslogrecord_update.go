@@ -24,318 +24,318 @@ type SysLogRecordUpdate struct {
 }
 
 // Where appends a list predicates to the SysLogRecordUpdate builder.
-func (slru *SysLogRecordUpdate) Where(ps ...predicate.SysLogRecord) *SysLogRecordUpdate {
-	slru.mutation.Where(ps...)
-	return slru
+func (_u *SysLogRecordUpdate) Where(ps ...predicate.SysLogRecord) *SysLogRecordUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (slru *SysLogRecordUpdate) SetUserID(s string) *SysLogRecordUpdate {
-	slru.mutation.SetUserID(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetUserID(v string) *SysLogRecordUpdate {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableUserID(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetUserID(*s)
+func (_u *SysLogRecordUpdate) SetNillableUserID(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetUserName sets the "user_name" field.
-func (slru *SysLogRecordUpdate) SetUserName(s string) *SysLogRecordUpdate {
-	slru.mutation.SetUserName(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetUserName(v string) *SysLogRecordUpdate {
+	_u.mutation.SetUserName(v)
+	return _u
 }
 
 // SetNillableUserName sets the "user_name" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableUserName(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetUserName(*s)
+func (_u *SysLogRecordUpdate) SetNillableUserName(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetUserName(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetIsLogin sets the "is_login" field.
-func (slru *SysLogRecordUpdate) SetIsLogin(b bool) *SysLogRecordUpdate {
-	slru.mutation.SetIsLogin(b)
-	return slru
+func (_u *SysLogRecordUpdate) SetIsLogin(v bool) *SysLogRecordUpdate {
+	_u.mutation.SetIsLogin(v)
+	return _u
 }
 
 // SetNillableIsLogin sets the "is_login" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableIsLogin(b *bool) *SysLogRecordUpdate {
-	if b != nil {
-		slru.SetIsLogin(*b)
+func (_u *SysLogRecordUpdate) SetNillableIsLogin(v *bool) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetIsLogin(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetSessionID sets the "session_id" field.
-func (slru *SysLogRecordUpdate) SetSessionID(s string) *SysLogRecordUpdate {
-	slru.mutation.SetSessionID(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetSessionID(v string) *SysLogRecordUpdate {
+	_u.mutation.SetSessionID(v)
+	return _u
 }
 
 // SetNillableSessionID sets the "session_id" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableSessionID(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetSessionID(*s)
+func (_u *SysLogRecordUpdate) SetNillableSessionID(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetSessionID(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetMethod sets the "method" field.
-func (slru *SysLogRecordUpdate) SetMethod(s string) *SysLogRecordUpdate {
-	slru.mutation.SetMethod(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetMethod(v string) *SysLogRecordUpdate {
+	_u.mutation.SetMethod(v)
+	return _u
 }
 
 // SetNillableMethod sets the "method" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableMethod(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetMethod(*s)
+func (_u *SysLogRecordUpdate) SetNillableMethod(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetMethod(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetPath sets the "path" field.
-func (slru *SysLogRecordUpdate) SetPath(s string) *SysLogRecordUpdate {
-	slru.mutation.SetPath(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetPath(v string) *SysLogRecordUpdate {
+	_u.mutation.SetPath(v)
+	return _u
 }
 
 // SetNillablePath sets the "path" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillablePath(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetPath(*s)
+func (_u *SysLogRecordUpdate) SetNillablePath(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetPath(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetRequestTime sets the "request_time" field.
-func (slru *SysLogRecordUpdate) SetRequestTime(t time.Time) *SysLogRecordUpdate {
-	slru.mutation.SetRequestTime(t)
-	return slru
+func (_u *SysLogRecordUpdate) SetRequestTime(v time.Time) *SysLogRecordUpdate {
+	_u.mutation.SetRequestTime(v)
+	return _u
 }
 
 // SetNillableRequestTime sets the "request_time" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableRequestTime(t *time.Time) *SysLogRecordUpdate {
-	if t != nil {
-		slru.SetRequestTime(*t)
+func (_u *SysLogRecordUpdate) SetNillableRequestTime(v *time.Time) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetRequestTime(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetIPAddress sets the "ip_address" field.
-func (slru *SysLogRecordUpdate) SetIPAddress(s string) *SysLogRecordUpdate {
-	slru.mutation.SetIPAddress(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetIPAddress(v string) *SysLogRecordUpdate {
+	_u.mutation.SetIPAddress(v)
+	return _u
 }
 
 // SetNillableIPAddress sets the "ip_address" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableIPAddress(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetIPAddress(*s)
+func (_u *SysLogRecordUpdate) SetNillableIPAddress(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetIPAddress(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetIPLocation sets the "ip_location" field.
-func (slru *SysLogRecordUpdate) SetIPLocation(s string) *SysLogRecordUpdate {
-	slru.mutation.SetIPLocation(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetIPLocation(v string) *SysLogRecordUpdate {
+	_u.mutation.SetIPLocation(v)
+	return _u
 }
 
 // SetNillableIPLocation sets the "ip_location" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableIPLocation(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetIPLocation(*s)
+func (_u *SysLogRecordUpdate) SetNillableIPLocation(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetIPLocation(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetLatency sets the "latency" field.
-func (slru *SysLogRecordUpdate) SetLatency(i int64) *SysLogRecordUpdate {
-	slru.mutation.ResetLatency()
-	slru.mutation.SetLatency(i)
-	return slru
+func (_u *SysLogRecordUpdate) SetLatency(v int64) *SysLogRecordUpdate {
+	_u.mutation.ResetLatency()
+	_u.mutation.SetLatency(v)
+	return _u
 }
 
 // SetNillableLatency sets the "latency" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableLatency(i *int64) *SysLogRecordUpdate {
-	if i != nil {
-		slru.SetLatency(*i)
+func (_u *SysLogRecordUpdate) SetNillableLatency(v *int64) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetLatency(*v)
 	}
-	return slru
+	return _u
 }
 
-// AddLatency adds i to the "latency" field.
-func (slru *SysLogRecordUpdate) AddLatency(i int64) *SysLogRecordUpdate {
-	slru.mutation.AddLatency(i)
-	return slru
+// AddLatency adds value to the "latency" field.
+func (_u *SysLogRecordUpdate) AddLatency(v int64) *SysLogRecordUpdate {
+	_u.mutation.AddLatency(v)
+	return _u
 }
 
 // SetOs sets the "os" field.
-func (slru *SysLogRecordUpdate) SetOs(s string) *SysLogRecordUpdate {
-	slru.mutation.SetOs(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetOs(v string) *SysLogRecordUpdate {
+	_u.mutation.SetOs(v)
+	return _u
 }
 
 // SetNillableOs sets the "os" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableOs(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetOs(*s)
+func (_u *SysLogRecordUpdate) SetNillableOs(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetOs(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetBrowser sets the "browser" field.
-func (slru *SysLogRecordUpdate) SetBrowser(s string) *SysLogRecordUpdate {
-	slru.mutation.SetBrowser(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetBrowser(v string) *SysLogRecordUpdate {
+	_u.mutation.SetBrowser(v)
+	return _u
 }
 
 // SetNillableBrowser sets the "browser" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableBrowser(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetBrowser(*s)
+func (_u *SysLogRecordUpdate) SetNillableBrowser(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetBrowser(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetUserAgent sets the "user_agent" field.
-func (slru *SysLogRecordUpdate) SetUserAgent(s string) *SysLogRecordUpdate {
-	slru.mutation.SetUserAgent(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetUserAgent(v string) *SysLogRecordUpdate {
+	_u.mutation.SetUserAgent(v)
+	return _u
 }
 
 // SetNillableUserAgent sets the "user_agent" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableUserAgent(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetUserAgent(*s)
+func (_u *SysLogRecordUpdate) SetNillableUserAgent(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetUserAgent(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetHeader sets the "header" field.
-func (slru *SysLogRecordUpdate) SetHeader(s string) *SysLogRecordUpdate {
-	slru.mutation.SetHeader(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetHeader(v string) *SysLogRecordUpdate {
+	_u.mutation.SetHeader(v)
+	return _u
 }
 
 // SetNillableHeader sets the "header" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableHeader(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetHeader(*s)
+func (_u *SysLogRecordUpdate) SetNillableHeader(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetHeader(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetGetParams sets the "get_params" field.
-func (slru *SysLogRecordUpdate) SetGetParams(s string) *SysLogRecordUpdate {
-	slru.mutation.SetGetParams(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetGetParams(v string) *SysLogRecordUpdate {
+	_u.mutation.SetGetParams(v)
+	return _u
 }
 
 // SetNillableGetParams sets the "get_params" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableGetParams(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetGetParams(*s)
+func (_u *SysLogRecordUpdate) SetNillableGetParams(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetGetParams(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetPostData sets the "post_data" field.
-func (slru *SysLogRecordUpdate) SetPostData(s string) *SysLogRecordUpdate {
-	slru.mutation.SetPostData(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetPostData(v string) *SysLogRecordUpdate {
+	_u.mutation.SetPostData(v)
+	return _u
 }
 
 // SetNillablePostData sets the "post_data" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillablePostData(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetPostData(*s)
+func (_u *SysLogRecordUpdate) SetNillablePostData(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetPostData(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetResCode sets the "res_code" field.
-func (slru *SysLogRecordUpdate) SetResCode(i int32) *SysLogRecordUpdate {
-	slru.mutation.ResetResCode()
-	slru.mutation.SetResCode(i)
-	return slru
+func (_u *SysLogRecordUpdate) SetResCode(v int32) *SysLogRecordUpdate {
+	_u.mutation.ResetResCode()
+	_u.mutation.SetResCode(v)
+	return _u
 }
 
 // SetNillableResCode sets the "res_code" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableResCode(i *int32) *SysLogRecordUpdate {
-	if i != nil {
-		slru.SetResCode(*i)
+func (_u *SysLogRecordUpdate) SetNillableResCode(v *int32) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetResCode(*v)
 	}
-	return slru
+	return _u
 }
 
-// AddResCode adds i to the "res_code" field.
-func (slru *SysLogRecordUpdate) AddResCode(i int32) *SysLogRecordUpdate {
-	slru.mutation.AddResCode(i)
-	return slru
+// AddResCode adds value to the "res_code" field.
+func (_u *SysLogRecordUpdate) AddResCode(v int32) *SysLogRecordUpdate {
+	_u.mutation.AddResCode(v)
+	return _u
 }
 
 // SetReason sets the "reason" field.
-func (slru *SysLogRecordUpdate) SetReason(s string) *SysLogRecordUpdate {
-	slru.mutation.SetReason(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetReason(v string) *SysLogRecordUpdate {
+	_u.mutation.SetReason(v)
+	return _u
 }
 
 // SetNillableReason sets the "reason" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableReason(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetReason(*s)
+func (_u *SysLogRecordUpdate) SetNillableReason(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetReason(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetResStatus sets the "res_status" field.
-func (slru *SysLogRecordUpdate) SetResStatus(b bool) *SysLogRecordUpdate {
-	slru.mutation.SetResStatus(b)
-	return slru
+func (_u *SysLogRecordUpdate) SetResStatus(v bool) *SysLogRecordUpdate {
+	_u.mutation.SetResStatus(v)
+	return _u
 }
 
 // SetNillableResStatus sets the "res_status" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableResStatus(b *bool) *SysLogRecordUpdate {
-	if b != nil {
-		slru.SetResStatus(*b)
+func (_u *SysLogRecordUpdate) SetNillableResStatus(v *bool) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetResStatus(*v)
 	}
-	return slru
+	return _u
 }
 
 // SetStack sets the "stack" field.
-func (slru *SysLogRecordUpdate) SetStack(s string) *SysLogRecordUpdate {
-	slru.mutation.SetStack(s)
-	return slru
+func (_u *SysLogRecordUpdate) SetStack(v string) *SysLogRecordUpdate {
+	_u.mutation.SetStack(v)
+	return _u
 }
 
 // SetNillableStack sets the "stack" field if the given value is not nil.
-func (slru *SysLogRecordUpdate) SetNillableStack(s *string) *SysLogRecordUpdate {
-	if s != nil {
-		slru.SetStack(*s)
+func (_u *SysLogRecordUpdate) SetNillableStack(v *string) *SysLogRecordUpdate {
+	if v != nil {
+		_u.SetStack(*v)
 	}
-	return slru
+	return _u
 }
 
 // Mutation returns the SysLogRecordMutation object of the builder.
-func (slru *SysLogRecordUpdate) Mutation() *SysLogRecordMutation {
-	return slru.mutation
+func (_u *SysLogRecordUpdate) Mutation() *SysLogRecordMutation {
+	return _u.mutation
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (slru *SysLogRecordUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, slru.sqlSave, slru.mutation, slru.hooks)
+func (_u *SysLogRecordUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (slru *SysLogRecordUpdate) SaveX(ctx context.Context) int {
-	affected, err := slru.Save(ctx)
+func (_u *SysLogRecordUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -343,101 +343,101 @@ func (slru *SysLogRecordUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (slru *SysLogRecordUpdate) Exec(ctx context.Context) error {
-	_, err := slru.Save(ctx)
+func (_u *SysLogRecordUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slru *SysLogRecordUpdate) ExecX(ctx context.Context) {
-	if err := slru.Exec(ctx); err != nil {
+func (_u *SysLogRecordUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (slru *SysLogRecordUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SysLogRecordUpdate {
-	slru.modifiers = append(slru.modifiers, modifiers...)
-	return slru
+func (_u *SysLogRecordUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SysLogRecordUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (slru *SysLogRecordUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (_u *SysLogRecordUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	_spec := sqlgraph.NewUpdateSpec(syslogrecord.Table, syslogrecord.Columns, sqlgraph.NewFieldSpec(syslogrecord.FieldID, field.TypeString))
-	if ps := slru.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := slru.mutation.UserID(); ok {
+	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(syslogrecord.FieldUserID, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.UserName(); ok {
+	if value, ok := _u.mutation.UserName(); ok {
 		_spec.SetField(syslogrecord.FieldUserName, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.IsLogin(); ok {
+	if value, ok := _u.mutation.IsLogin(); ok {
 		_spec.SetField(syslogrecord.FieldIsLogin, field.TypeBool, value)
 	}
-	if value, ok := slru.mutation.SessionID(); ok {
+	if value, ok := _u.mutation.SessionID(); ok {
 		_spec.SetField(syslogrecord.FieldSessionID, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.Method(); ok {
+	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(syslogrecord.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.Path(); ok {
+	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(syslogrecord.FieldPath, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.RequestTime(); ok {
+	if value, ok := _u.mutation.RequestTime(); ok {
 		_spec.SetField(syslogrecord.FieldRequestTime, field.TypeTime, value)
 	}
-	if value, ok := slru.mutation.IPAddress(); ok {
+	if value, ok := _u.mutation.IPAddress(); ok {
 		_spec.SetField(syslogrecord.FieldIPAddress, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.IPLocation(); ok {
+	if value, ok := _u.mutation.IPLocation(); ok {
 		_spec.SetField(syslogrecord.FieldIPLocation, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.Latency(); ok {
+	if value, ok := _u.mutation.Latency(); ok {
 		_spec.SetField(syslogrecord.FieldLatency, field.TypeInt64, value)
 	}
-	if value, ok := slru.mutation.AddedLatency(); ok {
+	if value, ok := _u.mutation.AddedLatency(); ok {
 		_spec.AddField(syslogrecord.FieldLatency, field.TypeInt64, value)
 	}
-	if value, ok := slru.mutation.Os(); ok {
+	if value, ok := _u.mutation.Os(); ok {
 		_spec.SetField(syslogrecord.FieldOs, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.Browser(); ok {
+	if value, ok := _u.mutation.Browser(); ok {
 		_spec.SetField(syslogrecord.FieldBrowser, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.UserAgent(); ok {
+	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(syslogrecord.FieldUserAgent, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.Header(); ok {
+	if value, ok := _u.mutation.Header(); ok {
 		_spec.SetField(syslogrecord.FieldHeader, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.GetParams(); ok {
+	if value, ok := _u.mutation.GetParams(); ok {
 		_spec.SetField(syslogrecord.FieldGetParams, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.PostData(); ok {
+	if value, ok := _u.mutation.PostData(); ok {
 		_spec.SetField(syslogrecord.FieldPostData, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.ResCode(); ok {
+	if value, ok := _u.mutation.ResCode(); ok {
 		_spec.SetField(syslogrecord.FieldResCode, field.TypeInt32, value)
 	}
-	if value, ok := slru.mutation.AddedResCode(); ok {
+	if value, ok := _u.mutation.AddedResCode(); ok {
 		_spec.AddField(syslogrecord.FieldResCode, field.TypeInt32, value)
 	}
-	if value, ok := slru.mutation.Reason(); ok {
+	if value, ok := _u.mutation.Reason(); ok {
 		_spec.SetField(syslogrecord.FieldReason, field.TypeString, value)
 	}
-	if value, ok := slru.mutation.ResStatus(); ok {
+	if value, ok := _u.mutation.ResStatus(); ok {
 		_spec.SetField(syslogrecord.FieldResStatus, field.TypeBool, value)
 	}
-	if value, ok := slru.mutation.Stack(); ok {
+	if value, ok := _u.mutation.Stack(); ok {
 		_spec.SetField(syslogrecord.FieldStack, field.TypeString, value)
 	}
-	_spec.AddModifiers(slru.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, slru.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{syslogrecord.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -445,8 +445,8 @@ func (slru *SysLogRecordUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		return 0, err
 	}
-	slru.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // SysLogRecordUpdateOne is the builder for updating a single SysLogRecord entity.
@@ -459,325 +459,325 @@ type SysLogRecordUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (slruo *SysLogRecordUpdateOne) SetUserID(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetUserID(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetUserID(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableUserID(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetUserID(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableUserID(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetUserName sets the "user_name" field.
-func (slruo *SysLogRecordUpdateOne) SetUserName(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetUserName(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetUserName(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetUserName(v)
+	return _u
 }
 
 // SetNillableUserName sets the "user_name" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableUserName(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetUserName(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableUserName(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetUserName(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetIsLogin sets the "is_login" field.
-func (slruo *SysLogRecordUpdateOne) SetIsLogin(b bool) *SysLogRecordUpdateOne {
-	slruo.mutation.SetIsLogin(b)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetIsLogin(v bool) *SysLogRecordUpdateOne {
+	_u.mutation.SetIsLogin(v)
+	return _u
 }
 
 // SetNillableIsLogin sets the "is_login" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableIsLogin(b *bool) *SysLogRecordUpdateOne {
-	if b != nil {
-		slruo.SetIsLogin(*b)
+func (_u *SysLogRecordUpdateOne) SetNillableIsLogin(v *bool) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetIsLogin(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetSessionID sets the "session_id" field.
-func (slruo *SysLogRecordUpdateOne) SetSessionID(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetSessionID(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetSessionID(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetSessionID(v)
+	return _u
 }
 
 // SetNillableSessionID sets the "session_id" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableSessionID(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetSessionID(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableSessionID(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetSessionID(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetMethod sets the "method" field.
-func (slruo *SysLogRecordUpdateOne) SetMethod(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetMethod(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetMethod(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetMethod(v)
+	return _u
 }
 
 // SetNillableMethod sets the "method" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableMethod(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetMethod(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableMethod(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetMethod(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetPath sets the "path" field.
-func (slruo *SysLogRecordUpdateOne) SetPath(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetPath(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetPath(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetPath(v)
+	return _u
 }
 
 // SetNillablePath sets the "path" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillablePath(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetPath(*s)
+func (_u *SysLogRecordUpdateOne) SetNillablePath(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetPath(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetRequestTime sets the "request_time" field.
-func (slruo *SysLogRecordUpdateOne) SetRequestTime(t time.Time) *SysLogRecordUpdateOne {
-	slruo.mutation.SetRequestTime(t)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetRequestTime(v time.Time) *SysLogRecordUpdateOne {
+	_u.mutation.SetRequestTime(v)
+	return _u
 }
 
 // SetNillableRequestTime sets the "request_time" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableRequestTime(t *time.Time) *SysLogRecordUpdateOne {
-	if t != nil {
-		slruo.SetRequestTime(*t)
+func (_u *SysLogRecordUpdateOne) SetNillableRequestTime(v *time.Time) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetRequestTime(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetIPAddress sets the "ip_address" field.
-func (slruo *SysLogRecordUpdateOne) SetIPAddress(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetIPAddress(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetIPAddress(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetIPAddress(v)
+	return _u
 }
 
 // SetNillableIPAddress sets the "ip_address" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableIPAddress(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetIPAddress(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableIPAddress(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetIPAddress(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetIPLocation sets the "ip_location" field.
-func (slruo *SysLogRecordUpdateOne) SetIPLocation(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetIPLocation(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetIPLocation(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetIPLocation(v)
+	return _u
 }
 
 // SetNillableIPLocation sets the "ip_location" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableIPLocation(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetIPLocation(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableIPLocation(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetIPLocation(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetLatency sets the "latency" field.
-func (slruo *SysLogRecordUpdateOne) SetLatency(i int64) *SysLogRecordUpdateOne {
-	slruo.mutation.ResetLatency()
-	slruo.mutation.SetLatency(i)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetLatency(v int64) *SysLogRecordUpdateOne {
+	_u.mutation.ResetLatency()
+	_u.mutation.SetLatency(v)
+	return _u
 }
 
 // SetNillableLatency sets the "latency" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableLatency(i *int64) *SysLogRecordUpdateOne {
-	if i != nil {
-		slruo.SetLatency(*i)
+func (_u *SysLogRecordUpdateOne) SetNillableLatency(v *int64) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetLatency(*v)
 	}
-	return slruo
+	return _u
 }
 
-// AddLatency adds i to the "latency" field.
-func (slruo *SysLogRecordUpdateOne) AddLatency(i int64) *SysLogRecordUpdateOne {
-	slruo.mutation.AddLatency(i)
-	return slruo
+// AddLatency adds value to the "latency" field.
+func (_u *SysLogRecordUpdateOne) AddLatency(v int64) *SysLogRecordUpdateOne {
+	_u.mutation.AddLatency(v)
+	return _u
 }
 
 // SetOs sets the "os" field.
-func (slruo *SysLogRecordUpdateOne) SetOs(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetOs(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetOs(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetOs(v)
+	return _u
 }
 
 // SetNillableOs sets the "os" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableOs(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetOs(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableOs(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetOs(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetBrowser sets the "browser" field.
-func (slruo *SysLogRecordUpdateOne) SetBrowser(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetBrowser(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetBrowser(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetBrowser(v)
+	return _u
 }
 
 // SetNillableBrowser sets the "browser" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableBrowser(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetBrowser(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableBrowser(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetBrowser(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetUserAgent sets the "user_agent" field.
-func (slruo *SysLogRecordUpdateOne) SetUserAgent(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetUserAgent(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetUserAgent(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetUserAgent(v)
+	return _u
 }
 
 // SetNillableUserAgent sets the "user_agent" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableUserAgent(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetUserAgent(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableUserAgent(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetUserAgent(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetHeader sets the "header" field.
-func (slruo *SysLogRecordUpdateOne) SetHeader(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetHeader(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetHeader(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetHeader(v)
+	return _u
 }
 
 // SetNillableHeader sets the "header" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableHeader(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetHeader(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableHeader(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetHeader(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetGetParams sets the "get_params" field.
-func (slruo *SysLogRecordUpdateOne) SetGetParams(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetGetParams(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetGetParams(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetGetParams(v)
+	return _u
 }
 
 // SetNillableGetParams sets the "get_params" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableGetParams(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetGetParams(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableGetParams(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetGetParams(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetPostData sets the "post_data" field.
-func (slruo *SysLogRecordUpdateOne) SetPostData(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetPostData(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetPostData(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetPostData(v)
+	return _u
 }
 
 // SetNillablePostData sets the "post_data" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillablePostData(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetPostData(*s)
+func (_u *SysLogRecordUpdateOne) SetNillablePostData(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetPostData(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetResCode sets the "res_code" field.
-func (slruo *SysLogRecordUpdateOne) SetResCode(i int32) *SysLogRecordUpdateOne {
-	slruo.mutation.ResetResCode()
-	slruo.mutation.SetResCode(i)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetResCode(v int32) *SysLogRecordUpdateOne {
+	_u.mutation.ResetResCode()
+	_u.mutation.SetResCode(v)
+	return _u
 }
 
 // SetNillableResCode sets the "res_code" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableResCode(i *int32) *SysLogRecordUpdateOne {
-	if i != nil {
-		slruo.SetResCode(*i)
+func (_u *SysLogRecordUpdateOne) SetNillableResCode(v *int32) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetResCode(*v)
 	}
-	return slruo
+	return _u
 }
 
-// AddResCode adds i to the "res_code" field.
-func (slruo *SysLogRecordUpdateOne) AddResCode(i int32) *SysLogRecordUpdateOne {
-	slruo.mutation.AddResCode(i)
-	return slruo
+// AddResCode adds value to the "res_code" field.
+func (_u *SysLogRecordUpdateOne) AddResCode(v int32) *SysLogRecordUpdateOne {
+	_u.mutation.AddResCode(v)
+	return _u
 }
 
 // SetReason sets the "reason" field.
-func (slruo *SysLogRecordUpdateOne) SetReason(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetReason(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetReason(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetReason(v)
+	return _u
 }
 
 // SetNillableReason sets the "reason" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableReason(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetReason(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableReason(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetReason(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetResStatus sets the "res_status" field.
-func (slruo *SysLogRecordUpdateOne) SetResStatus(b bool) *SysLogRecordUpdateOne {
-	slruo.mutation.SetResStatus(b)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetResStatus(v bool) *SysLogRecordUpdateOne {
+	_u.mutation.SetResStatus(v)
+	return _u
 }
 
 // SetNillableResStatus sets the "res_status" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableResStatus(b *bool) *SysLogRecordUpdateOne {
-	if b != nil {
-		slruo.SetResStatus(*b)
+func (_u *SysLogRecordUpdateOne) SetNillableResStatus(v *bool) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetResStatus(*v)
 	}
-	return slruo
+	return _u
 }
 
 // SetStack sets the "stack" field.
-func (slruo *SysLogRecordUpdateOne) SetStack(s string) *SysLogRecordUpdateOne {
-	slruo.mutation.SetStack(s)
-	return slruo
+func (_u *SysLogRecordUpdateOne) SetStack(v string) *SysLogRecordUpdateOne {
+	_u.mutation.SetStack(v)
+	return _u
 }
 
 // SetNillableStack sets the "stack" field if the given value is not nil.
-func (slruo *SysLogRecordUpdateOne) SetNillableStack(s *string) *SysLogRecordUpdateOne {
-	if s != nil {
-		slruo.SetStack(*s)
+func (_u *SysLogRecordUpdateOne) SetNillableStack(v *string) *SysLogRecordUpdateOne {
+	if v != nil {
+		_u.SetStack(*v)
 	}
-	return slruo
+	return _u
 }
 
 // Mutation returns the SysLogRecordMutation object of the builder.
-func (slruo *SysLogRecordUpdateOne) Mutation() *SysLogRecordMutation {
-	return slruo.mutation
+func (_u *SysLogRecordUpdateOne) Mutation() *SysLogRecordMutation {
+	return _u.mutation
 }
 
 // Where appends a list predicates to the SysLogRecordUpdate builder.
-func (slruo *SysLogRecordUpdateOne) Where(ps ...predicate.SysLogRecord) *SysLogRecordUpdateOne {
-	slruo.mutation.Where(ps...)
-	return slruo
+func (_u *SysLogRecordUpdateOne) Where(ps ...predicate.SysLogRecord) *SysLogRecordUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (slruo *SysLogRecordUpdateOne) Select(field string, fields ...string) *SysLogRecordUpdateOne {
-	slruo.fields = append([]string{field}, fields...)
-	return slruo
+func (_u *SysLogRecordUpdateOne) Select(field string, fields ...string) *SysLogRecordUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated SysLogRecord entity.
-func (slruo *SysLogRecordUpdateOne) Save(ctx context.Context) (*SysLogRecord, error) {
-	return withHooks(ctx, slruo.sqlSave, slruo.mutation, slruo.hooks)
+func (_u *SysLogRecordUpdateOne) Save(ctx context.Context) (*SysLogRecord, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (slruo *SysLogRecordUpdateOne) SaveX(ctx context.Context) *SysLogRecord {
-	node, err := slruo.Save(ctx)
+func (_u *SysLogRecordUpdateOne) SaveX(ctx context.Context) *SysLogRecord {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -785,32 +785,32 @@ func (slruo *SysLogRecordUpdateOne) SaveX(ctx context.Context) *SysLogRecord {
 }
 
 // Exec executes the query on the entity.
-func (slruo *SysLogRecordUpdateOne) Exec(ctx context.Context) error {
-	_, err := slruo.Save(ctx)
+func (_u *SysLogRecordUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slruo *SysLogRecordUpdateOne) ExecX(ctx context.Context) {
-	if err := slruo.Exec(ctx); err != nil {
+func (_u *SysLogRecordUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (slruo *SysLogRecordUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SysLogRecordUpdateOne {
-	slruo.modifiers = append(slruo.modifiers, modifiers...)
-	return slruo
+func (_u *SysLogRecordUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SysLogRecordUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (slruo *SysLogRecordUpdateOne) sqlSave(ctx context.Context) (_node *SysLogRecord, err error) {
+func (_u *SysLogRecordUpdateOne) sqlSave(ctx context.Context) (_node *SysLogRecord, err error) {
 	_spec := sqlgraph.NewUpdateSpec(syslogrecord.Table, syslogrecord.Columns, sqlgraph.NewFieldSpec(syslogrecord.FieldID, field.TypeString))
-	id, ok := slruo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "SysLogRecord.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := slruo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, syslogrecord.FieldID)
 		for _, f := range fields {
@@ -822,84 +822,84 @@ func (slruo *SysLogRecordUpdateOne) sqlSave(ctx context.Context) (_node *SysLogR
 			}
 		}
 	}
-	if ps := slruo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := slruo.mutation.UserID(); ok {
+	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(syslogrecord.FieldUserID, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.UserName(); ok {
+	if value, ok := _u.mutation.UserName(); ok {
 		_spec.SetField(syslogrecord.FieldUserName, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.IsLogin(); ok {
+	if value, ok := _u.mutation.IsLogin(); ok {
 		_spec.SetField(syslogrecord.FieldIsLogin, field.TypeBool, value)
 	}
-	if value, ok := slruo.mutation.SessionID(); ok {
+	if value, ok := _u.mutation.SessionID(); ok {
 		_spec.SetField(syslogrecord.FieldSessionID, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.Method(); ok {
+	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(syslogrecord.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.Path(); ok {
+	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(syslogrecord.FieldPath, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.RequestTime(); ok {
+	if value, ok := _u.mutation.RequestTime(); ok {
 		_spec.SetField(syslogrecord.FieldRequestTime, field.TypeTime, value)
 	}
-	if value, ok := slruo.mutation.IPAddress(); ok {
+	if value, ok := _u.mutation.IPAddress(); ok {
 		_spec.SetField(syslogrecord.FieldIPAddress, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.IPLocation(); ok {
+	if value, ok := _u.mutation.IPLocation(); ok {
 		_spec.SetField(syslogrecord.FieldIPLocation, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.Latency(); ok {
+	if value, ok := _u.mutation.Latency(); ok {
 		_spec.SetField(syslogrecord.FieldLatency, field.TypeInt64, value)
 	}
-	if value, ok := slruo.mutation.AddedLatency(); ok {
+	if value, ok := _u.mutation.AddedLatency(); ok {
 		_spec.AddField(syslogrecord.FieldLatency, field.TypeInt64, value)
 	}
-	if value, ok := slruo.mutation.Os(); ok {
+	if value, ok := _u.mutation.Os(); ok {
 		_spec.SetField(syslogrecord.FieldOs, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.Browser(); ok {
+	if value, ok := _u.mutation.Browser(); ok {
 		_spec.SetField(syslogrecord.FieldBrowser, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.UserAgent(); ok {
+	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(syslogrecord.FieldUserAgent, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.Header(); ok {
+	if value, ok := _u.mutation.Header(); ok {
 		_spec.SetField(syslogrecord.FieldHeader, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.GetParams(); ok {
+	if value, ok := _u.mutation.GetParams(); ok {
 		_spec.SetField(syslogrecord.FieldGetParams, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.PostData(); ok {
+	if value, ok := _u.mutation.PostData(); ok {
 		_spec.SetField(syslogrecord.FieldPostData, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.ResCode(); ok {
+	if value, ok := _u.mutation.ResCode(); ok {
 		_spec.SetField(syslogrecord.FieldResCode, field.TypeInt32, value)
 	}
-	if value, ok := slruo.mutation.AddedResCode(); ok {
+	if value, ok := _u.mutation.AddedResCode(); ok {
 		_spec.AddField(syslogrecord.FieldResCode, field.TypeInt32, value)
 	}
-	if value, ok := slruo.mutation.Reason(); ok {
+	if value, ok := _u.mutation.Reason(); ok {
 		_spec.SetField(syslogrecord.FieldReason, field.TypeString, value)
 	}
-	if value, ok := slruo.mutation.ResStatus(); ok {
+	if value, ok := _u.mutation.ResStatus(); ok {
 		_spec.SetField(syslogrecord.FieldResStatus, field.TypeBool, value)
 	}
-	if value, ok := slruo.mutation.Stack(); ok {
+	if value, ok := _u.mutation.Stack(); ok {
 		_spec.SetField(syslogrecord.FieldStack, field.TypeString, value)
 	}
-	_spec.AddModifiers(slruo.modifiers...)
-	_node = &SysLogRecord{config: slruo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &SysLogRecord{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, slruo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{syslogrecord.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -907,6 +907,6 @@ func (slruo *SysLogRecordUpdateOne) sqlSave(ctx context.Context) (_node *SysLogR
 		}
 		return nil, err
 	}
-	slruo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }

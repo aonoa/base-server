@@ -319,6 +319,75 @@ service Base {
 			get: "/basic-api/system/log/{id}"
 		};
 	}
+
+	//////////////////////////////////////////////// 站内信
+	// 获取当前用户站内信列表
+	rpc GetMySiteMessageList (GetMySiteMessageListParams) returns (GetMySiteMessageListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/notice/my/list"
+		};
+	}
+
+	// 获取当前用户未读站内信数量
+	rpc GetMySiteMessageUnreadCount (google.protobuf.Empty) returns (GetMySiteMessageUnreadCountReply) {
+		option (google.api.http) = {
+			get: "/basic-api/notice/my/unread-count"
+		};
+	}
+
+	// 标记单条站内信已读
+	rpc MarkSiteMessageRead (MarkSiteMessageReadRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/notice/my/read/{messageId}"
+			body: "*"
+		};
+	}
+
+	// 标记单条站内信未读
+	rpc MarkSiteMessageUnread (MarkSiteMessageReadRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/notice/my/unread/{messageId}"
+			body: "*"
+		};
+	}
+
+	// 标记全部站内信已读
+	rpc MarkAllSiteMessagesRead (google.protobuf.Empty) returns (MarkAllSiteMessagesReadReply) {
+		option (google.api.http) = {
+			post: "/basic-api/notice/my/read-all"
+			body: "*"
+		};
+	}
+
+	// 获取已发布站内信列表
+	rpc GetPublishedSiteMessageList (GetPublishedSiteMessageListParams) returns (GetPublishedSiteMessageListReply) {
+		option (google.api.http) = {
+			get: "/basic-api/notice/admin/list"
+		};
+	}
+
+	// 保存/定时/发布站内信
+	rpc CreateSiteMessage (CreateSiteMessageRequest) returns (CreateSiteMessageReply) {
+		option (google.api.http) = {
+			post: "/basic-api/notice/admin"
+			body: "*"
+		};
+	}
+
+	// 撤回已发布站内信
+	rpc RecallSiteMessage (RecallSiteMessageRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			post: "/basic-api/notice/admin/recall/{id}"
+			body: "*"
+		};
+	}
+
+	// 删除未发布站内信
+	rpc DeletePendingSiteMessage (DeletePendingSiteMessageRequest) returns (google.protobuf.Empty) {
+		option (google.api.http) = {
+			delete: "/basic-api/notice/admin/{id}"
+		};
+	}
 }
 
 
@@ -341,7 +410,7 @@ message GetUserInfoReply {
 	string desc = 5;
 	string homePath = 6;
 	string token = 7;
-	RoleInfo roles = 8;
+	repeated RoleInfo roles = 8;
 }
 
 message UserRole {
@@ -726,4 +795,100 @@ message GetSysLogInfoReply {
 	bool res_status = 20;
 	string stack = 21;
 	string create_time = 22;
+}
+
+////////////////////////////////////////// 站内信
+
+message GetMySiteMessageListParams {
+	int64 currentPage = 1;
+	int64 pageSize = 2;
+	int32 readStatus = 3; // 0-全部 1-已读 2-未读
+}
+
+message SiteMessageItem {
+	string id = 1;
+	string title = 2;
+	string content = 3;
+	string category = 4;
+	bool isRead = 5;
+	string link = 6;
+	string senderId = 7;
+	string senderName = 8;
+	string createdTime = 9;
+	string readTime = 10;
+}
+
+message GetMySiteMessageListReply {
+	repeated SiteMessageItem items = 1;
+	int64 total = 2;
+}
+
+message GetMySiteMessageUnreadCountReply {
+	int64 unreadCount = 1;
+}
+
+message MarkSiteMessageReadRequest {
+	string messageId = 1;
+}
+
+message MarkAllSiteMessagesReadReply {
+	int64 updatedCount = 1;
+}
+
+message GetPublishedSiteMessageListParams {
+	int64 currentPage = 1;
+	int64 pageSize = 2;
+	string status = 3; // all | draft | scheduled | published | recalled
+}
+
+message PublishedSiteMessageItem {
+	string id = 1;
+	string title = 2;
+	string content = 3;
+	string category = 4;
+	string receiverType = 5;
+	repeated string receiverIds = 6;
+	int64 receiverCount = 7;
+	string link = 8;
+	string senderId = 9;
+	string senderName = 10;
+	string createdTime = 11;
+	string status = 12;
+	string scheduledPublishTime = 13;
+	string publishedTime = 14;
+	string recalledTime = 15;
+	string updatedTime = 16;
+}
+
+message GetPublishedSiteMessageListReply {
+	repeated PublishedSiteMessageItem items = 1;
+	int64 total = 2;
+}
+
+message CreateSiteMessageRequest {
+	string id = 1;
+	string title = 2;
+	string content = 3;
+	string category = 4;
+	string receiverType = 5; // all | user
+	repeated string receiverIds = 6;
+	string link = 7;
+	string action = 8; // draft | schedule | publish
+	string scheduledPublishTime = 9; // YYYY-MM-DD HH:mm:ss
+}
+
+message CreateSiteMessageReply {
+	string id = 1;
+	int64 receiverCount = 2;
+	string status = 3;
+	string scheduledPublishTime = 4;
+	string publishedTime = 5;
+}
+
+message RecallSiteMessageRequest {
+	string id = 1;
+}
+
+message DeletePendingSiteMessageRequest {
+	string id = 1;
 }

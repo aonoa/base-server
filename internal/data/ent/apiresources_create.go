@@ -22,112 +22,112 @@ type ApiResourcesCreate struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (arc *ApiResourcesCreate) SetCreateTime(t time.Time) *ApiResourcesCreate {
-	arc.mutation.SetCreateTime(t)
-	return arc
+func (_c *ApiResourcesCreate) SetCreateTime(v time.Time) *ApiResourcesCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (arc *ApiResourcesCreate) SetNillableCreateTime(t *time.Time) *ApiResourcesCreate {
-	if t != nil {
-		arc.SetCreateTime(*t)
+func (_c *ApiResourcesCreate) SetNillableCreateTime(v *time.Time) *ApiResourcesCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return arc
+	return _c
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (arc *ApiResourcesCreate) SetUpdateTime(t time.Time) *ApiResourcesCreate {
-	arc.mutation.SetUpdateTime(t)
-	return arc
+func (_c *ApiResourcesCreate) SetUpdateTime(v time.Time) *ApiResourcesCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
 }
 
 // SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (arc *ApiResourcesCreate) SetNillableUpdateTime(t *time.Time) *ApiResourcesCreate {
-	if t != nil {
-		arc.SetUpdateTime(*t)
+func (_c *ApiResourcesCreate) SetNillableUpdateTime(v *time.Time) *ApiResourcesCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
 	}
-	return arc
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (arc *ApiResourcesCreate) SetDescription(s string) *ApiResourcesCreate {
-	arc.mutation.SetDescription(s)
-	return arc
+func (_c *ApiResourcesCreate) SetDescription(v string) *ApiResourcesCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetPath sets the "path" field.
-func (arc *ApiResourcesCreate) SetPath(s string) *ApiResourcesCreate {
-	arc.mutation.SetPath(s)
-	return arc
+func (_c *ApiResourcesCreate) SetPath(v string) *ApiResourcesCreate {
+	_c.mutation.SetPath(v)
+	return _c
 }
 
 // SetMethod sets the "method" field.
-func (arc *ApiResourcesCreate) SetMethod(s string) *ApiResourcesCreate {
-	arc.mutation.SetMethod(s)
-	return arc
+func (_c *ApiResourcesCreate) SetMethod(v string) *ApiResourcesCreate {
+	_c.mutation.SetMethod(v)
+	return _c
 }
 
 // SetModule sets the "module" field.
-func (arc *ApiResourcesCreate) SetModule(s string) *ApiResourcesCreate {
-	arc.mutation.SetModule(s)
-	return arc
+func (_c *ApiResourcesCreate) SetModule(v string) *ApiResourcesCreate {
+	_c.mutation.SetModule(v)
+	return _c
 }
 
 // SetModuleDescription sets the "module_description" field.
-func (arc *ApiResourcesCreate) SetModuleDescription(s string) *ApiResourcesCreate {
-	arc.mutation.SetModuleDescription(s)
-	return arc
+func (_c *ApiResourcesCreate) SetModuleDescription(v string) *ApiResourcesCreate {
+	_c.mutation.SetModuleDescription(v)
+	return _c
 }
 
 // SetResourcesGroup sets the "resources_group" field.
-func (arc *ApiResourcesCreate) SetResourcesGroup(s string) *ApiResourcesCreate {
-	arc.mutation.SetResourcesGroup(s)
-	return arc
+func (_c *ApiResourcesCreate) SetResourcesGroup(v string) *ApiResourcesCreate {
+	_c.mutation.SetResourcesGroup(v)
+	return _c
 }
 
 // SetID sets the "id" field.
-func (arc *ApiResourcesCreate) SetID(s string) *ApiResourcesCreate {
-	arc.mutation.SetID(s)
-	return arc
+func (_c *ApiResourcesCreate) SetID(v string) *ApiResourcesCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (arc *ApiResourcesCreate) SetNillableID(s *string) *ApiResourcesCreate {
-	if s != nil {
-		arc.SetID(*s)
+func (_c *ApiResourcesCreate) SetNillableID(v *string) *ApiResourcesCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return arc
+	return _c
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (arc *ApiResourcesCreate) AddRoleIDs(ids ...int64) *ApiResourcesCreate {
-	arc.mutation.AddRoleIDs(ids...)
-	return arc
+func (_c *ApiResourcesCreate) AddRoleIDs(ids ...int64) *ApiResourcesCreate {
+	_c.mutation.AddRoleIDs(ids...)
+	return _c
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
-func (arc *ApiResourcesCreate) AddRoles(r ...*Role) *ApiResourcesCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *ApiResourcesCreate) AddRoles(v ...*Role) *ApiResourcesCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return arc.AddRoleIDs(ids...)
+	return _c.AddRoleIDs(ids...)
 }
 
 // Mutation returns the ApiResourcesMutation object of the builder.
-func (arc *ApiResourcesCreate) Mutation() *ApiResourcesMutation {
-	return arc.mutation
+func (_c *ApiResourcesCreate) Mutation() *ApiResourcesMutation {
+	return _c.mutation
 }
 
 // Save creates the ApiResources in the database.
-func (arc *ApiResourcesCreate) Save(ctx context.Context) (*ApiResources, error) {
-	arc.defaults()
-	return withHooks(ctx, arc.sqlSave, arc.mutation, arc.hooks)
+func (_c *ApiResourcesCreate) Save(ctx context.Context) (*ApiResources, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (arc *ApiResourcesCreate) SaveX(ctx context.Context) *ApiResources {
-	v, err := arc.Save(ctx)
+func (_c *ApiResourcesCreate) SaveX(ctx context.Context) *ApiResources {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -135,69 +135,69 @@ func (arc *ApiResourcesCreate) SaveX(ctx context.Context) *ApiResources {
 }
 
 // Exec executes the query.
-func (arc *ApiResourcesCreate) Exec(ctx context.Context) error {
-	_, err := arc.Save(ctx)
+func (_c *ApiResourcesCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (arc *ApiResourcesCreate) ExecX(ctx context.Context) {
-	if err := arc.Exec(ctx); err != nil {
+func (_c *ApiResourcesCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (arc *ApiResourcesCreate) defaults() {
-	if _, ok := arc.mutation.CreateTime(); !ok {
+func (_c *ApiResourcesCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := apiresources.DefaultCreateTime()
-		arc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := arc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		v := apiresources.DefaultUpdateTime()
-		arc.mutation.SetUpdateTime(v)
+		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := arc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := apiresources.DefaultID()
-		arc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (arc *ApiResourcesCreate) check() error {
-	if _, ok := arc.mutation.CreateTime(); !ok {
+func (_c *ApiResourcesCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "ApiResources.create_time"`)}
 	}
-	if _, ok := arc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "ApiResources.update_time"`)}
 	}
-	if _, ok := arc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "ApiResources.description"`)}
 	}
-	if _, ok := arc.mutation.Path(); !ok {
+	if _, ok := _c.mutation.Path(); !ok {
 		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "ApiResources.path"`)}
 	}
-	if _, ok := arc.mutation.Method(); !ok {
+	if _, ok := _c.mutation.Method(); !ok {
 		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "ApiResources.method"`)}
 	}
-	if _, ok := arc.mutation.Module(); !ok {
+	if _, ok := _c.mutation.Module(); !ok {
 		return &ValidationError{Name: "module", err: errors.New(`ent: missing required field "ApiResources.module"`)}
 	}
-	if _, ok := arc.mutation.ModuleDescription(); !ok {
+	if _, ok := _c.mutation.ModuleDescription(); !ok {
 		return &ValidationError{Name: "module_description", err: errors.New(`ent: missing required field "ApiResources.module_description"`)}
 	}
-	if _, ok := arc.mutation.ResourcesGroup(); !ok {
+	if _, ok := _c.mutation.ResourcesGroup(); !ok {
 		return &ValidationError{Name: "resources_group", err: errors.New(`ent: missing required field "ApiResources.resources_group"`)}
 	}
 	return nil
 }
 
-func (arc *ApiResourcesCreate) sqlSave(ctx context.Context) (*ApiResources, error) {
-	if err := arc.check(); err != nil {
+func (_c *ApiResourcesCreate) sqlSave(ctx context.Context) (*ApiResources, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := arc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, arc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -210,53 +210,53 @@ func (arc *ApiResourcesCreate) sqlSave(ctx context.Context) (*ApiResources, erro
 			return nil, fmt.Errorf("unexpected ApiResources.ID type: %T", _spec.ID.Value)
 		}
 	}
-	arc.mutation.id = &_node.ID
-	arc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (arc *ApiResourcesCreate) createSpec() (*ApiResources, *sqlgraph.CreateSpec) {
+func (_c *ApiResourcesCreate) createSpec() (*ApiResources, *sqlgraph.CreateSpec) {
 	var (
-		_node = &ApiResources{config: arc.config}
+		_node = &ApiResources{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(apiresources.Table, sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString))
 	)
-	if id, ok := arc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := arc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(apiresources.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := arc.mutation.UpdateTime(); ok {
+	if value, ok := _c.mutation.UpdateTime(); ok {
 		_spec.SetField(apiresources.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := arc.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(apiresources.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := arc.mutation.Path(); ok {
+	if value, ok := _c.mutation.Path(); ok {
 		_spec.SetField(apiresources.FieldPath, field.TypeString, value)
 		_node.Path = value
 	}
-	if value, ok := arc.mutation.Method(); ok {
+	if value, ok := _c.mutation.Method(); ok {
 		_spec.SetField(apiresources.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
-	if value, ok := arc.mutation.Module(); ok {
+	if value, ok := _c.mutation.Module(); ok {
 		_spec.SetField(apiresources.FieldModule, field.TypeString, value)
 		_node.Module = value
 	}
-	if value, ok := arc.mutation.ModuleDescription(); ok {
+	if value, ok := _c.mutation.ModuleDescription(); ok {
 		_spec.SetField(apiresources.FieldModuleDescription, field.TypeString, value)
 		_node.ModuleDescription = value
 	}
-	if value, ok := arc.mutation.ResourcesGroup(); ok {
+	if value, ok := _c.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
 		_node.ResourcesGroup = value
 	}
-	if nodes := arc.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -283,16 +283,16 @@ type ApiResourcesCreateBulk struct {
 }
 
 // Save creates the ApiResources entities in the database.
-func (arcb *ApiResourcesCreateBulk) Save(ctx context.Context) ([]*ApiResources, error) {
-	if arcb.err != nil {
-		return nil, arcb.err
+func (_c *ApiResourcesCreateBulk) Save(ctx context.Context) ([]*ApiResources, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(arcb.builders))
-	nodes := make([]*ApiResources, len(arcb.builders))
-	mutators := make([]Mutator, len(arcb.builders))
-	for i := range arcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*ApiResources, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := arcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ApiResourcesMutation)
@@ -306,11 +306,11 @@ func (arcb *ApiResourcesCreateBulk) Save(ctx context.Context) ([]*ApiResources, 
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, arcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, arcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -330,7 +330,7 @@ func (arcb *ApiResourcesCreateBulk) Save(ctx context.Context) ([]*ApiResources, 
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, arcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -338,8 +338,8 @@ func (arcb *ApiResourcesCreateBulk) Save(ctx context.Context) ([]*ApiResources, 
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (arcb *ApiResourcesCreateBulk) SaveX(ctx context.Context) []*ApiResources {
-	v, err := arcb.Save(ctx)
+func (_c *ApiResourcesCreateBulk) SaveX(ctx context.Context) []*ApiResources {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -347,14 +347,14 @@ func (arcb *ApiResourcesCreateBulk) SaveX(ctx context.Context) []*ApiResources {
 }
 
 // Exec executes the query.
-func (arcb *ApiResourcesCreateBulk) Exec(ctx context.Context) error {
-	_, err := arcb.Save(ctx)
+func (_c *ApiResourcesCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (arcb *ApiResourcesCreateBulk) ExecX(ctx context.Context) {
-	if err := arcb.Exec(ctx); err != nil {
+func (_c *ApiResourcesCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -73,6 +73,11 @@ func (s *BaseService) GetUserInfo(ctx context.Context, req *emptypb.Empty) (*pb.
 	var res pb.GetUserInfoReply
 	copier.Copy(&res, user)
 	res.UserId = user.ID.String()
+	roleInfos, err := s.uc.GetUserRoleInfos(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	res.Roles = roleInfos
 	//res.HomePath = "Dashboard"
 	// /pages
 	return &res, nil
@@ -355,6 +360,42 @@ func (s *BaseService) GetSysLogList(ctx context.Context, req *pb.GetSysLogListPa
 
 func (s *BaseService) GetSysLogInfo(ctx context.Context, req *pb.GetSysLogInfoParams) (*pb.GetSysLogInfoReply, error) {
 	return s.uc.GetSysLogInfo(ctx, req)
+}
+
+func (s *BaseService) GetMySiteMessageList(ctx context.Context, req *pb.GetMySiteMessageListParams) (*pb.GetMySiteMessageListReply, error) {
+	return s.uc.GetMySiteMessageList(ctx, req)
+}
+
+func (s *BaseService) GetMySiteMessageUnreadCount(ctx context.Context, req *emptypb.Empty) (*pb.GetMySiteMessageUnreadCountReply, error) {
+	return s.uc.GetMySiteMessageUnreadCount(ctx)
+}
+
+func (s *BaseService) MarkSiteMessageRead(ctx context.Context, req *pb.MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.MarkSiteMessageRead(ctx, req)
+}
+
+func (s *BaseService) MarkSiteMessageUnread(ctx context.Context, req *pb.MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.MarkSiteMessageUnread(ctx, req)
+}
+
+func (s *BaseService) MarkAllSiteMessagesRead(ctx context.Context, req *emptypb.Empty) (*pb.MarkAllSiteMessagesReadReply, error) {
+	return s.uc.MarkAllSiteMessagesRead(ctx)
+}
+
+func (s *BaseService) GetPublishedSiteMessageList(ctx context.Context, req *pb.GetPublishedSiteMessageListParams) (*pb.GetPublishedSiteMessageListReply, error) {
+	return s.uc.GetPublishedSiteMessageList(ctx, req)
+}
+
+func (s *BaseService) CreateSiteMessage(ctx context.Context, req *pb.CreateSiteMessageRequest) (*pb.CreateSiteMessageReply, error) {
+	return s.uc.CreateSiteMessage(ctx, req)
+}
+
+func (s *BaseService) RecallSiteMessage(ctx context.Context, req *pb.RecallSiteMessageRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.RecallSiteMessage(ctx, req)
+}
+
+func (s *BaseService) DeletePendingSiteMessage(ctx context.Context, req *pb.DeletePendingSiteMessageRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DeletePendingSiteMessage(ctx, req)
 }
 
 func (s *BaseService) Copilot(ctx http.Context, req *pb.Msg) (*emptypb.Empty, error) {

@@ -208,7 +208,7 @@ type GetUserInfoReply struct {
 	Desc          string                 `protobuf:"bytes,5,opt,name=desc,proto3" json:"desc,omitempty"`
 	HomePath      string                 `protobuf:"bytes,6,opt,name=homePath,proto3" json:"homePath,omitempty"`
 	Token         string                 `protobuf:"bytes,7,opt,name=token,proto3" json:"token,omitempty"`
-	Roles         *RoleInfo              `protobuf:"bytes,8,opt,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*RoleInfo            `protobuf:"bytes,8,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -292,7 +292,7 @@ func (x *GetUserInfoReply) GetToken() string {
 	return ""
 }
 
-func (x *GetUserInfoReply) GetRoles() *RoleInfo {
+func (x *GetUserInfoReply) GetRoles() []*RoleInfo {
 	if x != nil {
 		return x.Roles
 	}
@@ -3807,6 +3807,914 @@ func (x *GetSysLogInfoReply) GetCreateTime() string {
 	return ""
 }
 
+type GetMySiteMessageListParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	ReadStatus    int32                  `protobuf:"varint,3,opt,name=readStatus,proto3" json:"readStatus,omitempty"` // 0-全部 1-已读 2-未读
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageListParams) Reset() {
+	*x = GetMySiteMessageListParams{}
+	mi := &file_base_api_v1_base_proto_msgTypes[50]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageListParams) ProtoMessage() {}
+
+func (x *GetMySiteMessageListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[50]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageListParams.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageListParams) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{50}
+}
+
+func (x *GetMySiteMessageListParams) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *GetMySiteMessageListParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetMySiteMessageListParams) GetReadStatus() int32 {
+	if x != nil {
+		return x.ReadStatus
+	}
+	return 0
+}
+
+type SiteMessageItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Category      string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	IsRead        bool                   `protobuf:"varint,5,opt,name=isRead,proto3" json:"isRead,omitempty"`
+	Link          string                 `protobuf:"bytes,6,opt,name=link,proto3" json:"link,omitempty"`
+	SenderId      string                 `protobuf:"bytes,7,opt,name=senderId,proto3" json:"senderId,omitempty"`
+	SenderName    string                 `protobuf:"bytes,8,opt,name=senderName,proto3" json:"senderName,omitempty"`
+	CreatedTime   string                 `protobuf:"bytes,9,opt,name=createdTime,proto3" json:"createdTime,omitempty"`
+	ReadTime      string                 `protobuf:"bytes,10,opt,name=readTime,proto3" json:"readTime,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SiteMessageItem) Reset() {
+	*x = SiteMessageItem{}
+	mi := &file_base_api_v1_base_proto_msgTypes[51]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SiteMessageItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SiteMessageItem) ProtoMessage() {}
+
+func (x *SiteMessageItem) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[51]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SiteMessageItem.ProtoReflect.Descriptor instead.
+func (*SiteMessageItem) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{51}
+}
+
+func (x *SiteMessageItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetIsRead() bool {
+	if x != nil {
+		return x.IsRead
+	}
+	return false
+}
+
+func (x *SiteMessageItem) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetSenderId() string {
+	if x != nil {
+		return x.SenderId
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetCreatedTime() string {
+	if x != nil {
+		return x.CreatedTime
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetReadTime() string {
+	if x != nil {
+		return x.ReadTime
+	}
+	return ""
+}
+
+type GetMySiteMessageListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*SiteMessageItem     `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageListReply) Reset() {
+	*x = GetMySiteMessageListReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageListReply) ProtoMessage() {}
+
+func (x *GetMySiteMessageListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageListReply.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageListReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *GetMySiteMessageListReply) GetItems() []*SiteMessageItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetMySiteMessageListReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type GetMySiteMessageUnreadCountReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UnreadCount   int64                  `protobuf:"varint,1,opt,name=unreadCount,proto3" json:"unreadCount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageUnreadCountReply) Reset() {
+	*x = GetMySiteMessageUnreadCountReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageUnreadCountReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageUnreadCountReply) ProtoMessage() {}
+
+func (x *GetMySiteMessageUnreadCountReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageUnreadCountReply.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageUnreadCountReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *GetMySiteMessageUnreadCountReply) GetUnreadCount() int64 {
+	if x != nil {
+		return x.UnreadCount
+	}
+	return 0
+}
+
+type MarkSiteMessageReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     string                 `protobuf:"bytes,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkSiteMessageReadRequest) Reset() {
+	*x = MarkSiteMessageReadRequest{}
+	mi := &file_base_api_v1_base_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkSiteMessageReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkSiteMessageReadRequest) ProtoMessage() {}
+
+func (x *MarkSiteMessageReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkSiteMessageReadRequest.ProtoReflect.Descriptor instead.
+func (*MarkSiteMessageReadRequest) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *MarkSiteMessageReadRequest) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+type MarkAllSiteMessagesReadReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UpdatedCount  int64                  `protobuf:"varint,1,opt,name=updatedCount,proto3" json:"updatedCount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkAllSiteMessagesReadReply) Reset() {
+	*x = MarkAllSiteMessagesReadReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[55]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkAllSiteMessagesReadReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkAllSiteMessagesReadReply) ProtoMessage() {}
+
+func (x *MarkAllSiteMessagesReadReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[55]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkAllSiteMessagesReadReply.ProtoReflect.Descriptor instead.
+func (*MarkAllSiteMessagesReadReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *MarkAllSiteMessagesReadReply) GetUpdatedCount() int64 {
+	if x != nil {
+		return x.UpdatedCount
+	}
+	return 0
+}
+
+type GetPublishedSiteMessageListParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=currentPage,proto3" json:"currentPage,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"` // all | draft | scheduled | published | recalled
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPublishedSiteMessageListParams) Reset() {
+	*x = GetPublishedSiteMessageListParams{}
+	mi := &file_base_api_v1_base_proto_msgTypes[56]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPublishedSiteMessageListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPublishedSiteMessageListParams) ProtoMessage() {}
+
+func (x *GetPublishedSiteMessageListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[56]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPublishedSiteMessageListParams.ProtoReflect.Descriptor instead.
+func (*GetPublishedSiteMessageListParams) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{56}
+}
+
+func (x *GetPublishedSiteMessageListParams) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *GetPublishedSiteMessageListParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetPublishedSiteMessageListParams) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type PublishedSiteMessageItem struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Category             string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	ReceiverType         string                 `protobuf:"bytes,5,opt,name=receiverType,proto3" json:"receiverType,omitempty"`
+	ReceiverIds          []string               `protobuf:"bytes,6,rep,name=receiverIds,proto3" json:"receiverIds,omitempty"`
+	ReceiverCount        int64                  `protobuf:"varint,7,opt,name=receiverCount,proto3" json:"receiverCount,omitempty"`
+	Link                 string                 `protobuf:"bytes,8,opt,name=link,proto3" json:"link,omitempty"`
+	SenderId             string                 `protobuf:"bytes,9,opt,name=senderId,proto3" json:"senderId,omitempty"`
+	SenderName           string                 `protobuf:"bytes,10,opt,name=senderName,proto3" json:"senderName,omitempty"`
+	CreatedTime          string                 `protobuf:"bytes,11,opt,name=createdTime,proto3" json:"createdTime,omitempty"`
+	Status               string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`
+	ScheduledPublishTime string                 `protobuf:"bytes,13,opt,name=scheduledPublishTime,proto3" json:"scheduledPublishTime,omitempty"`
+	PublishedTime        string                 `protobuf:"bytes,14,opt,name=publishedTime,proto3" json:"publishedTime,omitempty"`
+	RecalledTime         string                 `protobuf:"bytes,15,opt,name=recalledTime,proto3" json:"recalledTime,omitempty"`
+	UpdatedTime          string                 `protobuf:"bytes,16,opt,name=updatedTime,proto3" json:"updatedTime,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *PublishedSiteMessageItem) Reset() {
+	*x = PublishedSiteMessageItem{}
+	mi := &file_base_api_v1_base_proto_msgTypes[57]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PublishedSiteMessageItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PublishedSiteMessageItem) ProtoMessage() {}
+
+func (x *PublishedSiteMessageItem) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[57]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PublishedSiteMessageItem.ProtoReflect.Descriptor instead.
+func (*PublishedSiteMessageItem) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{57}
+}
+
+func (x *PublishedSiteMessageItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetReceiverType() string {
+	if x != nil {
+		return x.ReceiverType
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetReceiverIds() []string {
+	if x != nil {
+		return x.ReceiverIds
+	}
+	return nil
+}
+
+func (x *PublishedSiteMessageItem) GetReceiverCount() int64 {
+	if x != nil {
+		return x.ReceiverCount
+	}
+	return 0
+}
+
+func (x *PublishedSiteMessageItem) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetSenderId() string {
+	if x != nil {
+		return x.SenderId
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetCreatedTime() string {
+	if x != nil {
+		return x.CreatedTime
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetPublishedTime() string {
+	if x != nil {
+		return x.PublishedTime
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetRecalledTime() string {
+	if x != nil {
+		return x.RecalledTime
+	}
+	return ""
+}
+
+func (x *PublishedSiteMessageItem) GetUpdatedTime() string {
+	if x != nil {
+		return x.UpdatedTime
+	}
+	return ""
+}
+
+type GetPublishedSiteMessageListReply struct {
+	state         protoimpl.MessageState      `protogen:"open.v1"`
+	Items         []*PublishedSiteMessageItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                       `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPublishedSiteMessageListReply) Reset() {
+	*x = GetPublishedSiteMessageListReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[58]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPublishedSiteMessageListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPublishedSiteMessageListReply) ProtoMessage() {}
+
+func (x *GetPublishedSiteMessageListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[58]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPublishedSiteMessageListReply.ProtoReflect.Descriptor instead.
+func (*GetPublishedSiteMessageListReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{58}
+}
+
+func (x *GetPublishedSiteMessageListReply) GetItems() []*PublishedSiteMessageItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetPublishedSiteMessageListReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type CreateSiteMessageRequest struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Category             string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	ReceiverType         string                 `protobuf:"bytes,5,opt,name=receiverType,proto3" json:"receiverType,omitempty"` // all | user
+	ReceiverIds          []string               `protobuf:"bytes,6,rep,name=receiverIds,proto3" json:"receiverIds,omitempty"`
+	Link                 string                 `protobuf:"bytes,7,opt,name=link,proto3" json:"link,omitempty"`
+	Action               string                 `protobuf:"bytes,8,opt,name=action,proto3" json:"action,omitempty"`                             // draft | schedule | publish
+	ScheduledPublishTime string                 `protobuf:"bytes,9,opt,name=scheduledPublishTime,proto3" json:"scheduledPublishTime,omitempty"` // YYYY-MM-DD HH:mm:ss
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CreateSiteMessageRequest) Reset() {
+	*x = CreateSiteMessageRequest{}
+	mi := &file_base_api_v1_base_proto_msgTypes[59]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSiteMessageRequest) ProtoMessage() {}
+
+func (x *CreateSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[59]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*CreateSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *CreateSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetReceiverType() string {
+	if x != nil {
+		return x.ReceiverType
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetReceiverIds() []string {
+	if x != nil {
+		return x.ReceiverIds
+	}
+	return nil
+}
+
+func (x *CreateSiteMessageRequest) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+type CreateSiteMessageReply struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	ReceiverCount        int64                  `protobuf:"varint,2,opt,name=receiverCount,proto3" json:"receiverCount,omitempty"`
+	Status               string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	ScheduledPublishTime string                 `protobuf:"bytes,4,opt,name=scheduledPublishTime,proto3" json:"scheduledPublishTime,omitempty"`
+	PublishedTime        string                 `protobuf:"bytes,5,opt,name=publishedTime,proto3" json:"publishedTime,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CreateSiteMessageReply) Reset() {
+	*x = CreateSiteMessageReply{}
+	mi := &file_base_api_v1_base_proto_msgTypes[60]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSiteMessageReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSiteMessageReply) ProtoMessage() {}
+
+func (x *CreateSiteMessageReply) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[60]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSiteMessageReply.ProtoReflect.Descriptor instead.
+func (*CreateSiteMessageReply) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{60}
+}
+
+func (x *CreateSiteMessageReply) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetReceiverCount() int64 {
+	if x != nil {
+		return x.ReceiverCount
+	}
+	return 0
+}
+
+func (x *CreateSiteMessageReply) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetPublishedTime() string {
+	if x != nil {
+		return x.PublishedTime
+	}
+	return ""
+}
+
+type RecallSiteMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecallSiteMessageRequest) Reset() {
+	*x = RecallSiteMessageRequest{}
+	mi := &file_base_api_v1_base_proto_msgTypes[61]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecallSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecallSiteMessageRequest) ProtoMessage() {}
+
+func (x *RecallSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[61]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecallSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*RecallSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{61}
+}
+
+func (x *RecallSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeletePendingSiteMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePendingSiteMessageRequest) Reset() {
+	*x = DeletePendingSiteMessageRequest{}
+	mi := &file_base_api_v1_base_proto_msgTypes[62]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePendingSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePendingSiteMessageRequest) ProtoMessage() {}
+
+func (x *DeletePendingSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_base_api_v1_base_proto_msgTypes[62]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePendingSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*DeletePendingSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_base_api_v1_base_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *DeletePendingSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_base_api_v1_base_proto protoreflect.FileDescriptor
 
 const file_base_api_v1_base_proto_rawDesc = "" +
@@ -3829,7 +4737,7 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x04desc\x18\x05 \x01(\tR\x04desc\x12\x1a\n" +
 	"\bhomePath\x18\x06 \x01(\tR\bhomePath\x12\x14\n" +
 	"\x05token\x18\a \x01(\tR\x05token\x12/\n" +
-	"\x05roles\x18\b \x01(\v2\x19.api.base_api.v1.RoleInfoR\x05roles\"D\n" +
+	"\x05roles\x18\b \x03(\v2\x19.api.base_api.v1.RoleInfoR\x05roles\"D\n" +
 	"\bUserRole\x12\x10\n" +
 	"\x03dom\x18\x01 \x01(\tR\x03dom\x12\x12\n" +
 	"\x04role\x18\x02 \x01(\tR\x04role\x12\x12\n" +
@@ -4173,14 +5081,90 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"res_status\x18\x14 \x01(\bR\tresStatus\x12\x14\n" +
 	"\x05stack\x18\x15 \x01(\tR\x05stack\x12\x1f\n" +
 	"\vcreate_time\x18\x16 \x01(\tR\n" +
-	"createTime*\x8d\x01\n" +
+	"createTime\"z\n" +
+	"\x1aGetMySiteMessageListParams\x12 \n" +
+	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x1e\n" +
+	"\n" +
+	"readStatus\x18\x03 \x01(\x05R\n" +
+	"readStatus\"\x93\x02\n" +
+	"\x0fSiteMessageItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x16\n" +
+	"\x06isRead\x18\x05 \x01(\bR\x06isRead\x12\x12\n" +
+	"\x04link\x18\x06 \x01(\tR\x04link\x12\x1a\n" +
+	"\bsenderId\x18\a \x01(\tR\bsenderId\x12\x1e\n" +
+	"\n" +
+	"senderName\x18\b \x01(\tR\n" +
+	"senderName\x12 \n" +
+	"\vcreatedTime\x18\t \x01(\tR\vcreatedTime\x12\x1a\n" +
+	"\breadTime\x18\n" +
+	" \x01(\tR\breadTime\"i\n" +
+	"\x19GetMySiteMessageListReply\x126\n" +
+	"\x05items\x18\x01 \x03(\v2 .api.base_api.v1.SiteMessageItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"D\n" +
+	" GetMySiteMessageUnreadCountReply\x12 \n" +
+	"\vunreadCount\x18\x01 \x01(\x03R\vunreadCount\":\n" +
+	"\x1aMarkSiteMessageReadRequest\x12\x1c\n" +
+	"\tmessageId\x18\x01 \x01(\tR\tmessageId\"B\n" +
+	"\x1cMarkAllSiteMessagesReadReply\x12\"\n" +
+	"\fupdatedCount\x18\x01 \x01(\x03R\fupdatedCount\"y\n" +
+	"!GetPublishedSiteMessageListParams\x12 \n" +
+	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
+	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\"\x8c\x04\n" +
+	"\x18PublishedSiteMessageItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\"\n" +
+	"\freceiverType\x18\x05 \x01(\tR\freceiverType\x12 \n" +
+	"\vreceiverIds\x18\x06 \x03(\tR\vreceiverIds\x12$\n" +
+	"\rreceiverCount\x18\a \x01(\x03R\rreceiverCount\x12\x12\n" +
+	"\x04link\x18\b \x01(\tR\x04link\x12\x1a\n" +
+	"\bsenderId\x18\t \x01(\tR\bsenderId\x12\x1e\n" +
+	"\n" +
+	"senderName\x18\n" +
+	" \x01(\tR\n" +
+	"senderName\x12 \n" +
+	"\vcreatedTime\x18\v \x01(\tR\vcreatedTime\x12\x16\n" +
+	"\x06status\x18\f \x01(\tR\x06status\x122\n" +
+	"\x14scheduledPublishTime\x18\r \x01(\tR\x14scheduledPublishTime\x12$\n" +
+	"\rpublishedTime\x18\x0e \x01(\tR\rpublishedTime\x12\"\n" +
+	"\frecalledTime\x18\x0f \x01(\tR\frecalledTime\x12 \n" +
+	"\vupdatedTime\x18\x10 \x01(\tR\vupdatedTime\"y\n" +
+	" GetPublishedSiteMessageListReply\x12?\n" +
+	"\x05items\x18\x01 \x03(\v2).api.base_api.v1.PublishedSiteMessageItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x9c\x02\n" +
+	"\x18CreateSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\"\n" +
+	"\freceiverType\x18\x05 \x01(\tR\freceiverType\x12 \n" +
+	"\vreceiverIds\x18\x06 \x03(\tR\vreceiverIds\x12\x12\n" +
+	"\x04link\x18\a \x01(\tR\x04link\x12\x16\n" +
+	"\x06action\x18\b \x01(\tR\x06action\x122\n" +
+	"\x14scheduledPublishTime\x18\t \x01(\tR\x14scheduledPublishTime\"\xc0\x01\n" +
+	"\x16CreateSiteMessageReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12$\n" +
+	"\rreceiverCount\x18\x02 \x01(\x03R\rreceiverCount\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\x122\n" +
+	"\x14scheduledPublishTime\x18\x04 \x01(\tR\x14scheduledPublishTime\x12$\n" +
+	"\rpublishedTime\x18\x05 \x01(\tR\rpublishedTime\"*\n" +
+	"\x18RecallSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"1\n" +
+	"\x1fDeletePendingSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id*\x8d\x01\n" +
 	"\bMenuType\x12\x18\n" +
 	"\acatalog\x10\x00\x1a\vҸ\x02\acatalog\x12\x12\n" +
 	"\x04menu\x10\x01\x1a\bҸ\x02\x04menu\x12\x1a\n" +
 	"\bembedded\x10\x02\x1a\fҸ\x02\bembedded\x12\x12\n" +
 	"\x04link\x10\x03\x1a\bҸ\x02\x04link\x12\x16\n" +
 	"\x06button\x10\x04\x1a\n" +
-	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\xd7#\n" +
+	"Ҹ\x02\x06button\x1a\vʸ\x02\adefault2\x82.\n" +
 	"\x04Base\x12e\n" +
 	"\x05Login\x12\x1d.api.base_api.v1.LoginRequest\x1a\x1b.api.base_api.v1.LoginReply\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/basic-api/auth/login\x12f\n" +
 	"\vGetUserInfo\x12\x16.google.protobuf.Empty\x1a!.api.base_api.v1.GetUserInfoReply\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/basic-api/user/info\x12}\n" +
@@ -4227,7 +5211,16 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\x0eUpdateResource\x12!.api.base_api.v1.ResourceListItem\x1a!.api.base_api.v1.ResourceListItem\"*\x82\xd3\xe4\x93\x02$:\x01*\x1a\x1f/basic-api/system/resource/{id}\x12o\n" +
 	"\vDelResource\x12\x1f.api.base_api.v1.DeleteResource\x1a\x16.google.protobuf.Empty\"'\x82\xd3\xe4\x93\x02!*\x1f/basic-api/system/resource/{id}\x12~\n" +
 	"\rGetSysLogList\x12$.api.base_api.v1.GetSysLogListParams\x1a#.api.base_api.v1.GetSysLogListReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/basic-api/system/log/list\x12~\n" +
-	"\rGetSysLogInfo\x12$.api.base_api.v1.GetSysLogInfoParams\x1a#.api.base_api.v1.GetSysLogInfoReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/basic-api/system/log/{id}B3\n" +
+	"\rGetSysLogInfo\x12$.api.base_api.v1.GetSysLogInfoParams\x1a#.api.base_api.v1.GetSysLogInfoReply\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/basic-api/system/log/{id}\x12\x92\x01\n" +
+	"\x14GetMySiteMessageList\x12+.api.base_api.v1.GetMySiteMessageListParams\x1a*.api.base_api.v1.GetMySiteMessageListReply\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/basic-api/notice/my/list\x12\x93\x01\n" +
+	"\x1bGetMySiteMessageUnreadCount\x12\x16.google.protobuf.Empty\x1a1.api.base_api.v1.GetMySiteMessageUnreadCountReply\")\x82\xd3\xe4\x93\x02#\x12!/basic-api/notice/my/unread-count\x12\x8c\x01\n" +
+	"\x13MarkSiteMessageRead\x12+.api.base_api.v1.MarkSiteMessageReadRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/basic-api/notice/my/read/{messageId}\x12\x90\x01\n" +
+	"\x15MarkSiteMessageUnread\x12+.api.base_api.v1.MarkSiteMessageReadRequest\x1a\x16.google.protobuf.Empty\"2\x82\xd3\xe4\x93\x02,:\x01*\"'/basic-api/notice/my/unread/{messageId}\x12\x8a\x01\n" +
+	"\x17MarkAllSiteMessagesRead\x12\x16.google.protobuf.Empty\x1a-.api.base_api.v1.MarkAllSiteMessagesReadReply\"(\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/basic-api/notice/my/read-all\x12\xaa\x01\n" +
+	"\x1bGetPublishedSiteMessageList\x122.api.base_api.v1.GetPublishedSiteMessageListParams\x1a1.api.base_api.v1.GetPublishedSiteMessageListReply\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/basic-api/notice/admin/list\x12\x8b\x01\n" +
+	"\x11CreateSiteMessage\x12).api.base_api.v1.CreateSiteMessageRequest\x1a'.api.base_api.v1.CreateSiteMessageReply\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/basic-api/notice/admin\x12\x86\x01\n" +
+	"\x11RecallSiteMessage\x12).api.base_api.v1.RecallSiteMessageRequest\x1a\x16.google.protobuf.Empty\".\x82\xd3\xe4\x93\x02(:\x01*\"#/basic-api/notice/admin/recall/{id}\x12\x8a\x01\n" +
+	"\x18DeletePendingSiteMessage\x120.api.base_api.v1.DeletePendingSiteMessageRequest\x1a\x16.google.protobuf.Empty\"$\x82\xd3\xe4\x93\x02\x1e*\x1c/basic-api/notice/admin/{id}B3\n" +
 	"\x0fapi.base_api.v1P\x01Z\x1ebase-server/api/base_api/v1;v1b\x06proto3"
 
 var (
@@ -4243,60 +5236,73 @@ func file_base_api_v1_base_proto_rawDescGZIP() []byte {
 }
 
 var file_base_api_v1_base_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
+var file_base_api_v1_base_proto_msgTypes = make([]protoimpl.MessageInfo, 63)
 var file_base_api_v1_base_proto_goTypes = []any{
-	(MenuType)(0),                      // 0: api.base_api.v1.MenuType
-	(*LoginRequest)(nil),               // 1: api.base_api.v1.LoginRequest
-	(*LoginReply)(nil),                 // 2: api.base_api.v1.LoginReply
-	(*GetUserInfoReply)(nil),           // 3: api.base_api.v1.GetUserInfoReply
-	(*UserRole)(nil),                   // 4: api.base_api.v1.UserRole
-	(*UserExtension)(nil),              // 5: api.base_api.v1.UserExtension
-	(*GetAccessCodesReply)(nil),        // 6: api.base_api.v1.GetAccessCodesReply
-	(*GetMenuListReply)(nil),           // 7: api.base_api.v1.GetMenuListReply
-	(*RoleInfo)(nil),                   // 8: api.base_api.v1.RoleInfo
-	(*RouteItem)(nil),                  // 9: api.base_api.v1.RouteItem
-	(*RouteMeta)(nil),                  // 10: api.base_api.v1.RouteMeta
-	(*DeptListItem)(nil),               // 11: api.base_api.v1.DeptListItem
-	(*DeleteDept)(nil),                 // 12: api.base_api.v1.DeleteDept
-	(*GetDeptListReply)(nil),           // 13: api.base_api.v1.GetDeptListReply
-	(*RolePageParams)(nil),             // 14: api.base_api.v1.RolePageParams
-	(*RoleListItem)(nil),               // 15: api.base_api.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),     // 16: api.base_api.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),                 // 17: api.base_api.v1.DeleteRole
-	(*MenuParams)(nil),                 // 18: api.base_api.v1.MenuParams
-	(*Meta)(nil),                       // 19: api.base_api.v1.Meta
-	(*SysMenuListItem)(nil),            // 20: api.base_api.v1.SysMenuListItem
-	(*GetSysMenuListReply)(nil),        // 21: api.base_api.v1.GetSysMenuListReply
-	(*GetUserParams)(nil),              // 22: api.base_api.v1.GetUserParams
-	(*UserListItem)(nil),               // 23: api.base_api.v1.UserListItem
-	(*GetUserListReply)(nil),           // 24: api.base_api.v1.GetUserListReply
-	(*DeleteUser)(nil),                 // 25: api.base_api.v1.DeleteUser
-	(*RoleParams)(nil),                 // 26: api.base_api.v1.RoleParams
-	(*SetRoleStatusRequest)(nil),       // 27: api.base_api.v1.SetRoleStatusRequest
-	(*IsUserExistsRequest)(nil),        // 28: api.base_api.v1.IsUserExistsRequest
-	(*IsUserExistsReply)(nil),          // 29: api.base_api.v1.IsUserExistsReply
-	(*IsMenuNameExistsRequest)(nil),    // 30: api.base_api.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),      // 31: api.base_api.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil),    // 32: api.base_api.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),      // 33: api.base_api.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),          // 34: api.base_api.v1.DeleteMenuRequest
-	(*ChangePasswordRequest)(nil),      // 35: api.base_api.v1.ChangePasswordRequest
-	(*WalkRouteItem)(nil),              // 36: api.base_api.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),          // 37: api.base_api.v1.GetWalkRouteReply
-	(*GetApiPageParams)(nil),           // 38: api.base_api.v1.GetApiPageParams
-	(*ApiListItem)(nil),                // 39: api.base_api.v1.ApiListItem
-	(*GetApiListByPageReply)(nil),      // 40: api.base_api.v1.GetApiListByPageReply
-	(*DeleteApi)(nil),                  // 41: api.base_api.v1.DeleteApi
-	(*GetResourcePageParams)(nil),      // 42: api.base_api.v1.GetResourcePageParams
-	(*ResourceListItem)(nil),           // 43: api.base_api.v1.ResourceListItem
-	(*GetResourceListByPageReply)(nil), // 44: api.base_api.v1.GetResourceListByPageReply
-	(*DeleteResource)(nil),             // 45: api.base_api.v1.DeleteResource
-	(*GetSysLogListParams)(nil),        // 46: api.base_api.v1.GetSysLogListParams
-	(*SysLogItem)(nil),                 // 47: api.base_api.v1.SysLogItem
-	(*GetSysLogListReply)(nil),         // 48: api.base_api.v1.GetSysLogListReply
-	(*GetSysLogInfoParams)(nil),        // 49: api.base_api.v1.GetSysLogInfoParams
-	(*GetSysLogInfoReply)(nil),         // 50: api.base_api.v1.GetSysLogInfoReply
-	(*emptypb.Empty)(nil),              // 51: google.protobuf.Empty
+	(MenuType)(0),                             // 0: api.base_api.v1.MenuType
+	(*LoginRequest)(nil),                      // 1: api.base_api.v1.LoginRequest
+	(*LoginReply)(nil),                        // 2: api.base_api.v1.LoginReply
+	(*GetUserInfoReply)(nil),                  // 3: api.base_api.v1.GetUserInfoReply
+	(*UserRole)(nil),                          // 4: api.base_api.v1.UserRole
+	(*UserExtension)(nil),                     // 5: api.base_api.v1.UserExtension
+	(*GetAccessCodesReply)(nil),               // 6: api.base_api.v1.GetAccessCodesReply
+	(*GetMenuListReply)(nil),                  // 7: api.base_api.v1.GetMenuListReply
+	(*RoleInfo)(nil),                          // 8: api.base_api.v1.RoleInfo
+	(*RouteItem)(nil),                         // 9: api.base_api.v1.RouteItem
+	(*RouteMeta)(nil),                         // 10: api.base_api.v1.RouteMeta
+	(*DeptListItem)(nil),                      // 11: api.base_api.v1.DeptListItem
+	(*DeleteDept)(nil),                        // 12: api.base_api.v1.DeleteDept
+	(*GetDeptListReply)(nil),                  // 13: api.base_api.v1.GetDeptListReply
+	(*RolePageParams)(nil),                    // 14: api.base_api.v1.RolePageParams
+	(*RoleListItem)(nil),                      // 15: api.base_api.v1.RoleListItem
+	(*GetRoleListByPageReply)(nil),            // 16: api.base_api.v1.GetRoleListByPageReply
+	(*DeleteRole)(nil),                        // 17: api.base_api.v1.DeleteRole
+	(*MenuParams)(nil),                        // 18: api.base_api.v1.MenuParams
+	(*Meta)(nil),                              // 19: api.base_api.v1.Meta
+	(*SysMenuListItem)(nil),                   // 20: api.base_api.v1.SysMenuListItem
+	(*GetSysMenuListReply)(nil),               // 21: api.base_api.v1.GetSysMenuListReply
+	(*GetUserParams)(nil),                     // 22: api.base_api.v1.GetUserParams
+	(*UserListItem)(nil),                      // 23: api.base_api.v1.UserListItem
+	(*GetUserListReply)(nil),                  // 24: api.base_api.v1.GetUserListReply
+	(*DeleteUser)(nil),                        // 25: api.base_api.v1.DeleteUser
+	(*RoleParams)(nil),                        // 26: api.base_api.v1.RoleParams
+	(*SetRoleStatusRequest)(nil),              // 27: api.base_api.v1.SetRoleStatusRequest
+	(*IsUserExistsRequest)(nil),               // 28: api.base_api.v1.IsUserExistsRequest
+	(*IsUserExistsReply)(nil),                 // 29: api.base_api.v1.IsUserExistsReply
+	(*IsMenuNameExistsRequest)(nil),           // 30: api.base_api.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),             // 31: api.base_api.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil),           // 32: api.base_api.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),             // 33: api.base_api.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),                 // 34: api.base_api.v1.DeleteMenuRequest
+	(*ChangePasswordRequest)(nil),             // 35: api.base_api.v1.ChangePasswordRequest
+	(*WalkRouteItem)(nil),                     // 36: api.base_api.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),                 // 37: api.base_api.v1.GetWalkRouteReply
+	(*GetApiPageParams)(nil),                  // 38: api.base_api.v1.GetApiPageParams
+	(*ApiListItem)(nil),                       // 39: api.base_api.v1.ApiListItem
+	(*GetApiListByPageReply)(nil),             // 40: api.base_api.v1.GetApiListByPageReply
+	(*DeleteApi)(nil),                         // 41: api.base_api.v1.DeleteApi
+	(*GetResourcePageParams)(nil),             // 42: api.base_api.v1.GetResourcePageParams
+	(*ResourceListItem)(nil),                  // 43: api.base_api.v1.ResourceListItem
+	(*GetResourceListByPageReply)(nil),        // 44: api.base_api.v1.GetResourceListByPageReply
+	(*DeleteResource)(nil),                    // 45: api.base_api.v1.DeleteResource
+	(*GetSysLogListParams)(nil),               // 46: api.base_api.v1.GetSysLogListParams
+	(*SysLogItem)(nil),                        // 47: api.base_api.v1.SysLogItem
+	(*GetSysLogListReply)(nil),                // 48: api.base_api.v1.GetSysLogListReply
+	(*GetSysLogInfoParams)(nil),               // 49: api.base_api.v1.GetSysLogInfoParams
+	(*GetSysLogInfoReply)(nil),                // 50: api.base_api.v1.GetSysLogInfoReply
+	(*GetMySiteMessageListParams)(nil),        // 51: api.base_api.v1.GetMySiteMessageListParams
+	(*SiteMessageItem)(nil),                   // 52: api.base_api.v1.SiteMessageItem
+	(*GetMySiteMessageListReply)(nil),         // 53: api.base_api.v1.GetMySiteMessageListReply
+	(*GetMySiteMessageUnreadCountReply)(nil),  // 54: api.base_api.v1.GetMySiteMessageUnreadCountReply
+	(*MarkSiteMessageReadRequest)(nil),        // 55: api.base_api.v1.MarkSiteMessageReadRequest
+	(*MarkAllSiteMessagesReadReply)(nil),      // 56: api.base_api.v1.MarkAllSiteMessagesReadReply
+	(*GetPublishedSiteMessageListParams)(nil), // 57: api.base_api.v1.GetPublishedSiteMessageListParams
+	(*PublishedSiteMessageItem)(nil),          // 58: api.base_api.v1.PublishedSiteMessageItem
+	(*GetPublishedSiteMessageListReply)(nil),  // 59: api.base_api.v1.GetPublishedSiteMessageListReply
+	(*CreateSiteMessageRequest)(nil),          // 60: api.base_api.v1.CreateSiteMessageRequest
+	(*CreateSiteMessageReply)(nil),            // 61: api.base_api.v1.CreateSiteMessageReply
+	(*RecallSiteMessageRequest)(nil),          // 62: api.base_api.v1.RecallSiteMessageRequest
+	(*DeletePendingSiteMessageRequest)(nil),   // 63: api.base_api.v1.DeletePendingSiteMessageRequest
+	(*emptypb.Empty)(nil),                     // 64: google.protobuf.Empty
 }
 var file_base_api_v1_base_proto_depIdxs = []int32{
 	8,  // 0: api.base_api.v1.GetUserInfoReply.roles:type_name -> api.base_api.v1.RoleInfo
@@ -4315,89 +5321,109 @@ var file_base_api_v1_base_proto_depIdxs = []int32{
 	39, // 13: api.base_api.v1.GetApiListByPageReply.items:type_name -> api.base_api.v1.ApiListItem
 	43, // 14: api.base_api.v1.GetResourceListByPageReply.items:type_name -> api.base_api.v1.ResourceListItem
 	47, // 15: api.base_api.v1.GetSysLogListReply.items:type_name -> api.base_api.v1.SysLogItem
-	1,  // 16: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
-	51, // 17: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
-	51, // 18: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
-	51, // 19: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
-	51, // 20: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
-	51, // 21: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
-	51, // 22: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
-	22, // 23: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
-	23, // 24: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
-	23, // 25: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
-	25, // 26: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
-	28, // 27: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
-	18, // 28: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
-	30, // 29: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
-	32, // 30: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
-	20, // 31: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	20, // 32: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
-	34, // 33: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
-	51, // 34: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
-	11, // 35: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
-	11, // 36: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
-	12, // 37: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
-	14, // 38: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
-	15, // 39: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
-	15, // 40: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
-	17, // 41: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
-	27, // 42: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
-	35, // 43: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
-	51, // 44: api.base_api.v1.Base.GetWalkRoute:input_type -> google.protobuf.Empty
-	38, // 45: api.base_api.v1.Base.GetApiList:input_type -> api.base_api.v1.GetApiPageParams
-	39, // 46: api.base_api.v1.Base.AddApi:input_type -> api.base_api.v1.ApiListItem
-	39, // 47: api.base_api.v1.Base.UpdateApi:input_type -> api.base_api.v1.ApiListItem
-	41, // 48: api.base_api.v1.Base.DelApi:input_type -> api.base_api.v1.DeleteApi
-	42, // 49: api.base_api.v1.Base.GetResourceList:input_type -> api.base_api.v1.GetResourcePageParams
-	43, // 50: api.base_api.v1.Base.AddResource:input_type -> api.base_api.v1.ResourceListItem
-	43, // 51: api.base_api.v1.Base.UpdateResource:input_type -> api.base_api.v1.ResourceListItem
-	45, // 52: api.base_api.v1.Base.DelResource:input_type -> api.base_api.v1.DeleteResource
-	46, // 53: api.base_api.v1.Base.GetSysLogList:input_type -> api.base_api.v1.GetSysLogListParams
-	49, // 54: api.base_api.v1.Base.GetSysLogInfo:input_type -> api.base_api.v1.GetSysLogInfoParams
-	2,  // 55: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
-	3,  // 56: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
-	6,  // 57: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
-	51, // 58: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
-	21, // 59: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	2,  // 60: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
-	51, // 61: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
-	24, // 62: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
-	23, // 63: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
-	23, // 64: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
-	51, // 65: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
-	29, // 66: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
-	21, // 67: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
-	31, // 68: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
-	33, // 69: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
-	51, // 70: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
-	51, // 71: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
-	51, // 72: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
-	13, // 73: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
-	11, // 74: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
-	11, // 75: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
-	51, // 76: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
-	16, // 77: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
-	15, // 78: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
-	15, // 79: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
-	51, // 80: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
-	51, // 81: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
-	51, // 82: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
-	37, // 83: api.base_api.v1.Base.GetWalkRoute:output_type -> api.base_api.v1.GetWalkRouteReply
-	40, // 84: api.base_api.v1.Base.GetApiList:output_type -> api.base_api.v1.GetApiListByPageReply
-	39, // 85: api.base_api.v1.Base.AddApi:output_type -> api.base_api.v1.ApiListItem
-	39, // 86: api.base_api.v1.Base.UpdateApi:output_type -> api.base_api.v1.ApiListItem
-	51, // 87: api.base_api.v1.Base.DelApi:output_type -> google.protobuf.Empty
-	44, // 88: api.base_api.v1.Base.GetResourceList:output_type -> api.base_api.v1.GetResourceListByPageReply
-	43, // 89: api.base_api.v1.Base.AddResource:output_type -> api.base_api.v1.ResourceListItem
-	43, // 90: api.base_api.v1.Base.UpdateResource:output_type -> api.base_api.v1.ResourceListItem
-	51, // 91: api.base_api.v1.Base.DelResource:output_type -> google.protobuf.Empty
-	48, // 92: api.base_api.v1.Base.GetSysLogList:output_type -> api.base_api.v1.GetSysLogListReply
-	50, // 93: api.base_api.v1.Base.GetSysLogInfo:output_type -> api.base_api.v1.GetSysLogInfoReply
-	55, // [55:94] is the sub-list for method output_type
-	16, // [16:55] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	52, // 16: api.base_api.v1.GetMySiteMessageListReply.items:type_name -> api.base_api.v1.SiteMessageItem
+	58, // 17: api.base_api.v1.GetPublishedSiteMessageListReply.items:type_name -> api.base_api.v1.PublishedSiteMessageItem
+	1,  // 18: api.base_api.v1.Base.Login:input_type -> api.base_api.v1.LoginRequest
+	64, // 19: api.base_api.v1.Base.GetUserInfo:input_type -> google.protobuf.Empty
+	64, // 20: api.base_api.v1.Base.GetAccessCodes:input_type -> google.protobuf.Empty
+	64, // 21: api.base_api.v1.Base.Logout:input_type -> google.protobuf.Empty
+	64, // 22: api.base_api.v1.Base.GetMenuList:input_type -> google.protobuf.Empty
+	64, // 23: api.base_api.v1.Base.RefreshToken:input_type -> google.protobuf.Empty
+	64, // 24: api.base_api.v1.Base.ReLoadPolicy:input_type -> google.protobuf.Empty
+	22, // 25: api.base_api.v1.Base.GetUserList:input_type -> api.base_api.v1.GetUserParams
+	23, // 26: api.base_api.v1.Base.AddUser:input_type -> api.base_api.v1.UserListItem
+	23, // 27: api.base_api.v1.Base.UpdateUser:input_type -> api.base_api.v1.UserListItem
+	25, // 28: api.base_api.v1.Base.DelUser:input_type -> api.base_api.v1.DeleteUser
+	28, // 29: api.base_api.v1.Base.IsUserExist:input_type -> api.base_api.v1.IsUserExistsRequest
+	18, // 30: api.base_api.v1.Base.GetSysMenuList:input_type -> api.base_api.v1.MenuParams
+	30, // 31: api.base_api.v1.Base.IsMenuNameExists:input_type -> api.base_api.v1.IsMenuNameExistsRequest
+	32, // 32: api.base_api.v1.Base.IsMenuPathExists:input_type -> api.base_api.v1.IsMenuPathExistsRequest
+	20, // 33: api.base_api.v1.Base.CreateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	20, // 34: api.base_api.v1.Base.UpdateMenu:input_type -> api.base_api.v1.SysMenuListItem
+	34, // 35: api.base_api.v1.Base.DeleteMenu:input_type -> api.base_api.v1.DeleteMenuRequest
+	64, // 36: api.base_api.v1.Base.GetDeptList:input_type -> google.protobuf.Empty
+	11, // 37: api.base_api.v1.Base.AddDept:input_type -> api.base_api.v1.DeptListItem
+	11, // 38: api.base_api.v1.Base.UpdateDept:input_type -> api.base_api.v1.DeptListItem
+	12, // 39: api.base_api.v1.Base.DelDept:input_type -> api.base_api.v1.DeleteDept
+	14, // 40: api.base_api.v1.Base.GetRoleList:input_type -> api.base_api.v1.RolePageParams
+	15, // 41: api.base_api.v1.Base.AddRole:input_type -> api.base_api.v1.RoleListItem
+	15, // 42: api.base_api.v1.Base.UpdateRole:input_type -> api.base_api.v1.RoleListItem
+	17, // 43: api.base_api.v1.Base.DelRole:input_type -> api.base_api.v1.DeleteRole
+	27, // 44: api.base_api.v1.Base.SetRoleStatus:input_type -> api.base_api.v1.SetRoleStatusRequest
+	35, // 45: api.base_api.v1.Base.ChangePassword:input_type -> api.base_api.v1.ChangePasswordRequest
+	64, // 46: api.base_api.v1.Base.GetWalkRoute:input_type -> google.protobuf.Empty
+	38, // 47: api.base_api.v1.Base.GetApiList:input_type -> api.base_api.v1.GetApiPageParams
+	39, // 48: api.base_api.v1.Base.AddApi:input_type -> api.base_api.v1.ApiListItem
+	39, // 49: api.base_api.v1.Base.UpdateApi:input_type -> api.base_api.v1.ApiListItem
+	41, // 50: api.base_api.v1.Base.DelApi:input_type -> api.base_api.v1.DeleteApi
+	42, // 51: api.base_api.v1.Base.GetResourceList:input_type -> api.base_api.v1.GetResourcePageParams
+	43, // 52: api.base_api.v1.Base.AddResource:input_type -> api.base_api.v1.ResourceListItem
+	43, // 53: api.base_api.v1.Base.UpdateResource:input_type -> api.base_api.v1.ResourceListItem
+	45, // 54: api.base_api.v1.Base.DelResource:input_type -> api.base_api.v1.DeleteResource
+	46, // 55: api.base_api.v1.Base.GetSysLogList:input_type -> api.base_api.v1.GetSysLogListParams
+	49, // 56: api.base_api.v1.Base.GetSysLogInfo:input_type -> api.base_api.v1.GetSysLogInfoParams
+	51, // 57: api.base_api.v1.Base.GetMySiteMessageList:input_type -> api.base_api.v1.GetMySiteMessageListParams
+	64, // 58: api.base_api.v1.Base.GetMySiteMessageUnreadCount:input_type -> google.protobuf.Empty
+	55, // 59: api.base_api.v1.Base.MarkSiteMessageRead:input_type -> api.base_api.v1.MarkSiteMessageReadRequest
+	55, // 60: api.base_api.v1.Base.MarkSiteMessageUnread:input_type -> api.base_api.v1.MarkSiteMessageReadRequest
+	64, // 61: api.base_api.v1.Base.MarkAllSiteMessagesRead:input_type -> google.protobuf.Empty
+	57, // 62: api.base_api.v1.Base.GetPublishedSiteMessageList:input_type -> api.base_api.v1.GetPublishedSiteMessageListParams
+	60, // 63: api.base_api.v1.Base.CreateSiteMessage:input_type -> api.base_api.v1.CreateSiteMessageRequest
+	62, // 64: api.base_api.v1.Base.RecallSiteMessage:input_type -> api.base_api.v1.RecallSiteMessageRequest
+	63, // 65: api.base_api.v1.Base.DeletePendingSiteMessage:input_type -> api.base_api.v1.DeletePendingSiteMessageRequest
+	2,  // 66: api.base_api.v1.Base.Login:output_type -> api.base_api.v1.LoginReply
+	3,  // 67: api.base_api.v1.Base.GetUserInfo:output_type -> api.base_api.v1.GetUserInfoReply
+	6,  // 68: api.base_api.v1.Base.GetAccessCodes:output_type -> api.base_api.v1.GetAccessCodesReply
+	64, // 69: api.base_api.v1.Base.Logout:output_type -> google.protobuf.Empty
+	21, // 70: api.base_api.v1.Base.GetMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	2,  // 71: api.base_api.v1.Base.RefreshToken:output_type -> api.base_api.v1.LoginReply
+	64, // 72: api.base_api.v1.Base.ReLoadPolicy:output_type -> google.protobuf.Empty
+	24, // 73: api.base_api.v1.Base.GetUserList:output_type -> api.base_api.v1.GetUserListReply
+	23, // 74: api.base_api.v1.Base.AddUser:output_type -> api.base_api.v1.UserListItem
+	23, // 75: api.base_api.v1.Base.UpdateUser:output_type -> api.base_api.v1.UserListItem
+	64, // 76: api.base_api.v1.Base.DelUser:output_type -> google.protobuf.Empty
+	29, // 77: api.base_api.v1.Base.IsUserExist:output_type -> api.base_api.v1.IsUserExistsReply
+	21, // 78: api.base_api.v1.Base.GetSysMenuList:output_type -> api.base_api.v1.GetSysMenuListReply
+	31, // 79: api.base_api.v1.Base.IsMenuNameExists:output_type -> api.base_api.v1.IsMenuNameExistsReply
+	33, // 80: api.base_api.v1.Base.IsMenuPathExists:output_type -> api.base_api.v1.IsMenuPathExistsReply
+	64, // 81: api.base_api.v1.Base.CreateMenu:output_type -> google.protobuf.Empty
+	64, // 82: api.base_api.v1.Base.UpdateMenu:output_type -> google.protobuf.Empty
+	64, // 83: api.base_api.v1.Base.DeleteMenu:output_type -> google.protobuf.Empty
+	13, // 84: api.base_api.v1.Base.GetDeptList:output_type -> api.base_api.v1.GetDeptListReply
+	11, // 85: api.base_api.v1.Base.AddDept:output_type -> api.base_api.v1.DeptListItem
+	11, // 86: api.base_api.v1.Base.UpdateDept:output_type -> api.base_api.v1.DeptListItem
+	64, // 87: api.base_api.v1.Base.DelDept:output_type -> google.protobuf.Empty
+	16, // 88: api.base_api.v1.Base.GetRoleList:output_type -> api.base_api.v1.GetRoleListByPageReply
+	15, // 89: api.base_api.v1.Base.AddRole:output_type -> api.base_api.v1.RoleListItem
+	15, // 90: api.base_api.v1.Base.UpdateRole:output_type -> api.base_api.v1.RoleListItem
+	64, // 91: api.base_api.v1.Base.DelRole:output_type -> google.protobuf.Empty
+	64, // 92: api.base_api.v1.Base.SetRoleStatus:output_type -> google.protobuf.Empty
+	64, // 93: api.base_api.v1.Base.ChangePassword:output_type -> google.protobuf.Empty
+	37, // 94: api.base_api.v1.Base.GetWalkRoute:output_type -> api.base_api.v1.GetWalkRouteReply
+	40, // 95: api.base_api.v1.Base.GetApiList:output_type -> api.base_api.v1.GetApiListByPageReply
+	39, // 96: api.base_api.v1.Base.AddApi:output_type -> api.base_api.v1.ApiListItem
+	39, // 97: api.base_api.v1.Base.UpdateApi:output_type -> api.base_api.v1.ApiListItem
+	64, // 98: api.base_api.v1.Base.DelApi:output_type -> google.protobuf.Empty
+	44, // 99: api.base_api.v1.Base.GetResourceList:output_type -> api.base_api.v1.GetResourceListByPageReply
+	43, // 100: api.base_api.v1.Base.AddResource:output_type -> api.base_api.v1.ResourceListItem
+	43, // 101: api.base_api.v1.Base.UpdateResource:output_type -> api.base_api.v1.ResourceListItem
+	64, // 102: api.base_api.v1.Base.DelResource:output_type -> google.protobuf.Empty
+	48, // 103: api.base_api.v1.Base.GetSysLogList:output_type -> api.base_api.v1.GetSysLogListReply
+	50, // 104: api.base_api.v1.Base.GetSysLogInfo:output_type -> api.base_api.v1.GetSysLogInfoReply
+	53, // 105: api.base_api.v1.Base.GetMySiteMessageList:output_type -> api.base_api.v1.GetMySiteMessageListReply
+	54, // 106: api.base_api.v1.Base.GetMySiteMessageUnreadCount:output_type -> api.base_api.v1.GetMySiteMessageUnreadCountReply
+	64, // 107: api.base_api.v1.Base.MarkSiteMessageRead:output_type -> google.protobuf.Empty
+	64, // 108: api.base_api.v1.Base.MarkSiteMessageUnread:output_type -> google.protobuf.Empty
+	56, // 109: api.base_api.v1.Base.MarkAllSiteMessagesRead:output_type -> api.base_api.v1.MarkAllSiteMessagesReadReply
+	59, // 110: api.base_api.v1.Base.GetPublishedSiteMessageList:output_type -> api.base_api.v1.GetPublishedSiteMessageListReply
+	61, // 111: api.base_api.v1.Base.CreateSiteMessage:output_type -> api.base_api.v1.CreateSiteMessageReply
+	64, // 112: api.base_api.v1.Base.RecallSiteMessage:output_type -> google.protobuf.Empty
+	64, // 113: api.base_api.v1.Base.DeletePendingSiteMessage:output_type -> google.protobuf.Empty
+	66, // [66:114] is the sub-list for method output_type
+	18, // [18:66] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_base_api_v1_base_proto_init() }
@@ -4413,7 +5439,7 @@ func file_base_api_v1_base_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_base_api_v1_base_proto_rawDesc), len(file_base_api_v1_base_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   50,
+			NumMessages:   63,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

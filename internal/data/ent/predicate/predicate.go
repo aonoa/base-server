@@ -21,6 +21,12 @@ type Resource func(*sql.Selector)
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)
 
+// SiteMessage is the predicate function for sitemessage builders.
+type SiteMessage func(*sql.Selector)
+
+// SiteMessageReceipt is the predicate function for sitemessagereceipt builders.
+type SiteMessageReceipt func(*sql.Selector)
+
 // SysLogRecord is the predicate function for syslogrecord builders.
 type SysLogRecord func(*sql.Selector)
 

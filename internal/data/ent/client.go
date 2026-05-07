@@ -16,6 +16,8 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/sitemessage"
+	"base-server/internal/data/ent/sitemessagereceipt"
 	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 
@@ -41,6 +43,10 @@ type Client struct {
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
+	// SiteMessage is the client for interacting with the SiteMessage builders.
+	SiteMessage *SiteMessageClient
+	// SiteMessageReceipt is the client for interacting with the SiteMessageReceipt builders.
+	SiteMessageReceipt *SiteMessageReceiptClient
 	// SysLogRecord is the client for interacting with the SysLogRecord builders.
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
@@ -61,6 +67,8 @@ func (c *Client) init() {
 	c.Menu = NewMenuClient(c.config)
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
+	c.SiteMessage = NewSiteMessageClient(c.config)
+	c.SiteMessageReceipt = NewSiteMessageReceiptClient(c.config)
 	c.SysLogRecord = NewSysLogRecordClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -153,15 +161,17 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		ApiResources: NewApiResourcesClient(cfg),
-		Dept:         NewDeptClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Resource:     NewResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysLogRecord: NewSysLogRecordClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:                ctx,
+		config:             cfg,
+		ApiResources:       NewApiResourcesClient(cfg),
+		Dept:               NewDeptClient(cfg),
+		Menu:               NewMenuClient(cfg),
+		Resource:           NewResourceClient(cfg),
+		Role:               NewRoleClient(cfg),
+		SiteMessage:        NewSiteMessageClient(cfg),
+		SiteMessageReceipt: NewSiteMessageReceiptClient(cfg),
+		SysLogRecord:       NewSysLogRecordClient(cfg),
+		User:               NewUserClient(cfg),
 	}, nil
 }
 
@@ -179,15 +189,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		ApiResources: NewApiResourcesClient(cfg),
-		Dept:         NewDeptClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Resource:     NewResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysLogRecord: NewSysLogRecordClient(cfg),
-		User:         NewUserClient(cfg),
+		ctx:                ctx,
+		config:             cfg,
+		ApiResources:       NewApiResourcesClient(cfg),
+		Dept:               NewDeptClient(cfg),
+		Menu:               NewMenuClient(cfg),
+		Resource:           NewResourceClient(cfg),
+		Role:               NewRoleClient(cfg),
+		SiteMessage:        NewSiteMessageClient(cfg),
+		SiteMessageReceipt: NewSiteMessageReceiptClient(cfg),
+		SysLogRecord:       NewSysLogRecordClient(cfg),
+		User:               NewUserClient(cfg),
 	}, nil
 }
 
@@ -217,7 +229,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SiteMessage,
+		c.SiteMessageReceipt, c.SysLogRecord, c.User,
 	} {
 		n.Use(hooks...)
 	}
@@ -227,7 +240,8 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SysLogRecord, c.User,
+		c.ApiResources, c.Dept, c.Menu, c.Resource, c.Role, c.SiteMessage,
+		c.SiteMessageReceipt, c.SysLogRecord, c.User,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -246,6 +260,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Resource.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
+	case *SiteMessageMutation:
+		return c.SiteMessage.mutate(ctx, m)
+	case *SiteMessageReceiptMutation:
+		return c.SiteMessageReceipt.mutate(ctx, m)
 	case *SysLogRecordMutation:
 		return c.SysLogRecord.mutate(ctx, m)
 	case *UserMutation:
@@ -310,8 +328,8 @@ func (c *ApiResourcesClient) Update() *ApiResourcesUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ApiResourcesClient) UpdateOne(ar *ApiResources) *ApiResourcesUpdateOne {
-	mutation := newApiResourcesMutation(c.config, OpUpdateOne, withApiResources(ar))
+func (c *ApiResourcesClient) UpdateOne(_m *ApiResources) *ApiResourcesUpdateOne {
+	mutation := newApiResourcesMutation(c.config, OpUpdateOne, withApiResources(_m))
 	return &ApiResourcesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -328,8 +346,8 @@ func (c *ApiResourcesClient) Delete() *ApiResourcesDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ApiResourcesClient) DeleteOne(ar *ApiResources) *ApiResourcesDeleteOne {
-	return c.DeleteOneID(ar.ID)
+func (c *ApiResourcesClient) DeleteOne(_m *ApiResources) *ApiResourcesDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -364,16 +382,16 @@ func (c *ApiResourcesClient) GetX(ctx context.Context, id string) *ApiResources 
 }
 
 // QueryRoles queries the roles edge of a ApiResources.
-func (c *ApiResourcesClient) QueryRoles(ar *ApiResources) *RoleQuery {
+func (c *ApiResourcesClient) QueryRoles(_m *ApiResources) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := ar.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(apiresources.Table, apiresources.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, apiresources.RolesTable, apiresources.RolesPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(ar.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -459,8 +477,8 @@ func (c *DeptClient) Update() *DeptUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *DeptClient) UpdateOne(d *Dept) *DeptUpdateOne {
-	mutation := newDeptMutation(c.config, OpUpdateOne, withDept(d))
+func (c *DeptClient) UpdateOne(_m *Dept) *DeptUpdateOne {
+	mutation := newDeptMutation(c.config, OpUpdateOne, withDept(_m))
 	return &DeptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -477,8 +495,8 @@ func (c *DeptClient) Delete() *DeptDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *DeptClient) DeleteOne(d *Dept) *DeptDeleteOne {
-	return c.DeleteOneID(d.ID)
+func (c *DeptClient) DeleteOne(_m *Dept) *DeptDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -513,64 +531,64 @@ func (c *DeptClient) GetX(ctx context.Context, id int64) *Dept {
 }
 
 // QueryUsers queries the users edge of a Dept.
-func (c *DeptClient) QueryUsers(d *Dept) *UserQuery {
+func (c *DeptClient) QueryUsers(_m *Dept) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, dept.UsersTable, dept.UsersPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryRoles queries the roles edge of a Dept.
-func (c *DeptClient) QueryRoles(d *Dept) *RoleQuery {
+func (c *DeptClient) QueryRoles(_m *Dept) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, dept.RolesTable, dept.RolesColumn),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryParent queries the parent edge of a Dept.
-func (c *DeptClient) QueryParent(d *Dept) *DeptQuery {
+func (c *DeptClient) QueryParent(_m *Dept) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, dept.ParentTable, dept.ParentColumn),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryChildren queries the children edge of a Dept.
-func (c *DeptClient) QueryChildren(d *Dept) *DeptQuery {
+func (c *DeptClient) QueryChildren(_m *Dept) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(dept.Table, dept.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, dept.ChildrenTable, dept.ChildrenColumn),
 		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -656,8 +674,8 @@ func (c *MenuClient) Update() *MenuUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *MenuClient) UpdateOne(m *Menu) *MenuUpdateOne {
-	mutation := newMenuMutation(c.config, OpUpdateOne, withMenu(m))
+func (c *MenuClient) UpdateOne(_m *Menu) *MenuUpdateOne {
+	mutation := newMenuMutation(c.config, OpUpdateOne, withMenu(_m))
 	return &MenuUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -674,8 +692,8 @@ func (c *MenuClient) Delete() *MenuDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *MenuClient) DeleteOne(m *Menu) *MenuDeleteOne {
-	return c.DeleteOneID(m.ID)
+func (c *MenuClient) DeleteOne(_m *Menu) *MenuDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -789,8 +807,8 @@ func (c *ResourceClient) Update() *ResourceUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ResourceClient) UpdateOne(r *Resource) *ResourceUpdateOne {
-	mutation := newResourceMutation(c.config, OpUpdateOne, withResource(r))
+func (c *ResourceClient) UpdateOne(_m *Resource) *ResourceUpdateOne {
+	mutation := newResourceMutation(c.config, OpUpdateOne, withResource(_m))
 	return &ResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -807,8 +825,8 @@ func (c *ResourceClient) Delete() *ResourceDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ResourceClient) DeleteOne(r *Resource) *ResourceDeleteOne {
-	return c.DeleteOneID(r.ID)
+func (c *ResourceClient) DeleteOne(_m *Resource) *ResourceDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -843,16 +861,16 @@ func (c *ResourceClient) GetX(ctx context.Context, id string) *Resource {
 }
 
 // QueryRoles queries the roles edge of a Resource.
-func (c *ResourceClient) QueryRoles(r *Resource) *RoleQuery {
+func (c *ResourceClient) QueryRoles(_m *Resource) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, resource.RolesTable, resource.RolesPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -938,8 +956,8 @@ func (c *RoleClient) Update() *RoleUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *RoleClient) UpdateOne(r *Role) *RoleUpdateOne {
-	mutation := newRoleMutation(c.config, OpUpdateOne, withRole(r))
+func (c *RoleClient) UpdateOne(_m *Role) *RoleUpdateOne {
+	mutation := newRoleMutation(c.config, OpUpdateOne, withRole(_m))
 	return &RoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -956,8 +974,8 @@ func (c *RoleClient) Delete() *RoleDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *RoleClient) DeleteOne(r *Role) *RoleDeleteOne {
-	return c.DeleteOneID(r.ID)
+func (c *RoleClient) DeleteOne(_m *Role) *RoleDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -992,64 +1010,64 @@ func (c *RoleClient) GetX(ctx context.Context, id int64) *Role {
 }
 
 // QueryUsers queries the users edge of a Role.
-func (c *RoleClient) QueryUsers(r *Role) *UserQuery {
+func (c *RoleClient) QueryUsers(_m *Role) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.UsersTable, role.UsersPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryDept queries the dept edge of a Role.
-func (c *RoleClient) QueryDept(r *Role) *DeptQuery {
+func (c *RoleClient) QueryDept(_m *Role) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, role.DeptTable, role.DeptColumn),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryAPI queries the api edge of a Role.
-func (c *RoleClient) QueryAPI(r *Role) *ApiResourcesQuery {
+func (c *RoleClient) QueryAPI(_m *Role) *ApiResourcesQuery {
 	query := (&ApiResourcesClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(apiresources.Table, apiresources.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.APITable, role.APIPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryResource queries the resource edge of a Role.
-func (c *RoleClient) QueryResource(r *Role) *ResourceQuery {
+func (c *RoleClient) QueryResource(_m *Role) *ResourceQuery {
 	query := (&ResourceClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.ResourceTable, role.ResourcePrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1077,6 +1095,272 @@ func (c *RoleClient) mutate(ctx context.Context, m *RoleMutation) (Value, error)
 		return (&RoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Role mutation op: %q", m.Op())
+	}
+}
+
+// SiteMessageClient is a client for the SiteMessage schema.
+type SiteMessageClient struct {
+	config
+}
+
+// NewSiteMessageClient returns a client for the SiteMessage from the given config.
+func NewSiteMessageClient(c config) *SiteMessageClient {
+	return &SiteMessageClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `sitemessage.Hooks(f(g(h())))`.
+func (c *SiteMessageClient) Use(hooks ...Hook) {
+	c.hooks.SiteMessage = append(c.hooks.SiteMessage, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `sitemessage.Intercept(f(g(h())))`.
+func (c *SiteMessageClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SiteMessage = append(c.inters.SiteMessage, interceptors...)
+}
+
+// Create returns a builder for creating a SiteMessage entity.
+func (c *SiteMessageClient) Create() *SiteMessageCreate {
+	mutation := newSiteMessageMutation(c.config, OpCreate)
+	return &SiteMessageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SiteMessage entities.
+func (c *SiteMessageClient) CreateBulk(builders ...*SiteMessageCreate) *SiteMessageCreateBulk {
+	return &SiteMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SiteMessageClient) MapCreateBulk(slice any, setFunc func(*SiteMessageCreate, int)) *SiteMessageCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SiteMessageCreateBulk{err: fmt.Errorf("calling to SiteMessageClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SiteMessageCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SiteMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SiteMessage.
+func (c *SiteMessageClient) Update() *SiteMessageUpdate {
+	mutation := newSiteMessageMutation(c.config, OpUpdate)
+	return &SiteMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SiteMessageClient) UpdateOne(_m *SiteMessage) *SiteMessageUpdateOne {
+	mutation := newSiteMessageMutation(c.config, OpUpdateOne, withSiteMessage(_m))
+	return &SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SiteMessageClient) UpdateOneID(id string) *SiteMessageUpdateOne {
+	mutation := newSiteMessageMutation(c.config, OpUpdateOne, withSiteMessageID(id))
+	return &SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SiteMessage.
+func (c *SiteMessageClient) Delete() *SiteMessageDelete {
+	mutation := newSiteMessageMutation(c.config, OpDelete)
+	return &SiteMessageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SiteMessageClient) DeleteOne(_m *SiteMessage) *SiteMessageDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SiteMessageClient) DeleteOneID(id string) *SiteMessageDeleteOne {
+	builder := c.Delete().Where(sitemessage.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SiteMessageDeleteOne{builder}
+}
+
+// Query returns a query builder for SiteMessage.
+func (c *SiteMessageClient) Query() *SiteMessageQuery {
+	return &SiteMessageQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSiteMessage},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SiteMessage entity by its id.
+func (c *SiteMessageClient) Get(ctx context.Context, id string) (*SiteMessage, error) {
+	return c.Query().Where(sitemessage.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SiteMessageClient) GetX(ctx context.Context, id string) *SiteMessage {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SiteMessageClient) Hooks() []Hook {
+	return c.hooks.SiteMessage
+}
+
+// Interceptors returns the client interceptors.
+func (c *SiteMessageClient) Interceptors() []Interceptor {
+	return c.inters.SiteMessage
+}
+
+func (c *SiteMessageClient) mutate(ctx context.Context, m *SiteMessageMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SiteMessageCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SiteMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SiteMessageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SiteMessage mutation op: %q", m.Op())
+	}
+}
+
+// SiteMessageReceiptClient is a client for the SiteMessageReceipt schema.
+type SiteMessageReceiptClient struct {
+	config
+}
+
+// NewSiteMessageReceiptClient returns a client for the SiteMessageReceipt from the given config.
+func NewSiteMessageReceiptClient(c config) *SiteMessageReceiptClient {
+	return &SiteMessageReceiptClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `sitemessagereceipt.Hooks(f(g(h())))`.
+func (c *SiteMessageReceiptClient) Use(hooks ...Hook) {
+	c.hooks.SiteMessageReceipt = append(c.hooks.SiteMessageReceipt, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `sitemessagereceipt.Intercept(f(g(h())))`.
+func (c *SiteMessageReceiptClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SiteMessageReceipt = append(c.inters.SiteMessageReceipt, interceptors...)
+}
+
+// Create returns a builder for creating a SiteMessageReceipt entity.
+func (c *SiteMessageReceiptClient) Create() *SiteMessageReceiptCreate {
+	mutation := newSiteMessageReceiptMutation(c.config, OpCreate)
+	return &SiteMessageReceiptCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SiteMessageReceipt entities.
+func (c *SiteMessageReceiptClient) CreateBulk(builders ...*SiteMessageReceiptCreate) *SiteMessageReceiptCreateBulk {
+	return &SiteMessageReceiptCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SiteMessageReceiptClient) MapCreateBulk(slice any, setFunc func(*SiteMessageReceiptCreate, int)) *SiteMessageReceiptCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SiteMessageReceiptCreateBulk{err: fmt.Errorf("calling to SiteMessageReceiptClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SiteMessageReceiptCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SiteMessageReceiptCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Update() *SiteMessageReceiptUpdate {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdate)
+	return &SiteMessageReceiptUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SiteMessageReceiptClient) UpdateOne(_m *SiteMessageReceipt) *SiteMessageReceiptUpdateOne {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdateOne, withSiteMessageReceipt(_m))
+	return &SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SiteMessageReceiptClient) UpdateOneID(id string) *SiteMessageReceiptUpdateOne {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdateOne, withSiteMessageReceiptID(id))
+	return &SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Delete() *SiteMessageReceiptDelete {
+	mutation := newSiteMessageReceiptMutation(c.config, OpDelete)
+	return &SiteMessageReceiptDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SiteMessageReceiptClient) DeleteOne(_m *SiteMessageReceipt) *SiteMessageReceiptDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SiteMessageReceiptClient) DeleteOneID(id string) *SiteMessageReceiptDeleteOne {
+	builder := c.Delete().Where(sitemessagereceipt.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SiteMessageReceiptDeleteOne{builder}
+}
+
+// Query returns a query builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Query() *SiteMessageReceiptQuery {
+	return &SiteMessageReceiptQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSiteMessageReceipt},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SiteMessageReceipt entity by its id.
+func (c *SiteMessageReceiptClient) Get(ctx context.Context, id string) (*SiteMessageReceipt, error) {
+	return c.Query().Where(sitemessagereceipt.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SiteMessageReceiptClient) GetX(ctx context.Context, id string) *SiteMessageReceipt {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SiteMessageReceiptClient) Hooks() []Hook {
+	return c.hooks.SiteMessageReceipt
+}
+
+// Interceptors returns the client interceptors.
+func (c *SiteMessageReceiptClient) Interceptors() []Interceptor {
+	return c.inters.SiteMessageReceipt
+}
+
+func (c *SiteMessageReceiptClient) mutate(ctx context.Context, m *SiteMessageReceiptMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SiteMessageReceiptCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SiteMessageReceiptUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SiteMessageReceiptDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SiteMessageReceipt mutation op: %q", m.Op())
 	}
 }
 
@@ -1135,8 +1419,8 @@ func (c *SysLogRecordClient) Update() *SysLogRecordUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *SysLogRecordClient) UpdateOne(slr *SysLogRecord) *SysLogRecordUpdateOne {
-	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecord(slr))
+func (c *SysLogRecordClient) UpdateOne(_m *SysLogRecord) *SysLogRecordUpdateOne {
+	mutation := newSysLogRecordMutation(c.config, OpUpdateOne, withSysLogRecord(_m))
 	return &SysLogRecordUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1153,8 +1437,8 @@ func (c *SysLogRecordClient) Delete() *SysLogRecordDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *SysLogRecordClient) DeleteOne(slr *SysLogRecord) *SysLogRecordDeleteOne {
-	return c.DeleteOneID(slr.ID)
+func (c *SysLogRecordClient) DeleteOne(_m *SysLogRecord) *SysLogRecordDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1268,8 +1552,8 @@ func (c *UserClient) Update() *UserUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
+func (c *UserClient) UpdateOne(_m *User) *UserUpdateOne {
+	mutation := newUserMutation(c.config, OpUpdateOne, withUser(_m))
 	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -1286,8 +1570,8 @@ func (c *UserClient) Delete() *UserDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *UserClient) DeleteOne(_m *User) *UserDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -1322,32 +1606,32 @@ func (c *UserClient) GetX(ctx context.Context, id uuid.UUID) *User {
 }
 
 // QueryDept queries the dept edge of a User.
-func (c *UserClient) QueryDept(u *User) *DeptQuery {
+func (c *UserClient) QueryDept(_m *User) *DeptQuery {
 	query := (&DeptClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(dept.Table, dept.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, user.DeptTable, user.DeptPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QueryRoles queries the roles edge of a User.
-func (c *UserClient) QueryRoles(u *User) *RoleQuery {
+func (c *UserClient) QueryRoles(_m *User) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.RolesTable, user.RolesPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -1381,9 +1665,11 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Hook
+		ApiResources, Dept, Menu, Resource, Role, SiteMessage, SiteMessageReceipt,
+		SysLogRecord, User []ent.Hook
 	}
 	inters struct {
-		ApiResources, Dept, Menu, Resource, Role, SysLogRecord, User []ent.Interceptor
+		ApiResources, Dept, Menu, Resource, Role, SiteMessage, SiteMessageReceipt,
+		SysLogRecord, User []ent.Interceptor
 	}
 )

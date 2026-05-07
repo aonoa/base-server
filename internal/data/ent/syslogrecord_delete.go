@@ -20,56 +20,56 @@ type SysLogRecordDelete struct {
 }
 
 // Where appends a list predicates to the SysLogRecordDelete builder.
-func (slrd *SysLogRecordDelete) Where(ps ...predicate.SysLogRecord) *SysLogRecordDelete {
-	slrd.mutation.Where(ps...)
-	return slrd
+func (_d *SysLogRecordDelete) Where(ps ...predicate.SysLogRecord) *SysLogRecordDelete {
+	_d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (slrd *SysLogRecordDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks(ctx, slrd.sqlExec, slrd.mutation, slrd.hooks)
+func (_d *SysLogRecordDelete) Exec(ctx context.Context) (int, error) {
+	return withHooks(ctx, _d.sqlExec, _d.mutation, _d.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slrd *SysLogRecordDelete) ExecX(ctx context.Context) int {
-	n, err := slrd.Exec(ctx)
+func (_d *SysLogRecordDelete) ExecX(ctx context.Context) int {
+	n, err := _d.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (slrd *SysLogRecordDelete) sqlExec(ctx context.Context) (int, error) {
+func (_d *SysLogRecordDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := sqlgraph.NewDeleteSpec(syslogrecord.Table, sqlgraph.NewFieldSpec(syslogrecord.FieldID, field.TypeString))
-	if ps := slrd.mutation.predicates; len(ps) > 0 {
+	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	affected, err := sqlgraph.DeleteNodes(ctx, slrd.driver, _spec)
+	affected, err := sqlgraph.DeleteNodes(ctx, _d.driver, _spec)
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
-	slrd.mutation.done = true
+	_d.mutation.done = true
 	return affected, err
 }
 
 // SysLogRecordDeleteOne is the builder for deleting a single SysLogRecord entity.
 type SysLogRecordDeleteOne struct {
-	slrd *SysLogRecordDelete
+	_d *SysLogRecordDelete
 }
 
 // Where appends a list predicates to the SysLogRecordDelete builder.
-func (slrdo *SysLogRecordDeleteOne) Where(ps ...predicate.SysLogRecord) *SysLogRecordDeleteOne {
-	slrdo.slrd.mutation.Where(ps...)
-	return slrdo
+func (_d *SysLogRecordDeleteOne) Where(ps ...predicate.SysLogRecord) *SysLogRecordDeleteOne {
+	_d._d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query.
-func (slrdo *SysLogRecordDeleteOne) Exec(ctx context.Context) error {
-	n, err := slrdo.slrd.Exec(ctx)
+func (_d *SysLogRecordDeleteOne) Exec(ctx context.Context) error {
+	n, err := _d._d.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -81,8 +81,8 @@ func (slrdo *SysLogRecordDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (slrdo *SysLogRecordDeleteOne) ExecX(ctx context.Context) {
-	if err := slrdo.Exec(ctx); err != nil {
+func (_d *SysLogRecordDeleteOne) ExecX(ctx context.Context) {
+	if err := _d.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

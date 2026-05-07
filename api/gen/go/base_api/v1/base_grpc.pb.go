@@ -20,45 +20,54 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Base_Login_FullMethodName            = "/api.base_api.v1.Base/Login"
-	Base_GetUserInfo_FullMethodName      = "/api.base_api.v1.Base/GetUserInfo"
-	Base_GetAccessCodes_FullMethodName   = "/api.base_api.v1.Base/GetAccessCodes"
-	Base_Logout_FullMethodName           = "/api.base_api.v1.Base/Logout"
-	Base_GetMenuList_FullMethodName      = "/api.base_api.v1.Base/GetMenuList"
-	Base_RefreshToken_FullMethodName     = "/api.base_api.v1.Base/RefreshToken"
-	Base_ReLoadPolicy_FullMethodName     = "/api.base_api.v1.Base/ReLoadPolicy"
-	Base_GetUserList_FullMethodName      = "/api.base_api.v1.Base/GetUserList"
-	Base_AddUser_FullMethodName          = "/api.base_api.v1.Base/AddUser"
-	Base_UpdateUser_FullMethodName       = "/api.base_api.v1.Base/UpdateUser"
-	Base_DelUser_FullMethodName          = "/api.base_api.v1.Base/DelUser"
-	Base_IsUserExist_FullMethodName      = "/api.base_api.v1.Base/IsUserExist"
-	Base_GetSysMenuList_FullMethodName   = "/api.base_api.v1.Base/GetSysMenuList"
-	Base_IsMenuNameExists_FullMethodName = "/api.base_api.v1.Base/IsMenuNameExists"
-	Base_IsMenuPathExists_FullMethodName = "/api.base_api.v1.Base/IsMenuPathExists"
-	Base_CreateMenu_FullMethodName       = "/api.base_api.v1.Base/CreateMenu"
-	Base_UpdateMenu_FullMethodName       = "/api.base_api.v1.Base/UpdateMenu"
-	Base_DeleteMenu_FullMethodName       = "/api.base_api.v1.Base/DeleteMenu"
-	Base_GetDeptList_FullMethodName      = "/api.base_api.v1.Base/GetDeptList"
-	Base_AddDept_FullMethodName          = "/api.base_api.v1.Base/AddDept"
-	Base_UpdateDept_FullMethodName       = "/api.base_api.v1.Base/UpdateDept"
-	Base_DelDept_FullMethodName          = "/api.base_api.v1.Base/DelDept"
-	Base_GetRoleList_FullMethodName      = "/api.base_api.v1.Base/GetRoleList"
-	Base_AddRole_FullMethodName          = "/api.base_api.v1.Base/AddRole"
-	Base_UpdateRole_FullMethodName       = "/api.base_api.v1.Base/UpdateRole"
-	Base_DelRole_FullMethodName          = "/api.base_api.v1.Base/DelRole"
-	Base_SetRoleStatus_FullMethodName    = "/api.base_api.v1.Base/SetRoleStatus"
-	Base_ChangePassword_FullMethodName   = "/api.base_api.v1.Base/ChangePassword"
-	Base_GetWalkRoute_FullMethodName     = "/api.base_api.v1.Base/GetWalkRoute"
-	Base_GetApiList_FullMethodName       = "/api.base_api.v1.Base/GetApiList"
-	Base_AddApi_FullMethodName           = "/api.base_api.v1.Base/AddApi"
-	Base_UpdateApi_FullMethodName        = "/api.base_api.v1.Base/UpdateApi"
-	Base_DelApi_FullMethodName           = "/api.base_api.v1.Base/DelApi"
-	Base_GetResourceList_FullMethodName  = "/api.base_api.v1.Base/GetResourceList"
-	Base_AddResource_FullMethodName      = "/api.base_api.v1.Base/AddResource"
-	Base_UpdateResource_FullMethodName   = "/api.base_api.v1.Base/UpdateResource"
-	Base_DelResource_FullMethodName      = "/api.base_api.v1.Base/DelResource"
-	Base_GetSysLogList_FullMethodName    = "/api.base_api.v1.Base/GetSysLogList"
-	Base_GetSysLogInfo_FullMethodName    = "/api.base_api.v1.Base/GetSysLogInfo"
+	Base_Login_FullMethodName                       = "/api.base_api.v1.Base/Login"
+	Base_GetUserInfo_FullMethodName                 = "/api.base_api.v1.Base/GetUserInfo"
+	Base_GetAccessCodes_FullMethodName              = "/api.base_api.v1.Base/GetAccessCodes"
+	Base_Logout_FullMethodName                      = "/api.base_api.v1.Base/Logout"
+	Base_GetMenuList_FullMethodName                 = "/api.base_api.v1.Base/GetMenuList"
+	Base_RefreshToken_FullMethodName                = "/api.base_api.v1.Base/RefreshToken"
+	Base_ReLoadPolicy_FullMethodName                = "/api.base_api.v1.Base/ReLoadPolicy"
+	Base_GetUserList_FullMethodName                 = "/api.base_api.v1.Base/GetUserList"
+	Base_AddUser_FullMethodName                     = "/api.base_api.v1.Base/AddUser"
+	Base_UpdateUser_FullMethodName                  = "/api.base_api.v1.Base/UpdateUser"
+	Base_DelUser_FullMethodName                     = "/api.base_api.v1.Base/DelUser"
+	Base_IsUserExist_FullMethodName                 = "/api.base_api.v1.Base/IsUserExist"
+	Base_GetSysMenuList_FullMethodName              = "/api.base_api.v1.Base/GetSysMenuList"
+	Base_IsMenuNameExists_FullMethodName            = "/api.base_api.v1.Base/IsMenuNameExists"
+	Base_IsMenuPathExists_FullMethodName            = "/api.base_api.v1.Base/IsMenuPathExists"
+	Base_CreateMenu_FullMethodName                  = "/api.base_api.v1.Base/CreateMenu"
+	Base_UpdateMenu_FullMethodName                  = "/api.base_api.v1.Base/UpdateMenu"
+	Base_DeleteMenu_FullMethodName                  = "/api.base_api.v1.Base/DeleteMenu"
+	Base_GetDeptList_FullMethodName                 = "/api.base_api.v1.Base/GetDeptList"
+	Base_AddDept_FullMethodName                     = "/api.base_api.v1.Base/AddDept"
+	Base_UpdateDept_FullMethodName                  = "/api.base_api.v1.Base/UpdateDept"
+	Base_DelDept_FullMethodName                     = "/api.base_api.v1.Base/DelDept"
+	Base_GetRoleList_FullMethodName                 = "/api.base_api.v1.Base/GetRoleList"
+	Base_AddRole_FullMethodName                     = "/api.base_api.v1.Base/AddRole"
+	Base_UpdateRole_FullMethodName                  = "/api.base_api.v1.Base/UpdateRole"
+	Base_DelRole_FullMethodName                     = "/api.base_api.v1.Base/DelRole"
+	Base_SetRoleStatus_FullMethodName               = "/api.base_api.v1.Base/SetRoleStatus"
+	Base_ChangePassword_FullMethodName              = "/api.base_api.v1.Base/ChangePassword"
+	Base_GetWalkRoute_FullMethodName                = "/api.base_api.v1.Base/GetWalkRoute"
+	Base_GetApiList_FullMethodName                  = "/api.base_api.v1.Base/GetApiList"
+	Base_AddApi_FullMethodName                      = "/api.base_api.v1.Base/AddApi"
+	Base_UpdateApi_FullMethodName                   = "/api.base_api.v1.Base/UpdateApi"
+	Base_DelApi_FullMethodName                      = "/api.base_api.v1.Base/DelApi"
+	Base_GetResourceList_FullMethodName             = "/api.base_api.v1.Base/GetResourceList"
+	Base_AddResource_FullMethodName                 = "/api.base_api.v1.Base/AddResource"
+	Base_UpdateResource_FullMethodName              = "/api.base_api.v1.Base/UpdateResource"
+	Base_DelResource_FullMethodName                 = "/api.base_api.v1.Base/DelResource"
+	Base_GetSysLogList_FullMethodName               = "/api.base_api.v1.Base/GetSysLogList"
+	Base_GetSysLogInfo_FullMethodName               = "/api.base_api.v1.Base/GetSysLogInfo"
+	Base_GetMySiteMessageList_FullMethodName        = "/api.base_api.v1.Base/GetMySiteMessageList"
+	Base_GetMySiteMessageUnreadCount_FullMethodName = "/api.base_api.v1.Base/GetMySiteMessageUnreadCount"
+	Base_MarkSiteMessageRead_FullMethodName         = "/api.base_api.v1.Base/MarkSiteMessageRead"
+	Base_MarkSiteMessageUnread_FullMethodName       = "/api.base_api.v1.Base/MarkSiteMessageUnread"
+	Base_MarkAllSiteMessagesRead_FullMethodName     = "/api.base_api.v1.Base/MarkAllSiteMessagesRead"
+	Base_GetPublishedSiteMessageList_FullMethodName = "/api.base_api.v1.Base/GetPublishedSiteMessageList"
+	Base_CreateSiteMessage_FullMethodName           = "/api.base_api.v1.Base/CreateSiteMessage"
+	Base_RecallSiteMessage_FullMethodName           = "/api.base_api.v1.Base/RecallSiteMessage"
+	Base_DeletePendingSiteMessage_FullMethodName    = "/api.base_api.v1.Base/DeletePendingSiteMessage"
 )
 
 // BaseClient is the client API for Base service.
@@ -150,6 +159,25 @@ type BaseClient interface {
 	GetSysLogList(ctx context.Context, in *GetSysLogListParams, opts ...grpc.CallOption) (*GetSysLogListReply, error)
 	// 获取单条日志详情
 	GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams, opts ...grpc.CallOption) (*GetSysLogInfoReply, error)
+	// ////////////////////////////////////////////// 站内信
+	// 获取当前用户站内信列表
+	GetMySiteMessageList(ctx context.Context, in *GetMySiteMessageListParams, opts ...grpc.CallOption) (*GetMySiteMessageListReply, error)
+	// 获取当前用户未读站内信数量
+	GetMySiteMessageUnreadCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMySiteMessageUnreadCountReply, error)
+	// 标记单条站内信已读
+	MarkSiteMessageRead(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 标记单条站内信未读
+	MarkSiteMessageUnread(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 标记全部站内信已读
+	MarkAllSiteMessagesRead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MarkAllSiteMessagesReadReply, error)
+	// 获取已发布站内信列表
+	GetPublishedSiteMessageList(ctx context.Context, in *GetPublishedSiteMessageListParams, opts ...grpc.CallOption) (*GetPublishedSiteMessageListReply, error)
+	// 保存/定时/发布站内信
+	CreateSiteMessage(ctx context.Context, in *CreateSiteMessageRequest, opts ...grpc.CallOption) (*CreateSiteMessageReply, error)
+	// 撤回已发布站内信
+	RecallSiteMessage(ctx context.Context, in *RecallSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 删除未发布站内信
+	DeletePendingSiteMessage(ctx context.Context, in *DeletePendingSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type baseClient struct {
@@ -550,6 +578,96 @@ func (c *baseClient) GetSysLogInfo(ctx context.Context, in *GetSysLogInfoParams,
 	return out, nil
 }
 
+func (c *baseClient) GetMySiteMessageList(ctx context.Context, in *GetMySiteMessageListParams, opts ...grpc.CallOption) (*GetMySiteMessageListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMySiteMessageListReply)
+	err := c.cc.Invoke(ctx, Base_GetMySiteMessageList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) GetMySiteMessageUnreadCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMySiteMessageUnreadCountReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMySiteMessageUnreadCountReply)
+	err := c.cc.Invoke(ctx, Base_GetMySiteMessageUnreadCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) MarkSiteMessageRead(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_MarkSiteMessageRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) MarkSiteMessageUnread(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_MarkSiteMessageUnread_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) MarkAllSiteMessagesRead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MarkAllSiteMessagesReadReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarkAllSiteMessagesReadReply)
+	err := c.cc.Invoke(ctx, Base_MarkAllSiteMessagesRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) GetPublishedSiteMessageList(ctx context.Context, in *GetPublishedSiteMessageListParams, opts ...grpc.CallOption) (*GetPublishedSiteMessageListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPublishedSiteMessageListReply)
+	err := c.cc.Invoke(ctx, Base_GetPublishedSiteMessageList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) CreateSiteMessage(ctx context.Context, in *CreateSiteMessageRequest, opts ...grpc.CallOption) (*CreateSiteMessageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSiteMessageReply)
+	err := c.cc.Invoke(ctx, Base_CreateSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) RecallSiteMessage(ctx context.Context, in *RecallSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_RecallSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *baseClient) DeletePendingSiteMessage(ctx context.Context, in *DeletePendingSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Base_DeletePendingSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BaseServer is the server API for Base service.
 // All implementations must embed UnimplementedBaseServer
 // for forward compatibility.
@@ -639,6 +757,25 @@ type BaseServer interface {
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	// 获取单条日志详情
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
+	// ////////////////////////////////////////////// 站内信
+	// 获取当前用户站内信列表
+	GetMySiteMessageList(context.Context, *GetMySiteMessageListParams) (*GetMySiteMessageListReply, error)
+	// 获取当前用户未读站内信数量
+	GetMySiteMessageUnreadCount(context.Context, *emptypb.Empty) (*GetMySiteMessageUnreadCountReply, error)
+	// 标记单条站内信已读
+	MarkSiteMessageRead(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
+	// 标记单条站内信未读
+	MarkSiteMessageUnread(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
+	// 标记全部站内信已读
+	MarkAllSiteMessagesRead(context.Context, *emptypb.Empty) (*MarkAllSiteMessagesReadReply, error)
+	// 获取已发布站内信列表
+	GetPublishedSiteMessageList(context.Context, *GetPublishedSiteMessageListParams) (*GetPublishedSiteMessageListReply, error)
+	// 保存/定时/发布站内信
+	CreateSiteMessage(context.Context, *CreateSiteMessageRequest) (*CreateSiteMessageReply, error)
+	// 撤回已发布站内信
+	RecallSiteMessage(context.Context, *RecallSiteMessageRequest) (*emptypb.Empty, error)
+	// 删除未发布站内信
+	DeletePendingSiteMessage(context.Context, *DeletePendingSiteMessageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedBaseServer()
 }
 
@@ -765,6 +902,33 @@ func (UnimplementedBaseServer) GetSysLogList(context.Context, *GetSysLogListPara
 }
 func (UnimplementedBaseServer) GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSysLogInfo not implemented")
+}
+func (UnimplementedBaseServer) GetMySiteMessageList(context.Context, *GetMySiteMessageListParams) (*GetMySiteMessageListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMySiteMessageList not implemented")
+}
+func (UnimplementedBaseServer) GetMySiteMessageUnreadCount(context.Context, *emptypb.Empty) (*GetMySiteMessageUnreadCountReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMySiteMessageUnreadCount not implemented")
+}
+func (UnimplementedBaseServer) MarkSiteMessageRead(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkSiteMessageRead not implemented")
+}
+func (UnimplementedBaseServer) MarkSiteMessageUnread(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkSiteMessageUnread not implemented")
+}
+func (UnimplementedBaseServer) MarkAllSiteMessagesRead(context.Context, *emptypb.Empty) (*MarkAllSiteMessagesReadReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkAllSiteMessagesRead not implemented")
+}
+func (UnimplementedBaseServer) GetPublishedSiteMessageList(context.Context, *GetPublishedSiteMessageListParams) (*GetPublishedSiteMessageListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublishedSiteMessageList not implemented")
+}
+func (UnimplementedBaseServer) CreateSiteMessage(context.Context, *CreateSiteMessageRequest) (*CreateSiteMessageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSiteMessage not implemented")
+}
+func (UnimplementedBaseServer) RecallSiteMessage(context.Context, *RecallSiteMessageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RecallSiteMessage not implemented")
+}
+func (UnimplementedBaseServer) DeletePendingSiteMessage(context.Context, *DeletePendingSiteMessageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePendingSiteMessage not implemented")
 }
 func (UnimplementedBaseServer) mustEmbedUnimplementedBaseServer() {}
 func (UnimplementedBaseServer) testEmbeddedByValue()              {}
@@ -1489,6 +1653,168 @@ func _Base_GetSysLogInfo_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Base_GetMySiteMessageList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMySiteMessageListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetMySiteMessageList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetMySiteMessageList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetMySiteMessageList(ctx, req.(*GetMySiteMessageListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_GetMySiteMessageUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetMySiteMessageUnreadCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetMySiteMessageUnreadCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetMySiteMessageUnreadCount(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_MarkSiteMessageRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkSiteMessageReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).MarkSiteMessageRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_MarkSiteMessageRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).MarkSiteMessageRead(ctx, req.(*MarkSiteMessageReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_MarkSiteMessageUnread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkSiteMessageReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).MarkSiteMessageUnread(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_MarkSiteMessageUnread_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).MarkSiteMessageUnread(ctx, req.(*MarkSiteMessageReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_MarkAllSiteMessagesRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).MarkAllSiteMessagesRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_MarkAllSiteMessagesRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).MarkAllSiteMessagesRead(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_GetPublishedSiteMessageList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPublishedSiteMessageListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).GetPublishedSiteMessageList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_GetPublishedSiteMessageList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).GetPublishedSiteMessageList(ctx, req.(*GetPublishedSiteMessageListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_CreateSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).CreateSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_CreateSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).CreateSiteMessage(ctx, req.(*CreateSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_RecallSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecallSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).RecallSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_RecallSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).RecallSiteMessage(ctx, req.(*RecallSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Base_DeletePendingSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePendingSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BaseServer).DeletePendingSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Base_DeletePendingSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BaseServer).DeletePendingSiteMessage(ctx, req.(*DeletePendingSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Base_ServiceDesc is the grpc.ServiceDesc for Base service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1651,6 +1977,42 @@ var Base_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSysLogInfo",
 			Handler:    _Base_GetSysLogInfo_Handler,
+		},
+		{
+			MethodName: "GetMySiteMessageList",
+			Handler:    _Base_GetMySiteMessageList_Handler,
+		},
+		{
+			MethodName: "GetMySiteMessageUnreadCount",
+			Handler:    _Base_GetMySiteMessageUnreadCount_Handler,
+		},
+		{
+			MethodName: "MarkSiteMessageRead",
+			Handler:    _Base_MarkSiteMessageRead_Handler,
+		},
+		{
+			MethodName: "MarkSiteMessageUnread",
+			Handler:    _Base_MarkSiteMessageUnread_Handler,
+		},
+		{
+			MethodName: "MarkAllSiteMessagesRead",
+			Handler:    _Base_MarkAllSiteMessagesRead_Handler,
+		},
+		{
+			MethodName: "GetPublishedSiteMessageList",
+			Handler:    _Base_GetPublishedSiteMessageList_Handler,
+		},
+		{
+			MethodName: "CreateSiteMessage",
+			Handler:    _Base_CreateSiteMessage_Handler,
+		},
+		{
+			MethodName: "RecallSiteMessage",
+			Handler:    _Base_RecallSiteMessage_Handler,
+		},
+		{
+			MethodName: "DeletePendingSiteMessage",
+			Handler:    _Base_DeletePendingSiteMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

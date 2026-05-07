@@ -439,6 +439,24 @@ func (uc *AuthUsecase) generateAuthPolicy() {
 			}
 		}
 	}
+
+	uc.ensureBuiltinSiteMessageApiGroups()
+}
+
+func (uc *AuthUsecase) ensureBuiltinSiteMessageApiGroups() {
+	for _, path := range []string{
+		"/basic-api/notice/my/list",
+		"/basic-api/notice/my/unread-count",
+		"/basic-api/notice/my/read/{messageId}",
+		"/basic-api/notice/my/unread/{messageId}",
+		"/basic-api/notice/my/read-all",
+		"/basic-api/notice/admin/list",
+		"/basic-api/notice/admin",
+		"/basic-api/notice/admin/recall/{id}",
+		"/basic-api/notice/admin/{id}",
+	} {
+		uc.AddApiToGroup(path, "default")
+	}
 }
 
 ////////////////////////////////////////////////////////

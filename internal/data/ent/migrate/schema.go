@@ -144,6 +144,93 @@ var (
 		Columns:    SysRoleColumns,
 		PrimaryKey: []*schema.Column{SysRoleColumns[0]},
 	}
+	// SysSiteMessageColumns holds the columns for the "sys_site_message" table.
+	SysSiteMessageColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "title", Type: field.TypeString, Comment: "消息标题"},
+		{Name: "content", Type: field.TypeString, Comment: "消息正文"},
+		{Name: "category", Type: field.TypeString, Comment: "消息分类", Default: "system"},
+		{Name: "status", Type: field.TypeString, Comment: "消息状态 draft|scheduled|published|recalled", Default: "published"},
+		{Name: "receiver_type", Type: field.TypeString, Comment: "接收范围 all|user", Default: "all"},
+		{Name: "receiver_ids", Type: field.TypeJSON, Nullable: true, Comment: "指定接收用户ID列表"},
+		{Name: "receiver_count", Type: field.TypeInt64, Comment: "接收人数", Default: 0},
+		{Name: "link", Type: field.TypeString, Comment: "消息跳转链接", Default: ""},
+		{Name: "sender_id", Type: field.TypeString, Comment: "发送人ID", Default: ""},
+		{Name: "sender_name", Type: field.TypeString, Comment: "发送人名称", Default: ""},
+		{Name: "scheduled_publish_time", Type: field.TypeTime, Nullable: true, Comment: "定时发布时间"},
+		{Name: "published_time", Type: field.TypeTime, Nullable: true, Comment: "实际发布时间"},
+		{Name: "recalled_time", Type: field.TypeTime, Nullable: true, Comment: "撤回时间"},
+	}
+	// SysSiteMessageTable holds the schema information for the "sys_site_message" table.
+	SysSiteMessageTable = &schema.Table{
+		Name:       "sys_site_message",
+		Comment:    "站内信发布记录表",
+		Columns:    SysSiteMessageColumns,
+		PrimaryKey: []*schema.Column{SysSiteMessageColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "sitemessage_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[1]},
+			},
+			{
+				Name:    "sitemessage_receiver_type",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[7]},
+			},
+			{
+				Name:    "sitemessage_category",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[5]},
+			},
+			{
+				Name:    "sitemessage_status",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[6]},
+			},
+			{
+				Name:    "sitemessage_scheduled_publish_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[13]},
+			},
+		},
+	}
+	// SysSiteMessageReceiptColumns holds the columns for the "sys_site_message_receipt" table.
+	SysSiteMessageReceiptColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "message_id", Type: field.TypeString, Comment: "站内信ID"},
+		{Name: "user_id", Type: field.TypeString, Comment: "接收用户ID"},
+		{Name: "is_read", Type: field.TypeBool, Comment: "是否已读", Default: false},
+		{Name: "read_time", Type: field.TypeTime, Comment: "已读时间"},
+	}
+	// SysSiteMessageReceiptTable holds the schema information for the "sys_site_message_receipt" table.
+	SysSiteMessageReceiptTable = &schema.Table{
+		Name:       "sys_site_message_receipt",
+		Comment:    "站内信收件记录表",
+		Columns:    SysSiteMessageReceiptColumns,
+		PrimaryKey: []*schema.Column{SysSiteMessageReceiptColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "sitemessagereceipt_user_id_is_read",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageReceiptColumns[4], SysSiteMessageReceiptColumns[5]},
+			},
+			{
+				Name:    "sitemessagereceipt_message_id_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysSiteMessageReceiptColumns[3], SysSiteMessageReceiptColumns[4]},
+			},
+			{
+				Name:    "sitemessagereceipt_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageReceiptColumns[1]},
+			},
+		},
+	}
 	// SysLogColumns holds the columns for the "sys_log" table.
 	SysLogColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
@@ -368,6 +455,8 @@ var (
 		SysMenuTable,
 		SysResourcesTable,
 		SysRoleTable,
+		SysSiteMessageTable,
+		SysSiteMessageReceiptTable,
 		SysLogTable,
 		SysUserTable,
 		APIResourcesRolesTable,
@@ -394,6 +483,12 @@ func init() {
 	}
 	SysRoleTable.Annotation = &entsql.Annotation{
 		Table: "sys_role",
+	}
+	SysSiteMessageTable.Annotation = &entsql.Annotation{
+		Table: "sys_site_message",
+	}
+	SysSiteMessageReceiptTable.Annotation = &entsql.Annotation{
+		Table: "sys_site_message_receipt",
 	}
 	SysLogTable.Annotation = &entsql.Annotation{
 		Table: "sys_log",

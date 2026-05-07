@@ -8,6 +8,8 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/sitemessage"
+	"base-server/internal/data/ent/sitemessagereceipt"
 	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"base-server/internal/data/schema"
@@ -207,6 +209,88 @@ func init() {
 	role.DefaultUpdateTime = roleDescUpdateTime.Default.(func() time.Time)
 	// role.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	role.UpdateDefaultUpdateTime = roleDescUpdateTime.UpdateDefault.(func() time.Time)
+	sitemessageMixin := schema.SiteMessage{}.Mixin()
+	sitemessageMixinFields0 := sitemessageMixin[0].Fields()
+	_ = sitemessageMixinFields0
+	sitemessageFields := schema.SiteMessage{}.Fields()
+	_ = sitemessageFields
+	// sitemessageDescCreateTime is the schema descriptor for create_time field.
+	sitemessageDescCreateTime := sitemessageMixinFields0[0].Descriptor()
+	// sitemessage.DefaultCreateTime holds the default value on creation for the create_time field.
+	sitemessage.DefaultCreateTime = sitemessageDescCreateTime.Default.(func() time.Time)
+	// sitemessageDescUpdateTime is the schema descriptor for update_time field.
+	sitemessageDescUpdateTime := sitemessageMixinFields0[1].Descriptor()
+	// sitemessage.DefaultUpdateTime holds the default value on creation for the update_time field.
+	sitemessage.DefaultUpdateTime = sitemessageDescUpdateTime.Default.(func() time.Time)
+	// sitemessage.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	sitemessage.UpdateDefaultUpdateTime = sitemessageDescUpdateTime.UpdateDefault.(func() time.Time)
+	// sitemessageDescTitle is the schema descriptor for title field.
+	sitemessageDescTitle := sitemessageFields[1].Descriptor()
+	// sitemessage.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	sitemessage.TitleValidator = sitemessageDescTitle.Validators[0].(func(string) error)
+	// sitemessageDescContent is the schema descriptor for content field.
+	sitemessageDescContent := sitemessageFields[2].Descriptor()
+	// sitemessage.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	sitemessage.ContentValidator = sitemessageDescContent.Validators[0].(func(string) error)
+	// sitemessageDescCategory is the schema descriptor for category field.
+	sitemessageDescCategory := sitemessageFields[3].Descriptor()
+	// sitemessage.DefaultCategory holds the default value on creation for the category field.
+	sitemessage.DefaultCategory = sitemessageDescCategory.Default.(string)
+	// sitemessageDescStatus is the schema descriptor for status field.
+	sitemessageDescStatus := sitemessageFields[4].Descriptor()
+	// sitemessage.DefaultStatus holds the default value on creation for the status field.
+	sitemessage.DefaultStatus = sitemessageDescStatus.Default.(string)
+	// sitemessageDescReceiverType is the schema descriptor for receiver_type field.
+	sitemessageDescReceiverType := sitemessageFields[5].Descriptor()
+	// sitemessage.DefaultReceiverType holds the default value on creation for the receiver_type field.
+	sitemessage.DefaultReceiverType = sitemessageDescReceiverType.Default.(string)
+	// sitemessageDescReceiverCount is the schema descriptor for receiver_count field.
+	sitemessageDescReceiverCount := sitemessageFields[7].Descriptor()
+	// sitemessage.DefaultReceiverCount holds the default value on creation for the receiver_count field.
+	sitemessage.DefaultReceiverCount = sitemessageDescReceiverCount.Default.(int64)
+	// sitemessageDescLink is the schema descriptor for link field.
+	sitemessageDescLink := sitemessageFields[8].Descriptor()
+	// sitemessage.DefaultLink holds the default value on creation for the link field.
+	sitemessage.DefaultLink = sitemessageDescLink.Default.(string)
+	// sitemessageDescSenderID is the schema descriptor for sender_id field.
+	sitemessageDescSenderID := sitemessageFields[9].Descriptor()
+	// sitemessage.DefaultSenderID holds the default value on creation for the sender_id field.
+	sitemessage.DefaultSenderID = sitemessageDescSenderID.Default.(string)
+	// sitemessageDescSenderName is the schema descriptor for sender_name field.
+	sitemessageDescSenderName := sitemessageFields[10].Descriptor()
+	// sitemessage.DefaultSenderName holds the default value on creation for the sender_name field.
+	sitemessage.DefaultSenderName = sitemessageDescSenderName.Default.(string)
+	// sitemessageDescID is the schema descriptor for id field.
+	sitemessageDescID := sitemessageFields[0].Descriptor()
+	// sitemessage.DefaultID holds the default value on creation for the id field.
+	sitemessage.DefaultID = sitemessageDescID.Default.(func() string)
+	sitemessagereceiptMixin := schema.SiteMessageReceipt{}.Mixin()
+	sitemessagereceiptMixinFields0 := sitemessagereceiptMixin[0].Fields()
+	_ = sitemessagereceiptMixinFields0
+	sitemessagereceiptFields := schema.SiteMessageReceipt{}.Fields()
+	_ = sitemessagereceiptFields
+	// sitemessagereceiptDescCreateTime is the schema descriptor for create_time field.
+	sitemessagereceiptDescCreateTime := sitemessagereceiptMixinFields0[0].Descriptor()
+	// sitemessagereceipt.DefaultCreateTime holds the default value on creation for the create_time field.
+	sitemessagereceipt.DefaultCreateTime = sitemessagereceiptDescCreateTime.Default.(func() time.Time)
+	// sitemessagereceiptDescUpdateTime is the schema descriptor for update_time field.
+	sitemessagereceiptDescUpdateTime := sitemessagereceiptMixinFields0[1].Descriptor()
+	// sitemessagereceipt.DefaultUpdateTime holds the default value on creation for the update_time field.
+	sitemessagereceipt.DefaultUpdateTime = sitemessagereceiptDescUpdateTime.Default.(func() time.Time)
+	// sitemessagereceipt.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	sitemessagereceipt.UpdateDefaultUpdateTime = sitemessagereceiptDescUpdateTime.UpdateDefault.(func() time.Time)
+	// sitemessagereceiptDescIsRead is the schema descriptor for is_read field.
+	sitemessagereceiptDescIsRead := sitemessagereceiptFields[3].Descriptor()
+	// sitemessagereceipt.DefaultIsRead holds the default value on creation for the is_read field.
+	sitemessagereceipt.DefaultIsRead = sitemessagereceiptDescIsRead.Default.(bool)
+	// sitemessagereceiptDescReadTime is the schema descriptor for read_time field.
+	sitemessagereceiptDescReadTime := sitemessagereceiptFields[4].Descriptor()
+	// sitemessagereceipt.DefaultReadTime holds the default value on creation for the read_time field.
+	sitemessagereceipt.DefaultReadTime = sitemessagereceiptDescReadTime.Default.(time.Time)
+	// sitemessagereceiptDescID is the schema descriptor for id field.
+	sitemessagereceiptDescID := sitemessagereceiptFields[0].Descriptor()
+	// sitemessagereceipt.DefaultID holds the default value on creation for the id field.
+	sitemessagereceipt.DefaultID = sitemessagereceiptDescID.Default.(func() string)
 	syslogrecordFields := schema.SysLogRecord{}.Fields()
 	_ = syslogrecordFields
 	// syslogrecordDescCreateTime is the schema descriptor for create_time field.

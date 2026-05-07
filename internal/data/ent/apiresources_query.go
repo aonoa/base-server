@@ -32,44 +32,44 @@ type ApiResourcesQuery struct {
 }
 
 // Where adds a new predicate for the ApiResourcesQuery builder.
-func (arq *ApiResourcesQuery) Where(ps ...predicate.ApiResources) *ApiResourcesQuery {
-	arq.predicates = append(arq.predicates, ps...)
-	return arq
+func (_q *ApiResourcesQuery) Where(ps ...predicate.ApiResources) *ApiResourcesQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (arq *ApiResourcesQuery) Limit(limit int) *ApiResourcesQuery {
-	arq.ctx.Limit = &limit
-	return arq
+func (_q *ApiResourcesQuery) Limit(limit int) *ApiResourcesQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (arq *ApiResourcesQuery) Offset(offset int) *ApiResourcesQuery {
-	arq.ctx.Offset = &offset
-	return arq
+func (_q *ApiResourcesQuery) Offset(offset int) *ApiResourcesQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (arq *ApiResourcesQuery) Unique(unique bool) *ApiResourcesQuery {
-	arq.ctx.Unique = &unique
-	return arq
+func (_q *ApiResourcesQuery) Unique(unique bool) *ApiResourcesQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (arq *ApiResourcesQuery) Order(o ...apiresources.OrderOption) *ApiResourcesQuery {
-	arq.order = append(arq.order, o...)
-	return arq
+func (_q *ApiResourcesQuery) Order(o ...apiresources.OrderOption) *ApiResourcesQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // QueryRoles chains the current query on the "roles" edge.
-func (arq *ApiResourcesQuery) QueryRoles() *RoleQuery {
-	query := (&RoleClient{config: arq.config}).Query()
+func (_q *ApiResourcesQuery) QueryRoles() *RoleQuery {
+	query := (&RoleClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := arq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := arq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -78,7 +78,7 @@ func (arq *ApiResourcesQuery) QueryRoles() *RoleQuery {
 			sqlgraph.To(role.Table, role.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, apiresources.RolesTable, apiresources.RolesPrimaryKey...),
 		)
-		fromU = sqlgraph.SetNeighbors(arq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
@@ -86,8 +86,8 @@ func (arq *ApiResourcesQuery) QueryRoles() *RoleQuery {
 
 // First returns the first ApiResources entity from the query.
 // Returns a *NotFoundError when no ApiResources was found.
-func (arq *ApiResourcesQuery) First(ctx context.Context) (*ApiResources, error) {
-	nodes, err := arq.Limit(1).All(setContextOp(ctx, arq.ctx, ent.OpQueryFirst))
+func (_q *ApiResourcesQuery) First(ctx context.Context) (*ApiResources, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -98,8 +98,8 @@ func (arq *ApiResourcesQuery) First(ctx context.Context) (*ApiResources, error) 
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (arq *ApiResourcesQuery) FirstX(ctx context.Context) *ApiResources {
-	node, err := arq.First(ctx)
+func (_q *ApiResourcesQuery) FirstX(ctx context.Context) *ApiResources {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -108,9 +108,9 @@ func (arq *ApiResourcesQuery) FirstX(ctx context.Context) *ApiResources {
 
 // FirstID returns the first ApiResources ID from the query.
 // Returns a *NotFoundError when no ApiResources ID was found.
-func (arq *ApiResourcesQuery) FirstID(ctx context.Context) (id string, err error) {
+func (_q *ApiResourcesQuery) FirstID(ctx context.Context) (id string, err error) {
 	var ids []string
-	if ids, err = arq.Limit(1).IDs(setContextOp(ctx, arq.ctx, ent.OpQueryFirstID)); err != nil {
+	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -121,8 +121,8 @@ func (arq *ApiResourcesQuery) FirstID(ctx context.Context) (id string, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (arq *ApiResourcesQuery) FirstIDX(ctx context.Context) string {
-	id, err := arq.FirstID(ctx)
+func (_q *ApiResourcesQuery) FirstIDX(ctx context.Context) string {
+	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -132,8 +132,8 @@ func (arq *ApiResourcesQuery) FirstIDX(ctx context.Context) string {
 // Only returns a single ApiResources entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one ApiResources entity is found.
 // Returns a *NotFoundError when no ApiResources entities are found.
-func (arq *ApiResourcesQuery) Only(ctx context.Context) (*ApiResources, error) {
-	nodes, err := arq.Limit(2).All(setContextOp(ctx, arq.ctx, ent.OpQueryOnly))
+func (_q *ApiResourcesQuery) Only(ctx context.Context) (*ApiResources, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -148,8 +148,8 @@ func (arq *ApiResourcesQuery) Only(ctx context.Context) (*ApiResources, error) {
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (arq *ApiResourcesQuery) OnlyX(ctx context.Context) *ApiResources {
-	node, err := arq.Only(ctx)
+func (_q *ApiResourcesQuery) OnlyX(ctx context.Context) *ApiResources {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -159,9 +159,9 @@ func (arq *ApiResourcesQuery) OnlyX(ctx context.Context) *ApiResources {
 // OnlyID is like Only, but returns the only ApiResources ID in the query.
 // Returns a *NotSingularError when more than one ApiResources ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (arq *ApiResourcesQuery) OnlyID(ctx context.Context) (id string, err error) {
+func (_q *ApiResourcesQuery) OnlyID(ctx context.Context) (id string, err error) {
 	var ids []string
-	if ids, err = arq.Limit(2).IDs(setContextOp(ctx, arq.ctx, ent.OpQueryOnlyID)); err != nil {
+	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -176,8 +176,8 @@ func (arq *ApiResourcesQuery) OnlyID(ctx context.Context) (id string, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (arq *ApiResourcesQuery) OnlyIDX(ctx context.Context) string {
-	id, err := arq.OnlyID(ctx)
+func (_q *ApiResourcesQuery) OnlyIDX(ctx context.Context) string {
+	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -185,18 +185,18 @@ func (arq *ApiResourcesQuery) OnlyIDX(ctx context.Context) string {
 }
 
 // All executes the query and returns a list of ApiResourcesSlice.
-func (arq *ApiResourcesQuery) All(ctx context.Context) ([]*ApiResources, error) {
-	ctx = setContextOp(ctx, arq.ctx, ent.OpQueryAll)
-	if err := arq.prepareQuery(ctx); err != nil {
+func (_q *ApiResourcesQuery) All(ctx context.Context) ([]*ApiResources, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*ApiResources, *ApiResourcesQuery]()
-	return withInterceptors[[]*ApiResources](ctx, arq, qr, arq.inters)
+	return withInterceptors[[]*ApiResources](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (arq *ApiResourcesQuery) AllX(ctx context.Context) []*ApiResources {
-	nodes, err := arq.All(ctx)
+func (_q *ApiResourcesQuery) AllX(ctx context.Context) []*ApiResources {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -204,20 +204,20 @@ func (arq *ApiResourcesQuery) AllX(ctx context.Context) []*ApiResources {
 }
 
 // IDs executes the query and returns a list of ApiResources IDs.
-func (arq *ApiResourcesQuery) IDs(ctx context.Context) (ids []string, err error) {
-	if arq.ctx.Unique == nil && arq.path != nil {
-		arq.Unique(true)
+func (_q *ApiResourcesQuery) IDs(ctx context.Context) (ids []string, err error) {
+	if _q.ctx.Unique == nil && _q.path != nil {
+		_q.Unique(true)
 	}
-	ctx = setContextOp(ctx, arq.ctx, ent.OpQueryIDs)
-	if err = arq.Select(apiresources.FieldID).Scan(ctx, &ids); err != nil {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryIDs)
+	if err = _q.Select(apiresources.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (arq *ApiResourcesQuery) IDsX(ctx context.Context) []string {
-	ids, err := arq.IDs(ctx)
+func (_q *ApiResourcesQuery) IDsX(ctx context.Context) []string {
+	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -225,17 +225,17 @@ func (arq *ApiResourcesQuery) IDsX(ctx context.Context) []string {
 }
 
 // Count returns the count of the given query.
-func (arq *ApiResourcesQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, arq.ctx, ent.OpQueryCount)
-	if err := arq.prepareQuery(ctx); err != nil {
+func (_q *ApiResourcesQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, arq, querierCount[*ApiResourcesQuery](), arq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*ApiResourcesQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (arq *ApiResourcesQuery) CountX(ctx context.Context) int {
-	count, err := arq.Count(ctx)
+func (_q *ApiResourcesQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -243,9 +243,9 @@ func (arq *ApiResourcesQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (arq *ApiResourcesQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, arq.ctx, ent.OpQueryExist)
-	switch _, err := arq.FirstID(ctx); {
+func (_q *ApiResourcesQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -256,8 +256,8 @@ func (arq *ApiResourcesQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (arq *ApiResourcesQuery) ExistX(ctx context.Context) bool {
-	exist, err := arq.Exist(ctx)
+func (_q *ApiResourcesQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -266,33 +266,33 @@ func (arq *ApiResourcesQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the ApiResourcesQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (arq *ApiResourcesQuery) Clone() *ApiResourcesQuery {
-	if arq == nil {
+func (_q *ApiResourcesQuery) Clone() *ApiResourcesQuery {
+	if _q == nil {
 		return nil
 	}
 	return &ApiResourcesQuery{
-		config:     arq.config,
-		ctx:        arq.ctx.Clone(),
-		order:      append([]apiresources.OrderOption{}, arq.order...),
-		inters:     append([]Interceptor{}, arq.inters...),
-		predicates: append([]predicate.ApiResources{}, arq.predicates...),
-		withRoles:  arq.withRoles.Clone(),
+		config:     _q.config,
+		ctx:        _q.ctx.Clone(),
+		order:      append([]apiresources.OrderOption{}, _q.order...),
+		inters:     append([]Interceptor{}, _q.inters...),
+		predicates: append([]predicate.ApiResources{}, _q.predicates...),
+		withRoles:  _q.withRoles.Clone(),
 		// clone intermediate query.
-		sql:       arq.sql.Clone(),
-		path:      arq.path,
-		modifiers: append([]func(*sql.Selector){}, arq.modifiers...),
+		sql:       _q.sql.Clone(),
+		path:      _q.path,
+		modifiers: append([]func(*sql.Selector){}, _q.modifiers...),
 	}
 }
 
 // WithRoles tells the query-builder to eager-load the nodes that are connected to
 // the "roles" edge. The optional arguments are used to configure the query builder of the edge.
-func (arq *ApiResourcesQuery) WithRoles(opts ...func(*RoleQuery)) *ApiResourcesQuery {
-	query := (&RoleClient{config: arq.config}).Query()
+func (_q *ApiResourcesQuery) WithRoles(opts ...func(*RoleQuery)) *ApiResourcesQuery {
+	query := (&RoleClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	arq.withRoles = query
-	return arq
+	_q.withRoles = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -309,10 +309,10 @@ func (arq *ApiResourcesQuery) WithRoles(opts ...func(*RoleQuery)) *ApiResourcesQ
 //		GroupBy(apiresources.FieldCreateTime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (arq *ApiResourcesQuery) GroupBy(field string, fields ...string) *ApiResourcesGroupBy {
-	arq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &ApiResourcesGroupBy{build: arq}
-	grbuild.flds = &arq.ctx.Fields
+func (_q *ApiResourcesQuery) GroupBy(field string, fields ...string) *ApiResourcesGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &ApiResourcesGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = apiresources.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -330,76 +330,76 @@ func (arq *ApiResourcesQuery) GroupBy(field string, fields ...string) *ApiResour
 //	client.ApiResources.Query().
 //		Select(apiresources.FieldCreateTime).
 //		Scan(ctx, &v)
-func (arq *ApiResourcesQuery) Select(fields ...string) *ApiResourcesSelect {
-	arq.ctx.Fields = append(arq.ctx.Fields, fields...)
-	sbuild := &ApiResourcesSelect{ApiResourcesQuery: arq}
+func (_q *ApiResourcesQuery) Select(fields ...string) *ApiResourcesSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &ApiResourcesSelect{ApiResourcesQuery: _q}
 	sbuild.label = apiresources.Label
-	sbuild.flds, sbuild.scan = &arq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a ApiResourcesSelect configured with the given aggregations.
-func (arq *ApiResourcesQuery) Aggregate(fns ...AggregateFunc) *ApiResourcesSelect {
-	return arq.Select().Aggregate(fns...)
+func (_q *ApiResourcesQuery) Aggregate(fns ...AggregateFunc) *ApiResourcesSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (arq *ApiResourcesQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range arq.inters {
+func (_q *ApiResourcesQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, arq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range arq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !apiresources.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if arq.path != nil {
-		prev, err := arq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		arq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (arq *ApiResourcesQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*ApiResources, error) {
+func (_q *ApiResourcesQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*ApiResources, error) {
 	var (
 		nodes       = []*ApiResources{}
-		_spec       = arq.querySpec()
+		_spec       = _q.querySpec()
 		loadedTypes = [1]bool{
-			arq.withRoles != nil,
+			_q.withRoles != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*ApiResources).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &ApiResources{config: arq.config}
+		node := &ApiResources{config: _q.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(arq.modifiers) > 0 {
-		_spec.Modifiers = arq.modifiers
+	if len(_q.modifiers) > 0 {
+		_spec.Modifiers = _q.modifiers
 	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, arq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := arq.withRoles; query != nil {
-		if err := arq.loadRoles(ctx, query, nodes,
+	if query := _q.withRoles; query != nil {
+		if err := _q.loadRoles(ctx, query, nodes,
 			func(n *ApiResources) { n.Edges.Roles = []*Role{} },
 			func(n *ApiResources, e *Role) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
 			return nil, err
@@ -408,7 +408,7 @@ func (arq *ApiResourcesQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 	return nodes, nil
 }
 
-func (arq *ApiResourcesQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*ApiResources, init func(*ApiResources), assign func(*ApiResources, *Role)) error {
+func (_q *ApiResourcesQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*ApiResources, init func(*ApiResources), assign func(*ApiResources, *Role)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[string]*ApiResources)
 	nids := make(map[int64]map[*ApiResources]struct{})
@@ -470,27 +470,27 @@ func (arq *ApiResourcesQuery) loadRoles(ctx context.Context, query *RoleQuery, n
 	return nil
 }
 
-func (arq *ApiResourcesQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := arq.querySpec()
-	if len(arq.modifiers) > 0 {
-		_spec.Modifiers = arq.modifiers
+func (_q *ApiResourcesQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	if len(_q.modifiers) > 0 {
+		_spec.Modifiers = _q.modifiers
 	}
-	_spec.Node.Columns = arq.ctx.Fields
-	if len(arq.ctx.Fields) > 0 {
-		_spec.Unique = arq.ctx.Unique != nil && *arq.ctx.Unique
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, arq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (arq *ApiResourcesQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *ApiResourcesQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(apiresources.Table, apiresources.Columns, sqlgraph.NewFieldSpec(apiresources.FieldID, field.TypeString))
-	_spec.From = arq.sql
-	if unique := arq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if arq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := arq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, apiresources.FieldID)
 		for i := range fields {
@@ -499,20 +499,20 @@ func (arq *ApiResourcesQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if ps := arq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := arq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := arq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := arq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -522,45 +522,45 @@ func (arq *ApiResourcesQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (arq *ApiResourcesQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(arq.driver.Dialect())
+func (_q *ApiResourcesQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(apiresources.Table)
-	columns := arq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = apiresources.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if arq.sql != nil {
-		selector = arq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if arq.ctx.Unique != nil && *arq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, m := range arq.modifiers {
+	for _, m := range _q.modifiers {
 		m(selector)
 	}
-	for _, p := range arq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range arq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := arq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := arq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (arq *ApiResourcesQuery) Modify(modifiers ...func(s *sql.Selector)) *ApiResourcesSelect {
-	arq.modifiers = append(arq.modifiers, modifiers...)
-	return arq.Select()
+func (_q *ApiResourcesQuery) Modify(modifiers ...func(s *sql.Selector)) *ApiResourcesSelect {
+	_q.modifiers = append(_q.modifiers, modifiers...)
+	return _q.Select()
 }
 
 // ApiResourcesGroupBy is the group-by builder for ApiResources entities.
@@ -570,41 +570,41 @@ type ApiResourcesGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (argb *ApiResourcesGroupBy) Aggregate(fns ...AggregateFunc) *ApiResourcesGroupBy {
-	argb.fns = append(argb.fns, fns...)
-	return argb
+func (_g *ApiResourcesGroupBy) Aggregate(fns ...AggregateFunc) *ApiResourcesGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (argb *ApiResourcesGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, argb.build.ctx, ent.OpQueryGroupBy)
-	if err := argb.build.prepareQuery(ctx); err != nil {
+func (_g *ApiResourcesGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*ApiResourcesQuery, *ApiResourcesGroupBy](ctx, argb.build, argb, argb.build.inters, v)
+	return scanWithInterceptors[*ApiResourcesQuery, *ApiResourcesGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (argb *ApiResourcesGroupBy) sqlScan(ctx context.Context, root *ApiResourcesQuery, v any) error {
+func (_g *ApiResourcesGroupBy) sqlScan(ctx context.Context, root *ApiResourcesQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(argb.fns))
-	for _, fn := range argb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*argb.flds)+len(argb.fns))
-		for _, f := range *argb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*argb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := argb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -618,27 +618,27 @@ type ApiResourcesSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (ars *ApiResourcesSelect) Aggregate(fns ...AggregateFunc) *ApiResourcesSelect {
-	ars.fns = append(ars.fns, fns...)
-	return ars
+func (_s *ApiResourcesSelect) Aggregate(fns ...AggregateFunc) *ApiResourcesSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ars *ApiResourcesSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ars.ctx, ent.OpQuerySelect)
-	if err := ars.prepareQuery(ctx); err != nil {
+func (_s *ApiResourcesSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*ApiResourcesQuery, *ApiResourcesSelect](ctx, ars.ApiResourcesQuery, ars, ars.inters, v)
+	return scanWithInterceptors[*ApiResourcesQuery, *ApiResourcesSelect](ctx, _s.ApiResourcesQuery, _s, _s.inters, v)
 }
 
-func (ars *ApiResourcesSelect) sqlScan(ctx context.Context, root *ApiResourcesQuery, v any) error {
+func (_s *ApiResourcesSelect) sqlScan(ctx context.Context, root *ApiResourcesQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(ars.fns))
-	for _, fn := range ars.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*ars.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -646,7 +646,7 @@ func (ars *ApiResourcesSelect) sqlScan(ctx context.Context, root *ApiResourcesQu
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := ars.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -654,7 +654,7 @@ func (ars *ApiResourcesSelect) sqlScan(ctx context.Context, root *ApiResourcesQu
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (ars *ApiResourcesSelect) Modify(modifiers ...func(s *sql.Selector)) *ApiResourcesSelect {
-	ars.modifiers = append(ars.modifiers, modifiers...)
-	return ars
+func (_s *ApiResourcesSelect) Modify(modifiers ...func(s *sql.Selector)) *ApiResourcesSelect {
+	_s.modifiers = append(_s.modifiers, modifiers...)
+	return _s
 }

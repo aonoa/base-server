@@ -98,6 +98,192 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.base_api.v1.GetSysMenuListReply'
+    /basic-api/notice/admin:
+        post:
+            tags:
+                - Base
+            description: 保存/定时/发布站内信
+            operationId: Base_CreateSiteMessage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.CreateSiteMessageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.CreateSiteMessageReply'
+    /basic-api/notice/admin/list:
+        get:
+            tags:
+                - Base
+            description: 获取已发布站内信列表
+            operationId: Base_GetPublishedSiteMessageList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetPublishedSiteMessageListReply'
+    /basic-api/notice/admin/recall/{id}:
+        post:
+            tags:
+                - Base
+            description: 撤回已发布站内信
+            operationId: Base_RecallSiteMessage
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.RecallSiteMessageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/notice/admin/{id}:
+        delete:
+            tags:
+                - Base
+            description: 删除未发布站内信
+            operationId: Base_DeletePendingSiteMessage
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/notice/my/list:
+        get:
+            tags:
+                - Base
+            description: |-
+                ////////////////////////////////////////////// 站内信
+                 获取当前用户站内信列表
+            operationId: Base_GetMySiteMessageList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: readStatus
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetMySiteMessageListReply'
+    /basic-api/notice/my/read-all:
+        post:
+            tags:
+                - Base
+            description: 标记全部站内信已读
+            operationId: Base_MarkAllSiteMessagesRead
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.MarkAllSiteMessagesReadReply'
+    /basic-api/notice/my/read/{messageId}:
+        post:
+            tags:
+                - Base
+            description: 标记单条站内信已读
+            operationId: Base_MarkSiteMessageRead
+            parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.MarkSiteMessageReadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /basic-api/notice/my/unread-count:
+        get:
+            tags:
+                - Base
+            description: 获取当前用户未读站内信数量
+            operationId: Base_GetMySiteMessageUnreadCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.base_api.v1.GetMySiteMessageUnreadCountReply'
+    /basic-api/notice/my/unread/{messageId}:
+        post:
+            tags:
+                - Base
+            description: 标记单条站内信未读
+            operationId: Base_MarkSiteMessageUnread
+            parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.base_api.v1.MarkSiteMessageReadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /basic-api/system/api:
         post:
             tags:
@@ -920,6 +1106,42 @@ components:
                     type: string
                 passwordNew:
                     type: string
+        api.base_api.v1.CreateSiteMessageReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                receiverCount:
+                    type: string
+                status:
+                    type: string
+                scheduledPublishTime:
+                    type: string
+                publishedTime:
+                    type: string
+        api.base_api.v1.CreateSiteMessageRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                category:
+                    type: string
+                receiverType:
+                    type: string
+                receiverIds:
+                    type: array
+                    items:
+                        type: string
+                link:
+                    type: string
+                action:
+                    type: string
+                scheduledPublishTime:
+                    type: string
         api.base_api.v1.DeptListItem:
             type: object
             properties:
@@ -978,6 +1200,29 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.DeptListItem'
+                total:
+                    type: string
+        api.base_api.v1.GetMySiteMessageListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.SiteMessageItem'
+                total:
+                    type: string
+        api.base_api.v1.GetMySiteMessageUnreadCountReply:
+            type: object
+            properties:
+                unreadCount:
+                    type: string
+        api.base_api.v1.GetPublishedSiteMessageListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.PublishedSiteMessageItem'
                 total:
                     type: string
         api.base_api.v1.GetResourceListByPageReply:
@@ -1082,7 +1327,9 @@ components:
                 token:
                     type: string
                 roles:
-                    $ref: '#/components/schemas/api.base_api.v1.RoleInfo'
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.base_api.v1.RoleInfo'
         api.base_api.v1.GetUserListReply:
             type: object
             properties:
@@ -1138,6 +1385,16 @@ components:
                 username:
                     type: string
                 password:
+                    type: string
+        api.base_api.v1.MarkAllSiteMessagesReadReply:
+            type: object
+            properties:
+                updatedCount:
+                    type: string
+        api.base_api.v1.MarkSiteMessageReadRequest:
+            type: object
+            properties:
+                messageId:
                     type: string
         api.base_api.v1.Message:
             type: object
@@ -1202,6 +1459,48 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.base_api.v1.Message'
+        api.base_api.v1.PublishedSiteMessageItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                category:
+                    type: string
+                receiverType:
+                    type: string
+                receiverIds:
+                    type: array
+                    items:
+                        type: string
+                receiverCount:
+                    type: string
+                link:
+                    type: string
+                senderId:
+                    type: string
+                senderName:
+                    type: string
+                createdTime:
+                    type: string
+                status:
+                    type: string
+                scheduledPublishTime:
+                    type: string
+                publishedTime:
+                    type: string
+                recalledTime:
+                    type: string
+                updatedTime:
+                    type: string
+        api.base_api.v1.RecallSiteMessageRequest:
+            type: object
+            properties:
+                id:
+                    type: string
         api.base_api.v1.ResourceListItem:
             type: object
             properties:
@@ -1259,6 +1558,29 @@ components:
                 id:
                     type: string
                 status:
+                    type: string
+        api.base_api.v1.SiteMessageItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                category:
+                    type: string
+                isRead:
+                    type: boolean
+                link:
+                    type: string
+                senderId:
+                    type: string
+                senderName:
+                    type: string
+                createdTime:
+                    type: string
+                readTime:
                     type: string
         api.base_api.v1.SysLogItem:
             type: object

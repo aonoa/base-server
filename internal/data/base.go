@@ -10,6 +10,8 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/sitemessage"
+	"base-server/internal/data/ent/sitemessagereceipt"
 	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"base-server/internal/tools"
@@ -24,6 +26,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type baseRepo struct {
@@ -348,6 +351,12 @@ func (r *baseRepo) GetRole(ctx context.Context, id int64) (*ent.Role, error) {
 	return r.data.db.Role.Query().Where(role.IDEQ(id)).First(ctx)
 }
 
+func (r *baseRepo) UpdateRoleMenus(ctx context.Context, roleId int64, menus []int32) error {
+	defer r.data.db.Role.Query().All(entcache.Evict(ctx))
+	_, err := r.data.db.Role.UpdateOneID(roleId).SetMenus(menus).Save(entcache.Evict(ctx))
+	return err
+}
+
 // DelRole 删除角色
 func (r *baseRepo) DelRole(ctx context.Context, id int64) error {
 	defer r.data.db.Role.Query().All(entcache.Evict(ctx))
@@ -597,4 +606,485 @@ func (r *baseRepo) GetSysLogList(ctx context.Context, req *pb.GetSysLogListParam
 
 func (r *baseRepo) GetSysLogInfo(ctx context.Context, id string) (*ent.SysLogRecord, error) {
 	return r.data.db.SysLogRecord.Query().Where(syslogrecord.IDEQ(id)).First(ctx)
+}
+
+func uniqueStrings(values []string) []string {
+	seen := make(map[string]struct{}, len(values))
+	result := make([]string, 0, len(values))
+	for _, value := range values {
+		if value == "" {
+			continue
+		}
+		if _, ok := seen[value]; ok {
+			continue
+		}
+		seen[value] = struct{}{}
+		result = append(result, value)
+	}
+	return result
+}
+
+func normalizeSiteMessageReceiverSelection(receiverType string, receiverIDs []string) (string, []string) {
+	if receiverType == "user" {
+		return "user", uniqueStrings(receiverIDs)
+	}
+	return "all", []string{}
+}
+
+func (r *baseRepo) countActiveSiteMessageReceivers(ctx context.Context) (int64, error) {
+	count, err := r.data.db.User.Query().
+		Where(user.StatusEQ(1)).
+		Count(ctx)
+	return int64(count), err
+}
+
+func (r *baseRepo) previewSiteMessageReceiverCount(ctx context.Context, receiverType string, receiverIDs []string) (int64, error) {
+	if receiverType == "user" {
+		return int64(len(uniqueStrings(receiverIDs))), nil
+	}
+	return r.countActiveSiteMessageReceivers(ctx)
+}
+
+func (r *baseRepo) resolveSiteMessageReceivers(ctx context.Context, receiverType string, receiverIDs []string) ([]string, error) {
+	if receiverType == "user" {
+		ids := uniqueStrings(receiverIDs)
+		if len(ids) == 0 {
+			return nil, errors.BadRequest("BAD_REQUEST", "no receiver found")
+		}
+		return ids, nil
+	}
+
+	users, err := r.data.db.User.Query().
+		Where(user.StatusEQ(1)).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	ids := make([]string, 0, len(users))
+	for _, item := range users {
+		ids = append(ids, item.ID.String())
+	}
+	if len(ids) == 0 {
+		return nil, errors.BadRequest("BAD_REQUEST", "no receiver found")
+	}
+	return ids, nil
+}
+
+func parseSiteMessageSchedule(value string) (time.Time, error) {
+	return time.ParseInLocation(time.DateTime, value, time.Local)
+}
+
+func (r *baseRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, messageID string, receiverIDs []string) error {
+	if len(receiverIDs) == 0 {
+		return nil
+	}
+
+	creates := make([]*ent.SiteMessageReceiptCreate, 0, len(receiverIDs))
+	for _, receiverID := range receiverIDs {
+		creates = append(creates, tx.SiteMessageReceipt.Create().
+			SetMessageID(messageID).
+			SetUserID(receiverID))
+	}
+	return tx.SiteMessageReceipt.CreateBulk(creates...).Exec(ctx)
+}
+
+func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName string, req *pb.CreateSiteMessageRequest) (*ent.SiteMessage, error) {
+	receiverType, receiverIDs := normalizeSiteMessageReceiverSelection(req.ReceiverType, req.ReceiverIds)
+	receiverCount, err := r.previewSiteMessageReceiverCount(ctx, receiverType, receiverIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	var scheduledPublishTime time.Time
+	if req.Action == biz.SiteMessageActionSchedule {
+		scheduledPublishTime, err = parseSiteMessageSchedule(req.ScheduledPublishTime)
+		if err != nil {
+			return nil, errors.BadRequest("BAD_REQUEST", "invalid scheduledPublishTime")
+		}
+	}
+
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var message *ent.SiteMessage
+	switch {
+	case req.Id == "":
+		createBuilder := tx.SiteMessage.Create().
+			SetTitle(req.Title).
+			SetContent(req.Content).
+			SetCategory(req.Category).
+			SetReceiverType(receiverType).
+			SetLink(req.Link).
+			SetSenderID(senderID).
+			SetSenderName(senderName)
+
+		switch req.Action {
+		case biz.SiteMessageActionDraft:
+			createBuilder.
+				SetStatus(biz.SiteMessageStatusDraft).
+				SetReceiverIds(receiverIDs).
+				SetReceiverCount(receiverCount)
+		case biz.SiteMessageActionSchedule:
+			createBuilder.
+				SetStatus(biz.SiteMessageStatusScheduled).
+				SetReceiverIds(receiverIDs).
+				SetReceiverCount(receiverCount).
+				SetScheduledPublishTime(scheduledPublishTime)
+		default:
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, receiverType, receiverIDs)
+			if err != nil {
+				_ = tx.Rollback()
+				return nil, err
+			}
+			now := time.Now()
+			createBuilder.
+				SetStatus(biz.SiteMessageStatusPublished).
+				SetReceiverIds(actualReceiverIDs).
+				SetReceiverCount(int64(len(actualReceiverIDs))).
+				SetPublishedTime(now)
+		}
+
+		message, err = createBuilder.Save(ctx)
+		if err != nil {
+			_ = tx.Rollback()
+			return nil, err
+		}
+	case req.Id != "":
+		existing, err := tx.SiteMessage.Get(ctx, req.Id)
+		if err != nil {
+			_ = tx.Rollback()
+			return nil, err
+		}
+		if existing.Status == biz.SiteMessageStatusPublished || existing.Status == biz.SiteMessageStatusRecalled {
+			_ = tx.Rollback()
+			return nil, errors.BadRequest("BAD_REQUEST", "only draft or scheduled messages can be updated")
+		}
+
+		updateBuilder := tx.SiteMessage.UpdateOneID(existing.ID).
+			SetTitle(req.Title).
+			SetContent(req.Content).
+			SetCategory(req.Category).
+			SetReceiverType(receiverType).
+			SetLink(req.Link).
+			SetSenderID(senderID).
+			SetSenderName(senderName)
+
+		switch req.Action {
+		case biz.SiteMessageActionDraft:
+			updateBuilder.
+				ClearScheduledPublishTime().
+				ClearPublishedTime().
+				ClearRecalledTime().
+				SetStatus(biz.SiteMessageStatusDraft).
+				SetReceiverIds(receiverIDs).
+				SetReceiverCount(receiverCount)
+		case biz.SiteMessageActionSchedule:
+			updateBuilder.
+				ClearPublishedTime().
+				ClearRecalledTime().
+				SetStatus(biz.SiteMessageStatusScheduled).
+				SetReceiverIds(receiverIDs).
+				SetReceiverCount(receiverCount).
+				SetScheduledPublishTime(scheduledPublishTime)
+		default:
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, receiverType, receiverIDs)
+			if err != nil {
+				_ = tx.Rollback()
+				return nil, err
+			}
+			now := time.Now()
+			updateBuilder.
+				ClearScheduledPublishTime().
+				ClearRecalledTime().
+				SetStatus(biz.SiteMessageStatusPublished).
+				SetReceiverIds(actualReceiverIDs).
+				SetReceiverCount(int64(len(actualReceiverIDs))).
+				SetPublishedTime(now)
+		}
+
+		message, err = updateBuilder.Save(ctx)
+		if err != nil {
+			_ = tx.Rollback()
+			return nil, err
+		}
+	}
+
+	if req.Action == biz.SiteMessageActionPublish {
+		if err := r.createSiteMessageReceipts(ctx, tx, message.ID, message.ReceiverIds); err != nil {
+			_ = tx.Rollback()
+			return nil, err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	return message, nil
+}
+
+func getMySiteMessageListQuery(userID string, params *pb.GetMySiteMessageListParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		s.Where(sql.EQ(sitemessagereceipt.FieldUserID, userID))
+		switch params.ReadStatus {
+		case 1:
+			s.Where(sql.EQ(sitemessagereceipt.FieldIsRead, true))
+		case 2:
+			s.Where(sql.EQ(sitemessagereceipt.FieldIsRead, false))
+		}
+		if isPage {
+			s.OrderBy(sql.Desc(sitemessagereceipt.FieldCreateTime))
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *baseRepo) GetMySiteMessageList(ctx context.Context, userID string, req *pb.GetMySiteMessageListParams) ([]*biz.SiteMessageEnvelope, int64, error) {
+	receipts, err := r.data.db.SiteMessageReceipt.Query().Modify(
+		getMySiteMessageListQuery(userID, req, true),
+	).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.SiteMessageReceipt.Query().Modify(
+		getMySiteMessageListQuery(userID, req, false),
+	).Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	if len(receipts) == 0 {
+		return []*biz.SiteMessageEnvelope{}, int64(count), nil
+	}
+
+	messageIDs := make([]string, 0, len(receipts))
+	for _, receipt := range receipts {
+		messageIDs = append(messageIDs, receipt.MessageID)
+	}
+	messages, err := r.data.db.SiteMessage.Query().
+		Where(sitemessage.IDIn(messageIDs...)).
+		All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	messageMap := make(map[string]*ent.SiteMessage, len(messages))
+	for _, item := range messages {
+		messageMap[item.ID] = item
+	}
+	items := make([]*biz.SiteMessageEnvelope, 0, len(receipts))
+	for _, receipt := range receipts {
+		message := messageMap[receipt.MessageID]
+		if message == nil {
+			continue
+		}
+		items = append(items, &biz.SiteMessageEnvelope{
+			Message: message,
+			Receipt: receipt,
+		})
+	}
+	return items, int64(count), nil
+}
+
+func (r *baseRepo) GetMySiteMessageUnreadCount(ctx context.Context, userID string) (int64, error) {
+	count, err := r.data.db.SiteMessageReceipt.Query().
+		Where(
+			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.IsReadEQ(false),
+		).
+		Count(ctx)
+	return int64(count), err
+}
+
+func (r *baseRepo) MarkSiteMessageRead(ctx context.Context, userID, messageID string) error {
+	_, err := r.data.db.SiteMessageReceipt.Update().
+		Where(
+			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.MessageIDEQ(messageID),
+		).
+		SetIsRead(true).
+		SetReadTime(time.Now()).
+		Save(ctx)
+	return err
+}
+
+func (r *baseRepo) MarkSiteMessageUnread(ctx context.Context, userID, messageID string) error {
+	_, err := r.data.db.SiteMessageReceipt.Update().
+		Where(
+			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.MessageIDEQ(messageID),
+		).
+		SetIsRead(false).
+		SetReadTime(time.Time{}).
+		Save(ctx)
+	return err
+}
+
+func (r *baseRepo) MarkAllSiteMessagesRead(ctx context.Context, userID string) (int64, error) {
+	updated, err := r.data.db.SiteMessageReceipt.Update().
+		Where(
+			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.IsReadEQ(false),
+		).
+		SetIsRead(true).
+		SetReadTime(time.Now()).
+		Save(ctx)
+	return int64(updated), err
+}
+
+func getPublishedSiteMessageListQuery(params *pb.GetPublishedSiteMessageListParams, isPage bool) func(s *sql.Selector) {
+	return func(s *sql.Selector) {
+		if params.Status != "" {
+			s.Where(sql.EQ(sitemessage.FieldStatus, params.Status))
+		}
+		if isPage {
+			s.OrderBy(sql.Desc(sitemessage.FieldUpdateTime))
+			if params.PageSize != 0 {
+				s.Limit(int(params.PageSize))
+			}
+			if params.CurrentPage != 0 {
+				s.Offset(int(tools.GetPageOffset(params.CurrentPage, params.PageSize)))
+			}
+		}
+	}
+}
+
+func (r *baseRepo) GetPublishedSiteMessageList(ctx context.Context, req *pb.GetPublishedSiteMessageListParams) ([]*ent.SiteMessage, int64, error) {
+	items, err := r.data.db.SiteMessage.Query().Modify(
+		getPublishedSiteMessageListQuery(req, true),
+	).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	count, err := r.data.db.SiteMessage.Query().Modify(
+		getPublishedSiteMessageListQuery(req, false),
+	).Count(ctx)
+	return items, int64(count), err
+}
+
+func (r *baseRepo) RecallSiteMessage(ctx context.Context, messageID string) error {
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+
+	messageItem, err := tx.SiteMessage.Get(ctx, messageID)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	if messageItem.Status != biz.SiteMessageStatusPublished {
+		_ = tx.Rollback()
+		return errors.BadRequest("BAD_REQUEST", "only published messages can be recalled")
+	}
+
+	if _, err := tx.SiteMessage.UpdateOneID(messageID).
+		SetStatus(biz.SiteMessageStatusRecalled).
+		SetRecalledTime(time.Now()).
+		Save(ctx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	if _, err := tx.SiteMessageReceipt.Delete().
+		Where(sitemessagereceipt.MessageIDEQ(messageID)).
+		Exec(ctx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (r *baseRepo) DeletePendingSiteMessage(ctx context.Context, messageID string) error {
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+
+	messageItem, err := tx.SiteMessage.Get(ctx, messageID)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	if messageItem.Status != biz.SiteMessageStatusDraft && messageItem.Status != biz.SiteMessageStatusScheduled {
+		_ = tx.Rollback()
+		return errors.BadRequest("BAD_REQUEST", "only draft or scheduled messages can be deleted")
+	}
+
+	if _, err := tx.SiteMessageReceipt.Delete().
+		Where(sitemessagereceipt.MessageIDEQ(messageID)).
+		Exec(ctx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	if err := tx.SiteMessage.DeleteOneID(messageID).Exec(ctx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	return tx.Commit()
+}
+
+func (r *baseRepo) promoteScheduledSiteMessage(ctx context.Context, messageItem *ent.SiteMessage) error {
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+
+	receiverIDs, err := r.resolveSiteMessageReceivers(ctx, messageItem.ReceiverType, messageItem.ReceiverIds)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	updated, err := tx.SiteMessage.Update().
+		Where(
+			sitemessage.IDEQ(messageItem.ID),
+			sitemessage.StatusEQ(biz.SiteMessageStatusScheduled),
+		).
+		SetStatus(biz.SiteMessageStatusPublished).
+		SetReceiverIds(receiverIDs).
+		SetReceiverCount(int64(len(receiverIDs))).
+		SetPublishedTime(time.Now()).
+		ClearScheduledPublishTime().
+		Save(ctx)
+	if err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	if updated == 0 {
+		_ = tx.Rollback()
+		return nil
+	}
+
+	if err := r.createSiteMessageReceipts(ctx, tx, messageItem.ID, receiverIDs); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	return tx.Commit()
+}
+
+func (r *baseRepo) PromoteDueScheduledSiteMessages(ctx context.Context) error {
+	now := time.Now()
+	items, err := r.data.db.SiteMessage.Query().
+		Where(
+			sitemessage.StatusEQ(biz.SiteMessageStatusScheduled),
+			sitemessage.ScheduledPublishTimeLTE(now),
+		).
+		All(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, item := range items {
+		if err := r.promoteScheduledSiteMessage(ctx, item); err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -8,6 +8,8 @@ import (
 	"base-server/internal/data/ent/menu"
 	"base-server/internal/data/ent/resource"
 	"base-server/internal/data/ent/role"
+	"base-server/internal/data/ent/sitemessage"
+	"base-server/internal/data/ent/sitemessagereceipt"
 	"base-server/internal/data/ent/syslogrecord"
 	"base-server/internal/data/ent/user"
 	"context"
@@ -76,19 +78,21 @@ var (
 )
 
 // checkColumn checks if the column exists in the given table.
-func checkColumn(table, column string) error {
+func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			apiresources.Table: apiresources.ValidColumn,
-			dept.Table:         dept.ValidColumn,
-			menu.Table:         menu.ValidColumn,
-			resource.Table:     resource.ValidColumn,
-			role.Table:         role.ValidColumn,
-			syslogrecord.Table: syslogrecord.ValidColumn,
-			user.Table:         user.ValidColumn,
+			apiresources.Table:       apiresources.ValidColumn,
+			dept.Table:               dept.ValidColumn,
+			menu.Table:               menu.ValidColumn,
+			resource.Table:           resource.ValidColumn,
+			role.Table:               role.ValidColumn,
+			sitemessage.Table:        sitemessage.ValidColumn,
+			sitemessagereceipt.Table: sitemessagereceipt.ValidColumn,
+			syslogrecord.Table:       syslogrecord.ValidColumn,
+			user.Table:               user.ValidColumn,
 		})
 	})
-	return columnCheck(table, column)
+	return columnCheck(t, c)
 }
 
 // Asc applies the given fields in ASC order.
