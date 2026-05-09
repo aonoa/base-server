@@ -139,6 +139,35 @@ func (c *ServiceRegistryCreate) CreateAll(ServiceRegistry *ServiceRegistry) *Ser
 	return builder
 }
 
+// CreateAll creates a new SiteMessage entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *SiteMessageCreate) CreateAll(SiteMessage *SiteMessage) *SiteMessageCreate {
+	builder := c
+	builder = builder.SetTitle(SiteMessage.Title)
+	builder = builder.SetContent(SiteMessage.Content)
+	builder = builder.SetCategory(SiteMessage.Category)
+	builder = builder.SetStatus(SiteMessage.Status)
+	builder = builder.SetReceiverCount(SiteMessage.ReceiverCount)
+	builder = builder.SetLink(SiteMessage.Link)
+	builder = builder.SetSenderID(SiteMessage.SenderID)
+	builder = builder.SetSenderName(SiteMessage.SenderName)
+	builder = builder.SetNillableScheduledPublishTime(SiteMessage.ScheduledPublishTime)
+	builder = builder.SetNillablePublishedTime(SiteMessage.PublishedTime)
+	builder = builder.SetNillableRecalledTime(SiteMessage.RecalledTime)
+	return builder
+}
+
+// CreateAll creates a new SiteMessageReceipt entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *SiteMessageReceiptCreate) CreateAll(SiteMessageReceipt *SiteMessageReceipt) *SiteMessageReceiptCreate {
+	builder := c
+	builder = builder.SetMessageID(SiteMessageReceipt.MessageID)
+	builder = builder.SetUserID(SiteMessageReceipt.UserID)
+	builder = builder.SetIsRead(SiteMessageReceipt.IsRead)
+	builder = builder.SetReadTime(SiteMessageReceipt.ReadTime)
+	return builder
+}
+
 // CreateAll creates a new SysLogRecord entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *SysLogRecordCreate) CreateAll(SysLogRecord *SysLogRecord) *SysLogRecordCreate {

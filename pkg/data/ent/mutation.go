@@ -12,6 +12,8 @@ import (
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/serviceregistry"
+	"base-server/pkg/data/ent/sitemessage"
+	"base-server/pkg/data/ent/sitemessagereceipt"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -43,6 +45,8 @@ const (
 	TypeResource               = "Resource"
 	TypeRole                   = "Role"
 	TypeServiceRegistry        = "ServiceRegistry"
+	TypeSiteMessage            = "SiteMessage"
+	TypeSiteMessageReceipt     = "SiteMessageReceipt"
 	TypeSysLogRecord           = "SysLogRecord"
 	TypeUser                   = "User"
 	TypeUserRoleBinding        = "UserRoleBinding"
@@ -8300,6 +8304,1684 @@ func (m *ServiceRegistryMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *ServiceRegistryMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown ServiceRegistry edge %s", name)
+}
+
+// SiteMessageMutation represents an operation that mutates the SiteMessage nodes in the graph.
+type SiteMessageMutation struct {
+	config
+	op                     Op
+	typ                    string
+	id                     *string
+	create_time            *time.Time
+	update_time            *time.Time
+	title                  *string
+	content                *string
+	category               *string
+	status                 *string
+	receiver_count         *int64
+	addreceiver_count      *int64
+	link                   *string
+	sender_id              *string
+	sender_name            *string
+	scheduled_publish_time *time.Time
+	published_time         *time.Time
+	recalled_time          *time.Time
+	clearedFields          map[string]struct{}
+	done                   bool
+	oldValue               func(context.Context) (*SiteMessage, error)
+	predicates             []predicate.SiteMessage
+}
+
+var _ ent.Mutation = (*SiteMessageMutation)(nil)
+
+// sitemessageOption allows management of the mutation configuration using functional options.
+type sitemessageOption func(*SiteMessageMutation)
+
+// newSiteMessageMutation creates new mutation for the SiteMessage entity.
+func newSiteMessageMutation(c config, op Op, opts ...sitemessageOption) *SiteMessageMutation {
+	m := &SiteMessageMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeSiteMessage,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withSiteMessageID sets the ID field of the mutation.
+func withSiteMessageID(id string) sitemessageOption {
+	return func(m *SiteMessageMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *SiteMessage
+		)
+		m.oldValue = func(ctx context.Context) (*SiteMessage, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().SiteMessage.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withSiteMessage sets the old SiteMessage of the mutation.
+func withSiteMessage(node *SiteMessage) sitemessageOption {
+	return func(m *SiteMessageMutation) {
+		m.oldValue = func(context.Context) (*SiteMessage, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m SiteMessageMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m SiteMessageMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of SiteMessage entities.
+func (m *SiteMessageMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *SiteMessageMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *SiteMessageMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().SiteMessage.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *SiteMessageMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *SiteMessageMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *SiteMessageMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *SiteMessageMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *SiteMessageMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *SiteMessageMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetTitle sets the "title" field.
+func (m *SiteMessageMutation) SetTitle(s string) {
+	m.title = &s
+}
+
+// Title returns the value of the "title" field in the mutation.
+func (m *SiteMessageMutation) Title() (r string, exists bool) {
+	v := m.title
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTitle returns the old "title" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldTitle(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTitle requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
+	}
+	return oldValue.Title, nil
+}
+
+// ResetTitle resets all changes to the "title" field.
+func (m *SiteMessageMutation) ResetTitle() {
+	m.title = nil
+}
+
+// SetContent sets the "content" field.
+func (m *SiteMessageMutation) SetContent(s string) {
+	m.content = &s
+}
+
+// Content returns the value of the "content" field in the mutation.
+func (m *SiteMessageMutation) Content() (r string, exists bool) {
+	v := m.content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContent returns the old "content" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContent: %w", err)
+	}
+	return oldValue.Content, nil
+}
+
+// ResetContent resets all changes to the "content" field.
+func (m *SiteMessageMutation) ResetContent() {
+	m.content = nil
+}
+
+// SetCategory sets the "category" field.
+func (m *SiteMessageMutation) SetCategory(s string) {
+	m.category = &s
+}
+
+// Category returns the value of the "category" field in the mutation.
+func (m *SiteMessageMutation) Category() (r string, exists bool) {
+	v := m.category
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCategory returns the old "category" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldCategory(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCategory is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCategory requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCategory: %w", err)
+	}
+	return oldValue.Category, nil
+}
+
+// ResetCategory resets all changes to the "category" field.
+func (m *SiteMessageMutation) ResetCategory() {
+	m.category = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *SiteMessageMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *SiteMessageMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *SiteMessageMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetReceiverCount sets the "receiver_count" field.
+func (m *SiteMessageMutation) SetReceiverCount(i int64) {
+	m.receiver_count = &i
+	m.addreceiver_count = nil
+}
+
+// ReceiverCount returns the value of the "receiver_count" field in the mutation.
+func (m *SiteMessageMutation) ReceiverCount() (r int64, exists bool) {
+	v := m.receiver_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReceiverCount returns the old "receiver_count" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldReceiverCount(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReceiverCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReceiverCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReceiverCount: %w", err)
+	}
+	return oldValue.ReceiverCount, nil
+}
+
+// AddReceiverCount adds i to the "receiver_count" field.
+func (m *SiteMessageMutation) AddReceiverCount(i int64) {
+	if m.addreceiver_count != nil {
+		*m.addreceiver_count += i
+	} else {
+		m.addreceiver_count = &i
+	}
+}
+
+// AddedReceiverCount returns the value that was added to the "receiver_count" field in this mutation.
+func (m *SiteMessageMutation) AddedReceiverCount() (r int64, exists bool) {
+	v := m.addreceiver_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetReceiverCount resets all changes to the "receiver_count" field.
+func (m *SiteMessageMutation) ResetReceiverCount() {
+	m.receiver_count = nil
+	m.addreceiver_count = nil
+}
+
+// SetLink sets the "link" field.
+func (m *SiteMessageMutation) SetLink(s string) {
+	m.link = &s
+}
+
+// Link returns the value of the "link" field in the mutation.
+func (m *SiteMessageMutation) Link() (r string, exists bool) {
+	v := m.link
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLink returns the old "link" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldLink(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLink is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLink requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLink: %w", err)
+	}
+	return oldValue.Link, nil
+}
+
+// ResetLink resets all changes to the "link" field.
+func (m *SiteMessageMutation) ResetLink() {
+	m.link = nil
+}
+
+// SetSenderID sets the "sender_id" field.
+func (m *SiteMessageMutation) SetSenderID(s string) {
+	m.sender_id = &s
+}
+
+// SenderID returns the value of the "sender_id" field in the mutation.
+func (m *SiteMessageMutation) SenderID() (r string, exists bool) {
+	v := m.sender_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSenderID returns the old "sender_id" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldSenderID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSenderID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSenderID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSenderID: %w", err)
+	}
+	return oldValue.SenderID, nil
+}
+
+// ResetSenderID resets all changes to the "sender_id" field.
+func (m *SiteMessageMutation) ResetSenderID() {
+	m.sender_id = nil
+}
+
+// SetSenderName sets the "sender_name" field.
+func (m *SiteMessageMutation) SetSenderName(s string) {
+	m.sender_name = &s
+}
+
+// SenderName returns the value of the "sender_name" field in the mutation.
+func (m *SiteMessageMutation) SenderName() (r string, exists bool) {
+	v := m.sender_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSenderName returns the old "sender_name" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldSenderName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSenderName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSenderName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSenderName: %w", err)
+	}
+	return oldValue.SenderName, nil
+}
+
+// ResetSenderName resets all changes to the "sender_name" field.
+func (m *SiteMessageMutation) ResetSenderName() {
+	m.sender_name = nil
+}
+
+// SetScheduledPublishTime sets the "scheduled_publish_time" field.
+func (m *SiteMessageMutation) SetScheduledPublishTime(t time.Time) {
+	m.scheduled_publish_time = &t
+}
+
+// ScheduledPublishTime returns the value of the "scheduled_publish_time" field in the mutation.
+func (m *SiteMessageMutation) ScheduledPublishTime() (r time.Time, exists bool) {
+	v := m.scheduled_publish_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScheduledPublishTime returns the old "scheduled_publish_time" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldScheduledPublishTime(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScheduledPublishTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScheduledPublishTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScheduledPublishTime: %w", err)
+	}
+	return oldValue.ScheduledPublishTime, nil
+}
+
+// ClearScheduledPublishTime clears the value of the "scheduled_publish_time" field.
+func (m *SiteMessageMutation) ClearScheduledPublishTime() {
+	m.scheduled_publish_time = nil
+	m.clearedFields[sitemessage.FieldScheduledPublishTime] = struct{}{}
+}
+
+// ScheduledPublishTimeCleared returns if the "scheduled_publish_time" field was cleared in this mutation.
+func (m *SiteMessageMutation) ScheduledPublishTimeCleared() bool {
+	_, ok := m.clearedFields[sitemessage.FieldScheduledPublishTime]
+	return ok
+}
+
+// ResetScheduledPublishTime resets all changes to the "scheduled_publish_time" field.
+func (m *SiteMessageMutation) ResetScheduledPublishTime() {
+	m.scheduled_publish_time = nil
+	delete(m.clearedFields, sitemessage.FieldScheduledPublishTime)
+}
+
+// SetPublishedTime sets the "published_time" field.
+func (m *SiteMessageMutation) SetPublishedTime(t time.Time) {
+	m.published_time = &t
+}
+
+// PublishedTime returns the value of the "published_time" field in the mutation.
+func (m *SiteMessageMutation) PublishedTime() (r time.Time, exists bool) {
+	v := m.published_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishedTime returns the old "published_time" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldPublishedTime(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishedTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishedTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishedTime: %w", err)
+	}
+	return oldValue.PublishedTime, nil
+}
+
+// ClearPublishedTime clears the value of the "published_time" field.
+func (m *SiteMessageMutation) ClearPublishedTime() {
+	m.published_time = nil
+	m.clearedFields[sitemessage.FieldPublishedTime] = struct{}{}
+}
+
+// PublishedTimeCleared returns if the "published_time" field was cleared in this mutation.
+func (m *SiteMessageMutation) PublishedTimeCleared() bool {
+	_, ok := m.clearedFields[sitemessage.FieldPublishedTime]
+	return ok
+}
+
+// ResetPublishedTime resets all changes to the "published_time" field.
+func (m *SiteMessageMutation) ResetPublishedTime() {
+	m.published_time = nil
+	delete(m.clearedFields, sitemessage.FieldPublishedTime)
+}
+
+// SetRecalledTime sets the "recalled_time" field.
+func (m *SiteMessageMutation) SetRecalledTime(t time.Time) {
+	m.recalled_time = &t
+}
+
+// RecalledTime returns the value of the "recalled_time" field in the mutation.
+func (m *SiteMessageMutation) RecalledTime() (r time.Time, exists bool) {
+	v := m.recalled_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRecalledTime returns the old "recalled_time" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldRecalledTime(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRecalledTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRecalledTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRecalledTime: %w", err)
+	}
+	return oldValue.RecalledTime, nil
+}
+
+// ClearRecalledTime clears the value of the "recalled_time" field.
+func (m *SiteMessageMutation) ClearRecalledTime() {
+	m.recalled_time = nil
+	m.clearedFields[sitemessage.FieldRecalledTime] = struct{}{}
+}
+
+// RecalledTimeCleared returns if the "recalled_time" field was cleared in this mutation.
+func (m *SiteMessageMutation) RecalledTimeCleared() bool {
+	_, ok := m.clearedFields[sitemessage.FieldRecalledTime]
+	return ok
+}
+
+// ResetRecalledTime resets all changes to the "recalled_time" field.
+func (m *SiteMessageMutation) ResetRecalledTime() {
+	m.recalled_time = nil
+	delete(m.clearedFields, sitemessage.FieldRecalledTime)
+}
+
+// Where appends a list predicates to the SiteMessageMutation builder.
+func (m *SiteMessageMutation) Where(ps ...predicate.SiteMessage) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the SiteMessageMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *SiteMessageMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.SiteMessage, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *SiteMessageMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *SiteMessageMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (SiteMessage).
+func (m *SiteMessageMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *SiteMessageMutation) Fields() []string {
+	fields := make([]string, 0, 13)
+	if m.create_time != nil {
+		fields = append(fields, sitemessage.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, sitemessage.FieldUpdateTime)
+	}
+	if m.title != nil {
+		fields = append(fields, sitemessage.FieldTitle)
+	}
+	if m.content != nil {
+		fields = append(fields, sitemessage.FieldContent)
+	}
+	if m.category != nil {
+		fields = append(fields, sitemessage.FieldCategory)
+	}
+	if m.status != nil {
+		fields = append(fields, sitemessage.FieldStatus)
+	}
+	if m.receiver_count != nil {
+		fields = append(fields, sitemessage.FieldReceiverCount)
+	}
+	if m.link != nil {
+		fields = append(fields, sitemessage.FieldLink)
+	}
+	if m.sender_id != nil {
+		fields = append(fields, sitemessage.FieldSenderID)
+	}
+	if m.sender_name != nil {
+		fields = append(fields, sitemessage.FieldSenderName)
+	}
+	if m.scheduled_publish_time != nil {
+		fields = append(fields, sitemessage.FieldScheduledPublishTime)
+	}
+	if m.published_time != nil {
+		fields = append(fields, sitemessage.FieldPublishedTime)
+	}
+	if m.recalled_time != nil {
+		fields = append(fields, sitemessage.FieldRecalledTime)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *SiteMessageMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case sitemessage.FieldCreateTime:
+		return m.CreateTime()
+	case sitemessage.FieldUpdateTime:
+		return m.UpdateTime()
+	case sitemessage.FieldTitle:
+		return m.Title()
+	case sitemessage.FieldContent:
+		return m.Content()
+	case sitemessage.FieldCategory:
+		return m.Category()
+	case sitemessage.FieldStatus:
+		return m.Status()
+	case sitemessage.FieldReceiverCount:
+		return m.ReceiverCount()
+	case sitemessage.FieldLink:
+		return m.Link()
+	case sitemessage.FieldSenderID:
+		return m.SenderID()
+	case sitemessage.FieldSenderName:
+		return m.SenderName()
+	case sitemessage.FieldScheduledPublishTime:
+		return m.ScheduledPublishTime()
+	case sitemessage.FieldPublishedTime:
+		return m.PublishedTime()
+	case sitemessage.FieldRecalledTime:
+		return m.RecalledTime()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *SiteMessageMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case sitemessage.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case sitemessage.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case sitemessage.FieldTitle:
+		return m.OldTitle(ctx)
+	case sitemessage.FieldContent:
+		return m.OldContent(ctx)
+	case sitemessage.FieldCategory:
+		return m.OldCategory(ctx)
+	case sitemessage.FieldStatus:
+		return m.OldStatus(ctx)
+	case sitemessage.FieldReceiverCount:
+		return m.OldReceiverCount(ctx)
+	case sitemessage.FieldLink:
+		return m.OldLink(ctx)
+	case sitemessage.FieldSenderID:
+		return m.OldSenderID(ctx)
+	case sitemessage.FieldSenderName:
+		return m.OldSenderName(ctx)
+	case sitemessage.FieldScheduledPublishTime:
+		return m.OldScheduledPublishTime(ctx)
+	case sitemessage.FieldPublishedTime:
+		return m.OldPublishedTime(ctx)
+	case sitemessage.FieldRecalledTime:
+		return m.OldRecalledTime(ctx)
+	}
+	return nil, fmt.Errorf("unknown SiteMessage field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SiteMessageMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case sitemessage.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case sitemessage.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case sitemessage.FieldTitle:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTitle(v)
+		return nil
+	case sitemessage.FieldContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContent(v)
+		return nil
+	case sitemessage.FieldCategory:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCategory(v)
+		return nil
+	case sitemessage.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case sitemessage.FieldReceiverCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReceiverCount(v)
+		return nil
+	case sitemessage.FieldLink:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLink(v)
+		return nil
+	case sitemessage.FieldSenderID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSenderID(v)
+		return nil
+	case sitemessage.FieldSenderName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSenderName(v)
+		return nil
+	case sitemessage.FieldScheduledPublishTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScheduledPublishTime(v)
+		return nil
+	case sitemessage.FieldPublishedTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishedTime(v)
+		return nil
+	case sitemessage.FieldRecalledTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRecalledTime(v)
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessage field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *SiteMessageMutation) AddedFields() []string {
+	var fields []string
+	if m.addreceiver_count != nil {
+		fields = append(fields, sitemessage.FieldReceiverCount)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *SiteMessageMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case sitemessage.FieldReceiverCount:
+		return m.AddedReceiverCount()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SiteMessageMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case sitemessage.FieldReceiverCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddReceiverCount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessage numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *SiteMessageMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(sitemessage.FieldScheduledPublishTime) {
+		fields = append(fields, sitemessage.FieldScheduledPublishTime)
+	}
+	if m.FieldCleared(sitemessage.FieldPublishedTime) {
+		fields = append(fields, sitemessage.FieldPublishedTime)
+	}
+	if m.FieldCleared(sitemessage.FieldRecalledTime) {
+		fields = append(fields, sitemessage.FieldRecalledTime)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *SiteMessageMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *SiteMessageMutation) ClearField(name string) error {
+	switch name {
+	case sitemessage.FieldScheduledPublishTime:
+		m.ClearScheduledPublishTime()
+		return nil
+	case sitemessage.FieldPublishedTime:
+		m.ClearPublishedTime()
+		return nil
+	case sitemessage.FieldRecalledTime:
+		m.ClearRecalledTime()
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessage nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *SiteMessageMutation) ResetField(name string) error {
+	switch name {
+	case sitemessage.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case sitemessage.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case sitemessage.FieldTitle:
+		m.ResetTitle()
+		return nil
+	case sitemessage.FieldContent:
+		m.ResetContent()
+		return nil
+	case sitemessage.FieldCategory:
+		m.ResetCategory()
+		return nil
+	case sitemessage.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case sitemessage.FieldReceiverCount:
+		m.ResetReceiverCount()
+		return nil
+	case sitemessage.FieldLink:
+		m.ResetLink()
+		return nil
+	case sitemessage.FieldSenderID:
+		m.ResetSenderID()
+		return nil
+	case sitemessage.FieldSenderName:
+		m.ResetSenderName()
+		return nil
+	case sitemessage.FieldScheduledPublishTime:
+		m.ResetScheduledPublishTime()
+		return nil
+	case sitemessage.FieldPublishedTime:
+		m.ResetPublishedTime()
+		return nil
+	case sitemessage.FieldRecalledTime:
+		m.ResetRecalledTime()
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessage field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *SiteMessageMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *SiteMessageMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *SiteMessageMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *SiteMessageMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *SiteMessageMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *SiteMessageMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *SiteMessageMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown SiteMessage unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *SiteMessageMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown SiteMessage edge %s", name)
+}
+
+// SiteMessageReceiptMutation represents an operation that mutates the SiteMessageReceipt nodes in the graph.
+type SiteMessageReceiptMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *string
+	create_time   *time.Time
+	update_time   *time.Time
+	message_id    *string
+	user_id       *string
+	is_read       *bool
+	read_time     *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*SiteMessageReceipt, error)
+	predicates    []predicate.SiteMessageReceipt
+}
+
+var _ ent.Mutation = (*SiteMessageReceiptMutation)(nil)
+
+// sitemessagereceiptOption allows management of the mutation configuration using functional options.
+type sitemessagereceiptOption func(*SiteMessageReceiptMutation)
+
+// newSiteMessageReceiptMutation creates new mutation for the SiteMessageReceipt entity.
+func newSiteMessageReceiptMutation(c config, op Op, opts ...sitemessagereceiptOption) *SiteMessageReceiptMutation {
+	m := &SiteMessageReceiptMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeSiteMessageReceipt,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withSiteMessageReceiptID sets the ID field of the mutation.
+func withSiteMessageReceiptID(id string) sitemessagereceiptOption {
+	return func(m *SiteMessageReceiptMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *SiteMessageReceipt
+		)
+		m.oldValue = func(ctx context.Context) (*SiteMessageReceipt, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().SiteMessageReceipt.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withSiteMessageReceipt sets the old SiteMessageReceipt of the mutation.
+func withSiteMessageReceipt(node *SiteMessageReceipt) sitemessagereceiptOption {
+	return func(m *SiteMessageReceiptMutation) {
+		m.oldValue = func(context.Context) (*SiteMessageReceipt, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m SiteMessageReceiptMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m SiteMessageReceiptMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of SiteMessageReceipt entities.
+func (m *SiteMessageReceiptMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *SiteMessageReceiptMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *SiteMessageReceiptMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().SiteMessageReceipt.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *SiteMessageReceiptMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *SiteMessageReceiptMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *SiteMessageReceiptMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *SiteMessageReceiptMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *SiteMessageReceiptMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *SiteMessageReceiptMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetMessageID sets the "message_id" field.
+func (m *SiteMessageReceiptMutation) SetMessageID(s string) {
+	m.message_id = &s
+}
+
+// MessageID returns the value of the "message_id" field in the mutation.
+func (m *SiteMessageReceiptMutation) MessageID() (r string, exists bool) {
+	v := m.message_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMessageID returns the old "message_id" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldMessageID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMessageID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMessageID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMessageID: %w", err)
+	}
+	return oldValue.MessageID, nil
+}
+
+// ResetMessageID resets all changes to the "message_id" field.
+func (m *SiteMessageReceiptMutation) ResetMessageID() {
+	m.message_id = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *SiteMessageReceiptMutation) SetUserID(s string) {
+	m.user_id = &s
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *SiteMessageReceiptMutation) UserID() (r string, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldUserID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *SiteMessageReceiptMutation) ResetUserID() {
+	m.user_id = nil
+}
+
+// SetIsRead sets the "is_read" field.
+func (m *SiteMessageReceiptMutation) SetIsRead(b bool) {
+	m.is_read = &b
+}
+
+// IsRead returns the value of the "is_read" field in the mutation.
+func (m *SiteMessageReceiptMutation) IsRead() (r bool, exists bool) {
+	v := m.is_read
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsRead returns the old "is_read" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldIsRead(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsRead is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsRead requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsRead: %w", err)
+	}
+	return oldValue.IsRead, nil
+}
+
+// ResetIsRead resets all changes to the "is_read" field.
+func (m *SiteMessageReceiptMutation) ResetIsRead() {
+	m.is_read = nil
+}
+
+// SetReadTime sets the "read_time" field.
+func (m *SiteMessageReceiptMutation) SetReadTime(t time.Time) {
+	m.read_time = &t
+}
+
+// ReadTime returns the value of the "read_time" field in the mutation.
+func (m *SiteMessageReceiptMutation) ReadTime() (r time.Time, exists bool) {
+	v := m.read_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReadTime returns the old "read_time" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldReadTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReadTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReadTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReadTime: %w", err)
+	}
+	return oldValue.ReadTime, nil
+}
+
+// ResetReadTime resets all changes to the "read_time" field.
+func (m *SiteMessageReceiptMutation) ResetReadTime() {
+	m.read_time = nil
+}
+
+// Where appends a list predicates to the SiteMessageReceiptMutation builder.
+func (m *SiteMessageReceiptMutation) Where(ps ...predicate.SiteMessageReceipt) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the SiteMessageReceiptMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *SiteMessageReceiptMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.SiteMessageReceipt, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *SiteMessageReceiptMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *SiteMessageReceiptMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (SiteMessageReceipt).
+func (m *SiteMessageReceiptMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *SiteMessageReceiptMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.create_time != nil {
+		fields = append(fields, sitemessagereceipt.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, sitemessagereceipt.FieldUpdateTime)
+	}
+	if m.message_id != nil {
+		fields = append(fields, sitemessagereceipt.FieldMessageID)
+	}
+	if m.user_id != nil {
+		fields = append(fields, sitemessagereceipt.FieldUserID)
+	}
+	if m.is_read != nil {
+		fields = append(fields, sitemessagereceipt.FieldIsRead)
+	}
+	if m.read_time != nil {
+		fields = append(fields, sitemessagereceipt.FieldReadTime)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *SiteMessageReceiptMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case sitemessagereceipt.FieldCreateTime:
+		return m.CreateTime()
+	case sitemessagereceipt.FieldUpdateTime:
+		return m.UpdateTime()
+	case sitemessagereceipt.FieldMessageID:
+		return m.MessageID()
+	case sitemessagereceipt.FieldUserID:
+		return m.UserID()
+	case sitemessagereceipt.FieldIsRead:
+		return m.IsRead()
+	case sitemessagereceipt.FieldReadTime:
+		return m.ReadTime()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *SiteMessageReceiptMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case sitemessagereceipt.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case sitemessagereceipt.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case sitemessagereceipt.FieldMessageID:
+		return m.OldMessageID(ctx)
+	case sitemessagereceipt.FieldUserID:
+		return m.OldUserID(ctx)
+	case sitemessagereceipt.FieldIsRead:
+		return m.OldIsRead(ctx)
+	case sitemessagereceipt.FieldReadTime:
+		return m.OldReadTime(ctx)
+	}
+	return nil, fmt.Errorf("unknown SiteMessageReceipt field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SiteMessageReceiptMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case sitemessagereceipt.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case sitemessagereceipt.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case sitemessagereceipt.FieldMessageID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMessageID(v)
+		return nil
+	case sitemessagereceipt.FieldUserID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case sitemessagereceipt.FieldIsRead:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsRead(v)
+		return nil
+	case sitemessagereceipt.FieldReadTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReadTime(v)
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessageReceipt field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *SiteMessageReceiptMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *SiteMessageReceiptMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SiteMessageReceiptMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown SiteMessageReceipt numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *SiteMessageReceiptMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *SiteMessageReceiptMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *SiteMessageReceiptMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown SiteMessageReceipt nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *SiteMessageReceiptMutation) ResetField(name string) error {
+	switch name {
+	case sitemessagereceipt.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case sitemessagereceipt.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case sitemessagereceipt.FieldMessageID:
+		m.ResetMessageID()
+		return nil
+	case sitemessagereceipt.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case sitemessagereceipt.FieldIsRead:
+		m.ResetIsRead()
+		return nil
+	case sitemessagereceipt.FieldReadTime:
+		m.ResetReadTime()
+		return nil
+	}
+	return fmt.Errorf("unknown SiteMessageReceipt field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *SiteMessageReceiptMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *SiteMessageReceiptMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *SiteMessageReceiptMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *SiteMessageReceiptMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *SiteMessageReceiptMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *SiteMessageReceiptMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *SiteMessageReceiptMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown SiteMessageReceipt unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *SiteMessageReceiptMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown SiteMessageReceipt edge %s", name)
 }
 
 // SysLogRecordMutation represents an operation that mutates the SysLogRecord nodes in the graph.

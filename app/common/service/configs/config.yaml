@@ -22,6 +22,11 @@ llm:
 auth:
   api_key: auth-service-secret
   whitelist: []
+services:
+  user:
+    grpc_endpoint: 127.0.0.1:9010
+  admin:
+    grpc_endpoint: 127.0.0.1:9030
 logger:
   level: info
   filename: logs/common-service.log

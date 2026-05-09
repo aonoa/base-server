@@ -7,6 +7,7 @@
 package v1
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -118,18 +119,954 @@ func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
 	return nil
 }
 
+type GetMySiteMessageListParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	ReadStatus    int32                  `protobuf:"varint,3,opt,name=read_status,json=readStatus,proto3" json:"read_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageListParams) Reset() {
+	*x = GetMySiteMessageListParams{}
+	mi := &file_common_service_v1_common_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageListParams) ProtoMessage() {}
+
+func (x *GetMySiteMessageListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageListParams.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageListParams) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetMySiteMessageListParams) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *GetMySiteMessageListParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetMySiteMessageListParams) GetReadStatus() int32 {
+	if x != nil {
+		return x.ReadStatus
+	}
+	return 0
+}
+
+type SiteMessageItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	IsRead        bool                   `protobuf:"varint,4,opt,name=is_read,json=isRead,proto3" json:"is_read,omitempty"`
+	Link          string                 `protobuf:"bytes,5,opt,name=link,proto3" json:"link,omitempty"`
+	SenderId      string                 `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SenderName    string                 `protobuf:"bytes,7,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
+	CreatedTime   string                 `protobuf:"bytes,8,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
+	ReadTime      string                 `protobuf:"bytes,9,opt,name=read_time,json=readTime,proto3" json:"read_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SiteMessageItem) Reset() {
+	*x = SiteMessageItem{}
+	mi := &file_common_service_v1_common_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SiteMessageItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SiteMessageItem) ProtoMessage() {}
+
+func (x *SiteMessageItem) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SiteMessageItem.ProtoReflect.Descriptor instead.
+func (*SiteMessageItem) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *SiteMessageItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetIsRead() bool {
+	if x != nil {
+		return x.IsRead
+	}
+	return false
+}
+
+func (x *SiteMessageItem) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetSenderId() string {
+	if x != nil {
+		return x.SenderId
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetCreatedTime() string {
+	if x != nil {
+		return x.CreatedTime
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetReadTime() string {
+	if x != nil {
+		return x.ReadTime
+	}
+	return ""
+}
+
+type GetMySiteMessageListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*SiteMessageItem     `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageListReply) Reset() {
+	*x = GetMySiteMessageListReply{}
+	mi := &file_common_service_v1_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageListReply) ProtoMessage() {}
+
+func (x *GetMySiteMessageListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageListReply.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageListReply) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetMySiteMessageListReply) GetItems() []*SiteMessageItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetMySiteMessageListReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type GetMySiteMessageUnreadCountReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UnreadCount   int64                  `protobuf:"varint,1,opt,name=unread_count,json=unreadCount,proto3" json:"unread_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMySiteMessageUnreadCountReply) Reset() {
+	*x = GetMySiteMessageUnreadCountReply{}
+	mi := &file_common_service_v1_common_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMySiteMessageUnreadCountReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMySiteMessageUnreadCountReply) ProtoMessage() {}
+
+func (x *GetMySiteMessageUnreadCountReply) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMySiteMessageUnreadCountReply.ProtoReflect.Descriptor instead.
+func (*GetMySiteMessageUnreadCountReply) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetMySiteMessageUnreadCountReply) GetUnreadCount() int64 {
+	if x != nil {
+		return x.UnreadCount
+	}
+	return 0
+}
+
+type MarkSiteMessageReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     string                 `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkSiteMessageReadRequest) Reset() {
+	*x = MarkSiteMessageReadRequest{}
+	mi := &file_common_service_v1_common_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkSiteMessageReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkSiteMessageReadRequest) ProtoMessage() {}
+
+func (x *MarkSiteMessageReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkSiteMessageReadRequest.ProtoReflect.Descriptor instead.
+func (*MarkSiteMessageReadRequest) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *MarkSiteMessageReadRequest) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+type MarkAllSiteMessagesReadReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UpdatedCount  int64                  `protobuf:"varint,1,opt,name=updated_count,json=updatedCount,proto3" json:"updated_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkAllSiteMessagesReadReply) Reset() {
+	*x = MarkAllSiteMessagesReadReply{}
+	mi := &file_common_service_v1_common_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkAllSiteMessagesReadReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkAllSiteMessagesReadReply) ProtoMessage() {}
+
+func (x *MarkAllSiteMessagesReadReply) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkAllSiteMessagesReadReply.ProtoReflect.Descriptor instead.
+func (*MarkAllSiteMessagesReadReply) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *MarkAllSiteMessagesReadReply) GetUpdatedCount() int64 {
+	if x != nil {
+		return x.UpdatedCount
+	}
+	return 0
+}
+
+type GetSiteMessageManageListParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSiteMessageManageListParams) Reset() {
+	*x = GetSiteMessageManageListParams{}
+	mi := &file_common_service_v1_common_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSiteMessageManageListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSiteMessageManageListParams) ProtoMessage() {}
+
+func (x *GetSiteMessageManageListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSiteMessageManageListParams.ProtoReflect.Descriptor instead.
+func (*GetSiteMessageManageListParams) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetSiteMessageManageListParams) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *GetSiteMessageManageListParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetSiteMessageManageListParams) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type SiteMessageManageItem struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Status               string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	ReceiverCount        int64                  `protobuf:"varint,5,opt,name=receiver_count,json=receiverCount,proto3" json:"receiver_count,omitempty"`
+	Link                 string                 `protobuf:"bytes,6,opt,name=link,proto3" json:"link,omitempty"`
+	SenderId             string                 `protobuf:"bytes,7,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SenderName           string                 `protobuf:"bytes,8,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
+	CreatedTime          string                 `protobuf:"bytes,9,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
+	UpdatedTime          string                 `protobuf:"bytes,10,opt,name=updated_time,json=updatedTime,proto3" json:"updated_time,omitempty"`
+	ScheduledPublishTime string                 `protobuf:"bytes,11,opt,name=scheduled_publish_time,json=scheduledPublishTime,proto3" json:"scheduled_publish_time,omitempty"`
+	PublishedTime        string                 `protobuf:"bytes,12,opt,name=published_time,json=publishedTime,proto3" json:"published_time,omitempty"`
+	RecalledTime         string                 `protobuf:"bytes,13,opt,name=recalled_time,json=recalledTime,proto3" json:"recalled_time,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *SiteMessageManageItem) Reset() {
+	*x = SiteMessageManageItem{}
+	mi := &file_common_service_v1_common_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SiteMessageManageItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SiteMessageManageItem) ProtoMessage() {}
+
+func (x *SiteMessageManageItem) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SiteMessageManageItem.ProtoReflect.Descriptor instead.
+func (*SiteMessageManageItem) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SiteMessageManageItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetReceiverCount() int64 {
+	if x != nil {
+		return x.ReceiverCount
+	}
+	return 0
+}
+
+func (x *SiteMessageManageItem) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetSenderId() string {
+	if x != nil {
+		return x.SenderId
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetCreatedTime() string {
+	if x != nil {
+		return x.CreatedTime
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetUpdatedTime() string {
+	if x != nil {
+		return x.UpdatedTime
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetPublishedTime() string {
+	if x != nil {
+		return x.PublishedTime
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetRecalledTime() string {
+	if x != nil {
+		return x.RecalledTime
+	}
+	return ""
+}
+
+type GetSiteMessageManageListReply struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Items         []*SiteMessageManageItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                    `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSiteMessageManageListReply) Reset() {
+	*x = GetSiteMessageManageListReply{}
+	mi := &file_common_service_v1_common_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSiteMessageManageListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSiteMessageManageListReply) ProtoMessage() {}
+
+func (x *GetSiteMessageManageListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSiteMessageManageListReply.ProtoReflect.Descriptor instead.
+func (*GetSiteMessageManageListReply) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetSiteMessageManageListReply) GetItems() []*SiteMessageManageItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetSiteMessageManageListReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type CreateSiteMessageRequest struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Category             string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
+	Link                 string                 `protobuf:"bytes,5,opt,name=link,proto3" json:"link,omitempty"`
+	Action               string                 `protobuf:"bytes,6,opt,name=action,proto3" json:"action,omitempty"`
+	ScheduledPublishTime string                 `protobuf:"bytes,7,opt,name=scheduled_publish_time,json=scheduledPublishTime,proto3" json:"scheduled_publish_time,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CreateSiteMessageRequest) Reset() {
+	*x = CreateSiteMessageRequest{}
+	mi := &file_common_service_v1_common_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSiteMessageRequest) ProtoMessage() {}
+
+func (x *CreateSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*CreateSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *CreateSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetLink() string {
+	if x != nil {
+		return x.Link
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageRequest) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+type CreateSiteMessageReply struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	ReceiverCount        int64                  `protobuf:"varint,2,opt,name=receiver_count,json=receiverCount,proto3" json:"receiver_count,omitempty"`
+	Status               string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	ScheduledPublishTime string                 `protobuf:"bytes,4,opt,name=scheduled_publish_time,json=scheduledPublishTime,proto3" json:"scheduled_publish_time,omitempty"`
+	PublishedTime        string                 `protobuf:"bytes,5,opt,name=published_time,json=publishedTime,proto3" json:"published_time,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CreateSiteMessageReply) Reset() {
+	*x = CreateSiteMessageReply{}
+	mi := &file_common_service_v1_common_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateSiteMessageReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateSiteMessageReply) ProtoMessage() {}
+
+func (x *CreateSiteMessageReply) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateSiteMessageReply.ProtoReflect.Descriptor instead.
+func (*CreateSiteMessageReply) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *CreateSiteMessageReply) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetReceiverCount() int64 {
+	if x != nil {
+		return x.ReceiverCount
+	}
+	return 0
+}
+
+func (x *CreateSiteMessageReply) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetScheduledPublishTime() string {
+	if x != nil {
+		return x.ScheduledPublishTime
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetPublishedTime() string {
+	if x != nil {
+		return x.PublishedTime
+	}
+	return ""
+}
+
+type RecallSiteMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecallSiteMessageRequest) Reset() {
+	*x = RecallSiteMessageRequest{}
+	mi := &file_common_service_v1_common_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecallSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecallSiteMessageRequest) ProtoMessage() {}
+
+func (x *RecallSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecallSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*RecallSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *RecallSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeletePendingSiteMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePendingSiteMessageRequest) Reset() {
+	*x = DeletePendingSiteMessageRequest{}
+	mi := &file_common_service_v1_common_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePendingSiteMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePendingSiteMessageRequest) ProtoMessage() {}
+
+func (x *DeletePendingSiteMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_service_v1_common_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePendingSiteMessageRequest.ProtoReflect.Descriptor instead.
+func (*DeletePendingSiteMessageRequest) Descriptor() ([]byte, []int) {
+	return file_common_service_v1_common_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DeletePendingSiteMessageRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_common_service_v1_common_proto protoreflect.FileDescriptor
 
 const file_common_service_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x1ecommon/service/v1/common.proto\x12\x15api.common.service.v1\x1a\x1bgoogle/protobuf/empty.proto\"9\n" +
+	"\x1ecommon/service/v1/common.proto\x12\x15api.common.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"9\n" +
 	"\rWalkRouteItem\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12\x16\n" +
 	"\x06method\x18\x02 \x01(\tR\x06method\"O\n" +
 	"\x11GetWalkRouteReply\x12:\n" +
-	"\x05items\x18\x01 \x03(\v2$.api.common.service.v1.WalkRouteItemR\x05items2a\n" +
+	"\x05items\x18\x01 \x03(\v2$.api.common.service.v1.WalkRouteItemR\x05items\"}\n" +
+	"\x1aGetMySiteMessageListParams\x12!\n" +
+	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1f\n" +
+	"\vread_status\x18\x03 \x01(\x05R\n" +
+	"readStatus\"\xfc\x01\n" +
+	"\x0fSiteMessageItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x17\n" +
+	"\ais_read\x18\x04 \x01(\bR\x06isRead\x12\x12\n" +
+	"\x04link\x18\x05 \x01(\tR\x04link\x12\x1b\n" +
+	"\tsender_id\x18\x06 \x01(\tR\bsenderId\x12\x1f\n" +
+	"\vsender_name\x18\a \x01(\tR\n" +
+	"senderName\x12!\n" +
+	"\fcreated_time\x18\b \x01(\tR\vcreatedTime\x12\x1b\n" +
+	"\tread_time\x18\t \x01(\tR\breadTime\"o\n" +
+	"\x19GetMySiteMessageListReply\x12<\n" +
+	"\x05items\x18\x01 \x03(\v2&.api.common.service.v1.SiteMessageItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"E\n" +
+	" GetMySiteMessageUnreadCountReply\x12!\n" +
+	"\funread_count\x18\x01 \x01(\x03R\vunreadCount\";\n" +
+	"\x1aMarkSiteMessageReadRequest\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\"C\n" +
+	"\x1cMarkAllSiteMessagesReadReply\x12#\n" +
+	"\rupdated_count\x18\x01 \x01(\x03R\fupdatedCount\"x\n" +
+	"\x1eGetSiteMessageManageListParams\x12!\n" +
+	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\"\xb0\x03\n" +
+	"\x15SiteMessageManageItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12%\n" +
+	"\x0ereceiver_count\x18\x05 \x01(\x03R\rreceiverCount\x12\x12\n" +
+	"\x04link\x18\x06 \x01(\tR\x04link\x12\x1b\n" +
+	"\tsender_id\x18\a \x01(\tR\bsenderId\x12\x1f\n" +
+	"\vsender_name\x18\b \x01(\tR\n" +
+	"senderName\x12!\n" +
+	"\fcreated_time\x18\t \x01(\tR\vcreatedTime\x12!\n" +
+	"\fupdated_time\x18\n" +
+	" \x01(\tR\vupdatedTime\x124\n" +
+	"\x16scheduled_publish_time\x18\v \x01(\tR\x14scheduledPublishTime\x12%\n" +
+	"\x0epublished_time\x18\f \x01(\tR\rpublishedTime\x12#\n" +
+	"\rrecalled_time\x18\r \x01(\tR\frecalledTime\"y\n" +
+	"\x1dGetSiteMessageManageListReply\x12B\n" +
+	"\x05items\x18\x01 \x03(\v2,.api.common.service.v1.SiteMessageManageItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xd8\x01\n" +
+	"\x18CreateSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x12\n" +
+	"\x04link\x18\x05 \x01(\tR\x04link\x12\x16\n" +
+	"\x06action\x18\x06 \x01(\tR\x06action\x124\n" +
+	"\x16scheduled_publish_time\x18\a \x01(\tR\x14scheduledPublishTime\"\xc4\x01\n" +
+	"\x16CreateSiteMessageReply\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12%\n" +
+	"\x0ereceiver_count\x18\x02 \x01(\x03R\rreceiverCount\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\x124\n" +
+	"\x16scheduled_publish_time\x18\x04 \x01(\tR\x14scheduledPublishTime\x12%\n" +
+	"\x0epublished_time\x18\x05 \x01(\tR\rpublishedTime\"*\n" +
+	"\x18RecallSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"1\n" +
+	"\x1fDeletePendingSiteMessageRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id2\xaa\f\n" +
 	"\rCommonService\x12P\n" +
-	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a(.api.common.service.v1.GetWalkRouteReplyBF\n" +
+	"\fGetWalkRoute\x12\x16.google.protobuf.Empty\x1a(.api.common.service.v1.GetWalkRouteReply\x12\xa4\x01\n" +
+	"\x14GetMySiteMessageList\x121.api.common.service.v1.GetMySiteMessageListParams\x1a0.api.common.service.v1.GetMySiteMessageListReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/common-api/v1/site-messages/my\x12\xa4\x01\n" +
+	"\x1bGetMySiteMessageUnreadCount\x12\x16.google.protobuf.Empty\x1a7.api.common.service.v1.GetMySiteMessageUnreadCountReply\"4\x82\xd3\xe4\x93\x02.\x12,/common-api/v1/site-messages/my/unread-count\x12\x9e\x01\n" +
+	"\x13MarkSiteMessageRead\x121.api.common.service.v1.MarkSiteMessageReadRequest\x1a\x16.google.protobuf.Empty\"<\x82\xd3\xe4\x93\x026:\x01*\"1/common-api/v1/site-messages/my/{message_id}/read\x12\xa2\x01\n" +
+	"\x15MarkSiteMessageUnread\x121.api.common.service.v1.MarkSiteMessageReadRequest\x1a\x16.google.protobuf.Empty\">\x82\xd3\xe4\x93\x028:\x01*\"3/common-api/v1/site-messages/my/{message_id}/unread\x12\x9b\x01\n" +
+	"\x17MarkAllSiteMessagesRead\x12\x16.google.protobuf.Empty\x1a3.api.common.service.v1.MarkAllSiteMessagesReadReply\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/common-api/v1/site-messages/my/read-all\x12\xb4\x01\n" +
+	"\x18GetSiteMessageManageList\x125.api.common.service.v1.GetSiteMessageManageListParams\x1a4.api.common.service.v1.GetSiteMessageManageListReply\"+\x82\xd3\xe4\x93\x02%\x12#/common-api/v1/site-messages/manage\x12\xa3\x01\n" +
+	"\x11CreateSiteMessage\x12/.api.common.service.v1.CreateSiteMessageRequest\x1a-.api.common.service.v1.CreateSiteMessageReply\".\x82\xd3\xe4\x93\x02(:\x01*\"#/common-api/v1/site-messages/manage\x12\x98\x01\n" +
+	"\x11RecallSiteMessage\x12/.api.common.service.v1.RecallSiteMessageRequest\x1a\x16.google.protobuf.Empty\":\x82\xd3\xe4\x93\x024:\x01*\"//common-api/v1/site-messages/manage/{id}/recall\x12\x9c\x01\n" +
+	"\x18DeletePendingSiteMessage\x126.api.common.service.v1.DeletePendingSiteMessageRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02**(/common-api/v1/site-messages/manage/{id}BF\n" +
 	"\x15api.common.service.v1P\x01Z+base-server/api/gen/go/common/service/v1;v1b\x06proto3"
 
 var (
@@ -144,21 +1081,54 @@ func file_common_service_v1_common_proto_rawDescGZIP() []byte {
 	return file_common_service_v1_common_proto_rawDescData
 }
 
-var file_common_service_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_common_service_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_common_service_v1_common_proto_goTypes = []any{
-	(*WalkRouteItem)(nil),     // 0: api.common.service.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil), // 1: api.common.service.v1.GetWalkRouteReply
-	(*emptypb.Empty)(nil),     // 2: google.protobuf.Empty
+	(*WalkRouteItem)(nil),                    // 0: api.common.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),                // 1: api.common.service.v1.GetWalkRouteReply
+	(*GetMySiteMessageListParams)(nil),       // 2: api.common.service.v1.GetMySiteMessageListParams
+	(*SiteMessageItem)(nil),                  // 3: api.common.service.v1.SiteMessageItem
+	(*GetMySiteMessageListReply)(nil),        // 4: api.common.service.v1.GetMySiteMessageListReply
+	(*GetMySiteMessageUnreadCountReply)(nil), // 5: api.common.service.v1.GetMySiteMessageUnreadCountReply
+	(*MarkSiteMessageReadRequest)(nil),       // 6: api.common.service.v1.MarkSiteMessageReadRequest
+	(*MarkAllSiteMessagesReadReply)(nil),     // 7: api.common.service.v1.MarkAllSiteMessagesReadReply
+	(*GetSiteMessageManageListParams)(nil),   // 8: api.common.service.v1.GetSiteMessageManageListParams
+	(*SiteMessageManageItem)(nil),            // 9: api.common.service.v1.SiteMessageManageItem
+	(*GetSiteMessageManageListReply)(nil),    // 10: api.common.service.v1.GetSiteMessageManageListReply
+	(*CreateSiteMessageRequest)(nil),         // 11: api.common.service.v1.CreateSiteMessageRequest
+	(*CreateSiteMessageReply)(nil),           // 12: api.common.service.v1.CreateSiteMessageReply
+	(*RecallSiteMessageRequest)(nil),         // 13: api.common.service.v1.RecallSiteMessageRequest
+	(*DeletePendingSiteMessageRequest)(nil),  // 14: api.common.service.v1.DeletePendingSiteMessageRequest
+	(*emptypb.Empty)(nil),                    // 15: google.protobuf.Empty
 }
 var file_common_service_v1_common_proto_depIdxs = []int32{
-	0, // 0: api.common.service.v1.GetWalkRouteReply.items:type_name -> api.common.service.v1.WalkRouteItem
-	2, // 1: api.common.service.v1.CommonService.GetWalkRoute:input_type -> google.protobuf.Empty
-	1, // 2: api.common.service.v1.CommonService.GetWalkRoute:output_type -> api.common.service.v1.GetWalkRouteReply
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0,  // 0: api.common.service.v1.GetWalkRouteReply.items:type_name -> api.common.service.v1.WalkRouteItem
+	3,  // 1: api.common.service.v1.GetMySiteMessageListReply.items:type_name -> api.common.service.v1.SiteMessageItem
+	9,  // 2: api.common.service.v1.GetSiteMessageManageListReply.items:type_name -> api.common.service.v1.SiteMessageManageItem
+	15, // 3: api.common.service.v1.CommonService.GetWalkRoute:input_type -> google.protobuf.Empty
+	2,  // 4: api.common.service.v1.CommonService.GetMySiteMessageList:input_type -> api.common.service.v1.GetMySiteMessageListParams
+	15, // 5: api.common.service.v1.CommonService.GetMySiteMessageUnreadCount:input_type -> google.protobuf.Empty
+	6,  // 6: api.common.service.v1.CommonService.MarkSiteMessageRead:input_type -> api.common.service.v1.MarkSiteMessageReadRequest
+	6,  // 7: api.common.service.v1.CommonService.MarkSiteMessageUnread:input_type -> api.common.service.v1.MarkSiteMessageReadRequest
+	15, // 8: api.common.service.v1.CommonService.MarkAllSiteMessagesRead:input_type -> google.protobuf.Empty
+	8,  // 9: api.common.service.v1.CommonService.GetSiteMessageManageList:input_type -> api.common.service.v1.GetSiteMessageManageListParams
+	11, // 10: api.common.service.v1.CommonService.CreateSiteMessage:input_type -> api.common.service.v1.CreateSiteMessageRequest
+	13, // 11: api.common.service.v1.CommonService.RecallSiteMessage:input_type -> api.common.service.v1.RecallSiteMessageRequest
+	14, // 12: api.common.service.v1.CommonService.DeletePendingSiteMessage:input_type -> api.common.service.v1.DeletePendingSiteMessageRequest
+	1,  // 13: api.common.service.v1.CommonService.GetWalkRoute:output_type -> api.common.service.v1.GetWalkRouteReply
+	4,  // 14: api.common.service.v1.CommonService.GetMySiteMessageList:output_type -> api.common.service.v1.GetMySiteMessageListReply
+	5,  // 15: api.common.service.v1.CommonService.GetMySiteMessageUnreadCount:output_type -> api.common.service.v1.GetMySiteMessageUnreadCountReply
+	15, // 16: api.common.service.v1.CommonService.MarkSiteMessageRead:output_type -> google.protobuf.Empty
+	15, // 17: api.common.service.v1.CommonService.MarkSiteMessageUnread:output_type -> google.protobuf.Empty
+	7,  // 18: api.common.service.v1.CommonService.MarkAllSiteMessagesRead:output_type -> api.common.service.v1.MarkAllSiteMessagesReadReply
+	10, // 19: api.common.service.v1.CommonService.GetSiteMessageManageList:output_type -> api.common.service.v1.GetSiteMessageManageListReply
+	12, // 20: api.common.service.v1.CommonService.CreateSiteMessage:output_type -> api.common.service.v1.CreateSiteMessageReply
+	15, // 21: api.common.service.v1.CommonService.RecallSiteMessage:output_type -> google.protobuf.Empty
+	15, // 22: api.common.service.v1.CommonService.DeletePendingSiteMessage:output_type -> google.protobuf.Empty
+	13, // [13:23] is the sub-list for method output_type
+	3,  // [3:13] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_common_service_v1_common_proto_init() }
@@ -172,7 +1142,7 @@ func file_common_service_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_service_v1_common_proto_rawDesc), len(file_common_service_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -1,11 +1,35 @@
 package biz
 
-import "github.com/google/wire"
+import (
+	"context"
+
+	v1 "base-server/api/gen/go/common/service/v1"
+	"base-server/pkg/data/ent"
+	"github.com/google/wire"
+)
 
 // ProviderSet is biz providers.
 var ProviderSet = wire.NewSet(NewCommonUsecase)
 
-type CommonRepo interface{}
+type SiteMessageEnvelope struct {
+	Message *ent.SiteMessage
+	Receipt *ent.SiteMessageReceipt
+}
+
+type CommonRepo interface {
+	GetUserDisplayName(context.Context, string) (string, error)
+	GetUserRoleValues(context.Context, string) ([]string, error)
+	CreateSiteMessage(context.Context, string, string, *v1.CreateSiteMessageRequest) (*ent.SiteMessage, error)
+	GetMySiteMessageList(context.Context, string, *v1.GetMySiteMessageListParams) ([]*SiteMessageEnvelope, int64, error)
+	GetMySiteMessageUnreadCount(context.Context, string) (int64, error)
+	MarkSiteMessageRead(context.Context, string, string) error
+	MarkSiteMessageUnread(context.Context, string, string) error
+	MarkAllSiteMessagesRead(context.Context, string) (int64, error)
+	GetSiteMessageManageList(context.Context, *v1.GetSiteMessageManageListParams) ([]*ent.SiteMessage, int64, error)
+	RecallSiteMessage(context.Context, string) error
+	DeletePendingSiteMessage(context.Context, string) error
+	PromoteDueScheduledSiteMessages(context.Context) error
+}
 
 type CommonUsecase struct {
 	repo CommonRepo

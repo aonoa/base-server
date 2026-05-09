@@ -30,6 +30,12 @@ type Role func(*sql.Selector)
 // ServiceRegistry is the predicate function for serviceregistry builders.
 type ServiceRegistry func(*sql.Selector)
 
+// SiteMessage is the predicate function for sitemessage builders.
+type SiteMessage func(*sql.Selector)
+
+// SiteMessageReceipt is the predicate function for sitemessagereceipt builders.
+type SiteMessageReceipt func(*sql.Selector)
+
 // SysLogRecord is the predicate function for syslogrecord builders.
 type SysLogRecord func(*sql.Selector)
 

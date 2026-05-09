@@ -50,7 +50,7 @@ base-server/
 | auth | `app/auth/service/cmd/service/main.go` | `app/auth/service/configs` | `auth` | `/auth-api/v1/*` | 登录、刷新 token、授权投影执行、Casbin |
 | user | `app/user/service/cmd/service/main.go` | `app/user/service/configs` | `user` | `/user-api/v1/*` | 用户 CRUD、用户认证信息、密码 |
 | admin | `app/admin/service/cmd/service/main.go` | `app/admin/service/configs` | `admin` | `/admin-api/v1/*` | 菜单、角色、资源、API 目录、部门、日志、平台治理、投影源状态 |
-| common | `app/common/service/cmd/service/main.go` | `app/common/service/configs` | `common` | `/common-api/v1/*` | 文件上传、Copilot SSE、通用能力 |
+| common | `app/common/service/cmd/service/main.go` | `app/common/service/configs` | `common` | `/common-api/v1/*` | 文件上传、Copilot SSE、站内信、通用能力 |
 
 ## 4. 共享层边界
 
@@ -165,7 +165,7 @@ make frontend-api
 - gateway 的 HTTP 统一入口是 `:8000`
 - OpenAPI 同步入口是 `make frontend-api`
 - `common` 服务的数据层仍偏骨架化，目前没有与 `admin` 同量级的治理主数据
-- 这条 `monorepo` 版本线当前没有站内信模块
+- `common` 服务当前已承载站内信收件箱 / 发布记录能力，并通过内部 gRPC 依赖 `user`、`admin` 服务补足收件人和角色校验
 
 ## 8. 配套文档
 

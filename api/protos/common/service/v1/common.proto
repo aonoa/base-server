@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package api.common.service.v1;
 
+import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "base-server/api/gen/go/common/service/v1;v1";
@@ -10,6 +11,65 @@ option java_package = "api.common.service.v1";
 
 service CommonService {
   rpc GetWalkRoute(google.protobuf.Empty) returns (GetWalkRouteReply);
+
+  rpc GetMySiteMessageList(GetMySiteMessageListParams) returns (GetMySiteMessageListReply) {
+    option (google.api.http) = {
+      get: "/common-api/v1/site-messages/my"
+    };
+  }
+
+  rpc GetMySiteMessageUnreadCount(google.protobuf.Empty) returns (GetMySiteMessageUnreadCountReply) {
+    option (google.api.http) = {
+      get: "/common-api/v1/site-messages/my/unread-count"
+    };
+  }
+
+  rpc MarkSiteMessageRead(MarkSiteMessageReadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/common-api/v1/site-messages/my/{message_id}/read"
+      body: "*"
+    };
+  }
+
+  rpc MarkSiteMessageUnread(MarkSiteMessageReadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/common-api/v1/site-messages/my/{message_id}/unread"
+      body: "*"
+    };
+  }
+
+  rpc MarkAllSiteMessagesRead(google.protobuf.Empty) returns (MarkAllSiteMessagesReadReply) {
+    option (google.api.http) = {
+      post: "/common-api/v1/site-messages/my/read-all"
+      body: "*"
+    };
+  }
+
+  rpc GetSiteMessageManageList(GetSiteMessageManageListParams) returns (GetSiteMessageManageListReply) {
+    option (google.api.http) = {
+      get: "/common-api/v1/site-messages/manage"
+    };
+  }
+
+  rpc CreateSiteMessage(CreateSiteMessageRequest) returns (CreateSiteMessageReply) {
+    option (google.api.http) = {
+      post: "/common-api/v1/site-messages/manage"
+      body: "*"
+    };
+  }
+
+  rpc RecallSiteMessage(RecallSiteMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/common-api/v1/site-messages/manage/{id}/recall"
+      body: "*"
+    };
+  }
+
+  rpc DeletePendingSiteMessage(DeletePendingSiteMessageRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/common-api/v1/site-messages/manage/{id}"
+    };
+  }
 }
 
 message WalkRouteItem {
@@ -19,4 +79,92 @@ message WalkRouteItem {
 
 message GetWalkRouteReply {
   repeated WalkRouteItem items = 1;
+}
+
+message GetMySiteMessageListParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  int32 read_status = 3;
+}
+
+message SiteMessageItem {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  bool is_read = 4;
+  string link = 5;
+  string sender_id = 6;
+  string sender_name = 7;
+  string created_time = 8;
+  string read_time = 9;
+}
+
+message GetMySiteMessageListReply {
+  repeated SiteMessageItem items = 1;
+  int64 total = 2;
+}
+
+message GetMySiteMessageUnreadCountReply {
+  int64 unread_count = 1;
+}
+
+message MarkSiteMessageReadRequest {
+  string message_id = 1;
+}
+
+message MarkAllSiteMessagesReadReply {
+  int64 updated_count = 1;
+}
+
+message GetSiteMessageManageListParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string status = 3;
+}
+
+message SiteMessageManageItem {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string status = 4;
+  int64 receiver_count = 5;
+  string link = 6;
+  string sender_id = 7;
+  string sender_name = 8;
+  string created_time = 9;
+  string updated_time = 10;
+  string scheduled_publish_time = 11;
+  string published_time = 12;
+  string recalled_time = 13;
+}
+
+message GetSiteMessageManageListReply {
+  repeated SiteMessageManageItem items = 1;
+  int64 total = 2;
+}
+
+message CreateSiteMessageRequest {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string category = 4;
+  string link = 5;
+  string action = 6;
+  string scheduled_publish_time = 7;
+}
+
+message CreateSiteMessageReply {
+  string id = 1;
+  int64 receiver_count = 2;
+  string status = 3;
+  string scheduled_publish_time = 4;
+  string published_time = 5;
+}
+
+message RecallSiteMessageRequest {
+  string id = 1;
+}
+
+message DeletePendingSiteMessageRequest {
+  string id = 1;
 }

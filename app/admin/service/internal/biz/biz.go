@@ -105,6 +105,9 @@ func (uc *AdminUsecase) RegisterPermissionSnapshot(ctx context.Context) error {
 	if err := uc.repo.EnsurePermissionBootstrap(ctx); err != nil {
 		return err
 	}
+	if err := uc.ensureBuiltinSiteMessageBootstrap(ctx); err != nil {
+		return err
+	}
 	if err := uc.repo.RegisterPermissionSnapshot(ctx); err != nil {
 		return err
 	}
@@ -245,6 +248,9 @@ func (uc *AdminUsecase) GetRoleList(ctx context.Context, req *v1.RolePageParams)
 }
 
 func (uc *AdminUsecase) AddRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
+	if err := uc.normalizeSiteMessageRoleRequest(ctx, req); err != nil {
+		return nil, err
+	}
 	roleItem, err := uc.repo.AddRole(ctx, req)
 	if err != nil {
 		return nil, err
@@ -265,6 +271,9 @@ func (uc *AdminUsecase) AddRole(ctx context.Context, req *v1.RoleListItem) (*v1.
 func (uc *AdminUsecase) UpdateRole(ctx context.Context, req *v1.RoleListItem) (*v1.RoleListItem, error) {
 	roleID, err := strconv.ParseInt(req.Id, 10, 64)
 	if err != nil {
+		return nil, err
+	}
+	if err := uc.normalizeSiteMessageRoleRequest(ctx, req); err != nil {
 		return nil, err
 	}
 	before, err := uc.loadRoleWithResources(ctx, roleID)

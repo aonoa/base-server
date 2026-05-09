@@ -28,6 +28,10 @@ type Tx struct {
 	Role *RoleClient
 	// ServiceRegistry is the client for interacting with the ServiceRegistry builders.
 	ServiceRegistry *ServiceRegistryClient
+	// SiteMessage is the client for interacting with the SiteMessage builders.
+	SiteMessage *SiteMessageClient
+	// SiteMessageReceipt is the client for interacting with the SiteMessageReceipt builders.
+	SiteMessageReceipt *SiteMessageReceiptClient
 	// SysLogRecord is the client for interacting with the SysLogRecord builders.
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
@@ -173,6 +177,8 @@ func (tx *Tx) init() {
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.ServiceRegistry = NewServiceRegistryClient(tx.config)
+	tx.SiteMessage = NewSiteMessageClient(tx.config)
+	tx.SiteMessageReceipt = NewSiteMessageReceiptClient(tx.config)
 	tx.SysLogRecord = NewSysLogRecordClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserRoleBinding = NewUserRoleBindingClient(tx.config)

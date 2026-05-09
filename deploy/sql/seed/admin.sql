@@ -49,9 +49,9 @@ ON CONFLICT (service_code) DO UPDATE SET
 
 INSERT INTO sys_role (id, create_time, update_time, name, value, status, "desc", menus)
 VALUES
-  (0, '2025-02-25 00:00:39.255+08', '2025-11-01 16:31:19.080417+08', '默认角色', 'default', true, '', '[10, 11, 12, 13, 14, 15]'),
+  (0, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '默认角色', 'default', true, '', '[10, 11, 12, 13, 14, 15, 24]'),
   (1, '2025-02-25 00:00:39.255+08', '2025-08-22 00:47:56.788297+08', '超级管理员', 'root', true, '在系统层就拥有全部权限，不用设置', 'null'),
-  (2, '2025-02-25 00:00:39.255+08', '2025-08-22 00:48:34.778634+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 21, 22, 23]')
+  (2, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 21, 22, 23, 24, 25]')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -70,6 +70,7 @@ VALUES
   ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', '2025-08-06 21:29:31.728041+08', '2025-08-20 19:03:27.329457+08', '基础api组', 'api', 'default', '(GET|POST|PUT|DELETE)', ''),
   ('a3e1fca5-e7ab-41f2-b7a9-2ab46f3640ea', '2025-08-06 22:08:19.563908+08', '2025-08-06 22:08:19.563908+08', '系统管理api组', 'api', 'api', '(GET|POST|PUT|DELETE)', ''),
   ('d3213f61-23d8-4be3-a44a-63f49d8c6cec', '2025-08-06 22:09:52.787831+08', '2025-08-06 22:09:52.787831+08', '系统管理部门组', 'api', 'dept', '(GET|POST|PUT|DELETE)', ''),
+  ('9da89181-e2d3-4b7a-9860-a12badd4b415', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '站内信管理接口权限', 'api', 'site_message_manage', '(GET|POST|DELETE)', '站内信管理页接口权限'),
   ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', '2025-08-06 22:13:24.978161+08', '2025-08-06 22:13:24.978161+08', 'admin接口操作权限', 'api', 'admin', '(GET|POST|PUT|DELETE)', '')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
@@ -88,6 +89,8 @@ VALUES
   ('a3e1fca5-e7ab-41f2-b7a9-2ab46f3640ea', 2),
   ('7d6b49f5-3ef5-41e1-a4e5-0ccb96da5a95', 1),
   ('7d6b49f5-3ef5-41e1-a4e5-0ccb96da5a95', 2),
+  ('9da89181-e2d3-4b7a-9860-a12badd4b415', 1),
+  ('9da89181-e2d3-4b7a-9860-a12badd4b415', 2),
   ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', 1),
   ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', 2),
   ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', 0),
@@ -160,6 +163,15 @@ VALUES
   ('api-admin-platform-projection-source-report', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '上报投影源状态', '/admin-api/v1/platform/projection-sources/report/{source_service}', 'PUT', 'admin', '管理服务', 'admin'),
   ('api-admin-platform-projection-source-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除投影源状态', '/admin-api/v1/platform/projection-sources/{id}', 'DELETE', 'admin', '管理服务', 'admin'),
   ('api-admin-walk-route', '2026-03-28 00:00:00+08', '2026-03-28 00:00:00+08', '获取系统所有api接口', '/admin-api/v1/walk-routes', 'GET', 'admin', '系统管理', 'api'),
+  ('api-common-site-message-my-list', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信列表', '/common-api/v1/site-messages/my', 'GET', 'common', '公共服务', 'default'),
+  ('api-common-site-message-my-unread-count', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信未读数量', '/common-api/v1/site-messages/my/unread-count', 'GET', 'common', '公共服务', 'default'),
+  ('api-common-site-message-my-read', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '标记站内信已读', '/common-api/v1/site-messages/my/{message_id}/read', 'POST', 'common', '公共服务', 'default'),
+  ('api-common-site-message-my-unread', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '标记站内信未读', '/common-api/v1/site-messages/my/{message_id}/unread', 'POST', 'common', '公共服务', 'default'),
+  ('api-common-site-message-my-read-all', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '全部站内信标记已读', '/common-api/v1/site-messages/my/read-all', 'POST', 'common', '公共服务', 'default'),
+  ('api-common-site-message-manage-list', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取站内信发布记录', '/common-api/v1/site-messages/manage', 'GET', 'common', '公共服务', 'site_message_manage'),
+  ('api-common-site-message-manage-create', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '保存或发布站内信', '/common-api/v1/site-messages/manage', 'POST', 'common', '公共服务', 'site_message_manage'),
+  ('api-common-site-message-manage-recall', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '撤回站内信', '/common-api/v1/site-messages/manage/{id}/recall', 'POST', 'common', '公共服务', 'site_message_manage'),
+  ('api-common-site-message-manage-delete', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '删除未发布站内信', '/common-api/v1/site-messages/manage/{id}', 'DELETE', 'common', '公共服务', 'site_message_manage'),
   ('api-common-upload', '2025-08-04 15:16:13+08', '2025-08-04 15:23:14+08', '上传文件', '/common-api/v1/file/upload', 'POST', 'common', '公共服务', 'demo'),
   ('api-common-copilot-sse', '2025-08-04 15:16:20+08', '2025-08-04 15:23:20+08', 'Copilot SSE', '/common-api/v1/copilot/sse', 'POST', 'common', '公共服务', 'demo')
 ON CONFLICT (path, method) DO UPDATE SET
@@ -212,7 +224,11 @@ WHERE (path, method) IN (
   ('/admin-api/v1/platform/projection-sources/{id}', 'PUT'),
   ('/admin-api/v1/platform/projection-sources/report/{source_service}', 'PUT'),
   ('/admin-api/v1/platform/projection-sources/{id}', 'DELETE'),
-  ('/admin-api/v1/walk-routes', 'GET')
+  ('/admin-api/v1/walk-routes', 'GET'),
+  ('/common-api/v1/site-messages/manage', 'GET'),
+  ('/common-api/v1/site-messages/manage', 'POST'),
+  ('/common-api/v1/site-messages/manage/{id}/recall', 'POST'),
+  ('/common-api/v1/site-messages/manage/{id}', 'DELETE')
 )
 ON CONFLICT DO NOTHING;
 
@@ -261,7 +277,9 @@ VALUES
   (20, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 16, 'catalog', true, '/system/platform', '/system/platform/domain', '', 'Platform', '', 'carbon:cloud-service-management', '平台治理', 1004, false, false, false, '', '', '', '/system/platform', 0, false, true, '', false, 0, false, false, false, false, true, '', '', ''),
   (21, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/domain', '', '', 'BusinessDomain', '/system/platform/domain/index', 'carbon:network-4', '业务域管理', 1005, false, false, false, '', '', '', '/system/platform/domain', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (22, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/service', '', '', 'ServiceRegistry', '/system/platform/service/index', 'carbon:container-services', '服务注册', 1006, false, false, false, '', '', '', '/system/platform/service', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
-  (23, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/projection-source', '', '', 'ProjectionSource', '/system/platform/projection-source/index', 'carbon:data-check', '投影源状态', 1007, false, false, false, '', '', '', '/system/platform/projection-source', 0, false, true, '', false, 0, false, false, false, false, false, '', '', '')
+  (23, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/projection-source', '', '', 'ProjectionSource', '/system/platform/projection-source/index', 'carbon:data-check', '投影源状态', 1007, false, false, false, '', '', '', '/system/platform/projection-source', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
+  (24, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 0, 'menu', true, '/messages', '', '', 'SiteMessageInbox', '/_core/messages/inbox', 'lucide:mail', '站内信收件箱', 9999, false, false, false, '', '', '', '/messages', 0, false, false, '', false, 0, true, false, false, false, true, '', 'normal', 'success'),
+  (25, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 16, 'menu', true, '/system/site-message', '', '', 'SiteMessageManage', '/_core/messages/manage', 'lucide:mail', '站内信管理', 1008, false, false, false, '', '', '', '/system/site-message', 0, false, false, '', false, 0, false, false, false, false, true, '', 'normal', 'success')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -309,6 +327,6 @@ ON CONFLICT (user_id, role_id) DO UPDATE SET
 
 SELECT setval(pg_get_serial_sequence('sys_role', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_role), 0), 2), true);
 SELECT setval(pg_get_serial_sequence('sys_dept', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_dept), 0), 15), true);
-SELECT setval(pg_get_serial_sequence('sys_menu', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_menu), 0), 23), true);
+SELECT setval(pg_get_serial_sequence('sys_menu', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_menu), 0), 25), true);
 
 COMMIT;

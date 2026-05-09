@@ -11,6 +11,8 @@ import (
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/serviceregistry"
+	"base-server/pkg/data/ent/sitemessage"
+	"base-server/pkg/data/ent/sitemessagereceipt"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -91,6 +93,8 @@ func checkColumn(t, c string) error {
 			resource.Table:               resource.ValidColumn,
 			role.Table:                   role.ValidColumn,
 			serviceregistry.Table:        serviceregistry.ValidColumn,
+			sitemessage.Table:            sitemessage.ValidColumn,
+			sitemessagereceipt.Table:     sitemessagereceipt.ValidColumn,
 			syslogrecord.Table:           syslogrecord.ValidColumn,
 			user.Table:                   user.ValidColumn,
 			userrolebinding.Table:        userrolebinding.ValidColumn,

@@ -969,6 +969,180 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.common.service.v1.UploadResponse'
+    /common-api/v1/site-messages/manage:
+        get:
+            tags:
+                - CommonService
+            operationId: CommonService_GetSiteMessageManageList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.GetSiteMessageManageListReply'
+        post:
+            tags:
+                - CommonService
+            operationId: CommonService_CreateSiteMessage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.CreateSiteMessageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.CreateSiteMessageReply'
+    /common-api/v1/site-messages/manage/{id}:
+        delete:
+            tags:
+                - CommonService
+            operationId: CommonService_DeletePendingSiteMessage
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /common-api/v1/site-messages/manage/{id}/recall:
+        post:
+            tags:
+                - CommonService
+            operationId: CommonService_RecallSiteMessage
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.RecallSiteMessageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /common-api/v1/site-messages/my:
+        get:
+            tags:
+                - CommonService
+            operationId: CommonService_GetMySiteMessageList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: readStatus
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.GetMySiteMessageListReply'
+    /common-api/v1/site-messages/my/read-all:
+        post:
+            tags:
+                - CommonService
+            operationId: CommonService_MarkAllSiteMessagesRead
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.MarkAllSiteMessagesReadReply'
+    /common-api/v1/site-messages/my/unread-count:
+        get:
+            tags:
+                - CommonService
+            operationId: CommonService_GetMySiteMessageUnreadCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.common.service.v1.GetMySiteMessageUnreadCountReply'
+    /common-api/v1/site-messages/my/{messageId}/read:
+        post:
+            tags:
+                - CommonService
+            operationId: CommonService_MarkSiteMessageRead
+            parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.MarkSiteMessageReadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /common-api/v1/site-messages/my/{messageId}/unread:
+        post:
+            tags:
+                - CommonService
+            operationId: CommonService_MarkSiteMessageUnread
+            parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.common.service.v1.MarkSiteMessageReadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /user-api/v1/users:
         get:
             tags:
@@ -1640,6 +1814,36 @@ components:
             properties:
                 content:
                     type: string
+        api.common.service.v1.CreateSiteMessageReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                receiverCount:
+                    type: string
+                status:
+                    type: string
+                scheduledPublishTime:
+                    type: string
+                publishedTime:
+                    type: string
+        api.common.service.v1.CreateSiteMessageRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                category:
+                    type: string
+                link:
+                    type: string
+                action:
+                    type: string
+                scheduledPublishTime:
+                    type: string
         api.common.service.v1.File:
             type: object
             properties:
@@ -1649,6 +1853,39 @@ components:
                 fileName:
                     type: string
                 fileSize:
+                    type: string
+        api.common.service.v1.GetMySiteMessageListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.common.service.v1.SiteMessageItem'
+                total:
+                    type: string
+        api.common.service.v1.GetMySiteMessageUnreadCountReply:
+            type: object
+            properties:
+                unreadCount:
+                    type: string
+        api.common.service.v1.GetSiteMessageManageListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.common.service.v1.SiteMessageManageItem'
+                total:
+                    type: string
+        api.common.service.v1.MarkAllSiteMessagesReadReply:
+            type: object
+            properties:
+                updatedCount:
+                    type: string
+        api.common.service.v1.MarkSiteMessageReadRequest:
+            type: object
+            properties:
+                messageId:
                     type: string
         api.common.service.v1.Message:
             type: object
@@ -1664,6 +1901,61 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.common.service.v1.Message'
+        api.common.service.v1.RecallSiteMessageRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+        api.common.service.v1.SiteMessageItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                isRead:
+                    type: boolean
+                link:
+                    type: string
+                senderId:
+                    type: string
+                senderName:
+                    type: string
+                createdTime:
+                    type: string
+                readTime:
+                    type: string
+        api.common.service.v1.SiteMessageManageItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                content:
+                    type: string
+                status:
+                    type: string
+                receiverCount:
+                    type: string
+                link:
+                    type: string
+                senderId:
+                    type: string
+                senderName:
+                    type: string
+                createdTime:
+                    type: string
+                updatedTime:
+                    type: string
+                scheduledPublishTime:
+                    type: string
+                publishedTime:
+                    type: string
+                recalledTime:
+                    type: string
         api.common.service.v1.UploadResponse:
             type: object
             properties:
@@ -1741,6 +2033,7 @@ components:
 tags:
     - name: AdminService
     - name: AuthService
+    - name: CommonService
     - name: SSEService
     - name: UploadService
     - name: UserService

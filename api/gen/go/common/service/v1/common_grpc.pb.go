@@ -20,7 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CommonService_GetWalkRoute_FullMethodName = "/api.common.service.v1.CommonService/GetWalkRoute"
+	CommonService_GetWalkRoute_FullMethodName                = "/api.common.service.v1.CommonService/GetWalkRoute"
+	CommonService_GetMySiteMessageList_FullMethodName        = "/api.common.service.v1.CommonService/GetMySiteMessageList"
+	CommonService_GetMySiteMessageUnreadCount_FullMethodName = "/api.common.service.v1.CommonService/GetMySiteMessageUnreadCount"
+	CommonService_MarkSiteMessageRead_FullMethodName         = "/api.common.service.v1.CommonService/MarkSiteMessageRead"
+	CommonService_MarkSiteMessageUnread_FullMethodName       = "/api.common.service.v1.CommonService/MarkSiteMessageUnread"
+	CommonService_MarkAllSiteMessagesRead_FullMethodName     = "/api.common.service.v1.CommonService/MarkAllSiteMessagesRead"
+	CommonService_GetSiteMessageManageList_FullMethodName    = "/api.common.service.v1.CommonService/GetSiteMessageManageList"
+	CommonService_CreateSiteMessage_FullMethodName           = "/api.common.service.v1.CommonService/CreateSiteMessage"
+	CommonService_RecallSiteMessage_FullMethodName           = "/api.common.service.v1.CommonService/RecallSiteMessage"
+	CommonService_DeletePendingSiteMessage_FullMethodName    = "/api.common.service.v1.CommonService/DeletePendingSiteMessage"
 )
 
 // CommonServiceClient is the client API for CommonService service.
@@ -28,6 +37,15 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommonServiceClient interface {
 	GetWalkRoute(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetWalkRouteReply, error)
+	GetMySiteMessageList(ctx context.Context, in *GetMySiteMessageListParams, opts ...grpc.CallOption) (*GetMySiteMessageListReply, error)
+	GetMySiteMessageUnreadCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMySiteMessageUnreadCountReply, error)
+	MarkSiteMessageRead(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MarkSiteMessageUnread(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MarkAllSiteMessagesRead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MarkAllSiteMessagesReadReply, error)
+	GetSiteMessageManageList(ctx context.Context, in *GetSiteMessageManageListParams, opts ...grpc.CallOption) (*GetSiteMessageManageListReply, error)
+	CreateSiteMessage(ctx context.Context, in *CreateSiteMessageRequest, opts ...grpc.CallOption) (*CreateSiteMessageReply, error)
+	RecallSiteMessage(ctx context.Context, in *RecallSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeletePendingSiteMessage(ctx context.Context, in *DeletePendingSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type commonServiceClient struct {
@@ -48,11 +66,110 @@ func (c *commonServiceClient) GetWalkRoute(ctx context.Context, in *emptypb.Empt
 	return out, nil
 }
 
+func (c *commonServiceClient) GetMySiteMessageList(ctx context.Context, in *GetMySiteMessageListParams, opts ...grpc.CallOption) (*GetMySiteMessageListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMySiteMessageListReply)
+	err := c.cc.Invoke(ctx, CommonService_GetMySiteMessageList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) GetMySiteMessageUnreadCount(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMySiteMessageUnreadCountReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMySiteMessageUnreadCountReply)
+	err := c.cc.Invoke(ctx, CommonService_GetMySiteMessageUnreadCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) MarkSiteMessageRead(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CommonService_MarkSiteMessageRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) MarkSiteMessageUnread(ctx context.Context, in *MarkSiteMessageReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CommonService_MarkSiteMessageUnread_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) MarkAllSiteMessagesRead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*MarkAllSiteMessagesReadReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarkAllSiteMessagesReadReply)
+	err := c.cc.Invoke(ctx, CommonService_MarkAllSiteMessagesRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) GetSiteMessageManageList(ctx context.Context, in *GetSiteMessageManageListParams, opts ...grpc.CallOption) (*GetSiteMessageManageListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSiteMessageManageListReply)
+	err := c.cc.Invoke(ctx, CommonService_GetSiteMessageManageList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) CreateSiteMessage(ctx context.Context, in *CreateSiteMessageRequest, opts ...grpc.CallOption) (*CreateSiteMessageReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSiteMessageReply)
+	err := c.cc.Invoke(ctx, CommonService_CreateSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) RecallSiteMessage(ctx context.Context, in *RecallSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CommonService_RecallSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commonServiceClient) DeletePendingSiteMessage(ctx context.Context, in *DeletePendingSiteMessageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CommonService_DeletePendingSiteMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommonServiceServer is the server API for CommonService service.
 // All implementations must embed UnimplementedCommonServiceServer
 // for forward compatibility.
 type CommonServiceServer interface {
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
+	GetMySiteMessageList(context.Context, *GetMySiteMessageListParams) (*GetMySiteMessageListReply, error)
+	GetMySiteMessageUnreadCount(context.Context, *emptypb.Empty) (*GetMySiteMessageUnreadCountReply, error)
+	MarkSiteMessageRead(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
+	MarkSiteMessageUnread(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error)
+	MarkAllSiteMessagesRead(context.Context, *emptypb.Empty) (*MarkAllSiteMessagesReadReply, error)
+	GetSiteMessageManageList(context.Context, *GetSiteMessageManageListParams) (*GetSiteMessageManageListReply, error)
+	CreateSiteMessage(context.Context, *CreateSiteMessageRequest) (*CreateSiteMessageReply, error)
+	RecallSiteMessage(context.Context, *RecallSiteMessageRequest) (*emptypb.Empty, error)
+	DeletePendingSiteMessage(context.Context, *DeletePendingSiteMessageRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCommonServiceServer()
 }
 
@@ -65,6 +182,33 @@ type UnimplementedCommonServiceServer struct{}
 
 func (UnimplementedCommonServiceServer) GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalkRoute not implemented")
+}
+func (UnimplementedCommonServiceServer) GetMySiteMessageList(context.Context, *GetMySiteMessageListParams) (*GetMySiteMessageListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMySiteMessageList not implemented")
+}
+func (UnimplementedCommonServiceServer) GetMySiteMessageUnreadCount(context.Context, *emptypb.Empty) (*GetMySiteMessageUnreadCountReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMySiteMessageUnreadCount not implemented")
+}
+func (UnimplementedCommonServiceServer) MarkSiteMessageRead(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkSiteMessageRead not implemented")
+}
+func (UnimplementedCommonServiceServer) MarkSiteMessageUnread(context.Context, *MarkSiteMessageReadRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkSiteMessageUnread not implemented")
+}
+func (UnimplementedCommonServiceServer) MarkAllSiteMessagesRead(context.Context, *emptypb.Empty) (*MarkAllSiteMessagesReadReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkAllSiteMessagesRead not implemented")
+}
+func (UnimplementedCommonServiceServer) GetSiteMessageManageList(context.Context, *GetSiteMessageManageListParams) (*GetSiteMessageManageListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSiteMessageManageList not implemented")
+}
+func (UnimplementedCommonServiceServer) CreateSiteMessage(context.Context, *CreateSiteMessageRequest) (*CreateSiteMessageReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSiteMessage not implemented")
+}
+func (UnimplementedCommonServiceServer) RecallSiteMessage(context.Context, *RecallSiteMessageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RecallSiteMessage not implemented")
+}
+func (UnimplementedCommonServiceServer) DeletePendingSiteMessage(context.Context, *DeletePendingSiteMessageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePendingSiteMessage not implemented")
 }
 func (UnimplementedCommonServiceServer) mustEmbedUnimplementedCommonServiceServer() {}
 func (UnimplementedCommonServiceServer) testEmbeddedByValue()                       {}
@@ -105,6 +249,168 @@ func _CommonService_GetWalkRoute_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CommonService_GetMySiteMessageList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMySiteMessageListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).GetMySiteMessageList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_GetMySiteMessageList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).GetMySiteMessageList(ctx, req.(*GetMySiteMessageListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_GetMySiteMessageUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).GetMySiteMessageUnreadCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_GetMySiteMessageUnreadCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).GetMySiteMessageUnreadCount(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_MarkSiteMessageRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkSiteMessageReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).MarkSiteMessageRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_MarkSiteMessageRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).MarkSiteMessageRead(ctx, req.(*MarkSiteMessageReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_MarkSiteMessageUnread_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkSiteMessageReadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).MarkSiteMessageUnread(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_MarkSiteMessageUnread_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).MarkSiteMessageUnread(ctx, req.(*MarkSiteMessageReadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_MarkAllSiteMessagesRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).MarkAllSiteMessagesRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_MarkAllSiteMessagesRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).MarkAllSiteMessagesRead(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_GetSiteMessageManageList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSiteMessageManageListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).GetSiteMessageManageList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_GetSiteMessageManageList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).GetSiteMessageManageList(ctx, req.(*GetSiteMessageManageListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_CreateSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).CreateSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_CreateSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).CreateSiteMessage(ctx, req.(*CreateSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_RecallSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecallSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).RecallSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_RecallSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).RecallSiteMessage(ctx, req.(*RecallSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommonService_DeletePendingSiteMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePendingSiteMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommonServiceServer).DeletePendingSiteMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CommonService_DeletePendingSiteMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommonServiceServer).DeletePendingSiteMessage(ctx, req.(*DeletePendingSiteMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CommonService_ServiceDesc is the grpc.ServiceDesc for CommonService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -115,6 +421,42 @@ var CommonService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWalkRoute",
 			Handler:    _CommonService_GetWalkRoute_Handler,
+		},
+		{
+			MethodName: "GetMySiteMessageList",
+			Handler:    _CommonService_GetMySiteMessageList_Handler,
+		},
+		{
+			MethodName: "GetMySiteMessageUnreadCount",
+			Handler:    _CommonService_GetMySiteMessageUnreadCount_Handler,
+		},
+		{
+			MethodName: "MarkSiteMessageRead",
+			Handler:    _CommonService_MarkSiteMessageRead_Handler,
+		},
+		{
+			MethodName: "MarkSiteMessageUnread",
+			Handler:    _CommonService_MarkSiteMessageUnread_Handler,
+		},
+		{
+			MethodName: "MarkAllSiteMessagesRead",
+			Handler:    _CommonService_MarkAllSiteMessagesRead_Handler,
+		},
+		{
+			MethodName: "GetSiteMessageManageList",
+			Handler:    _CommonService_GetSiteMessageManageList_Handler,
+		},
+		{
+			MethodName: "CreateSiteMessage",
+			Handler:    _CommonService_CreateSiteMessage_Handler,
+		},
+		{
+			MethodName: "RecallSiteMessage",
+			Handler:    _CommonService_RecallSiteMessage_Handler,
+		},
+		{
+			MethodName: "DeletePendingSiteMessage",
+			Handler:    _CommonService_DeletePendingSiteMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

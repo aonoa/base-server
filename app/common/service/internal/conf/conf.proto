@@ -10,7 +10,8 @@ message Bootstrap {
   Data data = 2;
   Llm llm = 3;
   Auth auth = 4;
-  Logger logger = 5;
+  Services services = 5;
+  Logger logger = 6;
 }
 
 message Server {
@@ -58,6 +59,17 @@ message Llm {
 message Auth {
   string api_key = 1;
   repeated string whitelist = 2;
+}
+
+message Services {
+  message User {
+    string grpc_endpoint = 1;
+  }
+  message Admin {
+    string grpc_endpoint = 1;
+  }
+  User user = 1;
+  Admin admin = 2;
 }
 
 message Logger {

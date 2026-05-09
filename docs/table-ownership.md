@@ -60,8 +60,9 @@
 ### 3.4 `common` 服务
 
 - 数据库：`common`
-- 当前代码中没有对应的 Ent schema 迁移表
-- `app/common/service/internal/data/data.go` 目前是空数据层骨架
+- 当前迁移表：
+  - `sys_site_message`
+  - `sys_site_message_receipt`
 
 ## 4. `pkg/data/schema` 到服务的映射
 
@@ -80,6 +81,8 @@
 | `pkg/data/schema/business_domain.go` | `sys_business_domain` | `admin` | `admin` | 平台业务域注册信息 |
 | `pkg/data/schema/service_registry.go` | `sys_service_registry` | `admin` | `admin` | 平台服务注册与归属信息 |
 | `pkg/data/schema/projection_source_status.go` | `sys_projection_source_status` | `admin` | `admin` | 权限投影源状态与同步观测信息 |
+| `pkg/data/schema/site_message.go` | `sys_site_message` | `common` | `common` | 站内信发布记录、草稿、定时发布、撤回状态 |
+| `pkg/data/schema/site_message_receipt.go` | `sys_site_message_receipt` | `common` | `common` | 站内信收件回执、已读/未读状态 |
 
 ## 5. 按服务看“直接拥有和直接写入”
 
@@ -226,6 +229,45 @@
 直接读写方：
 
 - `admin`
+
+### 5.3 `common` 服务直接拥有的表
+
+#### `sys_site_message`
+
+作用：
+
+- 站内信发布记录
+- 草稿、定时发布、已发布、已撤回状态
+- 发布人、发布时间、计划发布时间、接收人数
+
+直接读写方：
+
+- `common`
+
+间接依赖方：
+
+- `admin` 负责下发站内信管理菜单和管理接口权限
+- `user` 提供全员发布时的有效用户列表
+
+备注：
+
+- 当前实现只支持全员发布，不支持按指定用户投递
+- 定时发布是懒触发模式，由收件箱/管理接口访问时顺带提升到已发布
+
+#### `sys_site_message_receipt`
+
+作用：
+
+- 记录每个用户是否已读
+- 支持单条标记已读 / 未读、全部标记已读
+
+直接读写方：
+
+- `common`
+
+备注：
+
+- 已撤回的站内信会删除对应回执，不再出现在收件箱和未读数中
 
 间接写入方：
 

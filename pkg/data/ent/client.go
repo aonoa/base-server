@@ -19,6 +19,8 @@ import (
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/serviceregistry"
+	"base-server/pkg/data/ent/sitemessage"
+	"base-server/pkg/data/ent/sitemessagereceipt"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
 	"base-server/pkg/data/ent/userrolebinding"
@@ -51,6 +53,10 @@ type Client struct {
 	Role *RoleClient
 	// ServiceRegistry is the client for interacting with the ServiceRegistry builders.
 	ServiceRegistry *ServiceRegistryClient
+	// SiteMessage is the client for interacting with the SiteMessage builders.
+	SiteMessage *SiteMessageClient
+	// SiteMessageReceipt is the client for interacting with the SiteMessageReceipt builders.
+	SiteMessageReceipt *SiteMessageReceiptClient
 	// SysLogRecord is the client for interacting with the SysLogRecord builders.
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
@@ -76,6 +82,8 @@ func (c *Client) init() {
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.ServiceRegistry = NewServiceRegistryClient(c.config)
+	c.SiteMessage = NewSiteMessageClient(c.config)
+	c.SiteMessageReceipt = NewSiteMessageReceiptClient(c.config)
 	c.SysLogRecord = NewSysLogRecordClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserRoleBinding = NewUserRoleBindingClient(c.config)
@@ -179,6 +187,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Resource:               NewResourceClient(cfg),
 		Role:                   NewRoleClient(cfg),
 		ServiceRegistry:        NewServiceRegistryClient(cfg),
+		SiteMessage:            NewSiteMessageClient(cfg),
+		SiteMessageReceipt:     NewSiteMessageReceiptClient(cfg),
 		SysLogRecord:           NewSysLogRecordClient(cfg),
 		User:                   NewUserClient(cfg),
 		UserRoleBinding:        NewUserRoleBindingClient(cfg),
@@ -209,6 +219,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Resource:               NewResourceClient(cfg),
 		Role:                   NewRoleClient(cfg),
 		ServiceRegistry:        NewServiceRegistryClient(cfg),
+		SiteMessage:            NewSiteMessageClient(cfg),
+		SiteMessageReceipt:     NewSiteMessageReceiptClient(cfg),
 		SysLogRecord:           NewSysLogRecordClient(cfg),
 		User:                   NewUserClient(cfg),
 		UserRoleBinding:        NewUserRoleBindingClient(cfg),
@@ -242,8 +254,8 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
-		c.Resource, c.Role, c.ServiceRegistry, c.SysLogRecord, c.User,
-		c.UserRoleBinding,
+		c.Resource, c.Role, c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt,
+		c.SysLogRecord, c.User, c.UserRoleBinding,
 	} {
 		n.Use(hooks...)
 	}
@@ -254,8 +266,8 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
-		c.Resource, c.Role, c.ServiceRegistry, c.SysLogRecord, c.User,
-		c.UserRoleBinding,
+		c.Resource, c.Role, c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt,
+		c.SysLogRecord, c.User, c.UserRoleBinding,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -280,6 +292,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Role.mutate(ctx, m)
 	case *ServiceRegistryMutation:
 		return c.ServiceRegistry.mutate(ctx, m)
+	case *SiteMessageMutation:
+		return c.SiteMessage.mutate(ctx, m)
+	case *SiteMessageReceiptMutation:
+		return c.SiteMessageReceipt.mutate(ctx, m)
 	case *SysLogRecordMutation:
 		return c.SysLogRecord.mutate(ctx, m)
 	case *UserMutation:
@@ -1451,6 +1467,272 @@ func (c *ServiceRegistryClient) mutate(ctx context.Context, m *ServiceRegistryMu
 	}
 }
 
+// SiteMessageClient is a client for the SiteMessage schema.
+type SiteMessageClient struct {
+	config
+}
+
+// NewSiteMessageClient returns a client for the SiteMessage from the given config.
+func NewSiteMessageClient(c config) *SiteMessageClient {
+	return &SiteMessageClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `sitemessage.Hooks(f(g(h())))`.
+func (c *SiteMessageClient) Use(hooks ...Hook) {
+	c.hooks.SiteMessage = append(c.hooks.SiteMessage, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `sitemessage.Intercept(f(g(h())))`.
+func (c *SiteMessageClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SiteMessage = append(c.inters.SiteMessage, interceptors...)
+}
+
+// Create returns a builder for creating a SiteMessage entity.
+func (c *SiteMessageClient) Create() *SiteMessageCreate {
+	mutation := newSiteMessageMutation(c.config, OpCreate)
+	return &SiteMessageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SiteMessage entities.
+func (c *SiteMessageClient) CreateBulk(builders ...*SiteMessageCreate) *SiteMessageCreateBulk {
+	return &SiteMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SiteMessageClient) MapCreateBulk(slice any, setFunc func(*SiteMessageCreate, int)) *SiteMessageCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SiteMessageCreateBulk{err: fmt.Errorf("calling to SiteMessageClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SiteMessageCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SiteMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SiteMessage.
+func (c *SiteMessageClient) Update() *SiteMessageUpdate {
+	mutation := newSiteMessageMutation(c.config, OpUpdate)
+	return &SiteMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SiteMessageClient) UpdateOne(_m *SiteMessage) *SiteMessageUpdateOne {
+	mutation := newSiteMessageMutation(c.config, OpUpdateOne, withSiteMessage(_m))
+	return &SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SiteMessageClient) UpdateOneID(id string) *SiteMessageUpdateOne {
+	mutation := newSiteMessageMutation(c.config, OpUpdateOne, withSiteMessageID(id))
+	return &SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SiteMessage.
+func (c *SiteMessageClient) Delete() *SiteMessageDelete {
+	mutation := newSiteMessageMutation(c.config, OpDelete)
+	return &SiteMessageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SiteMessageClient) DeleteOne(_m *SiteMessage) *SiteMessageDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SiteMessageClient) DeleteOneID(id string) *SiteMessageDeleteOne {
+	builder := c.Delete().Where(sitemessage.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SiteMessageDeleteOne{builder}
+}
+
+// Query returns a query builder for SiteMessage.
+func (c *SiteMessageClient) Query() *SiteMessageQuery {
+	return &SiteMessageQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSiteMessage},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SiteMessage entity by its id.
+func (c *SiteMessageClient) Get(ctx context.Context, id string) (*SiteMessage, error) {
+	return c.Query().Where(sitemessage.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SiteMessageClient) GetX(ctx context.Context, id string) *SiteMessage {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SiteMessageClient) Hooks() []Hook {
+	return c.hooks.SiteMessage
+}
+
+// Interceptors returns the client interceptors.
+func (c *SiteMessageClient) Interceptors() []Interceptor {
+	return c.inters.SiteMessage
+}
+
+func (c *SiteMessageClient) mutate(ctx context.Context, m *SiteMessageMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SiteMessageCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SiteMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SiteMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SiteMessageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SiteMessage mutation op: %q", m.Op())
+	}
+}
+
+// SiteMessageReceiptClient is a client for the SiteMessageReceipt schema.
+type SiteMessageReceiptClient struct {
+	config
+}
+
+// NewSiteMessageReceiptClient returns a client for the SiteMessageReceipt from the given config.
+func NewSiteMessageReceiptClient(c config) *SiteMessageReceiptClient {
+	return &SiteMessageReceiptClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `sitemessagereceipt.Hooks(f(g(h())))`.
+func (c *SiteMessageReceiptClient) Use(hooks ...Hook) {
+	c.hooks.SiteMessageReceipt = append(c.hooks.SiteMessageReceipt, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `sitemessagereceipt.Intercept(f(g(h())))`.
+func (c *SiteMessageReceiptClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SiteMessageReceipt = append(c.inters.SiteMessageReceipt, interceptors...)
+}
+
+// Create returns a builder for creating a SiteMessageReceipt entity.
+func (c *SiteMessageReceiptClient) Create() *SiteMessageReceiptCreate {
+	mutation := newSiteMessageReceiptMutation(c.config, OpCreate)
+	return &SiteMessageReceiptCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SiteMessageReceipt entities.
+func (c *SiteMessageReceiptClient) CreateBulk(builders ...*SiteMessageReceiptCreate) *SiteMessageReceiptCreateBulk {
+	return &SiteMessageReceiptCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SiteMessageReceiptClient) MapCreateBulk(slice any, setFunc func(*SiteMessageReceiptCreate, int)) *SiteMessageReceiptCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SiteMessageReceiptCreateBulk{err: fmt.Errorf("calling to SiteMessageReceiptClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SiteMessageReceiptCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SiteMessageReceiptCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Update() *SiteMessageReceiptUpdate {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdate)
+	return &SiteMessageReceiptUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SiteMessageReceiptClient) UpdateOne(_m *SiteMessageReceipt) *SiteMessageReceiptUpdateOne {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdateOne, withSiteMessageReceipt(_m))
+	return &SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SiteMessageReceiptClient) UpdateOneID(id string) *SiteMessageReceiptUpdateOne {
+	mutation := newSiteMessageReceiptMutation(c.config, OpUpdateOne, withSiteMessageReceiptID(id))
+	return &SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Delete() *SiteMessageReceiptDelete {
+	mutation := newSiteMessageReceiptMutation(c.config, OpDelete)
+	return &SiteMessageReceiptDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SiteMessageReceiptClient) DeleteOne(_m *SiteMessageReceipt) *SiteMessageReceiptDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SiteMessageReceiptClient) DeleteOneID(id string) *SiteMessageReceiptDeleteOne {
+	builder := c.Delete().Where(sitemessagereceipt.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SiteMessageReceiptDeleteOne{builder}
+}
+
+// Query returns a query builder for SiteMessageReceipt.
+func (c *SiteMessageReceiptClient) Query() *SiteMessageReceiptQuery {
+	return &SiteMessageReceiptQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSiteMessageReceipt},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SiteMessageReceipt entity by its id.
+func (c *SiteMessageReceiptClient) Get(ctx context.Context, id string) (*SiteMessageReceipt, error) {
+	return c.Query().Where(sitemessagereceipt.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SiteMessageReceiptClient) GetX(ctx context.Context, id string) *SiteMessageReceipt {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SiteMessageReceiptClient) Hooks() []Hook {
+	return c.hooks.SiteMessageReceipt
+}
+
+// Interceptors returns the client interceptors.
+func (c *SiteMessageReceiptClient) Interceptors() []Interceptor {
+	return c.inters.SiteMessageReceipt
+}
+
+func (c *SiteMessageReceiptClient) mutate(ctx context.Context, m *SiteMessageReceiptMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SiteMessageReceiptCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SiteMessageReceiptUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SiteMessageReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SiteMessageReceiptDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SiteMessageReceipt mutation op: %q", m.Op())
+	}
+}
+
 // SysLogRecordClient is a client for the SysLogRecord schema.
 type SysLogRecordClient struct {
 	config
@@ -1854,10 +2136,12 @@ func (c *UserRoleBindingClient) mutate(ctx context.Context, m *UserRoleBindingMu
 type (
 	hooks struct {
 		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
-		Role, ServiceRegistry, SysLogRecord, User, UserRoleBinding []ent.Hook
+		Role, ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
+		UserRoleBinding []ent.Hook
 	}
 	inters struct {
 		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
-		Role, ServiceRegistry, SysLogRecord, User, UserRoleBinding []ent.Interceptor
+		Role, ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
+		UserRoleBinding []ent.Interceptor
 	}
 )

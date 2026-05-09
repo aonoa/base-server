@@ -68,7 +68,7 @@ func main() {
 	defer loggerCleanup()
 	log.SetLogger(logger)
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Llm, bc.Auth, logger)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Llm, bc.Auth, bc.Services, logger)
 	if err != nil {
 		panic(err)
 	}

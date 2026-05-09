@@ -28,7 +28,8 @@ type Bootstrap struct {
 	Data          *Data                  `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	Llm           *Llm                   `protobuf:"bytes,3,opt,name=llm,proto3" json:"llm,omitempty"`
 	Auth          *Auth                  `protobuf:"bytes,4,opt,name=auth,proto3" json:"auth,omitempty"`
-	Logger        *Logger                `protobuf:"bytes,5,opt,name=logger,proto3" json:"logger,omitempty"`
+	Services      *Services              `protobuf:"bytes,5,opt,name=services,proto3" json:"services,omitempty"`
+	Logger        *Logger                `protobuf:"bytes,6,opt,name=logger,proto3" json:"logger,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -87,6 +88,13 @@ func (x *Bootstrap) GetLlm() *Llm {
 func (x *Bootstrap) GetAuth() *Auth {
 	if x != nil {
 		return x.Auth
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetServices() *Services {
+	if x != nil {
+		return x.Services
 	}
 	return nil
 }
@@ -298,6 +306,58 @@ func (x *Auth) GetWhitelist() []string {
 	return nil
 }
 
+type Services struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *Services_User         `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Admin         *Services_Admin        `protobuf:"bytes,2,opt,name=admin,proto3" json:"admin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services) Reset() {
+	*x = Services{}
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services) ProtoMessage() {}
+
+func (x *Services) ProtoReflect() protoreflect.Message {
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services.ProtoReflect.Descriptor instead.
+func (*Services) Descriptor() ([]byte, []int) {
+	return file_app_common_service_internal_conf_conf_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Services) GetUser() *Services_User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *Services) GetAdmin() *Services_Admin {
+	if x != nil {
+		return x.Admin
+	}
+	return nil
+}
+
 type Logger struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Level         string                 `protobuf:"bytes,1,opt,name=level,proto3" json:"level,omitempty"`
@@ -312,7 +372,7 @@ type Logger struct {
 
 func (x *Logger) Reset() {
 	*x = Logger{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[5]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -324,7 +384,7 @@ func (x *Logger) String() string {
 func (*Logger) ProtoMessage() {}
 
 func (x *Logger) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[5]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -337,7 +397,7 @@ func (x *Logger) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Logger.ProtoReflect.Descriptor instead.
 func (*Logger) Descriptor() ([]byte, []int) {
-	return file_app_common_service_internal_conf_conf_proto_rawDescGZIP(), []int{5}
+	return file_app_common_service_internal_conf_conf_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Logger) GetLevel() string {
@@ -393,7 +453,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[6]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -405,7 +465,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[6]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -453,7 +513,7 @@ type Server_GRPC struct {
 
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[7]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -465,7 +525,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[7]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -512,7 +572,7 @@ type Data_Database struct {
 
 func (x *Data_Database) Reset() {
 	*x = Data_Database{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[8]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -524,7 +584,7 @@ func (x *Data_Database) String() string {
 func (*Data_Database) ProtoMessage() {}
 
 func (x *Data_Database) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[8]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -566,7 +626,7 @@ type Data_Redis struct {
 
 func (x *Data_Redis) Reset() {
 	*x = Data_Redis{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[9]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -578,7 +638,7 @@ func (x *Data_Redis) String() string {
 func (*Data_Redis) ProtoMessage() {}
 
 func (x *Data_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[9]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -631,7 +691,7 @@ type Llm_Agent struct {
 
 func (x *Llm_Agent) Reset() {
 	*x = Llm_Agent{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[10]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -643,7 +703,7 @@ func (x *Llm_Agent) String() string {
 func (*Llm_Agent) ProtoMessage() {}
 
 func (x *Llm_Agent) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[10]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -677,7 +737,7 @@ type Llm_Agent_OpenAI struct {
 
 func (x *Llm_Agent_OpenAI) Reset() {
 	*x = Llm_Agent_OpenAI{}
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[11]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -689,7 +749,7 @@ func (x *Llm_Agent_OpenAI) String() string {
 func (*Llm_Agent_OpenAI) ProtoMessage() {}
 
 func (x *Llm_Agent_OpenAI) ProtoReflect() protoreflect.Message {
-	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[11]
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -726,18 +786,107 @@ func (x *Llm_Agent_OpenAI) GetApiKey() string {
 	return ""
 }
 
+type Services_User struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrpcEndpoint  string                 `protobuf:"bytes,1,opt,name=grpc_endpoint,json=grpcEndpoint,proto3" json:"grpc_endpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services_User) Reset() {
+	*x = Services_User{}
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services_User) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services_User) ProtoMessage() {}
+
+func (x *Services_User) ProtoReflect() protoreflect.Message {
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services_User.ProtoReflect.Descriptor instead.
+func (*Services_User) Descriptor() ([]byte, []int) {
+	return file_app_common_service_internal_conf_conf_proto_rawDescGZIP(), []int{5, 0}
+}
+
+func (x *Services_User) GetGrpcEndpoint() string {
+	if x != nil {
+		return x.GrpcEndpoint
+	}
+	return ""
+}
+
+type Services_Admin struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrpcEndpoint  string                 `protobuf:"bytes,1,opt,name=grpc_endpoint,json=grpcEndpoint,proto3" json:"grpc_endpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Services_Admin) Reset() {
+	*x = Services_Admin{}
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Services_Admin) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Services_Admin) ProtoMessage() {}
+
+func (x *Services_Admin) ProtoReflect() protoreflect.Message {
+	mi := &file_app_common_service_internal_conf_conf_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Services_Admin.ProtoReflect.Descriptor instead.
+func (*Services_Admin) Descriptor() ([]byte, []int) {
+	return file_app_common_service_internal_conf_conf_proto_rawDescGZIP(), []int{5, 1}
+}
+
+func (x *Services_Admin) GetGrpcEndpoint() string {
+	if x != nil {
+		return x.GrpcEndpoint
+	}
+	return ""
+}
+
 var File_app_common_service_internal_conf_conf_proto protoreflect.FileDescriptor
 
 const file_app_common_service_internal_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"+app/common/service/internal/conf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xd2\x01\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\x84\x02\n" +
 	"\tBootstrap\x12*\n" +
 	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
 	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x12!\n" +
 	"\x03llm\x18\x03 \x01(\v2\x0f.kratos.api.LlmR\x03llm\x12$\n" +
-	"\x04auth\x18\x04 \x01(\v2\x10.kratos.api.AuthR\x04auth\x12*\n" +
-	"\x06logger\x18\x05 \x01(\v2\x12.kratos.api.LoggerR\x06logger\"\xb8\x02\n" +
+	"\x04auth\x18\x04 \x01(\v2\x10.kratos.api.AuthR\x04auth\x120\n" +
+	"\bservices\x18\x05 \x01(\v2\x14.kratos.api.ServicesR\bservices\x12*\n" +
+	"\x06logger\x18\x06 \x01(\v2\x12.kratos.api.LoggerR\x06logger\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
@@ -771,7 +920,14 @@ const file_app_common_service_internal_conf_conf_proto_rawDesc = "" +
 	"\aapi_key\x18\x03 \x01(\tR\x06apiKey\"=\n" +
 	"\x04Auth\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x1c\n" +
-	"\twhitelist\x18\x02 \x03(\tR\twhitelist\"\xab\x01\n" +
+	"\twhitelist\x18\x02 \x03(\tR\twhitelist\"\xc6\x01\n" +
+	"\bServices\x12-\n" +
+	"\x04user\x18\x01 \x01(\v2\x19.kratos.api.Services.UserR\x04user\x120\n" +
+	"\x05admin\x18\x02 \x01(\v2\x1a.kratos.api.Services.AdminR\x05admin\x1a+\n" +
+	"\x04User\x12#\n" +
+	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpoint\x1a,\n" +
+	"\x05Admin\x12#\n" +
+	"\rgrpc_endpoint\x18\x01 \x01(\tR\fgrpcEndpoint\"\xab\x01\n" +
 	"\x06Logger\x12\x14\n" +
 	"\x05level\x18\x01 \x01(\tR\x05level\x12\x1a\n" +
 	"\bfilename\x18\x02 \x01(\tR\bfilename\x12\x19\n" +
@@ -793,43 +949,49 @@ func file_app_common_service_internal_conf_conf_proto_rawDescGZIP() []byte {
 	return file_app_common_service_internal_conf_conf_proto_rawDescData
 }
 
-var file_app_common_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_app_common_service_internal_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_app_common_service_internal_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
 	(*Server)(nil),              // 1: kratos.api.Server
 	(*Data)(nil),                // 2: kratos.api.Data
 	(*Llm)(nil),                 // 3: kratos.api.Llm
 	(*Auth)(nil),                // 4: kratos.api.Auth
-	(*Logger)(nil),              // 5: kratos.api.Logger
-	(*Server_HTTP)(nil),         // 6: kratos.api.Server.HTTP
-	(*Server_GRPC)(nil),         // 7: kratos.api.Server.GRPC
-	(*Data_Database)(nil),       // 8: kratos.api.Data.Database
-	(*Data_Redis)(nil),          // 9: kratos.api.Data.Redis
-	(*Llm_Agent)(nil),           // 10: kratos.api.Llm.Agent
-	(*Llm_Agent_OpenAI)(nil),    // 11: kratos.api.Llm.Agent.OpenAI
-	(*durationpb.Duration)(nil), // 12: google.protobuf.Duration
+	(*Services)(nil),            // 5: kratos.api.Services
+	(*Logger)(nil),              // 6: kratos.api.Logger
+	(*Server_HTTP)(nil),         // 7: kratos.api.Server.HTTP
+	(*Server_GRPC)(nil),         // 8: kratos.api.Server.GRPC
+	(*Data_Database)(nil),       // 9: kratos.api.Data.Database
+	(*Data_Redis)(nil),          // 10: kratos.api.Data.Redis
+	(*Llm_Agent)(nil),           // 11: kratos.api.Llm.Agent
+	(*Llm_Agent_OpenAI)(nil),    // 12: kratos.api.Llm.Agent.OpenAI
+	(*Services_User)(nil),       // 13: kratos.api.Services.User
+	(*Services_Admin)(nil),      // 14: kratos.api.Services.Admin
+	(*durationpb.Duration)(nil), // 15: google.protobuf.Duration
 }
 var file_app_common_service_internal_conf_conf_proto_depIdxs = []int32{
 	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
 	2,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
 	3,  // 2: kratos.api.Bootstrap.llm:type_name -> kratos.api.Llm
 	4,  // 3: kratos.api.Bootstrap.auth:type_name -> kratos.api.Auth
-	5,  // 4: kratos.api.Bootstrap.logger:type_name -> kratos.api.Logger
-	6,  // 5: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	7,  // 6: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	8,  // 7: kratos.api.Data.database:type_name -> kratos.api.Data.Database
-	9,  // 8: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
-	10, // 9: kratos.api.Llm.agent:type_name -> kratos.api.Llm.Agent
-	12, // 10: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	12, // 11: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	12, // 12: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	12, // 13: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
-	11, // 14: kratos.api.Llm.Agent.openAI:type_name -> kratos.api.Llm.Agent.OpenAI
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	5,  // 4: kratos.api.Bootstrap.services:type_name -> kratos.api.Services
+	6,  // 5: kratos.api.Bootstrap.logger:type_name -> kratos.api.Logger
+	7,  // 6: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	8,  // 7: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
+	9,  // 8: kratos.api.Data.database:type_name -> kratos.api.Data.Database
+	10, // 9: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
+	11, // 10: kratos.api.Llm.agent:type_name -> kratos.api.Llm.Agent
+	13, // 11: kratos.api.Services.user:type_name -> kratos.api.Services.User
+	14, // 12: kratos.api.Services.admin:type_name -> kratos.api.Services.Admin
+	15, // 13: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	15, // 14: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	15, // 15: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
+	15, // 16: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
+	12, // 17: kratos.api.Llm.Agent.openAI:type_name -> kratos.api.Llm.Agent.OpenAI
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_app_common_service_internal_conf_conf_proto_init() }
@@ -843,7 +1005,7 @@ func file_app_common_service_internal_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_app_common_service_internal_conf_conf_proto_rawDesc), len(file_app_common_service_internal_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
