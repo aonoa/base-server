@@ -11,6 +11,14 @@
 - Data: Ent ORM over PostgreSQL via `database/sql` + `pgx`.
 - Auth: JWT HS256 + Casbin.
 
+## Read first
+- `README.md`
+- `docs/README.md`
+- `docs/monorepo-overview.md`
+- `docs/permission-design.md`
+- `docs/api-ownership.md`
+- `docs/table-ownership.md`
+
 ## Where to change things
 - `app/*/service/cmd/service/` — each service entrypoint + Wire bootstrap.
 - `app/*/service/internal/service/` — transport handlers.
@@ -43,6 +51,7 @@
 ## Runtime config
 - Each service uses its own `-conf` directory under `app/<service>/service/configs`.
 - Config schema source of truth lives in the corresponding `app/<service>/service/internal/conf/conf.proto`.
+- The local IDE/debug configs under `app/*/service/configs` are different from container configs under `deploy/configs/*`.
 
 ## Repo-specific gotchas
 - Placeholder secrets still exist in service config YAMLs; do not commit real credentials.
