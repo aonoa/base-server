@@ -7,6 +7,15 @@ Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行
 - Go：`1.25.8`
 - PostgreSQL：`18`
 
+## 项目文档入口
+
+- [docs/README.md](./docs/README.md)
+- [docs/monorepo-overview.md](./docs/monorepo-overview.md)
+- [docs/permission-design.md](./docs/permission-design.md)
+- [docs/api-ownership.md](./docs/api-ownership.md)
+- [docs/table-ownership.md](./docs/table-ownership.md)
+- [docs/auth-incremental-sync-design.md](./docs/auth-incremental-sync-design.md)
+
 ## 服务布局
 
 - `app/gateway/service`：统一公网入口，使用 `go-kratos/gateway` 原生 endpoints 配置转发到下游服务
