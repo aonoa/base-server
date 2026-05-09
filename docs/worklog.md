@@ -26,3 +26,18 @@
 - Fixed `GetUserInfoReply.roles` from a singular object to a repeated role list and populated it from the user-role relation inside the service flow.
 - Fixed the draft update path so immediate publish no longer assigns `published_time` twice; added a regression test that covers draft-to-publish and draft-to-schedule transitions.
 - Added a mark-unread endpoint for site-message receipts, with backend and frontend wiring plus regression coverage for read-to-unread toggling.
+- Updated the built-in site-message menu bootstrap so inbox and manager routes point to separate frontend component files, and older persisted menu rows are repaired on startup.
+- Tightened the site-message management authority boundary by assigning the management APIs to a dedicated backend API resource group and auto-binding that resource to `admin`/`root` during startup.
+
+## 2026-05-09
+
+- Recorded the product decision to remove the targeted-user compose path from site-message management and kept the iteration sequential because both repos were already dirty in the same feature area.
+- Changed backend site-message creation normalization so new drafts, scheduled messages, and immediate publishes are always stored as all-user messages.
+- Cleared targeted-user request IDs inside the site-message usecase so non-UI callers cannot keep using the removed product path by sending legacy payloads.
+- Kept historical targeted-user records intact rather than rewriting old data in place.
+- Updated site-message data-layer regression tests to seed active users and verify that new publish/schedule flows fan out to all active users instead of honoring targeted-user payloads.
+- Removed `receiver_type` and `receiver_ids` from the site-message Ent schema and regenerated the Ent artifacts.
+- Added an idempotent startup cleanup SQL step that drops the two legacy columns from `sys_site_message` in existing PostgreSQL databases.
+- Restarted the backend on the monolith line and verified the live `test1.public.sys_site_message` table no longer contains the dropped columns.
+- Deleted the legacy `receiverType` and `receiverIds` fields from the site-message proto contract, regenerated Go/OpenAPI outputs, and synced the paired frontend generated client.
+- Simplified the service mapping and site-message tests so the removed API fields are no longer referenced anywhere in runtime code.

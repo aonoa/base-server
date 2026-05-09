@@ -100,8 +100,6 @@ func (c *SiteMessageCreate) CreateAll(SiteMessage *SiteMessage) *SiteMessageCrea
 	builder = builder.SetContent(SiteMessage.Content)
 	builder = builder.SetCategory(SiteMessage.Category)
 	builder = builder.SetStatus(SiteMessage.Status)
-	builder = builder.SetReceiverType(SiteMessage.ReceiverType)
-	builder = builder.SetReceiverIds(SiteMessage.ReceiverIds)
 	builder = builder.SetReceiverCount(SiteMessage.ReceiverCount)
 	builder = builder.SetLink(SiteMessage.Link)
 	builder = builder.SetSenderID(SiteMessage.SenderID)

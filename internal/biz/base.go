@@ -34,9 +34,11 @@ const (
 	siteMessageInboxMenuName    = "SiteMessageCenter"
 	siteMessageManageMenuPath   = "/system/site-message"
 	siteMessageManageMenuName   = "SiteMessageManage"
-	siteMessageMenuComponent    = "/_core/messages/index"
+	siteMessageInboxComponent   = "/_core/messages/inbox"
+	siteMessageManageComponent  = "/_core/messages/manage"
 	siteMessageManageParentPath = "/system"
 	siteMessageManageParentName = "System"
+	siteMessageManageApiGroup   = "site-message-manage"
 
 	SiteMessageActionDraft    = "draft"
 	SiteMessageActionSchedule = "schedule"
@@ -127,6 +129,9 @@ func NewBaseUsecase(repo BaseRepo, logger log.Logger, auth *AuthUsecase) *BaseUs
 	if err := uc.ensureBuiltinSiteMessageRouteData(context.Background()); err != nil {
 		uc.log.Errorf("ensure builtin site message route data failed: %v", err)
 	}
+	if err := uc.ensureBuiltinSiteMessageManageApiPermissions(context.Background()); err != nil {
+		uc.log.Errorf("ensure builtin site message manage api permissions failed: %v", err)
+	}
 	return uc
 }
 
@@ -178,13 +183,6 @@ func (uc *BaseUsecase) ensureSiteMessageManageAccess(ctx context.Context) (*ent.
 		}
 	}
 	return nil, kerrors.Forbidden("FORBIDDEN", "site message manage access denied")
-}
-
-func normalizeSiteMessageReceiverType(receiverType string) string {
-	if receiverType == "user" {
-		return "user"
-	}
-	return "all"
 }
 
 func normalizeSiteMessageAction(action string) string {
@@ -280,6 +278,15 @@ func (uc *BaseUsecase) ensureBuiltinSiteMessageMenus(ctx context.Context) (*ent.
 		if err != nil {
 			return nil, nil, err
 		}
+	} else if inboxMenu.Component != siteMessageInboxComponent {
+		nextMenu := *inboxMenu
+		nextMenu.Component = siteMessageInboxComponent
+		nextMenu.ActivePath = siteMessageInboxMenuPath
+		nextMenu.HideInMenu = true
+		inboxMenu, err = uc.repo.UpdateMenu(ctx, inboxMenu.ID, &nextMenu)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 
 	manageMenu := findMenuByPathOrName(menuList, siteMessageManageMenuPath, siteMessageManageMenuName)
@@ -293,12 +300,26 @@ func (uc *BaseUsecase) ensureBuiltinSiteMessageMenus(ctx context.Context) (*ent.
 		if err != nil {
 			return nil, nil, err
 		}
+	} else if manageMenu.Component != siteMessageManageComponent {
+		nextMenu := *manageMenu
+		nextMenu.Component = siteMessageManageComponent
+		nextMenu.ActivePath = siteMessageManageMenuPath
+		nextMenu.HideInMenu = false
+		manageMenu, err = uc.repo.UpdateMenu(ctx, manageMenu.ID, &nextMenu)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
 
 	return inboxMenu, manageMenu, nil
 }
 
 func builtinSiteMessageMenu(pid int64, path, name, title string, hideInMenu bool) *ent.Menu {
+	component := siteMessageInboxComponent
+	if path == siteMessageManageMenuPath {
+		component = siteMessageManageComponent
+	}
+
 	return &ent.Menu{
 		Pid:                      pid,
 		Type:                     "menu",
@@ -307,7 +328,7 @@ func builtinSiteMessageMenu(pid int64, path, name, title string, hideInMenu bool
 		Redirect:                 "",
 		Alias:                    "",
 		Name:                     name,
-		Component:                siteMessageMenuComponent,
+		Component:                component,
 		Icon:                     "lucide:mail",
 		Title:                    title,
 		Order:                    9999,
@@ -407,6 +428,102 @@ func appendMenuID(menuIDs []int32, menuID int32) []int32 {
 	next = append(next, menuIDs...)
 	next = append(next, menuID)
 	return next
+}
+
+func (uc *BaseUsecase) ensureBuiltinSiteMessageManageApiPermissions(ctx context.Context) error {
+	roleList, err := uc.repo.GetAllRoleList(ctx, &pb.RolePageParams{})
+	if err != nil {
+		return err
+	}
+
+	resourceID, err := uc.ensureSiteMessageManageApiResource(ctx)
+	if err != nil {
+		return err
+	}
+
+	needsReload := false
+	for _, role := range roleList {
+		shouldHave := role.Value == "admin" || role.Value == "root"
+		hasGroup := false
+		if role.Edges.Resource != nil {
+			for _, item := range role.Edges.Resource {
+				if item.Type == "api" && item.Value == siteMessageManageApiGroup {
+					hasGroup = true
+					break
+				}
+			}
+		}
+		if shouldHave == hasGroup {
+			continue
+		}
+
+		nextResourceIDs := make([]string, 0)
+		if role.Edges.Resource != nil {
+			for _, item := range role.Edges.Resource {
+				if item.Type == "api" && item.Value == siteMessageManageApiGroup {
+					continue
+				}
+				nextResourceIDs = append(nextResourceIDs, item.ID)
+			}
+		}
+		if shouldHave {
+			nextResourceIDs = append(nextResourceIDs, resourceID)
+		}
+
+		req := &pb.RoleListItem{
+			Id:             strconv.FormatInt(role.ID, 10),
+			Name:           role.Name,
+			Value:          role.Value,
+			Status:         boolToRoleStatus(role.Status),
+			Remark:         role.Desc,
+			Permissions:    role.Menus,
+			ApiPermissions: nextResourceIDs,
+		}
+		if err := uc.UpdateRole(ctx, req); err != nil {
+			return err
+		}
+		needsReload = true
+	}
+
+	if needsReload {
+		return uc.auth.ReLoadPolicy()
+	}
+	return nil
+}
+
+func (uc *BaseUsecase) ensureSiteMessageManageApiResource(ctx context.Context) (string, error) {
+	reply, _, err := uc.repo.GetResourceList(ctx, &pb.GetResourcePageParams{
+		CurrentPage: 1,
+		PageSize:    200,
+		Type:        "api",
+		Value:       siteMessageManageApiGroup,
+		Method:      "(GET|POST|DELETE)",
+	})
+	if err != nil {
+		return "", err
+	}
+	if len(reply) > 0 {
+		return reply[0].ID, nil
+	}
+
+	item, err := uc.repo.AddResource(ctx, &ent.Resource{
+		Name:        "站内信管理接口",
+		Type:        "api",
+		Value:       siteMessageManageApiGroup,
+		Method:      "(GET|POST|DELETE)",
+		Description: "站内信管理页面相关接口权限",
+	})
+	if err != nil {
+		return "", err
+	}
+	return item.ID, nil
+}
+
+func boolToRoleStatus(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
 }
 
 // Login 登陆，存在返回Id
@@ -1628,8 +1745,6 @@ func (uc *BaseUsecase) GetPublishedSiteMessageList(ctx context.Context, req *pb.
 			Title:                item.Title,
 			Content:              item.Content,
 			Category:             item.Category,
-			ReceiverType:         item.ReceiverType,
-			ReceiverIds:          item.ReceiverIds,
 			ReceiverCount:        item.ReceiverCount,
 			Link:                 item.Link,
 			SenderId:             item.SenderID,
@@ -1651,7 +1766,6 @@ func (uc *BaseUsecase) CreateSiteMessage(ctx context.Context, req *pb.CreateSite
 		return nil, err
 	}
 	req.Action = normalizeSiteMessageAction(req.Action)
-	req.ReceiverType = normalizeSiteMessageReceiverType(req.ReceiverType)
 	if req.Category == "" {
 		req.Category = "system"
 	}
@@ -1661,9 +1775,6 @@ func (uc *BaseUsecase) CreateSiteMessage(ctx context.Context, req *pb.CreateSite
 	}
 	if strings.TrimSpace(req.Content) == "" {
 		return nil, kerrors.BadRequest("BAD_REQUEST", "content is required")
-	}
-	if req.Action != SiteMessageActionDraft && req.ReceiverType == "user" && len(req.ReceiverIds) == 0 {
-		return nil, kerrors.BadRequest("BAD_REQUEST", "receiverIds is required when receiverType=user")
 	}
 	if req.Action == SiteMessageActionSchedule {
 		if strings.TrimSpace(req.ScheduledPublishTime) == "" {

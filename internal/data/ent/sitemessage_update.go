@@ -12,7 +12,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -89,38 +88,6 @@ func (_u *SiteMessageUpdate) SetNillableStatus(v *string) *SiteMessageUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
-	return _u
-}
-
-// SetReceiverType sets the "receiver_type" field.
-func (_u *SiteMessageUpdate) SetReceiverType(v string) *SiteMessageUpdate {
-	_u.mutation.SetReceiverType(v)
-	return _u
-}
-
-// SetNillableReceiverType sets the "receiver_type" field if the given value is not nil.
-func (_u *SiteMessageUpdate) SetNillableReceiverType(v *string) *SiteMessageUpdate {
-	if v != nil {
-		_u.SetReceiverType(*v)
-	}
-	return _u
-}
-
-// SetReceiverIds sets the "receiver_ids" field.
-func (_u *SiteMessageUpdate) SetReceiverIds(v []string) *SiteMessageUpdate {
-	_u.mutation.SetReceiverIds(v)
-	return _u
-}
-
-// AppendReceiverIds appends value to the "receiver_ids" field.
-func (_u *SiteMessageUpdate) AppendReceiverIds(v []string) *SiteMessageUpdate {
-	_u.mutation.AppendReceiverIds(v)
-	return _u
-}
-
-// ClearReceiverIds clears the value of the "receiver_ids" field.
-func (_u *SiteMessageUpdate) ClearReceiverIds() *SiteMessageUpdate {
-	_u.mutation.ClearReceiverIds()
 	return _u
 }
 
@@ -336,20 +303,6 @@ func (_u *SiteMessageUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.ReceiverType(); ok {
-		_spec.SetField(sitemessage.FieldReceiverType, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ReceiverIds(); ok {
-		_spec.SetField(sitemessage.FieldReceiverIds, field.TypeJSON, value)
-	}
-	if value, ok := _u.mutation.AppendedReceiverIds(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, sitemessage.FieldReceiverIds, value)
-		})
-	}
-	if _u.mutation.ReceiverIdsCleared() {
-		_spec.ClearField(sitemessage.FieldReceiverIds, field.TypeJSON)
-	}
 	if value, ok := _u.mutation.ReceiverCount(); ok {
 		_spec.SetField(sitemessage.FieldReceiverCount, field.TypeInt64, value)
 	}
@@ -464,38 +417,6 @@ func (_u *SiteMessageUpdateOne) SetNillableStatus(v *string) *SiteMessageUpdateO
 	if v != nil {
 		_u.SetStatus(*v)
 	}
-	return _u
-}
-
-// SetReceiverType sets the "receiver_type" field.
-func (_u *SiteMessageUpdateOne) SetReceiverType(v string) *SiteMessageUpdateOne {
-	_u.mutation.SetReceiverType(v)
-	return _u
-}
-
-// SetNillableReceiverType sets the "receiver_type" field if the given value is not nil.
-func (_u *SiteMessageUpdateOne) SetNillableReceiverType(v *string) *SiteMessageUpdateOne {
-	if v != nil {
-		_u.SetReceiverType(*v)
-	}
-	return _u
-}
-
-// SetReceiverIds sets the "receiver_ids" field.
-func (_u *SiteMessageUpdateOne) SetReceiverIds(v []string) *SiteMessageUpdateOne {
-	_u.mutation.SetReceiverIds(v)
-	return _u
-}
-
-// AppendReceiverIds appends value to the "receiver_ids" field.
-func (_u *SiteMessageUpdateOne) AppendReceiverIds(v []string) *SiteMessageUpdateOne {
-	_u.mutation.AppendReceiverIds(v)
-	return _u
-}
-
-// ClearReceiverIds clears the value of the "receiver_ids" field.
-func (_u *SiteMessageUpdateOne) ClearReceiverIds() *SiteMessageUpdateOne {
-	_u.mutation.ClearReceiverIds()
 	return _u
 }
 
@@ -740,20 +661,6 @@ func (_u *SiteMessageUpdateOne) sqlSave(ctx context.Context) (_node *SiteMessage
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ReceiverType(); ok {
-		_spec.SetField(sitemessage.FieldReceiverType, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ReceiverIds(); ok {
-		_spec.SetField(sitemessage.FieldReceiverIds, field.TypeJSON, value)
-	}
-	if value, ok := _u.mutation.AppendedReceiverIds(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, sitemessage.FieldReceiverIds, value)
-		})
-	}
-	if _u.mutation.ReceiverIdsCleared() {
-		_spec.ClearField(sitemessage.FieldReceiverIds, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.ReceiverCount(); ok {
 		_spec.SetField(sitemessage.FieldReceiverCount, field.TypeInt64, value)

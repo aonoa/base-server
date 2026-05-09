@@ -87,6 +87,10 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 		log.Errorf("failed creating schema resources: %v", err)
 		return nil, nil, err
 	}
+	if err := cleanupSiteMessageLegacyColumns(db); err != nil {
+		log.Errorf("failed cleaning legacy site message columns: %v", err)
+		return nil, nil, err
+	}
 
 	//migrate.Create(context.Background(), client.Schema, []*schema.Table{migrate.UsersTable})
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////// 本地缓存
@@ -133,4 +137,13 @@ func NewData(conf *conf.Data, logger log.Logger) (*Data, func(), error) {
 		}
 	}
 	return d, cleanup, nil
+}
+
+func cleanupSiteMessageLegacyColumns(db *sql.DB) error {
+	_, err := db.ExecContext(context.Background(), `
+		ALTER TABLE public.sys_site_message
+			DROP COLUMN IF EXISTS receiver_ids,
+			DROP COLUMN IF EXISTS receiver_type;
+	`)
+	return err
 }

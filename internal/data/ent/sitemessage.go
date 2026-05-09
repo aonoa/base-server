@@ -4,7 +4,6 @@ package ent
 
 import (
 	"base-server/internal/data/ent/sitemessage"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -31,10 +30,6 @@ type SiteMessage struct {
 	Category string `json:"category,omitempty"`
 	// 消息状态 draft|scheduled|published|recalled
 	Status string `json:"status,omitempty"`
-	// 接收范围 all|user
-	ReceiverType string `json:"receiver_type,omitempty"`
-	// 指定接收用户ID列表
-	ReceiverIds []string `json:"receiver_ids,omitempty"`
 	// 接收人数
 	ReceiverCount int64 `json:"receiver_count,omitempty"`
 	// 消息跳转链接
@@ -57,11 +52,9 @@ func (*SiteMessage) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case sitemessage.FieldReceiverIds:
-			values[i] = new([]byte)
 		case sitemessage.FieldReceiverCount:
 			values[i] = new(sql.NullInt64)
-		case sitemessage.FieldID, sitemessage.FieldTitle, sitemessage.FieldContent, sitemessage.FieldCategory, sitemessage.FieldStatus, sitemessage.FieldReceiverType, sitemessage.FieldLink, sitemessage.FieldSenderID, sitemessage.FieldSenderName:
+		case sitemessage.FieldID, sitemessage.FieldTitle, sitemessage.FieldContent, sitemessage.FieldCategory, sitemessage.FieldStatus, sitemessage.FieldLink, sitemessage.FieldSenderID, sitemessage.FieldSenderName:
 			values[i] = new(sql.NullString)
 		case sitemessage.FieldCreateTime, sitemessage.FieldUpdateTime, sitemessage.FieldScheduledPublishTime, sitemessage.FieldPublishedTime, sitemessage.FieldRecalledTime:
 			values[i] = new(sql.NullTime)
@@ -121,20 +114,6 @@ func (_m *SiteMessage) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				_m.Status = value.String
-			}
-		case sitemessage.FieldReceiverType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field receiver_type", values[i])
-			} else if value.Valid {
-				_m.ReceiverType = value.String
-			}
-		case sitemessage.FieldReceiverIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field receiver_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_m.ReceiverIds); err != nil {
-					return fmt.Errorf("unmarshal field receiver_ids: %w", err)
-				}
 			}
 		case sitemessage.FieldReceiverCount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -234,12 +213,6 @@ func (_m *SiteMessage) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(_m.Status)
-	builder.WriteString(", ")
-	builder.WriteString("receiver_type=")
-	builder.WriteString(_m.ReceiverType)
-	builder.WriteString(", ")
-	builder.WriteString("receiver_ids=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ReceiverIds))
 	builder.WriteString(", ")
 	builder.WriteString("receiver_count=")
 	builder.WriteString(fmt.Sprintf("%v", _m.ReceiverCount))

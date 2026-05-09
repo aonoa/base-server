@@ -1130,12 +1130,6 @@ components:
                     type: string
                 category:
                     type: string
-                receiverType:
-                    type: string
-                receiverIds:
-                    type: array
-                    items:
-                        type: string
                 link:
                     type: string
                 action:
@@ -1470,12 +1464,6 @@ components:
                     type: string
                 category:
                     type: string
-                receiverType:
-                    type: string
-                receiverIds:
-                    type: array
-                    items:
-                        type: string
                 receiverCount:
                     type: string
                 link:

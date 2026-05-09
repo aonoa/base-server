@@ -240,24 +240,20 @@ func init() {
 	sitemessageDescStatus := sitemessageFields[4].Descriptor()
 	// sitemessage.DefaultStatus holds the default value on creation for the status field.
 	sitemessage.DefaultStatus = sitemessageDescStatus.Default.(string)
-	// sitemessageDescReceiverType is the schema descriptor for receiver_type field.
-	sitemessageDescReceiverType := sitemessageFields[5].Descriptor()
-	// sitemessage.DefaultReceiverType holds the default value on creation for the receiver_type field.
-	sitemessage.DefaultReceiverType = sitemessageDescReceiverType.Default.(string)
 	// sitemessageDescReceiverCount is the schema descriptor for receiver_count field.
-	sitemessageDescReceiverCount := sitemessageFields[7].Descriptor()
+	sitemessageDescReceiverCount := sitemessageFields[5].Descriptor()
 	// sitemessage.DefaultReceiverCount holds the default value on creation for the receiver_count field.
 	sitemessage.DefaultReceiverCount = sitemessageDescReceiverCount.Default.(int64)
 	// sitemessageDescLink is the schema descriptor for link field.
-	sitemessageDescLink := sitemessageFields[8].Descriptor()
+	sitemessageDescLink := sitemessageFields[6].Descriptor()
 	// sitemessage.DefaultLink holds the default value on creation for the link field.
 	sitemessage.DefaultLink = sitemessageDescLink.Default.(string)
 	// sitemessageDescSenderID is the schema descriptor for sender_id field.
-	sitemessageDescSenderID := sitemessageFields[9].Descriptor()
+	sitemessageDescSenderID := sitemessageFields[7].Descriptor()
 	// sitemessage.DefaultSenderID holds the default value on creation for the sender_id field.
 	sitemessage.DefaultSenderID = sitemessageDescSenderID.Default.(string)
 	// sitemessageDescSenderName is the schema descriptor for sender_name field.
-	sitemessageDescSenderName := sitemessageFields[10].Descriptor()
+	sitemessageDescSenderName := sitemessageFields[8].Descriptor()
 	// sitemessage.DefaultSenderName holds the default value on creation for the sender_name field.
 	sitemessage.DefaultSenderName = sitemessageDescSenderName.Default.(string)
 	// sitemessageDescID is the schema descriptor for id field.

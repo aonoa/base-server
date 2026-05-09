@@ -25,10 +25,6 @@ const (
 	FieldCategory = "category"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldReceiverType holds the string denoting the receiver_type field in the database.
-	FieldReceiverType = "receiver_type"
-	// FieldReceiverIds holds the string denoting the receiver_ids field in the database.
-	FieldReceiverIds = "receiver_ids"
 	// FieldReceiverCount holds the string denoting the receiver_count field in the database.
 	FieldReceiverCount = "receiver_count"
 	// FieldLink holds the string denoting the link field in the database.
@@ -56,8 +52,6 @@ var Columns = []string{
 	FieldContent,
 	FieldCategory,
 	FieldStatus,
-	FieldReceiverType,
-	FieldReceiverIds,
 	FieldReceiverCount,
 	FieldLink,
 	FieldSenderID,
@@ -92,8 +86,6 @@ var (
 	DefaultCategory string
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus string
-	// DefaultReceiverType holds the default value on creation for the "receiver_type" field.
-	DefaultReceiverType string
 	// DefaultReceiverCount holds the default value on creation for the "receiver_count" field.
 	DefaultReceiverCount int64
 	// DefaultLink holds the default value on creation for the "link" field.
@@ -142,11 +134,6 @@ func ByCategory(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
-}
-
-// ByReceiverType orders the results by the receiver_type field.
-func ByReceiverType(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldReceiverType, opts...).ToFunc()
 }
 
 // ByReceiverCount orders the results by the receiver_count field.

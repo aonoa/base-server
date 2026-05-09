@@ -35,8 +35,6 @@ func (SiteMessage) Fields() []ent.Field {
 		field.String("content").NotEmpty().Comment("消息正文"),
 		field.String("category").Default("system").Comment("消息分类"),
 		field.String("status").Default("published").Comment("消息状态 draft|scheduled|published|recalled"),
-		field.String("receiver_type").Default("all").Comment("接收范围 all|user"),
-		field.JSON("receiver_ids", []string{}).Optional().Comment("指定接收用户ID列表"),
 		field.Int64("receiver_count").Default(0).Comment("接收人数"),
 		field.String("link").Default("").Comment("消息跳转链接"),
 		field.String("sender_id").Default("").Comment("发送人ID"),
@@ -56,7 +54,6 @@ func (SiteMessage) Mixin() []ent.Mixin {
 func (SiteMessage) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("create_time"),
-		index.Fields("receiver_type"),
 		index.Fields("category"),
 		index.Fields("status"),
 		index.Fields("scheduled_publish_time"),

@@ -6020,9 +6020,6 @@ type SiteMessageMutation struct {
 	content                *string
 	category               *string
 	status                 *string
-	receiver_type          *string
-	receiver_ids           *[]string
-	appendreceiver_ids     []string
 	receiver_count         *int64
 	addreceiver_count      *int64
 	link                   *string
@@ -6355,107 +6352,6 @@ func (m *SiteMessageMutation) OldStatus(ctx context.Context) (v string, err erro
 // ResetStatus resets all changes to the "status" field.
 func (m *SiteMessageMutation) ResetStatus() {
 	m.status = nil
-}
-
-// SetReceiverType sets the "receiver_type" field.
-func (m *SiteMessageMutation) SetReceiverType(s string) {
-	m.receiver_type = &s
-}
-
-// ReceiverType returns the value of the "receiver_type" field in the mutation.
-func (m *SiteMessageMutation) ReceiverType() (r string, exists bool) {
-	v := m.receiver_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldReceiverType returns the old "receiver_type" field's value of the SiteMessage entity.
-// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SiteMessageMutation) OldReceiverType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldReceiverType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldReceiverType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldReceiverType: %w", err)
-	}
-	return oldValue.ReceiverType, nil
-}
-
-// ResetReceiverType resets all changes to the "receiver_type" field.
-func (m *SiteMessageMutation) ResetReceiverType() {
-	m.receiver_type = nil
-}
-
-// SetReceiverIds sets the "receiver_ids" field.
-func (m *SiteMessageMutation) SetReceiverIds(s []string) {
-	m.receiver_ids = &s
-	m.appendreceiver_ids = nil
-}
-
-// ReceiverIds returns the value of the "receiver_ids" field in the mutation.
-func (m *SiteMessageMutation) ReceiverIds() (r []string, exists bool) {
-	v := m.receiver_ids
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldReceiverIds returns the old "receiver_ids" field's value of the SiteMessage entity.
-// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SiteMessageMutation) OldReceiverIds(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldReceiverIds is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldReceiverIds requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldReceiverIds: %w", err)
-	}
-	return oldValue.ReceiverIds, nil
-}
-
-// AppendReceiverIds adds s to the "receiver_ids" field.
-func (m *SiteMessageMutation) AppendReceiverIds(s []string) {
-	m.appendreceiver_ids = append(m.appendreceiver_ids, s...)
-}
-
-// AppendedReceiverIds returns the list of values that were appended to the "receiver_ids" field in this mutation.
-func (m *SiteMessageMutation) AppendedReceiverIds() ([]string, bool) {
-	if len(m.appendreceiver_ids) == 0 {
-		return nil, false
-	}
-	return m.appendreceiver_ids, true
-}
-
-// ClearReceiverIds clears the value of the "receiver_ids" field.
-func (m *SiteMessageMutation) ClearReceiverIds() {
-	m.receiver_ids = nil
-	m.appendreceiver_ids = nil
-	m.clearedFields[sitemessage.FieldReceiverIds] = struct{}{}
-}
-
-// ReceiverIdsCleared returns if the "receiver_ids" field was cleared in this mutation.
-func (m *SiteMessageMutation) ReceiverIdsCleared() bool {
-	_, ok := m.clearedFields[sitemessage.FieldReceiverIds]
-	return ok
-}
-
-// ResetReceiverIds resets all changes to the "receiver_ids" field.
-func (m *SiteMessageMutation) ResetReceiverIds() {
-	m.receiver_ids = nil
-	m.appendreceiver_ids = nil
-	delete(m.clearedFields, sitemessage.FieldReceiverIds)
 }
 
 // SetReceiverCount sets the "receiver_count" field.
@@ -6803,7 +6699,7 @@ func (m *SiteMessageMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SiteMessageMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 13)
 	if m.create_time != nil {
 		fields = append(fields, sitemessage.FieldCreateTime)
 	}
@@ -6821,12 +6717,6 @@ func (m *SiteMessageMutation) Fields() []string {
 	}
 	if m.status != nil {
 		fields = append(fields, sitemessage.FieldStatus)
-	}
-	if m.receiver_type != nil {
-		fields = append(fields, sitemessage.FieldReceiverType)
-	}
-	if m.receiver_ids != nil {
-		fields = append(fields, sitemessage.FieldReceiverIds)
 	}
 	if m.receiver_count != nil {
 		fields = append(fields, sitemessage.FieldReceiverCount)
@@ -6869,10 +6759,6 @@ func (m *SiteMessageMutation) Field(name string) (ent.Value, bool) {
 		return m.Category()
 	case sitemessage.FieldStatus:
 		return m.Status()
-	case sitemessage.FieldReceiverType:
-		return m.ReceiverType()
-	case sitemessage.FieldReceiverIds:
-		return m.ReceiverIds()
 	case sitemessage.FieldReceiverCount:
 		return m.ReceiverCount()
 	case sitemessage.FieldLink:
@@ -6908,10 +6794,6 @@ func (m *SiteMessageMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldCategory(ctx)
 	case sitemessage.FieldStatus:
 		return m.OldStatus(ctx)
-	case sitemessage.FieldReceiverType:
-		return m.OldReceiverType(ctx)
-	case sitemessage.FieldReceiverIds:
-		return m.OldReceiverIds(ctx)
 	case sitemessage.FieldReceiverCount:
 		return m.OldReceiverCount(ctx)
 	case sitemessage.FieldLink:
@@ -6976,20 +6858,6 @@ func (m *SiteMessageMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStatus(v)
-		return nil
-	case sitemessage.FieldReceiverType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetReceiverType(v)
-		return nil
-	case sitemessage.FieldReceiverIds:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetReceiverIds(v)
 		return nil
 	case sitemessage.FieldReceiverCount:
 		v, ok := value.(int64)
@@ -7085,9 +6953,6 @@ func (m *SiteMessageMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *SiteMessageMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(sitemessage.FieldReceiverIds) {
-		fields = append(fields, sitemessage.FieldReceiverIds)
-	}
 	if m.FieldCleared(sitemessage.FieldScheduledPublishTime) {
 		fields = append(fields, sitemessage.FieldScheduledPublishTime)
 	}
@@ -7111,9 +6976,6 @@ func (m *SiteMessageMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *SiteMessageMutation) ClearField(name string) error {
 	switch name {
-	case sitemessage.FieldReceiverIds:
-		m.ClearReceiverIds()
-		return nil
 	case sitemessage.FieldScheduledPublishTime:
 		m.ClearScheduledPublishTime()
 		return nil
@@ -7148,12 +7010,6 @@ func (m *SiteMessageMutation) ResetField(name string) error {
 		return nil
 	case sitemessage.FieldStatus:
 		m.ResetStatus()
-		return nil
-	case sitemessage.FieldReceiverType:
-		m.ResetReceiverType()
-		return nil
-	case sitemessage.FieldReceiverIds:
-		m.ResetReceiverIds()
 		return nil
 	case sitemessage.FieldReceiverCount:
 		m.ResetReceiverCount()

@@ -624,13 +624,6 @@ func uniqueStrings(values []string) []string {
 	return result
 }
 
-func normalizeSiteMessageReceiverSelection(receiverType string, receiverIDs []string) (string, []string) {
-	if receiverType == "user" {
-		return "user", uniqueStrings(receiverIDs)
-	}
-	return "all", []string{}
-}
-
 func (r *baseRepo) countActiveSiteMessageReceivers(ctx context.Context) (int64, error) {
 	count, err := r.data.db.User.Query().
 		Where(user.StatusEQ(1)).
@@ -638,22 +631,11 @@ func (r *baseRepo) countActiveSiteMessageReceivers(ctx context.Context) (int64, 
 	return int64(count), err
 }
 
-func (r *baseRepo) previewSiteMessageReceiverCount(ctx context.Context, receiverType string, receiverIDs []string) (int64, error) {
-	if receiverType == "user" {
-		return int64(len(uniqueStrings(receiverIDs))), nil
-	}
+func (r *baseRepo) previewSiteMessageReceiverCount(ctx context.Context) (int64, error) {
 	return r.countActiveSiteMessageReceivers(ctx)
 }
 
-func (r *baseRepo) resolveSiteMessageReceivers(ctx context.Context, receiverType string, receiverIDs []string) ([]string, error) {
-	if receiverType == "user" {
-		ids := uniqueStrings(receiverIDs)
-		if len(ids) == 0 {
-			return nil, errors.BadRequest("BAD_REQUEST", "no receiver found")
-		}
-		return ids, nil
-	}
-
+func (r *baseRepo) resolveSiteMessageReceivers(ctx context.Context) ([]string, error) {
 	users, err := r.data.db.User.Query().
 		Where(user.StatusEQ(1)).
 		All(ctx)
@@ -690,8 +672,7 @@ func (r *baseRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, me
 }
 
 func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName string, req *pb.CreateSiteMessageRequest) (*ent.SiteMessage, error) {
-	receiverType, receiverIDs := normalizeSiteMessageReceiverSelection(req.ReceiverType, req.ReceiverIds)
-	receiverCount, err := r.previewSiteMessageReceiverCount(ctx, receiverType, receiverIDs)
+	receiverCount, err := r.previewSiteMessageReceiverCount(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -716,7 +697,6 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 			SetTitle(req.Title).
 			SetContent(req.Content).
 			SetCategory(req.Category).
-			SetReceiverType(receiverType).
 			SetLink(req.Link).
 			SetSenderID(senderID).
 			SetSenderName(senderName)
@@ -725,16 +705,14 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 		case biz.SiteMessageActionDraft:
 			createBuilder.
 				SetStatus(biz.SiteMessageStatusDraft).
-				SetReceiverIds(receiverIDs).
 				SetReceiverCount(receiverCount)
 		case biz.SiteMessageActionSchedule:
 			createBuilder.
 				SetStatus(biz.SiteMessageStatusScheduled).
-				SetReceiverIds(receiverIDs).
 				SetReceiverCount(receiverCount).
 				SetScheduledPublishTime(scheduledPublishTime)
 		default:
-			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, receiverType, receiverIDs)
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx)
 			if err != nil {
 				_ = tx.Rollback()
 				return nil, err
@@ -742,7 +720,6 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 			now := time.Now()
 			createBuilder.
 				SetStatus(biz.SiteMessageStatusPublished).
-				SetReceiverIds(actualReceiverIDs).
 				SetReceiverCount(int64(len(actualReceiverIDs))).
 				SetPublishedTime(now)
 		}
@@ -767,7 +744,6 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 			SetTitle(req.Title).
 			SetContent(req.Content).
 			SetCategory(req.Category).
-			SetReceiverType(receiverType).
 			SetLink(req.Link).
 			SetSenderID(senderID).
 			SetSenderName(senderName)
@@ -779,18 +755,16 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 				ClearPublishedTime().
 				ClearRecalledTime().
 				SetStatus(biz.SiteMessageStatusDraft).
-				SetReceiverIds(receiverIDs).
 				SetReceiverCount(receiverCount)
 		case biz.SiteMessageActionSchedule:
 			updateBuilder.
 				ClearPublishedTime().
 				ClearRecalledTime().
 				SetStatus(biz.SiteMessageStatusScheduled).
-				SetReceiverIds(receiverIDs).
 				SetReceiverCount(receiverCount).
 				SetScheduledPublishTime(scheduledPublishTime)
 		default:
-			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, receiverType, receiverIDs)
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx)
 			if err != nil {
 				_ = tx.Rollback()
 				return nil, err
@@ -800,7 +774,6 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 				ClearScheduledPublishTime().
 				ClearRecalledTime().
 				SetStatus(biz.SiteMessageStatusPublished).
-				SetReceiverIds(actualReceiverIDs).
 				SetReceiverCount(int64(len(actualReceiverIDs))).
 				SetPublishedTime(now)
 		}
@@ -813,7 +786,12 @@ func (r *baseRepo) CreateSiteMessage(ctx context.Context, senderID, senderName s
 	}
 
 	if req.Action == biz.SiteMessageActionPublish {
-		if err := r.createSiteMessageReceipts(ctx, tx, message.ID, message.ReceiverIds); err != nil {
+		receiverIDs, err := r.resolveSiteMessageReceivers(ctx)
+		if err != nil {
+			_ = tx.Rollback()
+			return nil, err
+		}
+		if err := r.createSiteMessageReceipts(ctx, tx, message.ID, receiverIDs); err != nil {
 			_ = tx.Rollback()
 			return nil, err
 		}
@@ -1036,7 +1014,7 @@ func (r *baseRepo) promoteScheduledSiteMessage(ctx context.Context, messageItem 
 		return err
 	}
 
-	receiverIDs, err := r.resolveSiteMessageReceivers(ctx, messageItem.ReceiverType, messageItem.ReceiverIds)
+	receiverIDs, err := r.resolveSiteMessageReceivers(ctx)
 	if err != nil {
 		_ = tx.Rollback()
 		return err
@@ -1048,7 +1026,6 @@ func (r *baseRepo) promoteScheduledSiteMessage(ctx context.Context, messageItem 
 			sitemessage.StatusEQ(biz.SiteMessageStatusScheduled),
 		).
 		SetStatus(biz.SiteMessageStatusPublished).
-		SetReceiverIds(receiverIDs).
 		SetReceiverCount(int64(len(receiverIDs))).
 		SetPublishedTime(time.Now()).
 		ClearScheduledPublishTime().

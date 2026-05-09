@@ -124,8 +124,6 @@ func (u *SiteMessageUpdateOne) UpdateAll(sitemessage *SiteMessage) *SiteMessageU
 	update = update.SetContent(sitemessage.Content)
 	update = update.SetCategory(sitemessage.Category)
 	update = update.SetStatus(sitemessage.Status)
-	update = update.SetReceiverType(sitemessage.ReceiverType)
-	update = update.SetReceiverIds(sitemessage.ReceiverIds)
 	update = update.SetReceiverCount(sitemessage.ReceiverCount)
 	update = update.SetLink(sitemessage.Link)
 	update = update.SetSenderID(sitemessage.SenderID)

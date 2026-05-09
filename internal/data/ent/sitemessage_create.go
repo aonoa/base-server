@@ -88,26 +88,6 @@ func (_c *SiteMessageCreate) SetNillableStatus(v *string) *SiteMessageCreate {
 	return _c
 }
 
-// SetReceiverType sets the "receiver_type" field.
-func (_c *SiteMessageCreate) SetReceiverType(v string) *SiteMessageCreate {
-	_c.mutation.SetReceiverType(v)
-	return _c
-}
-
-// SetNillableReceiverType sets the "receiver_type" field if the given value is not nil.
-func (_c *SiteMessageCreate) SetNillableReceiverType(v *string) *SiteMessageCreate {
-	if v != nil {
-		_c.SetReceiverType(*v)
-	}
-	return _c
-}
-
-// SetReceiverIds sets the "receiver_ids" field.
-func (_c *SiteMessageCreate) SetReceiverIds(v []string) *SiteMessageCreate {
-	_c.mutation.SetReceiverIds(v)
-	return _c
-}
-
 // SetReceiverCount sets the "receiver_count" field.
 func (_c *SiteMessageCreate) SetReceiverCount(v int64) *SiteMessageCreate {
 	_c.mutation.SetReceiverCount(v)
@@ -271,10 +251,6 @@ func (_c *SiteMessageCreate) defaults() {
 		v := sitemessage.DefaultStatus
 		_c.mutation.SetStatus(v)
 	}
-	if _, ok := _c.mutation.ReceiverType(); !ok {
-		v := sitemessage.DefaultReceiverType
-		_c.mutation.SetReceiverType(v)
-	}
 	if _, ok := _c.mutation.ReceiverCount(); !ok {
 		v := sitemessage.DefaultReceiverCount
 		_c.mutation.SetReceiverCount(v)
@@ -326,9 +302,6 @@ func (_c *SiteMessageCreate) check() error {
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "SiteMessage.status"`)}
-	}
-	if _, ok := _c.mutation.ReceiverType(); !ok {
-		return &ValidationError{Name: "receiver_type", err: errors.New(`ent: missing required field "SiteMessage.receiver_type"`)}
 	}
 	if _, ok := _c.mutation.ReceiverCount(); !ok {
 		return &ValidationError{Name: "receiver_count", err: errors.New(`ent: missing required field "SiteMessage.receiver_count"`)}
@@ -400,14 +373,6 @@ func (_c *SiteMessageCreate) createSpec() (*SiteMessage, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)
 		_node.Status = value
-	}
-	if value, ok := _c.mutation.ReceiverType(); ok {
-		_spec.SetField(sitemessage.FieldReceiverType, field.TypeString, value)
-		_node.ReceiverType = value
-	}
-	if value, ok := _c.mutation.ReceiverIds(); ok {
-		_spec.SetField(sitemessage.FieldReceiverIds, field.TypeJSON, value)
-		_node.ReceiverIds = value
 	}
 	if value, ok := _c.mutation.ReceiverCount(); ok {
 		_spec.SetField(sitemessage.FieldReceiverCount, field.TypeInt64, value)

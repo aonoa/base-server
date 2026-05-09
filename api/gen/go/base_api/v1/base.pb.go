@@ -4233,8 +4233,6 @@ type PublishedSiteMessageItem struct {
 	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Category             string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
-	ReceiverType         string                 `protobuf:"bytes,5,opt,name=receiverType,proto3" json:"receiverType,omitempty"`
-	ReceiverIds          []string               `protobuf:"bytes,6,rep,name=receiverIds,proto3" json:"receiverIds,omitempty"`
 	ReceiverCount        int64                  `protobuf:"varint,7,opt,name=receiverCount,proto3" json:"receiverCount,omitempty"`
 	Link                 string                 `protobuf:"bytes,8,opt,name=link,proto3" json:"link,omitempty"`
 	SenderId             string                 `protobuf:"bytes,9,opt,name=senderId,proto3" json:"senderId,omitempty"`
@@ -4305,20 +4303,6 @@ func (x *PublishedSiteMessageItem) GetCategory() string {
 		return x.Category
 	}
 	return ""
-}
-
-func (x *PublishedSiteMessageItem) GetReceiverType() string {
-	if x != nil {
-		return x.ReceiverType
-	}
-	return ""
-}
-
-func (x *PublishedSiteMessageItem) GetReceiverIds() []string {
-	if x != nil {
-		return x.ReceiverIds
-	}
-	return nil
 }
 
 func (x *PublishedSiteMessageItem) GetReceiverCount() int64 {
@@ -4449,8 +4433,6 @@ type CreateSiteMessageRequest struct {
 	Title                string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content              string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Category             string                 `protobuf:"bytes,4,opt,name=category,proto3" json:"category,omitempty"`
-	ReceiverType         string                 `protobuf:"bytes,5,opt,name=receiverType,proto3" json:"receiverType,omitempty"` // all | user
-	ReceiverIds          []string               `protobuf:"bytes,6,rep,name=receiverIds,proto3" json:"receiverIds,omitempty"`
 	Link                 string                 `protobuf:"bytes,7,opt,name=link,proto3" json:"link,omitempty"`
 	Action               string                 `protobuf:"bytes,8,opt,name=action,proto3" json:"action,omitempty"`                             // draft | schedule | publish
 	ScheduledPublishTime string                 `protobuf:"bytes,9,opt,name=scheduledPublishTime,proto3" json:"scheduledPublishTime,omitempty"` // YYYY-MM-DD HH:mm:ss
@@ -4514,20 +4496,6 @@ func (x *CreateSiteMessageRequest) GetCategory() string {
 		return x.Category
 	}
 	return ""
-}
-
-func (x *CreateSiteMessageRequest) GetReceiverType() string {
-	if x != nil {
-		return x.ReceiverType
-	}
-	return ""
-}
-
-func (x *CreateSiteMessageRequest) GetReceiverIds() []string {
-	if x != nil {
-		return x.ReceiverIds
-	}
-	return nil
 }
 
 func (x *CreateSiteMessageRequest) GetLink() string {
@@ -5114,14 +5082,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"!GetPublishedSiteMessageListParams\x12 \n" +
 	"\vcurrentPage\x18\x01 \x01(\x03R\vcurrentPage\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x03R\bpageSize\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status\"\x8c\x04\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\"\xc6\x03\n" +
 	"\x18PublishedSiteMessageItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
-	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\"\n" +
-	"\freceiverType\x18\x05 \x01(\tR\freceiverType\x12 \n" +
-	"\vreceiverIds\x18\x06 \x03(\tR\vreceiverIds\x12$\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12$\n" +
 	"\rreceiverCount\x18\a \x01(\x03R\rreceiverCount\x12\x12\n" +
 	"\x04link\x18\b \x01(\tR\x04link\x12\x1a\n" +
 	"\bsenderId\x18\t \x01(\tR\bsenderId\x12\x1e\n" +
@@ -5137,14 +5103,12 @@ const file_base_api_v1_base_proto_rawDesc = "" +
 	"\vupdatedTime\x18\x10 \x01(\tR\vupdatedTime\"y\n" +
 	" GetPublishedSiteMessageListReply\x12?\n" +
 	"\x05items\x18\x01 \x03(\v2).api.base_api.v1.PublishedSiteMessageItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x9c\x02\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xd6\x01\n" +
 	"\x18CreateSiteMessageRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1a\n" +
-	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\"\n" +
-	"\freceiverType\x18\x05 \x01(\tR\freceiverType\x12 \n" +
-	"\vreceiverIds\x18\x06 \x03(\tR\vreceiverIds\x12\x12\n" +
+	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x12\n" +
 	"\x04link\x18\a \x01(\tR\x04link\x12\x16\n" +
 	"\x06action\x18\b \x01(\tR\x06action\x122\n" +
 	"\x14scheduledPublishTime\x18\t \x01(\tR\x14scheduledPublishTime\"\xc0\x01\n" +

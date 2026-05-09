@@ -153,8 +153,6 @@ var (
 		{Name: "content", Type: field.TypeString, Comment: "消息正文"},
 		{Name: "category", Type: field.TypeString, Comment: "消息分类", Default: "system"},
 		{Name: "status", Type: field.TypeString, Comment: "消息状态 draft|scheduled|published|recalled", Default: "published"},
-		{Name: "receiver_type", Type: field.TypeString, Comment: "接收范围 all|user", Default: "all"},
-		{Name: "receiver_ids", Type: field.TypeJSON, Nullable: true, Comment: "指定接收用户ID列表"},
 		{Name: "receiver_count", Type: field.TypeInt64, Comment: "接收人数", Default: 0},
 		{Name: "link", Type: field.TypeString, Comment: "消息跳转链接", Default: ""},
 		{Name: "sender_id", Type: field.TypeString, Comment: "发送人ID", Default: ""},
@@ -176,11 +174,6 @@ var (
 				Columns: []*schema.Column{SysSiteMessageColumns[1]},
 			},
 			{
-				Name:    "sitemessage_receiver_type",
-				Unique:  false,
-				Columns: []*schema.Column{SysSiteMessageColumns[7]},
-			},
-			{
 				Name:    "sitemessage_category",
 				Unique:  false,
 				Columns: []*schema.Column{SysSiteMessageColumns[5]},
@@ -193,7 +186,7 @@ var (
 			{
 				Name:    "sitemessage_scheduled_publish_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysSiteMessageColumns[13]},
+				Columns: []*schema.Column{SysSiteMessageColumns[11]},
 			},
 		},
 	}

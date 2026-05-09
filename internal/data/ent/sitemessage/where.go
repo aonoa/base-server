@@ -94,11 +94,6 @@ func Status(v string) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldEQ(FieldStatus, v))
 }
 
-// ReceiverType applies equality check predicate on the "receiver_type" field. It's identical to ReceiverTypeEQ.
-func ReceiverType(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldEQ(FieldReceiverType, v))
-}
-
 // ReceiverCount applies equality check predicate on the "receiver_count" field. It's identical to ReceiverCountEQ.
 func ReceiverCount(v int64) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldEQ(FieldReceiverCount, v))
@@ -472,81 +467,6 @@ func StatusEqualFold(v string) predicate.SiteMessage {
 // StatusContainsFold applies the ContainsFold predicate on the "status" field.
 func StatusContainsFold(v string) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldContainsFold(FieldStatus, v))
-}
-
-// ReceiverTypeEQ applies the EQ predicate on the "receiver_type" field.
-func ReceiverTypeEQ(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldEQ(FieldReceiverType, v))
-}
-
-// ReceiverTypeNEQ applies the NEQ predicate on the "receiver_type" field.
-func ReceiverTypeNEQ(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldNEQ(FieldReceiverType, v))
-}
-
-// ReceiverTypeIn applies the In predicate on the "receiver_type" field.
-func ReceiverTypeIn(vs ...string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldIn(FieldReceiverType, vs...))
-}
-
-// ReceiverTypeNotIn applies the NotIn predicate on the "receiver_type" field.
-func ReceiverTypeNotIn(vs ...string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldNotIn(FieldReceiverType, vs...))
-}
-
-// ReceiverTypeGT applies the GT predicate on the "receiver_type" field.
-func ReceiverTypeGT(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldGT(FieldReceiverType, v))
-}
-
-// ReceiverTypeGTE applies the GTE predicate on the "receiver_type" field.
-func ReceiverTypeGTE(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldGTE(FieldReceiverType, v))
-}
-
-// ReceiverTypeLT applies the LT predicate on the "receiver_type" field.
-func ReceiverTypeLT(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldLT(FieldReceiverType, v))
-}
-
-// ReceiverTypeLTE applies the LTE predicate on the "receiver_type" field.
-func ReceiverTypeLTE(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldLTE(FieldReceiverType, v))
-}
-
-// ReceiverTypeContains applies the Contains predicate on the "receiver_type" field.
-func ReceiverTypeContains(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldContains(FieldReceiverType, v))
-}
-
-// ReceiverTypeHasPrefix applies the HasPrefix predicate on the "receiver_type" field.
-func ReceiverTypeHasPrefix(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldHasPrefix(FieldReceiverType, v))
-}
-
-// ReceiverTypeHasSuffix applies the HasSuffix predicate on the "receiver_type" field.
-func ReceiverTypeHasSuffix(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldHasSuffix(FieldReceiverType, v))
-}
-
-// ReceiverTypeEqualFold applies the EqualFold predicate on the "receiver_type" field.
-func ReceiverTypeEqualFold(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldEqualFold(FieldReceiverType, v))
-}
-
-// ReceiverTypeContainsFold applies the ContainsFold predicate on the "receiver_type" field.
-func ReceiverTypeContainsFold(v string) predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldContainsFold(FieldReceiverType, v))
-}
-
-// ReceiverIdsIsNil applies the IsNil predicate on the "receiver_ids" field.
-func ReceiverIdsIsNil() predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldIsNull(FieldReceiverIds))
-}
-
-// ReceiverIdsNotNil applies the NotNil predicate on the "receiver_ids" field.
-func ReceiverIdsNotNil() predicate.SiteMessage {
-	return predicate.SiteMessage(sql.FieldNotNull(FieldReceiverIds))
 }
 
 // ReceiverCountEQ applies the EQ predicate on the "receiver_count" field.

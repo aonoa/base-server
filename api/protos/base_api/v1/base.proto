@@ -846,8 +846,6 @@ message PublishedSiteMessageItem {
 	string title = 2;
 	string content = 3;
 	string category = 4;
-	string receiverType = 5;
-	repeated string receiverIds = 6;
 	int64 receiverCount = 7;
 	string link = 8;
 	string senderId = 9;
@@ -870,8 +868,6 @@ message CreateSiteMessageRequest {
 	string title = 2;
 	string content = 3;
 	string category = 4;
-	string receiverType = 5; // all | user
-	repeated string receiverIds = 6;
 	string link = 7;
 	string action = 8; // draft | schedule | publish
 	string scheduledPublishTime = 9; // YYYY-MM-DD HH:mm:ss

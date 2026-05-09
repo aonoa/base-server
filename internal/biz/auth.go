@@ -450,12 +450,17 @@ func (uc *AuthUsecase) ensureBuiltinSiteMessageApiGroups() {
 		"/basic-api/notice/my/read/{messageId}",
 		"/basic-api/notice/my/unread/{messageId}",
 		"/basic-api/notice/my/read-all",
+	} {
+		uc.AddApiToGroup(path, "default")
+	}
+
+	for _, path := range []string{
 		"/basic-api/notice/admin/list",
 		"/basic-api/notice/admin",
 		"/basic-api/notice/admin/recall/{id}",
 		"/basic-api/notice/admin/{id}",
 	} {
-		uc.AddApiToGroup(path, "default")
+		uc.AddApiToGroup(path, "site-message-manage")
 	}
 }
 
