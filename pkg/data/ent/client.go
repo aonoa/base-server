@@ -12,7 +12,6 @@ import (
 	"base-server/pkg/data/ent/migrate"
 
 	"base-server/pkg/data/ent/apiresources"
-	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/projectionsourcestatus"
@@ -39,8 +38,6 @@ type Client struct {
 	Schema *migrate.Schema
 	// ApiResources is the client for interacting with the ApiResources builders.
 	ApiResources *ApiResourcesClient
-	// BusinessDomain is the client for interacting with the BusinessDomain builders.
-	BusinessDomain *BusinessDomainClient
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
@@ -75,7 +72,6 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.ApiResources = NewApiResourcesClient(c.config)
-	c.BusinessDomain = NewBusinessDomainClient(c.config)
 	c.Dept = NewDeptClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.ProjectionSourceStatus = NewProjectionSourceStatusClient(c.config)
@@ -180,7 +176,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:                    ctx,
 		config:                 cfg,
 		ApiResources:           NewApiResourcesClient(cfg),
-		BusinessDomain:         NewBusinessDomainClient(cfg),
 		Dept:                   NewDeptClient(cfg),
 		Menu:                   NewMenuClient(cfg),
 		ProjectionSourceStatus: NewProjectionSourceStatusClient(cfg),
@@ -212,7 +207,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:                    ctx,
 		config:                 cfg,
 		ApiResources:           NewApiResourcesClient(cfg),
-		BusinessDomain:         NewBusinessDomainClient(cfg),
 		Dept:                   NewDeptClient(cfg),
 		Menu:                   NewMenuClient(cfg),
 		ProjectionSourceStatus: NewProjectionSourceStatusClient(cfg),
@@ -253,9 +247,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
-		c.Resource, c.Role, c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt,
-		c.SysLogRecord, c.User, c.UserRoleBinding,
+		c.ApiResources, c.Dept, c.Menu, c.ProjectionSourceStatus, c.Resource, c.Role,
+		c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt, c.SysLogRecord, c.User,
+		c.UserRoleBinding,
 	} {
 		n.Use(hooks...)
 	}
@@ -265,9 +259,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.ApiResources, c.BusinessDomain, c.Dept, c.Menu, c.ProjectionSourceStatus,
-		c.Resource, c.Role, c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt,
-		c.SysLogRecord, c.User, c.UserRoleBinding,
+		c.ApiResources, c.Dept, c.Menu, c.ProjectionSourceStatus, c.Resource, c.Role,
+		c.ServiceRegistry, c.SiteMessage, c.SiteMessageReceipt, c.SysLogRecord, c.User,
+		c.UserRoleBinding,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -278,8 +272,6 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *ApiResourcesMutation:
 		return c.ApiResources.mutate(ctx, m)
-	case *BusinessDomainMutation:
-		return c.BusinessDomain.mutate(ctx, m)
 	case *DeptMutation:
 		return c.Dept.mutate(ctx, m)
 	case *MenuMutation:
@@ -453,139 +445,6 @@ func (c *ApiResourcesClient) mutate(ctx context.Context, m *ApiResourcesMutation
 		return (&ApiResourcesDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown ApiResources mutation op: %q", m.Op())
-	}
-}
-
-// BusinessDomainClient is a client for the BusinessDomain schema.
-type BusinessDomainClient struct {
-	config
-}
-
-// NewBusinessDomainClient returns a client for the BusinessDomain from the given config.
-func NewBusinessDomainClient(c config) *BusinessDomainClient {
-	return &BusinessDomainClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `businessdomain.Hooks(f(g(h())))`.
-func (c *BusinessDomainClient) Use(hooks ...Hook) {
-	c.hooks.BusinessDomain = append(c.hooks.BusinessDomain, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `businessdomain.Intercept(f(g(h())))`.
-func (c *BusinessDomainClient) Intercept(interceptors ...Interceptor) {
-	c.inters.BusinessDomain = append(c.inters.BusinessDomain, interceptors...)
-}
-
-// Create returns a builder for creating a BusinessDomain entity.
-func (c *BusinessDomainClient) Create() *BusinessDomainCreate {
-	mutation := newBusinessDomainMutation(c.config, OpCreate)
-	return &BusinessDomainCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of BusinessDomain entities.
-func (c *BusinessDomainClient) CreateBulk(builders ...*BusinessDomainCreate) *BusinessDomainCreateBulk {
-	return &BusinessDomainCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *BusinessDomainClient) MapCreateBulk(slice any, setFunc func(*BusinessDomainCreate, int)) *BusinessDomainCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &BusinessDomainCreateBulk{err: fmt.Errorf("calling to BusinessDomainClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*BusinessDomainCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &BusinessDomainCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for BusinessDomain.
-func (c *BusinessDomainClient) Update() *BusinessDomainUpdate {
-	mutation := newBusinessDomainMutation(c.config, OpUpdate)
-	return &BusinessDomainUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *BusinessDomainClient) UpdateOne(_m *BusinessDomain) *BusinessDomainUpdateOne {
-	mutation := newBusinessDomainMutation(c.config, OpUpdateOne, withBusinessDomain(_m))
-	return &BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *BusinessDomainClient) UpdateOneID(id string) *BusinessDomainUpdateOne {
-	mutation := newBusinessDomainMutation(c.config, OpUpdateOne, withBusinessDomainID(id))
-	return &BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for BusinessDomain.
-func (c *BusinessDomainClient) Delete() *BusinessDomainDelete {
-	mutation := newBusinessDomainMutation(c.config, OpDelete)
-	return &BusinessDomainDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *BusinessDomainClient) DeleteOne(_m *BusinessDomain) *BusinessDomainDeleteOne {
-	return c.DeleteOneID(_m.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *BusinessDomainClient) DeleteOneID(id string) *BusinessDomainDeleteOne {
-	builder := c.Delete().Where(businessdomain.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &BusinessDomainDeleteOne{builder}
-}
-
-// Query returns a query builder for BusinessDomain.
-func (c *BusinessDomainClient) Query() *BusinessDomainQuery {
-	return &BusinessDomainQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeBusinessDomain},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a BusinessDomain entity by its id.
-func (c *BusinessDomainClient) Get(ctx context.Context, id string) (*BusinessDomain, error) {
-	return c.Query().Where(businessdomain.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *BusinessDomainClient) GetX(ctx context.Context, id string) *BusinessDomain {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *BusinessDomainClient) Hooks() []Hook {
-	return c.hooks.BusinessDomain
-}
-
-// Interceptors returns the client interceptors.
-func (c *BusinessDomainClient) Interceptors() []Interceptor {
-	return c.inters.BusinessDomain
-}
-
-func (c *BusinessDomainClient) mutate(ctx context.Context, m *BusinessDomainMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&BusinessDomainCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&BusinessDomainUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&BusinessDomainUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&BusinessDomainDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("ent: unknown BusinessDomain mutation op: %q", m.Op())
 	}
 }
 
@@ -2135,13 +1994,13 @@ func (c *UserRoleBindingClient) mutate(ctx context.Context, m *UserRoleBindingMu
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
-		Role, ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
+		ApiResources, Dept, Menu, ProjectionSourceStatus, Resource, Role,
+		ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
 		UserRoleBinding []ent.Hook
 	}
 	inters struct {
-		ApiResources, BusinessDomain, Dept, Menu, ProjectionSourceStatus, Resource,
-		Role, ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
+		ApiResources, Dept, Menu, ProjectionSourceStatus, Resource, Role,
+		ServiceRegistry, SiteMessage, SiteMessageReceipt, SysLogRecord, User,
 		UserRoleBinding []ent.Interceptor
 	}
 )

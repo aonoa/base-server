@@ -60,12 +60,6 @@ func (_c *ServiceRegistryCreate) SetServiceName(v string) *ServiceRegistryCreate
 	return _c
 }
 
-// SetDomainCode sets the "domain_code" field.
-func (_c *ServiceRegistryCreate) SetDomainCode(v string) *ServiceRegistryCreate {
-	_c.mutation.SetDomainCode(v)
-	return _c
-}
-
 // SetHTTPPrefix sets the "http_prefix" field.
 func (_c *ServiceRegistryCreate) SetHTTPPrefix(v string) *ServiceRegistryCreate {
 	_c.mutation.SetHTTPPrefix(v)
@@ -233,9 +227,6 @@ func (_c *ServiceRegistryCreate) check() error {
 	if _, ok := _c.mutation.ServiceName(); !ok {
 		return &ValidationError{Name: "service_name", err: errors.New(`ent: missing required field "ServiceRegistry.service_name"`)}
 	}
-	if _, ok := _c.mutation.DomainCode(); !ok {
-		return &ValidationError{Name: "domain_code", err: errors.New(`ent: missing required field "ServiceRegistry.domain_code"`)}
-	}
 	if _, ok := _c.mutation.HTTPPrefix(); !ok {
 		return &ValidationError{Name: "http_prefix", err: errors.New(`ent: missing required field "ServiceRegistry.http_prefix"`)}
 	}
@@ -301,10 +292,6 @@ func (_c *ServiceRegistryCreate) createSpec() (*ServiceRegistry, *sqlgraph.Creat
 	if value, ok := _c.mutation.ServiceName(); ok {
 		_spec.SetField(serviceregistry.FieldServiceName, field.TypeString, value)
 		_node.ServiceName = value
-	}
-	if value, ok := _c.mutation.DomainCode(); ok {
-		_spec.SetField(serviceregistry.FieldDomainCode, field.TypeString, value)
-		_node.DomainCode = value
 	}
 	if value, ok := _c.mutation.HTTPPrefix(); ok {
 		_spec.SetField(serviceregistry.FieldHTTPPrefix, field.TypeString, value)

@@ -19,8 +19,6 @@ const (
 	FieldUpdateTime = "update_time"
 	// FieldSourceService holds the string denoting the source_service field in the database.
 	FieldSourceService = "source_service"
-	// FieldDomainCode holds the string denoting the domain_code field in the database.
-	FieldDomainCode = "domain_code"
 	// FieldSyncMode holds the string denoting the sync_mode field in the database.
 	FieldSyncMode = "sync_mode"
 	// FieldState holds the string denoting the state field in the database.
@@ -43,7 +41,6 @@ var Columns = []string{
 	FieldCreateTime,
 	FieldUpdateTime,
 	FieldSourceService,
-	FieldDomainCode,
 	FieldSyncMode,
 	FieldState,
 	FieldLastSnapshotRevision,
@@ -69,8 +66,6 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// DefaultDomainCode holds the default value on creation for the "domain_code" field.
-	DefaultDomainCode string
 	// DefaultSyncMode holds the default value on creation for the "sync_mode" field.
 	DefaultSyncMode string
 	// DefaultState holds the default value on creation for the "state" field.
@@ -108,11 +103,6 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 // BySourceService orders the results by the source_service field.
 func BySourceService(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSourceService, opts...).ToFunc()
-}
-
-// ByDomainCode orders the results by the domain_code field.
-func ByDomainCode(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDomainCode, opts...).ToFunc()
 }
 
 // BySyncMode orders the results by the sync_mode field.

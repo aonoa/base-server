@@ -14,8 +14,6 @@ type Tx struct {
 	config
 	// ApiResources is the client for interacting with the ApiResources builders.
 	ApiResources *ApiResourcesClient
-	// BusinessDomain is the client for interacting with the BusinessDomain builders.
-	BusinessDomain *BusinessDomainClient
 	// Dept is the client for interacting with the Dept builders.
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
@@ -170,7 +168,6 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.ApiResources = NewApiResourcesClient(tx.config)
-	tx.BusinessDomain = NewBusinessDomainClient(tx.config)
 	tx.Dept = NewDeptClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.ProjectionSourceStatus = NewProjectionSourceStatusClient(tx.config)

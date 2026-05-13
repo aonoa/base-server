@@ -4,7 +4,6 @@ package ent
 
 import (
 	"base-server/pkg/data/ent/apiresources"
-	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/predicate"
@@ -38,7 +37,6 @@ const (
 
 	// Node types.
 	TypeApiResources           = "ApiResources"
-	TypeBusinessDomain         = "BusinessDomain"
 	TypeDept                   = "Dept"
 	TypeMenu                   = "Menu"
 	TypeProjectionSourceStatus = "ProjectionSourceStatus"
@@ -66,8 +64,6 @@ type ApiResourcesMutation struct {
 	module             *string
 	module_description *string
 	resources_group    *string
-	service_code       *string
-	domain_code        *string
 	clearedFields      map[string]struct{}
 	roles              map[int64]struct{}
 	removedroles       map[int64]struct{}
@@ -469,78 +465,6 @@ func (m *ApiResourcesMutation) ResetResourcesGroup() {
 	m.resources_group = nil
 }
 
-// SetServiceCode sets the "service_code" field.
-func (m *ApiResourcesMutation) SetServiceCode(s string) {
-	m.service_code = &s
-}
-
-// ServiceCode returns the value of the "service_code" field in the mutation.
-func (m *ApiResourcesMutation) ServiceCode() (r string, exists bool) {
-	v := m.service_code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldServiceCode returns the old "service_code" field's value of the ApiResources entity.
-// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ApiResourcesMutation) OldServiceCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldServiceCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldServiceCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldServiceCode: %w", err)
-	}
-	return oldValue.ServiceCode, nil
-}
-
-// ResetServiceCode resets all changes to the "service_code" field.
-func (m *ApiResourcesMutation) ResetServiceCode() {
-	m.service_code = nil
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (m *ApiResourcesMutation) SetDomainCode(s string) {
-	m.domain_code = &s
-}
-
-// DomainCode returns the value of the "domain_code" field in the mutation.
-func (m *ApiResourcesMutation) DomainCode() (r string, exists bool) {
-	v := m.domain_code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDomainCode returns the old "domain_code" field's value of the ApiResources entity.
-// If the ApiResources object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ApiResourcesMutation) OldDomainCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDomainCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
-	}
-	return oldValue.DomainCode, nil
-}
-
-// ResetDomainCode resets all changes to the "domain_code" field.
-func (m *ApiResourcesMutation) ResetDomainCode() {
-	m.domain_code = nil
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *ApiResourcesMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -629,7 +553,7 @@ func (m *ApiResourcesMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ApiResourcesMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 8)
 	if m.create_time != nil {
 		fields = append(fields, apiresources.FieldCreateTime)
 	}
@@ -653,12 +577,6 @@ func (m *ApiResourcesMutation) Fields() []string {
 	}
 	if m.resources_group != nil {
 		fields = append(fields, apiresources.FieldResourcesGroup)
-	}
-	if m.service_code != nil {
-		fields = append(fields, apiresources.FieldServiceCode)
-	}
-	if m.domain_code != nil {
-		fields = append(fields, apiresources.FieldDomainCode)
 	}
 	return fields
 }
@@ -684,10 +602,6 @@ func (m *ApiResourcesMutation) Field(name string) (ent.Value, bool) {
 		return m.ModuleDescription()
 	case apiresources.FieldResourcesGroup:
 		return m.ResourcesGroup()
-	case apiresources.FieldServiceCode:
-		return m.ServiceCode()
-	case apiresources.FieldDomainCode:
-		return m.DomainCode()
 	}
 	return nil, false
 }
@@ -713,10 +627,6 @@ func (m *ApiResourcesMutation) OldField(ctx context.Context, name string) (ent.V
 		return m.OldModuleDescription(ctx)
 	case apiresources.FieldResourcesGroup:
 		return m.OldResourcesGroup(ctx)
-	case apiresources.FieldServiceCode:
-		return m.OldServiceCode(ctx)
-	case apiresources.FieldDomainCode:
-		return m.OldDomainCode(ctx)
 	}
 	return nil, fmt.Errorf("unknown ApiResources field %s", name)
 }
@@ -781,20 +691,6 @@ func (m *ApiResourcesMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetResourcesGroup(v)
-		return nil
-	case apiresources.FieldServiceCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetServiceCode(v)
-		return nil
-	case apiresources.FieldDomainCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDomainCode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources field %s", name)
@@ -868,12 +764,6 @@ func (m *ApiResourcesMutation) ResetField(name string) error {
 		return nil
 	case apiresources.FieldResourcesGroup:
 		m.ResetResourcesGroup()
-		return nil
-	case apiresources.FieldServiceCode:
-		m.ResetServiceCode()
-		return nil
-	case apiresources.FieldDomainCode:
-		m.ResetDomainCode()
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources field %s", name)
@@ -961,824 +851,6 @@ func (m *ApiResourcesMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown ApiResources edge %s", name)
-}
-
-// BusinessDomainMutation represents an operation that mutates the BusinessDomain nodes in the graph.
-type BusinessDomainMutation struct {
-	config
-	op              Op
-	typ             string
-	id              *string
-	create_time     *time.Time
-	update_time     *time.Time
-	code            *string
-	name            *string
-	owner_service   *string
-	org_model_type  *string
-	auth_scope_type *string
-	status          *bool
-	description     *string
-	meta_json       *string
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*BusinessDomain, error)
-	predicates      []predicate.BusinessDomain
-}
-
-var _ ent.Mutation = (*BusinessDomainMutation)(nil)
-
-// businessdomainOption allows management of the mutation configuration using functional options.
-type businessdomainOption func(*BusinessDomainMutation)
-
-// newBusinessDomainMutation creates new mutation for the BusinessDomain entity.
-func newBusinessDomainMutation(c config, op Op, opts ...businessdomainOption) *BusinessDomainMutation {
-	m := &BusinessDomainMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeBusinessDomain,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withBusinessDomainID sets the ID field of the mutation.
-func withBusinessDomainID(id string) businessdomainOption {
-	return func(m *BusinessDomainMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *BusinessDomain
-		)
-		m.oldValue = func(ctx context.Context) (*BusinessDomain, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().BusinessDomain.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withBusinessDomain sets the old BusinessDomain of the mutation.
-func withBusinessDomain(node *BusinessDomain) businessdomainOption {
-	return func(m *BusinessDomainMutation) {
-		m.oldValue = func(context.Context) (*BusinessDomain, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m BusinessDomainMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m BusinessDomainMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of BusinessDomain entities.
-func (m *BusinessDomainMutation) SetID(id string) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *BusinessDomainMutation) ID() (id string, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *BusinessDomainMutation) IDs(ctx context.Context) ([]string, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []string{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().BusinessDomain.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetCreateTime sets the "create_time" field.
-func (m *BusinessDomainMutation) SetCreateTime(t time.Time) {
-	m.create_time = &t
-}
-
-// CreateTime returns the value of the "create_time" field in the mutation.
-func (m *BusinessDomainMutation) CreateTime() (r time.Time, exists bool) {
-	v := m.create_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateTime returns the old "create_time" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
-	}
-	return oldValue.CreateTime, nil
-}
-
-// ResetCreateTime resets all changes to the "create_time" field.
-func (m *BusinessDomainMutation) ResetCreateTime() {
-	m.create_time = nil
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (m *BusinessDomainMutation) SetUpdateTime(t time.Time) {
-	m.update_time = &t
-}
-
-// UpdateTime returns the value of the "update_time" field in the mutation.
-func (m *BusinessDomainMutation) UpdateTime() (r time.Time, exists bool) {
-	v := m.update_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateTime returns the old "update_time" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
-	}
-	return oldValue.UpdateTime, nil
-}
-
-// ResetUpdateTime resets all changes to the "update_time" field.
-func (m *BusinessDomainMutation) ResetUpdateTime() {
-	m.update_time = nil
-}
-
-// SetCode sets the "code" field.
-func (m *BusinessDomainMutation) SetCode(s string) {
-	m.code = &s
-}
-
-// Code returns the value of the "code" field in the mutation.
-func (m *BusinessDomainMutation) Code() (r string, exists bool) {
-	v := m.code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCode returns the old "code" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCode: %w", err)
-	}
-	return oldValue.Code, nil
-}
-
-// ResetCode resets all changes to the "code" field.
-func (m *BusinessDomainMutation) ResetCode() {
-	m.code = nil
-}
-
-// SetName sets the "name" field.
-func (m *BusinessDomainMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the value of the "name" field in the mutation.
-func (m *BusinessDomainMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old "name" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName resets all changes to the "name" field.
-func (m *BusinessDomainMutation) ResetName() {
-	m.name = nil
-}
-
-// SetOwnerService sets the "owner_service" field.
-func (m *BusinessDomainMutation) SetOwnerService(s string) {
-	m.owner_service = &s
-}
-
-// OwnerService returns the value of the "owner_service" field in the mutation.
-func (m *BusinessDomainMutation) OwnerService() (r string, exists bool) {
-	v := m.owner_service
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOwnerService returns the old "owner_service" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldOwnerService(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOwnerService is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOwnerService requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOwnerService: %w", err)
-	}
-	return oldValue.OwnerService, nil
-}
-
-// ResetOwnerService resets all changes to the "owner_service" field.
-func (m *BusinessDomainMutation) ResetOwnerService() {
-	m.owner_service = nil
-}
-
-// SetOrgModelType sets the "org_model_type" field.
-func (m *BusinessDomainMutation) SetOrgModelType(s string) {
-	m.org_model_type = &s
-}
-
-// OrgModelType returns the value of the "org_model_type" field in the mutation.
-func (m *BusinessDomainMutation) OrgModelType() (r string, exists bool) {
-	v := m.org_model_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOrgModelType returns the old "org_model_type" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldOrgModelType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOrgModelType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOrgModelType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOrgModelType: %w", err)
-	}
-	return oldValue.OrgModelType, nil
-}
-
-// ResetOrgModelType resets all changes to the "org_model_type" field.
-func (m *BusinessDomainMutation) ResetOrgModelType() {
-	m.org_model_type = nil
-}
-
-// SetAuthScopeType sets the "auth_scope_type" field.
-func (m *BusinessDomainMutation) SetAuthScopeType(s string) {
-	m.auth_scope_type = &s
-}
-
-// AuthScopeType returns the value of the "auth_scope_type" field in the mutation.
-func (m *BusinessDomainMutation) AuthScopeType() (r string, exists bool) {
-	v := m.auth_scope_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAuthScopeType returns the old "auth_scope_type" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldAuthScopeType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAuthScopeType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAuthScopeType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAuthScopeType: %w", err)
-	}
-	return oldValue.AuthScopeType, nil
-}
-
-// ResetAuthScopeType resets all changes to the "auth_scope_type" field.
-func (m *BusinessDomainMutation) ResetAuthScopeType() {
-	m.auth_scope_type = nil
-}
-
-// SetStatus sets the "status" field.
-func (m *BusinessDomainMutation) SetStatus(b bool) {
-	m.status = &b
-}
-
-// Status returns the value of the "status" field in the mutation.
-func (m *BusinessDomainMutation) Status() (r bool, exists bool) {
-	v := m.status
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldStatus returns the old "status" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldStatus(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldStatus requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
-	}
-	return oldValue.Status, nil
-}
-
-// ResetStatus resets all changes to the "status" field.
-func (m *BusinessDomainMutation) ResetStatus() {
-	m.status = nil
-}
-
-// SetDescription sets the "description" field.
-func (m *BusinessDomainMutation) SetDescription(s string) {
-	m.description = &s
-}
-
-// Description returns the value of the "description" field in the mutation.
-func (m *BusinessDomainMutation) Description() (r string, exists bool) {
-	v := m.description
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDescription returns the old "description" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldDescription(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
-	}
-	return oldValue.Description, nil
-}
-
-// ResetDescription resets all changes to the "description" field.
-func (m *BusinessDomainMutation) ResetDescription() {
-	m.description = nil
-}
-
-// SetMetaJSON sets the "meta_json" field.
-func (m *BusinessDomainMutation) SetMetaJSON(s string) {
-	m.meta_json = &s
-}
-
-// MetaJSON returns the value of the "meta_json" field in the mutation.
-func (m *BusinessDomainMutation) MetaJSON() (r string, exists bool) {
-	v := m.meta_json
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldMetaJSON returns the old "meta_json" field's value of the BusinessDomain entity.
-// If the BusinessDomain object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BusinessDomainMutation) OldMetaJSON(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMetaJSON is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMetaJSON requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMetaJSON: %w", err)
-	}
-	return oldValue.MetaJSON, nil
-}
-
-// ResetMetaJSON resets all changes to the "meta_json" field.
-func (m *BusinessDomainMutation) ResetMetaJSON() {
-	m.meta_json = nil
-}
-
-// Where appends a list predicates to the BusinessDomainMutation builder.
-func (m *BusinessDomainMutation) Where(ps ...predicate.BusinessDomain) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the BusinessDomainMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *BusinessDomainMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.BusinessDomain, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *BusinessDomainMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *BusinessDomainMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (BusinessDomain).
-func (m *BusinessDomainMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *BusinessDomainMutation) Fields() []string {
-	fields := make([]string, 0, 10)
-	if m.create_time != nil {
-		fields = append(fields, businessdomain.FieldCreateTime)
-	}
-	if m.update_time != nil {
-		fields = append(fields, businessdomain.FieldUpdateTime)
-	}
-	if m.code != nil {
-		fields = append(fields, businessdomain.FieldCode)
-	}
-	if m.name != nil {
-		fields = append(fields, businessdomain.FieldName)
-	}
-	if m.owner_service != nil {
-		fields = append(fields, businessdomain.FieldOwnerService)
-	}
-	if m.org_model_type != nil {
-		fields = append(fields, businessdomain.FieldOrgModelType)
-	}
-	if m.auth_scope_type != nil {
-		fields = append(fields, businessdomain.FieldAuthScopeType)
-	}
-	if m.status != nil {
-		fields = append(fields, businessdomain.FieldStatus)
-	}
-	if m.description != nil {
-		fields = append(fields, businessdomain.FieldDescription)
-	}
-	if m.meta_json != nil {
-		fields = append(fields, businessdomain.FieldMetaJSON)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *BusinessDomainMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case businessdomain.FieldCreateTime:
-		return m.CreateTime()
-	case businessdomain.FieldUpdateTime:
-		return m.UpdateTime()
-	case businessdomain.FieldCode:
-		return m.Code()
-	case businessdomain.FieldName:
-		return m.Name()
-	case businessdomain.FieldOwnerService:
-		return m.OwnerService()
-	case businessdomain.FieldOrgModelType:
-		return m.OrgModelType()
-	case businessdomain.FieldAuthScopeType:
-		return m.AuthScopeType()
-	case businessdomain.FieldStatus:
-		return m.Status()
-	case businessdomain.FieldDescription:
-		return m.Description()
-	case businessdomain.FieldMetaJSON:
-		return m.MetaJSON()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *BusinessDomainMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case businessdomain.FieldCreateTime:
-		return m.OldCreateTime(ctx)
-	case businessdomain.FieldUpdateTime:
-		return m.OldUpdateTime(ctx)
-	case businessdomain.FieldCode:
-		return m.OldCode(ctx)
-	case businessdomain.FieldName:
-		return m.OldName(ctx)
-	case businessdomain.FieldOwnerService:
-		return m.OldOwnerService(ctx)
-	case businessdomain.FieldOrgModelType:
-		return m.OldOrgModelType(ctx)
-	case businessdomain.FieldAuthScopeType:
-		return m.OldAuthScopeType(ctx)
-	case businessdomain.FieldStatus:
-		return m.OldStatus(ctx)
-	case businessdomain.FieldDescription:
-		return m.OldDescription(ctx)
-	case businessdomain.FieldMetaJSON:
-		return m.OldMetaJSON(ctx)
-	}
-	return nil, fmt.Errorf("unknown BusinessDomain field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *BusinessDomainMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case businessdomain.FieldCreateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateTime(v)
-		return nil
-	case businessdomain.FieldUpdateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateTime(v)
-		return nil
-	case businessdomain.FieldCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCode(v)
-		return nil
-	case businessdomain.FieldName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetName(v)
-		return nil
-	case businessdomain.FieldOwnerService:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOwnerService(v)
-		return nil
-	case businessdomain.FieldOrgModelType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOrgModelType(v)
-		return nil
-	case businessdomain.FieldAuthScopeType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAuthScopeType(v)
-		return nil
-	case businessdomain.FieldStatus:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetStatus(v)
-		return nil
-	case businessdomain.FieldDescription:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDescription(v)
-		return nil
-	case businessdomain.FieldMetaJSON:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetMetaJSON(v)
-		return nil
-	}
-	return fmt.Errorf("unknown BusinessDomain field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *BusinessDomainMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *BusinessDomainMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *BusinessDomainMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown BusinessDomain numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *BusinessDomainMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *BusinessDomainMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *BusinessDomainMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown BusinessDomain nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *BusinessDomainMutation) ResetField(name string) error {
-	switch name {
-	case businessdomain.FieldCreateTime:
-		m.ResetCreateTime()
-		return nil
-	case businessdomain.FieldUpdateTime:
-		m.ResetUpdateTime()
-		return nil
-	case businessdomain.FieldCode:
-		m.ResetCode()
-		return nil
-	case businessdomain.FieldName:
-		m.ResetName()
-		return nil
-	case businessdomain.FieldOwnerService:
-		m.ResetOwnerService()
-		return nil
-	case businessdomain.FieldOrgModelType:
-		m.ResetOrgModelType()
-		return nil
-	case businessdomain.FieldAuthScopeType:
-		m.ResetAuthScopeType()
-		return nil
-	case businessdomain.FieldStatus:
-		m.ResetStatus()
-		return nil
-	case businessdomain.FieldDescription:
-		m.ResetDescription()
-		return nil
-	case businessdomain.FieldMetaJSON:
-		m.ResetMetaJSON()
-		return nil
-	}
-	return fmt.Errorf("unknown BusinessDomain field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *BusinessDomainMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *BusinessDomainMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *BusinessDomainMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *BusinessDomainMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *BusinessDomainMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *BusinessDomainMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *BusinessDomainMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown BusinessDomain unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *BusinessDomainMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown BusinessDomain edge %s", name)
 }
 
 // DeptMutation represents an operation that mutates the Dept nodes in the graph.
@@ -5046,7 +4118,6 @@ type ProjectionSourceStatusMutation struct {
 	create_time               *time.Time
 	update_time               *time.Time
 	source_service            *string
-	domain_code               *string
 	sync_mode                 *string
 	state                     *string
 	last_snapshot_revision    *uint64
@@ -5270,42 +4341,6 @@ func (m *ProjectionSourceStatusMutation) OldSourceService(ctx context.Context) (
 // ResetSourceService resets all changes to the "source_service" field.
 func (m *ProjectionSourceStatusMutation) ResetSourceService() {
 	m.source_service = nil
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (m *ProjectionSourceStatusMutation) SetDomainCode(s string) {
-	m.domain_code = &s
-}
-
-// DomainCode returns the value of the "domain_code" field in the mutation.
-func (m *ProjectionSourceStatusMutation) DomainCode() (r string, exists bool) {
-	v := m.domain_code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDomainCode returns the old "domain_code" field's value of the ProjectionSourceStatus entity.
-// If the ProjectionSourceStatus object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ProjectionSourceStatusMutation) OldDomainCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDomainCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
-	}
-	return oldValue.DomainCode, nil
-}
-
-// ResetDomainCode resets all changes to the "domain_code" field.
-func (m *ProjectionSourceStatusMutation) ResetDomainCode() {
-	m.domain_code = nil
 }
 
 // SetSyncMode sets the "sync_mode" field.
@@ -5578,7 +4613,7 @@ func (m *ProjectionSourceStatusMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ProjectionSourceStatusMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 9)
 	if m.create_time != nil {
 		fields = append(fields, projectionsourcestatus.FieldCreateTime)
 	}
@@ -5587,9 +4622,6 @@ func (m *ProjectionSourceStatusMutation) Fields() []string {
 	}
 	if m.source_service != nil {
 		fields = append(fields, projectionsourcestatus.FieldSourceService)
-	}
-	if m.domain_code != nil {
-		fields = append(fields, projectionsourcestatus.FieldDomainCode)
 	}
 	if m.sync_mode != nil {
 		fields = append(fields, projectionsourcestatus.FieldSyncMode)
@@ -5623,8 +4655,6 @@ func (m *ProjectionSourceStatusMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdateTime()
 	case projectionsourcestatus.FieldSourceService:
 		return m.SourceService()
-	case projectionsourcestatus.FieldDomainCode:
-		return m.DomainCode()
 	case projectionsourcestatus.FieldSyncMode:
 		return m.SyncMode()
 	case projectionsourcestatus.FieldState:
@@ -5652,8 +4682,6 @@ func (m *ProjectionSourceStatusMutation) OldField(ctx context.Context, name stri
 		return m.OldUpdateTime(ctx)
 	case projectionsourcestatus.FieldSourceService:
 		return m.OldSourceService(ctx)
-	case projectionsourcestatus.FieldDomainCode:
-		return m.OldDomainCode(ctx)
 	case projectionsourcestatus.FieldSyncMode:
 		return m.OldSyncMode(ctx)
 	case projectionsourcestatus.FieldState:
@@ -5695,13 +4723,6 @@ func (m *ProjectionSourceStatusMutation) SetField(name string, value ent.Value) 
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSourceService(v)
-		return nil
-	case projectionsourcestatus.FieldDomainCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDomainCode(v)
 		return nil
 	case projectionsourcestatus.FieldSyncMode:
 		v, ok := value.(string)
@@ -5817,9 +4838,6 @@ func (m *ProjectionSourceStatusMutation) ResetField(name string) error {
 		return nil
 	case projectionsourcestatus.FieldSourceService:
 		m.ResetSourceService()
-		return nil
-	case projectionsourcestatus.FieldDomainCode:
-		m.ResetDomainCode()
 		return nil
 	case projectionsourcestatus.FieldSyncMode:
 		m.ResetSyncMode()
@@ -7498,7 +6516,6 @@ type ServiceRegistryMutation struct {
 	update_time        *time.Time
 	service_code       *string
 	service_name       *string
-	domain_code        *string
 	http_prefix        *string
 	grpc_service       *string
 	status             *bool
@@ -7758,42 +6775,6 @@ func (m *ServiceRegistryMutation) ResetServiceName() {
 	m.service_name = nil
 }
 
-// SetDomainCode sets the "domain_code" field.
-func (m *ServiceRegistryMutation) SetDomainCode(s string) {
-	m.domain_code = &s
-}
-
-// DomainCode returns the value of the "domain_code" field in the mutation.
-func (m *ServiceRegistryMutation) DomainCode() (r string, exists bool) {
-	v := m.domain_code
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDomainCode returns the old "domain_code" field's value of the ServiceRegistry entity.
-// If the ServiceRegistry object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ServiceRegistryMutation) OldDomainCode(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDomainCode is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDomainCode requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDomainCode: %w", err)
-	}
-	return oldValue.DomainCode, nil
-}
-
-// ResetDomainCode resets all changes to the "domain_code" field.
-func (m *ServiceRegistryMutation) ResetDomainCode() {
-	m.domain_code = nil
-}
-
 // SetHTTPPrefix sets the "http_prefix" field.
 func (m *ServiceRegistryMutation) SetHTTPPrefix(s string) {
 	m.http_prefix = &s
@@ -8008,7 +6989,7 @@ func (m *ServiceRegistryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ServiceRegistryMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 9)
 	if m.create_time != nil {
 		fields = append(fields, serviceregistry.FieldCreateTime)
 	}
@@ -8020,9 +7001,6 @@ func (m *ServiceRegistryMutation) Fields() []string {
 	}
 	if m.service_name != nil {
 		fields = append(fields, serviceregistry.FieldServiceName)
-	}
-	if m.domain_code != nil {
-		fields = append(fields, serviceregistry.FieldDomainCode)
 	}
 	if m.http_prefix != nil {
 		fields = append(fields, serviceregistry.FieldHTTPPrefix)
@@ -8055,8 +7033,6 @@ func (m *ServiceRegistryMutation) Field(name string) (ent.Value, bool) {
 		return m.ServiceCode()
 	case serviceregistry.FieldServiceName:
 		return m.ServiceName()
-	case serviceregistry.FieldDomainCode:
-		return m.DomainCode()
 	case serviceregistry.FieldHTTPPrefix:
 		return m.HTTPPrefix()
 	case serviceregistry.FieldGrpcService:
@@ -8084,8 +7060,6 @@ func (m *ServiceRegistryMutation) OldField(ctx context.Context, name string) (en
 		return m.OldServiceCode(ctx)
 	case serviceregistry.FieldServiceName:
 		return m.OldServiceName(ctx)
-	case serviceregistry.FieldDomainCode:
-		return m.OldDomainCode(ctx)
 	case serviceregistry.FieldHTTPPrefix:
 		return m.OldHTTPPrefix(ctx)
 	case serviceregistry.FieldGrpcService:
@@ -8132,13 +7106,6 @@ func (m *ServiceRegistryMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetServiceName(v)
-		return nil
-	case serviceregistry.FieldDomainCode:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDomainCode(v)
 		return nil
 	case serviceregistry.FieldHTTPPrefix:
 		v, ok := value.(string)
@@ -8235,9 +7202,6 @@ func (m *ServiceRegistryMutation) ResetField(name string) error {
 		return nil
 	case serviceregistry.FieldServiceName:
 		m.ResetServiceName()
-		return nil
-	case serviceregistry.FieldDomainCode:
-		m.ResetDomainCode()
 		return nil
 	case serviceregistry.FieldHTTPPrefix:
 		m.ResetHTTPPrefix()

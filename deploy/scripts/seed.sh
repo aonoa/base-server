@@ -114,7 +114,6 @@ wait_for_table admin sys_user_role_binding
 wait_for_table user sys_user
 wait_for_table admin sys_menu
 wait_for_table admin sys_dept
-wait_for_table admin sys_business_domain
 wait_for_table admin sys_service_registry
 wait_for_table admin sys_projection_source_status
 

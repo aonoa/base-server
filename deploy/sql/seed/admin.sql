@@ -1,46 +1,55 @@
 BEGIN;
 
 -- Permission master data is owned by the admin service.
-INSERT INTO sys_business_domain (
-  id, create_time, update_time, code, name, owner_service, org_model_type, auth_scope_type, status, description, meta_json
-)
-VALUES
-  (
-    'domain-platform',
-    '2026-04-18 00:00:00+08',
-    '2026-04-18 00:00:00+08',
-    'platform',
-    '平台基础域',
-    'admin',
-    'platform',
-    'platform',
-    true,
-    '平台自身基础能力域，承载 admin/auth/user/common/gateway 等基础服务治理',
-    '{"bootstrap":true}'
-  )
-ON CONFLICT (code) DO UPDATE SET
-  update_time = EXCLUDED.update_time,
-  name = EXCLUDED.name,
-  owner_service = EXCLUDED.owner_service,
-  org_model_type = EXCLUDED.org_model_type,
-  auth_scope_type = EXCLUDED.auth_scope_type,
-  status = EXCLUDED.status,
-  description = EXCLUDED.description,
-  meta_json = EXCLUDED.meta_json;
+DELETE FROM api_resources_roles
+WHERE api_resources_id IN (
+  SELECT id
+  FROM sys_api_resources
+  WHERE path LIKE '/admin-api/v1/platform/domains%'
+     OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
+     OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
+     OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
+     OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
+     OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')
+);
+
+DELETE FROM sys_api_resources
+WHERE path LIKE '/admin-api/v1/platform/domains%'
+   OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
+   OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
+   OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
+   OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
+   OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT');
+
+ALTER TABLE sys_api_resources
+  DROP COLUMN IF EXISTS business_key,
+  DROP COLUMN IF EXISTS service_key,
+  DROP COLUMN IF EXISTS service_code,
+  DROP COLUMN IF EXISTS domain_code;
+
+ALTER TABLE sys_service_registry
+  DROP COLUMN IF EXISTS domain_code;
+
+ALTER TABLE sys_projection_source_status
+  DROP COLUMN IF EXISTS domain_code;
+
+DROP TABLE IF EXISTS sys_business_domain;
+
+DELETE FROM sys_menu
+WHERE id = 21 OR path = '/system/platform/domain';
 
 INSERT INTO sys_service_registry (
-  id, create_time, update_time, service_code, service_name, domain_code, http_prefix, grpc_service, status, projection_enabled, description
+  id, create_time, update_time, service_code, service_name, http_prefix, grpc_service, status, projection_enabled, description
 )
 VALUES
-  ('svc-admin', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'admin', '平台管理服务', 'platform', '/admin-api', 'api.admin.service.v1.AdminService', true, true, '平台控制面，负责菜单、业务域、服务注册、API 归属和投影源状态治理'),
-  ('svc-auth', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'auth', '统一认证服务', 'platform', '/auth-api', 'api.auth.service.v1.AuthService', true, false, '负责登录、令牌刷新、访问码下发、鉴权校验和权限快照接收'),
-  ('svc-user', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'user', '用户中心服务', 'platform', '/user-api', 'api.user.service.v1.UserService', true, false, '负责账号认证、用户资料、密码维护等身份基础能力'),
-  ('svc-common', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'common', '公共能力服务', 'platform', '/common-api', 'api.common.service.v1.CommonService, api.common.service.v1.UploadService, api.common.service.v1.SSEService', true, false, '负责文件上传、SSE 推送、Copilot 会话等平台公共能力'),
-  ('svc-gateway', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'gateway', '统一网关服务', 'platform', '/', '', true, false, '统一入口网关，负责路由转发、JWT 校验、Casbin 鉴权、限流和系统日志')
+  ('svc-admin', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'admin', '平台管理服务', '/admin-api', 'api.admin.service.v1.AdminService', true, true, '平台控制面，负责菜单、服务注册、API 目录和投影源状态观测'),
+  ('svc-auth', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'auth', '统一认证服务', '/auth-api', 'api.auth.service.v1.AuthService', true, false, '负责登录、令牌刷新、访问码下发、鉴权校验和权限快照接收'),
+  ('svc-user', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'user', '用户中心服务', '/user-api', 'api.user.service.v1.UserService', true, false, '负责账号认证、用户资料、密码维护等身份基础能力'),
+  ('svc-common', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'common', '公共能力服务', '/common-api', 'api.common.service.v1.CommonService, api.common.service.v1.UploadService, api.common.service.v1.SSEService', true, false, '负责文件上传、SSE 推送、Copilot 会话等平台公共能力'),
+  ('svc-gateway', '2026-04-18 00:00:00+08', '2026-04-18 00:00:00+08', 'gateway', '统一网关服务', '/', '', true, false, '统一入口网关，负责路由转发、JWT 校验、Casbin 鉴权、限流和系统日志')
 ON CONFLICT (service_code) DO UPDATE SET
   update_time = EXCLUDED.update_time,
   service_name = EXCLUDED.service_name,
-  domain_code = EXCLUDED.domain_code,
   http_prefix = EXCLUDED.http_prefix,
   grpc_service = EXCLUDED.grpc_service,
   status = EXCLUDED.status,
@@ -51,7 +60,7 @@ INSERT INTO sys_role (id, create_time, update_time, name, value, status, "desc",
 VALUES
   (0, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '默认角色', 'default', true, '', '[10, 11, 12, 13, 14, 15, 24]'),
   (1, '2025-02-25 00:00:39.255+08', '2025-08-22 00:47:56.788297+08', '超级管理员', 'root', true, '在系统层就拥有全部权限，不用设置', 'null'),
-  (2, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 21, 22, 23, 24, 25]')
+  (2, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 22, 23, 24, 25]')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -149,19 +158,8 @@ VALUES
   ('api-admin-resource-create', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '新增资源', '/admin-api/v1/resources', 'POST', 'admin', '管理服务', 'data'),
   ('api-admin-resource-update', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '更新资源', '/admin-api/v1/resources/{id}', 'PUT', 'admin', '管理服务', 'data'),
   ('api-admin-resource-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除资源', '/admin-api/v1/resources/{id}', 'DELETE', 'admin', '管理服务', 'data'),
-  ('api-admin-platform-domain-list', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '获取业务域列表', '/admin-api/v1/platform/domains', 'GET', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-domain-create', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '新增业务域', '/admin-api/v1/platform/domains', 'POST', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-domain-update', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '更新业务域', '/admin-api/v1/platform/domains/{id}', 'PUT', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-domain-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除业务域', '/admin-api/v1/platform/domains/{id}', 'DELETE', 'admin', '管理服务', 'admin'),
   ('api-admin-platform-service-list', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '获取服务注册列表', '/admin-api/v1/platform/services', 'GET', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-service-create', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '新增服务注册', '/admin-api/v1/platform/services', 'POST', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-service-update', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '更新服务注册', '/admin-api/v1/platform/services/{id}', 'PUT', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-service-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除服务注册', '/admin-api/v1/platform/services/{id}', 'DELETE', 'admin', '管理服务', 'admin'),
   ('api-admin-platform-projection-source-list', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '获取投影源状态列表', '/admin-api/v1/platform/projection-sources', 'GET', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-projection-source-create', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '新增投影源状态', '/admin-api/v1/platform/projection-sources', 'POST', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-projection-source-update', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '更新投影源状态', '/admin-api/v1/platform/projection-sources/{id}', 'PUT', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-projection-source-report', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '上报投影源状态', '/admin-api/v1/platform/projection-sources/report/{source_service}', 'PUT', 'admin', '管理服务', 'admin'),
-  ('api-admin-platform-projection-source-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除投影源状态', '/admin-api/v1/platform/projection-sources/{id}', 'DELETE', 'admin', '管理服务', 'admin'),
   ('api-admin-walk-route', '2026-03-28 00:00:00+08', '2026-03-28 00:00:00+08', '获取系统所有api接口', '/admin-api/v1/walk-routes', 'GET', 'admin', '系统管理', 'api'),
   ('api-common-site-message-my-list', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信列表', '/common-api/v1/site-messages/my', 'GET', 'common', '公共服务', 'default'),
   ('api-common-site-message-my-unread-count', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信未读数量', '/common-api/v1/site-messages/my/unread-count', 'GET', 'common', '公共服务', 'default'),
@@ -182,19 +180,6 @@ ON CONFLICT (path, method) DO UPDATE SET
   module_description = EXCLUDED.module_description,
   resources_group = EXCLUDED.resources_group;
 
-UPDATE sys_api_resources
-SET
-  service_code = CASE
-    WHEN module IN ('admin', 'auth', 'user', 'common') THEN module
-    ELSE service_code
-  END,
-  domain_code = CASE
-    WHEN module IN ('admin', 'auth', 'user', 'common') THEN 'platform'
-    ELSE domain_code
-  END,
-  update_time = '2026-04-18 00:00:00+08'
-WHERE module IN ('admin', 'auth', 'user', 'common');
-
 INSERT INTO api_resources_roles (api_resources_id, role_id)
 SELECT id, 1 FROM sys_api_resources
 ON CONFLICT DO NOTHING;
@@ -211,19 +196,8 @@ WHERE (path, method) IN (
   ('/admin-api/v1/resources', 'POST'),
   ('/admin-api/v1/resources/{id}', 'PUT'),
   ('/admin-api/v1/resources/{id}', 'DELETE'),
-  ('/admin-api/v1/platform/domains', 'GET'),
-  ('/admin-api/v1/platform/domains', 'POST'),
-  ('/admin-api/v1/platform/domains/{id}', 'PUT'),
-  ('/admin-api/v1/platform/domains/{id}', 'DELETE'),
   ('/admin-api/v1/platform/services', 'GET'),
-  ('/admin-api/v1/platform/services', 'POST'),
-  ('/admin-api/v1/platform/services/{id}', 'PUT'),
-  ('/admin-api/v1/platform/services/{id}', 'DELETE'),
   ('/admin-api/v1/platform/projection-sources', 'GET'),
-  ('/admin-api/v1/platform/projection-sources', 'POST'),
-  ('/admin-api/v1/platform/projection-sources/{id}', 'PUT'),
-  ('/admin-api/v1/platform/projection-sources/report/{source_service}', 'PUT'),
-  ('/admin-api/v1/platform/projection-sources/{id}', 'DELETE'),
   ('/admin-api/v1/walk-routes', 'GET'),
   ('/common-api/v1/site-messages/manage', 'GET'),
   ('/common-api/v1/site-messages/manage', 'POST'),
@@ -274,8 +248,7 @@ VALUES
   (17, '2024-07-08 22:25:32.213+08', '2025-07-19 12:47:42.919731+08', 16, 'menu', true, '/system/user', '', '', 'User', '/system/user/index', 'mdi:cloud-key-outline', 'system.user', 1001, false, false, false, '', '', '', '/system/user', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (18, '2024-07-08 22:25:32.213+08', '2025-07-19 23:39:04.581868+08', 16, 'menu', true, '/system/role', '', '', 'Role', '/system/role/list', 'mdi:cloud-key-outline', 'system.role.title', 1002, false, false, false, '', '', '', '/system/role', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (19, '2025-05-30 11:34:53.203+08', '2025-05-30 11:34:53.203+08', 16, 'menu', true, '/system/menu', '', '', 'Menu', '/system/menu/list', 'mdi:cloud-key-outline', 'system.menu.title', 1003, false, false, false, '', '', '', '/system/menu', 0, false, true, '', false, 0, false, false, false, false, true, '', '', ''),
-  (20, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 16, 'catalog', true, '/system/platform', '/system/platform/domain', '', 'Platform', '', 'carbon:cloud-service-management', '平台治理', 1004, false, false, false, '', '', '', '/system/platform', 0, false, true, '', false, 0, false, false, false, false, true, '', '', ''),
-  (21, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/domain', '', '', 'BusinessDomain', '/system/platform/domain/index', 'carbon:network-4', '业务域管理', 1005, false, false, false, '', '', '', '/system/platform/domain', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
+  (20, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 16, 'catalog', true, '/system/platform', '/system/platform/service', '', 'Platform', '', 'carbon:cloud-service-management', '平台治理', 1004, false, false, false, '', '', '', '/system/platform', 0, false, true, '', false, 0, false, false, false, false, true, '', '', ''),
   (22, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/service', '', '', 'ServiceRegistry', '/system/platform/service/index', 'carbon:container-services', '服务注册', 1006, false, false, false, '', '', '', '/system/platform/service', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (23, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/projection-source', '', '', 'ProjectionSource', '/system/platform/projection-source/index', 'carbon:data-check', '投影源状态', 1007, false, false, false, '', '', '', '/system/platform/projection-source', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (24, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 0, 'menu', true, '/messages', '', '', 'SiteMessageInbox', '/_core/messages/inbox', 'lucide:mail', '站内信收件箱', 9999, false, false, false, '', '', '', '/messages', 0, false, false, '', false, 0, true, false, false, false, true, '', 'normal', 'success'),

@@ -49,20 +49,6 @@ func (_u *ProjectionSourceStatusUpdate) SetNillableSourceService(v *string) *Pro
 	return _u
 }
 
-// SetDomainCode sets the "domain_code" field.
-func (_u *ProjectionSourceStatusUpdate) SetDomainCode(v string) *ProjectionSourceStatusUpdate {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ProjectionSourceStatusUpdate) SetNillableDomainCode(v *string) *ProjectionSourceStatusUpdate {
-	if v != nil {
-		_u.SetDomainCode(*v)
-	}
-	return _u
-}
-
 // SetSyncMode sets the "sync_mode" field.
 func (_u *ProjectionSourceStatusUpdate) SetSyncMode(v string) *ProjectionSourceStatusUpdate {
 	_u.mutation.SetSyncMode(v)
@@ -216,9 +202,6 @@ func (_u *ProjectionSourceStatusUpdate) sqlSave(ctx context.Context) (_node int,
 	if value, ok := _u.mutation.SourceService(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSourceService, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(projectionsourcestatus.FieldDomainCode, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.SyncMode(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSyncMode, field.TypeString, value)
 	}
@@ -278,20 +261,6 @@ func (_u *ProjectionSourceStatusUpdateOne) SetSourceService(v string) *Projectio
 func (_u *ProjectionSourceStatusUpdateOne) SetNillableSourceService(v *string) *ProjectionSourceStatusUpdateOne {
 	if v != nil {
 		_u.SetSourceService(*v)
-	}
-	return _u
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (_u *ProjectionSourceStatusUpdateOne) SetDomainCode(v string) *ProjectionSourceStatusUpdateOne {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ProjectionSourceStatusUpdateOne) SetNillableDomainCode(v *string) *ProjectionSourceStatusUpdateOne {
-	if v != nil {
-		_u.SetDomainCode(*v)
 	}
 	return _u
 }
@@ -478,9 +447,6 @@ func (_u *ProjectionSourceStatusUpdateOne) sqlSave(ctx context.Context) (_node *
 	}
 	if value, ok := _u.mutation.SourceService(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSourceService, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(projectionsourcestatus.FieldDomainCode, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.SyncMode(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSyncMode, field.TypeString, value)

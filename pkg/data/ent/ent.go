@@ -4,7 +4,6 @@ package ent
 
 import (
 	"base-server/pkg/data/ent/apiresources"
-	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/projectionsourcestatus"
@@ -86,7 +85,6 @@ func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			apiresources.Table:           apiresources.ValidColumn,
-			businessdomain.Table:         businessdomain.ValidColumn,
 			dept.Table:                   dept.ValidColumn,
 			menu.Table:                   menu.ValidColumn,
 			projectionsourcestatus.Table: projectionsourcestatus.ValidColumn,

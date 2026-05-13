@@ -26,8 +26,6 @@ type ServiceRegistry struct {
 	ServiceCode string `json:"service_code,omitempty"`
 	// 服务名称
 	ServiceName string `json:"service_name,omitempty"`
-	// 所属业务域
-	DomainCode string `json:"domain_code,omitempty"`
 	// HTTP 前缀
 	HTTPPrefix string `json:"http_prefix,omitempty"`
 	// gRPC 服务名
@@ -48,7 +46,7 @@ func (*ServiceRegistry) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case serviceregistry.FieldStatus, serviceregistry.FieldProjectionEnabled:
 			values[i] = new(sql.NullBool)
-		case serviceregistry.FieldID, serviceregistry.FieldServiceCode, serviceregistry.FieldServiceName, serviceregistry.FieldDomainCode, serviceregistry.FieldHTTPPrefix, serviceregistry.FieldGrpcService, serviceregistry.FieldDescription:
+		case serviceregistry.FieldID, serviceregistry.FieldServiceCode, serviceregistry.FieldServiceName, serviceregistry.FieldHTTPPrefix, serviceregistry.FieldGrpcService, serviceregistry.FieldDescription:
 			values[i] = new(sql.NullString)
 		case serviceregistry.FieldCreateTime, serviceregistry.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -96,12 +94,6 @@ func (_m *ServiceRegistry) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field service_name", values[i])
 			} else if value.Valid {
 				_m.ServiceName = value.String
-			}
-		case serviceregistry.FieldDomainCode:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field domain_code", values[i])
-			} else if value.Valid {
-				_m.DomainCode = value.String
 			}
 		case serviceregistry.FieldHTTPPrefix:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -180,9 +172,6 @@ func (_m *ServiceRegistry) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("service_name=")
 	builder.WriteString(_m.ServiceName)
-	builder.WriteString(", ")
-	builder.WriteString("domain_code=")
-	builder.WriteString(_m.DomainCode)
 	builder.WriteString(", ")
 	builder.WriteString("http_prefix=")
 	builder.WriteString(_m.HTTPPrefix)

@@ -74,14 +74,14 @@ func TestNormalizeHTTPPrefix(t *testing.T) {
 	}
 }
 
-func TestSelectAPIOwnershipMatchesPathMethodAndDomain(t *testing.T) {
+func TestSelectAPIOwnershipMatchesPathMethodAndResourceGroup(t *testing.T) {
 	entries := buildAPICatalogEntries([]*adminv1.ApiListItem{
-		{Path: "/admin-api/v1/apis/{id}", Method: "GET", ServiceCode: "admin", DomainCode: "platform", ResourcesGroup: "api_catalog"},
-		{Path: "/admin-api/v1/apis/{id}", Method: "DELETE", ServiceCode: "admin", DomainCode: "platform", ResourcesGroup: "api_catalog_delete"},
+		{Path: "/admin-api/v1/apis/{id}", Method: "GET", ResourcesGroup: "api_catalog"},
+		{Path: "/admin-api/v1/apis/{id}", Method: "DELETE", ResourcesGroup: "api_catalog_delete"},
 	})
 
 	ownership := selectAPIOwnership(entries, "/admin-api/v1/apis/123", "GET")
-	if ownership.ServiceCode != "admin" || ownership.DomainCode != "platform" || ownership.ResourceGroup != "api_catalog" {
+	if ownership.ServiceCode != "" || ownership.ResourceGroup != "api_catalog" {
 		t.Fatalf("unexpected ownership: %+v", ownership)
 	}
 

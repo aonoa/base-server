@@ -93,26 +93,25 @@ func TestCheckAuthorizationSupportsServiceAndScope(t *testing.T) {
 	}
 }
 
-func TestCheckAuthorizationPrefersDomainCode(t *testing.T) {
+func TestCheckAuthorizationUsesServiceNamespace(t *testing.T) {
 	uc := newTestAuthUsecase(t)
 	err := uc.RegisterPermissionSnapshot(context.Background(), &v1.RegisterPermissionSnapshotRequest{
 		SourceService: "admin",
 		Roles: []*v1.PolicyRole{
 			{
-				Value:      "admin",
-				Status:     true,
-				Service:    "admin",
-				DomainCode: "platform",
+				Value:   "admin",
+				Status:  true,
+				Service: "admin",
 				Resources: []*v1.PolicyRoleResource{
 					{Type: "api", Value: "api_catalog", Method: "GET"},
 				},
 			},
 		},
 		Apis: []*v1.PolicyApi{
-			{Path: "/admin-api/v1/apis", Method: "GET", ResourcesGroup: "api_catalog", Service: "admin", DomainCode: "platform"},
+			{Path: "/admin-api/v1/apis", Method: "GET", ResourcesGroup: "api_catalog", Service: "admin"},
 		},
 		Bindings: []*v1.PolicyUserRoleBinding{
-			{UserId: "u1", RoleValue: "admin", Service: "admin", DomainCode: "platform", ScopeId: "global"},
+			{UserId: "u1", RoleValue: "admin", Service: "admin", ScopeId: "global"},
 		},
 	})
 	if err != nil {
@@ -120,17 +119,16 @@ func TestCheckAuthorizationPrefersDomainCode(t *testing.T) {
 	}
 
 	allowed, err := uc.CheckAuthorization(context.Background(), &v1.CheckAuthorizationRequest{
-		UserId:     "u1",
-		Path:       "/admin-api/v1/apis",
-		Method:     "GET",
-		Service:    "admin",
-		DomainCode: "platform",
-		ScopeId:    "global",
+		UserId:  "u1",
+		Path:    "/admin-api/v1/apis",
+		Method:  "GET",
+		Service: "admin",
+		ScopeId: "global",
 	})
 	if err != nil {
 		t.Fatalf("CheckAuthorization() error = %v", err)
 	}
 	if !allowed.Allowed {
-		t.Fatalf("expected authorization to use domain_code namespace")
+		t.Fatalf("expected authorization to use service namespace")
 	}
 }

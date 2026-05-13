@@ -20,8 +20,6 @@ var (
 		{Name: "module", Type: field.TypeString, Comment: "模块"},
 		{Name: "module_description", Type: field.TypeString, Comment: "模块描述"},
 		{Name: "resources_group", Type: field.TypeString, Comment: "资源组"},
-		{Name: "service_code", Type: field.TypeString, Comment: "归属服务编码", Default: ""},
-		{Name: "domain_code", Type: field.TypeString, Comment: "归属业务域编码", Default: ""},
 	}
 	// SysAPIResourcesTable holds the schema information for the "sys_api_resources" table.
 	SysAPIResourcesTable = &schema.Table{
@@ -36,27 +34,6 @@ var (
 				Columns: []*schema.Column{SysAPIResourcesColumns[4], SysAPIResourcesColumns[5]},
 			},
 		},
-	}
-	// SysBusinessDomainColumns holds the columns for the "sys_business_domain" table.
-	SysBusinessDomainColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
-		{Name: "code", Type: field.TypeString, Unique: true, Comment: "业务域编码"},
-		{Name: "name", Type: field.TypeString, Comment: "业务域名称"},
-		{Name: "owner_service", Type: field.TypeString, Comment: "主服务编码"},
-		{Name: "org_model_type", Type: field.TypeString, Comment: "组织模型类型"},
-		{Name: "auth_scope_type", Type: field.TypeString, Comment: "权限范围类型"},
-		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用", Default: true},
-		{Name: "description", Type: field.TypeString, Comment: "描述", Default: ""},
-		{Name: "meta_json", Type: field.TypeString, Comment: "扩展元数据", Default: ""},
-	}
-	// SysBusinessDomainTable holds the schema information for the "sys_business_domain" table.
-	SysBusinessDomainTable = &schema.Table{
-		Name:       "sys_business_domain",
-		Comment:    "平台业务域注册表",
-		Columns:    SysBusinessDomainColumns,
-		PrimaryKey: []*schema.Column{SysBusinessDomainColumns[0]},
 	}
 	// SysDeptColumns holds the columns for the "sys_dept" table.
 	SysDeptColumns = []*schema.Column{
@@ -137,7 +114,6 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "source_service", Type: field.TypeString, Unique: true, Comment: "投影源服务编码"},
-		{Name: "domain_code", Type: field.TypeString, Comment: "所属业务域", Default: ""},
 		{Name: "sync_mode", Type: field.TypeString, Comment: "同步模式", Default: ""},
 		{Name: "state", Type: field.TypeString, Comment: "当前状态", Default: ""},
 		{Name: "last_snapshot_revision", Type: field.TypeUint64, Comment: "最后一次快照版本", Default: 0},
@@ -195,7 +171,6 @@ var (
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "service_code", Type: field.TypeString, Unique: true, Comment: "服务编码"},
 		{Name: "service_name", Type: field.TypeString, Comment: "服务名称"},
-		{Name: "domain_code", Type: field.TypeString, Comment: "所属业务域"},
 		{Name: "http_prefix", Type: field.TypeString, Comment: "HTTP 前缀", Default: ""},
 		{Name: "grpc_service", Type: field.TypeString, Comment: "gRPC 服务名", Default: ""},
 		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用", Default: true},
@@ -481,7 +456,6 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		SysAPIResourcesTable,
-		SysBusinessDomainTable,
 		SysDeptTable,
 		SysMenuTable,
 		SysProjectionSourceStatusTable,
@@ -501,9 +475,6 @@ var (
 func init() {
 	SysAPIResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_api_resources",
-	}
-	SysBusinessDomainTable.Annotation = &entsql.Annotation{
-		Table: "sys_business_domain",
 	}
 	SysDeptTable.ForeignKeys[0].RefTable = SysDeptTable
 	SysDeptTable.Annotation = &entsql.Annotation{

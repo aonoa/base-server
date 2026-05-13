@@ -9,9 +9,6 @@ import (
 // ApiResources is the predicate function for apiresources builders.
 type ApiResources func(*sql.Selector)
 
-// BusinessDomain is the predicate function for businessdomain builders.
-type BusinessDomain func(*sql.Selector)
-
 // Dept is the predicate function for dept builders.
 type Dept func(*sql.Selector)
 

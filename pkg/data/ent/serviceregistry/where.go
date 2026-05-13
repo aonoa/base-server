@@ -84,11 +84,6 @@ func ServiceName(v string) predicate.ServiceRegistry {
 	return predicate.ServiceRegistry(sql.FieldEQ(FieldServiceName, v))
 }
 
-// DomainCode applies equality check predicate on the "domain_code" field. It's identical to DomainCodeEQ.
-func DomainCode(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldEQ(FieldDomainCode, v))
-}
-
 // HTTPPrefix applies equality check predicate on the "http_prefix" field. It's identical to HTTPPrefixEQ.
 func HTTPPrefix(v string) predicate.ServiceRegistry {
 	return predicate.ServiceRegistry(sql.FieldEQ(FieldHTTPPrefix, v))
@@ -322,71 +317,6 @@ func ServiceNameEqualFold(v string) predicate.ServiceRegistry {
 // ServiceNameContainsFold applies the ContainsFold predicate on the "service_name" field.
 func ServiceNameContainsFold(v string) predicate.ServiceRegistry {
 	return predicate.ServiceRegistry(sql.FieldContainsFold(FieldServiceName, v))
-}
-
-// DomainCodeEQ applies the EQ predicate on the "domain_code" field.
-func DomainCodeEQ(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldEQ(FieldDomainCode, v))
-}
-
-// DomainCodeNEQ applies the NEQ predicate on the "domain_code" field.
-func DomainCodeNEQ(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldNEQ(FieldDomainCode, v))
-}
-
-// DomainCodeIn applies the In predicate on the "domain_code" field.
-func DomainCodeIn(vs ...string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldIn(FieldDomainCode, vs...))
-}
-
-// DomainCodeNotIn applies the NotIn predicate on the "domain_code" field.
-func DomainCodeNotIn(vs ...string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldNotIn(FieldDomainCode, vs...))
-}
-
-// DomainCodeGT applies the GT predicate on the "domain_code" field.
-func DomainCodeGT(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldGT(FieldDomainCode, v))
-}
-
-// DomainCodeGTE applies the GTE predicate on the "domain_code" field.
-func DomainCodeGTE(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldGTE(FieldDomainCode, v))
-}
-
-// DomainCodeLT applies the LT predicate on the "domain_code" field.
-func DomainCodeLT(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldLT(FieldDomainCode, v))
-}
-
-// DomainCodeLTE applies the LTE predicate on the "domain_code" field.
-func DomainCodeLTE(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldLTE(FieldDomainCode, v))
-}
-
-// DomainCodeContains applies the Contains predicate on the "domain_code" field.
-func DomainCodeContains(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldContains(FieldDomainCode, v))
-}
-
-// DomainCodeHasPrefix applies the HasPrefix predicate on the "domain_code" field.
-func DomainCodeHasPrefix(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldHasPrefix(FieldDomainCode, v))
-}
-
-// DomainCodeHasSuffix applies the HasSuffix predicate on the "domain_code" field.
-func DomainCodeHasSuffix(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldHasSuffix(FieldDomainCode, v))
-}
-
-// DomainCodeEqualFold applies the EqualFold predicate on the "domain_code" field.
-func DomainCodeEqualFold(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldEqualFold(FieldDomainCode, v))
-}
-
-// DomainCodeContainsFold applies the ContainsFold predicate on the "domain_code" field.
-func DomainCodeContainsFold(v string) predicate.ServiceRegistry {
-	return predicate.ServiceRegistry(sql.FieldContainsFold(FieldDomainCode, v))
 }
 
 // HTTPPrefixEQ applies the EQ predicate on the "http_prefix" field.

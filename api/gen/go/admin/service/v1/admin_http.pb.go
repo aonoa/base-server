@@ -21,24 +21,17 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAdminServiceAddApi = "/api.admin.service.v1.AdminService/AddApi"
-const OperationAdminServiceAddBusinessDomain = "/api.admin.service.v1.AdminService/AddBusinessDomain"
 const OperationAdminServiceAddDept = "/api.admin.service.v1.AdminService/AddDept"
-const OperationAdminServiceAddProjectionSourceStatus = "/api.admin.service.v1.AdminService/AddProjectionSourceStatus"
 const OperationAdminServiceAddResource = "/api.admin.service.v1.AdminService/AddResource"
 const OperationAdminServiceAddRole = "/api.admin.service.v1.AdminService/AddRole"
-const OperationAdminServiceAddServiceRegistry = "/api.admin.service.v1.AdminService/AddServiceRegistry"
 const OperationAdminServiceCreateMenu = "/api.admin.service.v1.AdminService/CreateMenu"
 const OperationAdminServiceDelApi = "/api.admin.service.v1.AdminService/DelApi"
 const OperationAdminServiceDelDept = "/api.admin.service.v1.AdminService/DelDept"
 const OperationAdminServiceDelResource = "/api.admin.service.v1.AdminService/DelResource"
 const OperationAdminServiceDelRole = "/api.admin.service.v1.AdminService/DelRole"
-const OperationAdminServiceDeleteBusinessDomain = "/api.admin.service.v1.AdminService/DeleteBusinessDomain"
 const OperationAdminServiceDeleteMenu = "/api.admin.service.v1.AdminService/DeleteMenu"
-const OperationAdminServiceDeleteProjectionSourceStatus = "/api.admin.service.v1.AdminService/DeleteProjectionSourceStatus"
-const OperationAdminServiceDeleteServiceRegistry = "/api.admin.service.v1.AdminService/DeleteServiceRegistry"
 const OperationAdminServiceDeleteUserRoleBinding = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
 const OperationAdminServiceGetApiList = "/api.admin.service.v1.AdminService/GetApiList"
-const OperationAdminServiceGetBusinessDomainList = "/api.admin.service.v1.AdminService/GetBusinessDomainList"
 const OperationAdminServiceGetCurrentUserMenus = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
 const OperationAdminServiceGetDeptList = "/api.admin.service.v1.AdminService/GetDeptList"
 const OperationAdminServiceGetProjectionSourceStatusList = "/api.admin.service.v1.AdminService/GetProjectionSourceStatusList"
@@ -53,37 +46,26 @@ const OperationAdminServiceGetWalkRoute = "/api.admin.service.v1.AdminService/Ge
 const OperationAdminServiceIsMenuNameExists = "/api.admin.service.v1.AdminService/IsMenuNameExists"
 const OperationAdminServiceIsMenuPathExists = "/api.admin.service.v1.AdminService/IsMenuPathExists"
 const OperationAdminServiceListUserRoleBindings = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
-const OperationAdminServiceReportProjectionSourceStatus = "/api.admin.service.v1.AdminService/ReportProjectionSourceStatus"
 const OperationAdminServiceUpdateApi = "/api.admin.service.v1.AdminService/UpdateApi"
-const OperationAdminServiceUpdateBusinessDomain = "/api.admin.service.v1.AdminService/UpdateBusinessDomain"
 const OperationAdminServiceUpdateDept = "/api.admin.service.v1.AdminService/UpdateDept"
 const OperationAdminServiceUpdateMenu = "/api.admin.service.v1.AdminService/UpdateMenu"
-const OperationAdminServiceUpdateProjectionSourceStatus = "/api.admin.service.v1.AdminService/UpdateProjectionSourceStatus"
 const OperationAdminServiceUpdateResource = "/api.admin.service.v1.AdminService/UpdateResource"
 const OperationAdminServiceUpdateRole = "/api.admin.service.v1.AdminService/UpdateRole"
-const OperationAdminServiceUpdateServiceRegistry = "/api.admin.service.v1.AdminService/UpdateServiceRegistry"
 const OperationAdminServiceUpsertUserRoleBinding = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
 
 type AdminServiceHTTPServer interface {
 	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	AddBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error)
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
-	AddProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
 	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	AddServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error)
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
 	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
-	DeleteBusinessDomain(context.Context, *DeleteBusinessDomainRequest) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
-	DeleteProjectionSourceStatus(context.Context, *DeleteProjectionSourceStatusRequest) (*emptypb.Empty, error)
-	DeleteServiceRegistry(context.Context, *DeleteServiceRegistryRequest) (*emptypb.Empty, error)
 	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
 	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
-	GetBusinessDomainList(context.Context, *emptypb.Empty) (*GetBusinessDomainListReply, error)
 	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
 	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
 	GetProjectionSourceStatusList(context.Context, *emptypb.Empty) (*GetProjectionSourceStatusListReply, error)
@@ -98,15 +80,11 @@ type AdminServiceHTTPServer interface {
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error)
-	ReportProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
 	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
-	UpdateBusinessDomain(context.Context, *BusinessDomainItem) (*BusinessDomainItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
-	UpdateProjectionSourceStatus(context.Context, *ProjectionSourceStatusItem) (*ProjectionSourceStatusItem, error)
 	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
-	UpdateServiceRegistry(context.Context, *ServiceRegistryItem) (*ServiceRegistryItem, error)
 	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
 }
 
@@ -140,19 +118,8 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 	r.POST("/admin-api/v1/menus", _AdminService_CreateMenu0_HTTP_Handler(srv))
 	r.PUT("/admin-api/v1/menus/{id}", _AdminService_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/admin-api/v1/menus/{id}", _AdminService_DeleteMenu0_HTTP_Handler(srv))
-	r.GET("/admin-api/v1/platform/domains", _AdminService_GetBusinessDomainList0_HTTP_Handler(srv))
-	r.POST("/admin-api/v1/platform/domains", _AdminService_AddBusinessDomain0_HTTP_Handler(srv))
-	r.PUT("/admin-api/v1/platform/domains/{id}", _AdminService_UpdateBusinessDomain0_HTTP_Handler(srv))
-	r.DELETE("/admin-api/v1/platform/domains/{id}", _AdminService_DeleteBusinessDomain0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/platform/services", _AdminService_GetServiceRegistryList0_HTTP_Handler(srv))
-	r.POST("/admin-api/v1/platform/services", _AdminService_AddServiceRegistry0_HTTP_Handler(srv))
-	r.PUT("/admin-api/v1/platform/services/{id}", _AdminService_UpdateServiceRegistry0_HTTP_Handler(srv))
-	r.DELETE("/admin-api/v1/platform/services/{id}", _AdminService_DeleteServiceRegistry0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/platform/projection-sources", _AdminService_GetProjectionSourceStatusList0_HTTP_Handler(srv))
-	r.POST("/admin-api/v1/platform/projection-sources", _AdminService_AddProjectionSourceStatus0_HTTP_Handler(srv))
-	r.PUT("/admin-api/v1/platform/projection-sources/{id}", _AdminService_UpdateProjectionSourceStatus0_HTTP_Handler(srv))
-	r.PUT("/admin-api/v1/platform/projection-sources/report/{source_service}", _AdminService_ReportProjectionSourceStatus0_HTTP_Handler(srv))
-	r.DELETE("/admin-api/v1/platform/projection-sources/{id}", _AdminService_DeleteProjectionSourceStatus0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/logs", _AdminService_GetSysLogList0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/logs/{id}", _AdminService_GetSysLogInfo0_HTTP_Handler(srv))
 }
@@ -761,94 +728,6 @@ func _AdminService_DeleteMenu0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx
 	}
 }
 
-func _AdminService_GetBusinessDomainList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceGetBusinessDomainList)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetBusinessDomainList(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetBusinessDomainListReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_AddBusinessDomain0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in BusinessDomainItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceAddBusinessDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddBusinessDomain(ctx, req.(*BusinessDomainItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*BusinessDomainItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_UpdateBusinessDomain0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in BusinessDomainItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceUpdateBusinessDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateBusinessDomain(ctx, req.(*BusinessDomainItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*BusinessDomainItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_DeleteBusinessDomain0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteBusinessDomainRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceDeleteBusinessDomain)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteBusinessDomain(ctx, req.(*DeleteBusinessDomainRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _AdminService_GetServiceRegistryList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
@@ -868,75 +747,6 @@ func _AdminService_GetServiceRegistryList0_HTTP_Handler(srv AdminServiceHTTPServ
 	}
 }
 
-func _AdminService_AddServiceRegistry0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ServiceRegistryItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceAddServiceRegistry)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddServiceRegistry(ctx, req.(*ServiceRegistryItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ServiceRegistryItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_UpdateServiceRegistry0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ServiceRegistryItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceUpdateServiceRegistry)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateServiceRegistry(ctx, req.(*ServiceRegistryItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ServiceRegistryItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_DeleteServiceRegistry0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteServiceRegistryRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceDeleteServiceRegistry)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteServiceRegistry(ctx, req.(*DeleteServiceRegistryRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _AdminService_GetProjectionSourceStatusList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
@@ -952,100 +762,6 @@ func _AdminService_GetProjectionSourceStatusList0_HTTP_Handler(srv AdminServiceH
 			return err
 		}
 		reply := out.(*GetProjectionSourceStatusListReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_AddProjectionSourceStatus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ProjectionSourceStatusItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceAddProjectionSourceStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AddProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ProjectionSourceStatusItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_UpdateProjectionSourceStatus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ProjectionSourceStatusItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceUpdateProjectionSourceStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ProjectionSourceStatusItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_ReportProjectionSourceStatus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ProjectionSourceStatusItem
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceReportProjectionSourceStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ReportProjectionSourceStatus(ctx, req.(*ProjectionSourceStatusItem))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ProjectionSourceStatusItem)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AdminService_DeleteProjectionSourceStatus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteProjectionSourceStatusRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAdminServiceDeleteProjectionSourceStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DeleteProjectionSourceStatus(ctx, req.(*DeleteProjectionSourceStatusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -1093,24 +809,17 @@ func _AdminService_GetSysLogInfo0_HTTP_Handler(srv AdminServiceHTTPServer) func(
 
 type AdminServiceHTTPClient interface {
 	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
-	AddBusinessDomain(ctx context.Context, req *BusinessDomainItem, opts ...http.CallOption) (rsp *BusinessDomainItem, err error)
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
-	AddProjectionSourceStatus(ctx context.Context, req *ProjectionSourceStatusItem, opts ...http.CallOption) (rsp *ProjectionSourceStatusItem, err error)
 	AddResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
-	AddServiceRegistry(ctx context.Context, req *ServiceRegistryItem, opts ...http.CallOption) (rsp *ServiceRegistryItem, err error)
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelResource(ctx context.Context, req *DeleteResource, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DeleteBusinessDomain(ctx context.Context, req *DeleteBusinessDomainRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DeleteProjectionSourceStatus(ctx context.Context, req *DeleteProjectionSourceStatusRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DeleteServiceRegistry(ctx context.Context, req *DeleteServiceRegistryRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteUserRoleBinding(ctx context.Context, req *DeleteUserRoleBindingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetApiList(ctx context.Context, req *GetApiPageParams, opts ...http.CallOption) (rsp *GetApiListByPageReply, err error)
-	GetBusinessDomainList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetBusinessDomainListReply, err error)
 	GetCurrentUserMenus(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetCurrentUserMenusReply, err error)
 	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
 	GetProjectionSourceStatusList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetProjectionSourceStatusListReply, err error)
@@ -1125,15 +834,11 @@ type AdminServiceHTTPClient interface {
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
 	ListUserRoleBindings(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleBindingsReply, err error)
-	ReportProjectionSourceStatus(ctx context.Context, req *ProjectionSourceStatusItem, opts ...http.CallOption) (rsp *ProjectionSourceStatusItem, err error)
 	UpdateApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
-	UpdateBusinessDomain(ctx context.Context, req *BusinessDomainItem, opts ...http.CallOption) (rsp *BusinessDomainItem, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	UpdateProjectionSourceStatus(ctx context.Context, req *ProjectionSourceStatusItem, opts ...http.CallOption) (rsp *ProjectionSourceStatusItem, err error)
 	UpdateResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
-	UpdateServiceRegistry(ctx context.Context, req *ServiceRegistryItem, opts ...http.CallOption) (rsp *ServiceRegistryItem, err error)
 	UpsertUserRoleBinding(ctx context.Context, req *UserRoleBindingItem, opts ...http.CallOption) (rsp *UserRoleBindingItem, err error)
 }
 
@@ -1158,37 +863,11 @@ func (c *AdminServiceHTTPClientImpl) AddApi(ctx context.Context, in *ApiListItem
 	return &out, nil
 }
 
-func (c *AdminServiceHTTPClientImpl) AddBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...http.CallOption) (*BusinessDomainItem, error) {
-	var out BusinessDomainItem
-	pattern := "/admin-api/v1/platform/domains"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceAddBusinessDomain))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AdminServiceHTTPClientImpl) AddDept(ctx context.Context, in *DeptListItem, opts ...http.CallOption) (*DeptListItem, error) {
 	var out DeptListItem
 	pattern := "/admin-api/v1/depts"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceAddDept))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) AddProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...http.CallOption) (*ProjectionSourceStatusItem, error) {
-	var out ProjectionSourceStatusItem
-	pattern := "/admin-api/v1/platform/projection-sources"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceAddProjectionSourceStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1215,19 +894,6 @@ func (c *AdminServiceHTTPClientImpl) AddRole(ctx context.Context, in *RoleListIt
 	pattern := "/admin-api/v1/roles"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceAddRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) AddServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...http.CallOption) (*ServiceRegistryItem, error) {
-	var out ServiceRegistryItem
-	pattern := "/admin-api/v1/platform/services"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceAddServiceRegistry))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1301,50 +967,11 @@ func (c *AdminServiceHTTPClientImpl) DelRole(ctx context.Context, in *DeleteRole
 	return &out, nil
 }
 
-func (c *AdminServiceHTTPClientImpl) DeleteBusinessDomain(ctx context.Context, in *DeleteBusinessDomainRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/admin-api/v1/platform/domains/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminServiceDeleteBusinessDomain))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AdminServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/admin-api/v1/menus/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceDeleteMenu))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) DeleteProjectionSourceStatus(ctx context.Context, in *DeleteProjectionSourceStatusRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/admin-api/v1/platform/projection-sources/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminServiceDeleteProjectionSourceStatus))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) DeleteServiceRegistry(ctx context.Context, in *DeleteServiceRegistryRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/admin-api/v1/platform/services/{id}"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminServiceDeleteServiceRegistry))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -1371,19 +998,6 @@ func (c *AdminServiceHTTPClientImpl) GetApiList(ctx context.Context, in *GetApiP
 	pattern := "/admin-api/v1/apis"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetApiList))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) GetBusinessDomainList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetBusinessDomainListReply, error) {
-	var out GetBusinessDomainListReply
-	pattern := "/admin-api/v1/platform/domains"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAdminServiceGetBusinessDomainList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -1574,37 +1188,11 @@ func (c *AdminServiceHTTPClientImpl) ListUserRoleBindings(ctx context.Context, i
 	return &out, nil
 }
 
-func (c *AdminServiceHTTPClientImpl) ReportProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...http.CallOption) (*ProjectionSourceStatusItem, error) {
-	var out ProjectionSourceStatusItem
-	pattern := "/admin-api/v1/platform/projection-sources/report/{source_service}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceReportProjectionSourceStatus))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AdminServiceHTTPClientImpl) UpdateApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
 	var out ApiListItem
 	pattern := "/admin-api/v1/apis/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceUpdateApi))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) UpdateBusinessDomain(ctx context.Context, in *BusinessDomainItem, opts ...http.CallOption) (*BusinessDomainItem, error) {
-	var out BusinessDomainItem
-	pattern := "/admin-api/v1/platform/domains/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceUpdateBusinessDomain))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -1639,19 +1227,6 @@ func (c *AdminServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenu
 	return &out, nil
 }
 
-func (c *AdminServiceHTTPClientImpl) UpdateProjectionSourceStatus(ctx context.Context, in *ProjectionSourceStatusItem, opts ...http.CallOption) (*ProjectionSourceStatusItem, error) {
-	var out ProjectionSourceStatusItem
-	pattern := "/admin-api/v1/platform/projection-sources/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceUpdateProjectionSourceStatus))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
 func (c *AdminServiceHTTPClientImpl) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
 	var out ResourceListItem
 	pattern := "/admin-api/v1/resources/{id}"
@@ -1670,19 +1245,6 @@ func (c *AdminServiceHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleLis
 	pattern := "/admin-api/v1/roles/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceUpdateRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *AdminServiceHTTPClientImpl) UpdateServiceRegistry(ctx context.Context, in *ServiceRegistryItem, opts ...http.CallOption) (*ServiceRegistryItem, error) {
-	var out ServiceRegistryItem
-	pattern := "/admin-api/v1/platform/services/{id}"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAdminServiceUpdateServiceRegistry))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

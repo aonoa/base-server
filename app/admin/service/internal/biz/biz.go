@@ -68,23 +68,9 @@ type AdminRepo interface {
 	CreateSysLog(context.Context, *ent.SysLogRecord) error
 	GetSysLogList(context.Context, *v1.GetSysLogListParams) ([]*ent.SysLogRecord, int64, error)
 	GetSysLogInfo(context.Context, string) (*ent.SysLogRecord, error)
-	ListBusinessDomains(context.Context) ([]*ent.BusinessDomain, error)
-	GetBusinessDomain(context.Context, string) (*ent.BusinessDomain, error)
-	AddBusinessDomain(context.Context, *v1.BusinessDomainItem) (*ent.BusinessDomain, error)
-	UpdateBusinessDomain(context.Context, string, *v1.BusinessDomainItem) (*ent.BusinessDomain, error)
-	DeleteBusinessDomain(context.Context, string) error
 	ListServiceRegistries(context.Context) ([]*ent.ServiceRegistry, error)
-	GetServiceRegistry(context.Context, string) (*ent.ServiceRegistry, error)
-	AddServiceRegistry(context.Context, *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error)
-	UpdateServiceRegistry(context.Context, string, *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error)
-	DeleteServiceRegistry(context.Context, string) error
 	ListProjectionSourceStatuses(context.Context) ([]*ent.ProjectionSourceStatus, error)
-	GetProjectionSourceStatus(context.Context, string) (*ent.ProjectionSourceStatus, error)
-	GetProjectionSourceStatusBySourceService(context.Context, string) (*ent.ProjectionSourceStatus, error)
-	AddProjectionSourceStatus(context.Context, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
-	UpdateProjectionSourceStatus(context.Context, string, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
-	ReportProjectionSourceStatus(context.Context, *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error)
-	DeleteProjectionSourceStatus(context.Context, string) error
+	SaveProjectionSourceStatus(context.Context, authx.ProjectionStatus) error
 }
 
 type AdminUsecase struct {
@@ -702,44 +688,6 @@ func (uc *AdminUsecase) CreateSysLog(ctx context.Context, req *v1.CreateSysLogRe
 	})
 }
 
-func (uc *AdminUsecase) GetBusinessDomainList(ctx context.Context) (*v1.GetBusinessDomainListReply, error) {
-	list, err := uc.repo.ListBusinessDomains(ctx)
-	if err != nil {
-		return nil, err
-	}
-	res := &v1.GetBusinessDomainListReply{Items: make([]*v1.BusinessDomainItem, 0, len(list)), Total: int64(len(list))}
-	for _, item := range list {
-		res.Items = append(res.Items, businessDomainToReply(item))
-	}
-	return res, nil
-}
-
-func (uc *AdminUsecase) AddBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
-	item, err := uc.repo.AddBusinessDomain(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	return businessDomainToReply(item), nil
-}
-
-func (uc *AdminUsecase) UpdateBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*v1.BusinessDomainItem, error) {
-	if _, err := uc.repo.GetBusinessDomain(ctx, req.Id); err != nil {
-		return nil, err
-	}
-	item, err := uc.repo.UpdateBusinessDomain(ctx, req.Id, req)
-	if err != nil {
-		return nil, err
-	}
-	return businessDomainToReply(item), nil
-}
-
-func (uc *AdminUsecase) DeleteBusinessDomain(ctx context.Context, id string) error {
-	if _, err := uc.repo.GetBusinessDomain(ctx, id); err != nil {
-		return err
-	}
-	return uc.repo.DeleteBusinessDomain(ctx, id)
-}
-
 func (uc *AdminUsecase) GetServiceRegistryList(ctx context.Context) (*v1.GetServiceRegistryListReply, error) {
 	list, err := uc.repo.ListServiceRegistries(ctx)
 	if err != nil {
@@ -752,32 +700,6 @@ func (uc *AdminUsecase) GetServiceRegistryList(ctx context.Context) (*v1.GetServ
 	return res, nil
 }
 
-func (uc *AdminUsecase) AddServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
-	item, err := uc.repo.AddServiceRegistry(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	return serviceRegistryToReply(item), nil
-}
-
-func (uc *AdminUsecase) UpdateServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*v1.ServiceRegistryItem, error) {
-	if _, err := uc.repo.GetServiceRegistry(ctx, req.Id); err != nil {
-		return nil, err
-	}
-	item, err := uc.repo.UpdateServiceRegistry(ctx, req.Id, req)
-	if err != nil {
-		return nil, err
-	}
-	return serviceRegistryToReply(item), nil
-}
-
-func (uc *AdminUsecase) DeleteServiceRegistry(ctx context.Context, id string) error {
-	if _, err := uc.repo.GetServiceRegistry(ctx, id); err != nil {
-		return err
-	}
-	return uc.repo.DeleteServiceRegistry(ctx, id)
-}
-
 func (uc *AdminUsecase) GetProjectionSourceStatusList(ctx context.Context) (*v1.GetProjectionSourceStatusListReply, error) {
 	list, err := uc.repo.ListProjectionSourceStatuses(ctx)
 	if err != nil {
@@ -788,43 +710,6 @@ func (uc *AdminUsecase) GetProjectionSourceStatusList(ctx context.Context) (*v1.
 		res.Items = append(res.Items, projectionSourceStatusToReply(item))
 	}
 	return res, nil
-}
-
-func (uc *AdminUsecase) AddProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
-	item, err := uc.repo.AddProjectionSourceStatus(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	return projectionSourceStatusToReply(item), nil
-}
-
-func (uc *AdminUsecase) UpdateProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
-	if _, err := uc.repo.GetProjectionSourceStatus(ctx, req.Id); err != nil {
-		return nil, err
-	}
-	item, err := uc.repo.UpdateProjectionSourceStatus(ctx, req.Id, req)
-	if err != nil {
-		return nil, err
-	}
-	return projectionSourceStatusToReply(item), nil
-}
-
-func (uc *AdminUsecase) ReportProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*v1.ProjectionSourceStatusItem, error) {
-	if req.SourceService == "" {
-		return nil, fmt.Errorf("source_service is required")
-	}
-	item, err := uc.repo.ReportProjectionSourceStatus(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	return projectionSourceStatusToReply(item), nil
-}
-
-func (uc *AdminUsecase) DeleteProjectionSourceStatus(ctx context.Context, id string) error {
-	if _, err := uc.repo.GetProjectionSourceStatus(ctx, id); err != nil {
-		return err
-	}
-	return uc.repo.DeleteProjectionSourceStatus(ctx, id)
 }
 
 func (uc *AdminUsecase) GetSysLogList(ctx context.Context, req *v1.GetSysLogListParams) (*v1.GetSysLogListReply, error) {
@@ -1266,8 +1151,6 @@ func apiToReply(item *ent.ApiResources) *v1.ApiListItem {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourcesGroup,
-		ServiceCode:       item.ServiceCode,
-		DomainCode:        item.DomainCode,
 	}
 }
 
@@ -1314,8 +1197,6 @@ func apiToAuthReply(item *ent.ApiResources) *v1.AuthApiItem {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourcesGroup,
-		ServiceCode:       item.ServiceCode,
-		DomainCode:        item.DomainCode,
 	}
 }
 
@@ -1383,25 +1264,6 @@ func userRoleBindingsToReply(userID string, items []*ent.UserRoleBinding) *v1.Us
 	return res
 }
 
-func businessDomainToReply(item *ent.BusinessDomain) *v1.BusinessDomainItem {
-	status := int32(0)
-	if item.Status {
-		status = 1
-	}
-	return &v1.BusinessDomainItem{
-		Id:            item.ID,
-		Code:          item.Code,
-		Name:          item.Name,
-		OwnerService:  item.OwnerService,
-		OrgModelType:  item.OrgModelType,
-		AuthScopeType: item.AuthScopeType,
-		Status:        status,
-		Description:   item.Description,
-		MetaJson:      item.MetaJSON,
-		CreateTime:    item.CreateTime.Format(time.DateTime),
-	}
-}
-
 func serviceRegistryToReply(item *ent.ServiceRegistry) *v1.ServiceRegistryItem {
 	status := int32(0)
 	if item.Status {
@@ -1411,7 +1273,6 @@ func serviceRegistryToReply(item *ent.ServiceRegistry) *v1.ServiceRegistryItem {
 		Id:                item.ID,
 		ServiceCode:       item.ServiceCode,
 		ServiceName:       item.ServiceName,
-		DomainCode:        item.DomainCode,
 		HttpPrefix:        item.HTTPPrefix,
 		GrpcService:       item.GrpcService,
 		Status:            status,
@@ -1425,7 +1286,6 @@ func projectionSourceStatusToReply(item *ent.ProjectionSourceStatus) *v1.Project
 	return &v1.ProjectionSourceStatusItem{
 		Id:                   item.ID,
 		SourceService:        item.SourceService,
-		DomainCode:           item.DomainCode,
 		SyncMode:             item.SyncMode,
 		State:                item.State,
 		LastSnapshotRevision: item.LastSnapshotRevision,

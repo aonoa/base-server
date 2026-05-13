@@ -54,20 +54,6 @@ func (_c *ProjectionSourceStatusCreate) SetSourceService(v string) *ProjectionSo
 	return _c
 }
 
-// SetDomainCode sets the "domain_code" field.
-func (_c *ProjectionSourceStatusCreate) SetDomainCode(v string) *ProjectionSourceStatusCreate {
-	_c.mutation.SetDomainCode(v)
-	return _c
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_c *ProjectionSourceStatusCreate) SetNillableDomainCode(v *string) *ProjectionSourceStatusCreate {
-	if v != nil {
-		_c.SetDomainCode(*v)
-	}
-	return _c
-}
-
 // SetSyncMode sets the "sync_mode" field.
 func (_c *ProjectionSourceStatusCreate) SetSyncMode(v string) *ProjectionSourceStatusCreate {
 	_c.mutation.SetSyncMode(v)
@@ -209,10 +195,6 @@ func (_c *ProjectionSourceStatusCreate) defaults() {
 		v := projectionsourcestatus.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := _c.mutation.DomainCode(); !ok {
-		v := projectionsourcestatus.DefaultDomainCode
-		_c.mutation.SetDomainCode(v)
-	}
 	if _, ok := _c.mutation.SyncMode(); !ok {
 		v := projectionsourcestatus.DefaultSyncMode
 		_c.mutation.SetSyncMode(v)
@@ -253,9 +235,6 @@ func (_c *ProjectionSourceStatusCreate) check() error {
 	}
 	if _, ok := _c.mutation.SourceService(); !ok {
 		return &ValidationError{Name: "source_service", err: errors.New(`ent: missing required field "ProjectionSourceStatus.source_service"`)}
-	}
-	if _, ok := _c.mutation.DomainCode(); !ok {
-		return &ValidationError{Name: "domain_code", err: errors.New(`ent: missing required field "ProjectionSourceStatus.domain_code"`)}
 	}
 	if _, ok := _c.mutation.SyncMode(); !ok {
 		return &ValidationError{Name: "sync_mode", err: errors.New(`ent: missing required field "ProjectionSourceStatus.sync_mode"`)}
@@ -321,10 +300,6 @@ func (_c *ProjectionSourceStatusCreate) createSpec() (*ProjectionSourceStatus, *
 	if value, ok := _c.mutation.SourceService(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSourceService, field.TypeString, value)
 		_node.SourceService = value
-	}
-	if value, ok := _c.mutation.DomainCode(); ok {
-		_spec.SetField(projectionsourcestatus.FieldDomainCode, field.TypeString, value)
-		_node.DomainCode = value
 	}
 	if value, ok := _c.mutation.SyncMode(); ok {
 		_spec.SetField(projectionsourcestatus.FieldSyncMode, field.TypeString, value)

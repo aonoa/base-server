@@ -115,7 +115,6 @@ make wire
   - `sys_menu`
   - `sys_dept`
   - `sys_log`
-  - `sys_business_domain`
   - `sys_service_registry`
   - `sys_projection_source_status`
 - `auth`：Casbin 投影执行，不是业务权限主数据中心
@@ -152,7 +151,8 @@ make frontend-api
 除了改 proto / handler 以外，还要同步检查：
 
 - `admin` 中的 API 目录主数据
-- `domain_code` / `service_code` / `resource_group`
+- `resource_group`
+- `sys_service_registry.http_prefix -> service_code`
 - `admin -> auth` 的快照或 delta 投影
 - gateway 是否需要新路由、中间件或白名单
 

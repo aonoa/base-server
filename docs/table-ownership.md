@@ -44,7 +44,6 @@
   - `sys_menu`
   - `sys_dept`
   - `sys_log`
-  - `sys_business_domain`
   - `sys_service_registry`
   - `sys_projection_source_status`
 
@@ -78,8 +77,7 @@
 | `pkg/data/schema/menu.go` | `sys_menu` | `admin` | `admin` | 系统菜单 |
 | `pkg/data/schema/dept.go` | `sys_dept` | `admin` | `admin` | 部门树 |
 | `pkg/data/schema/log.go` | `sys_log` | `admin` | `admin` | 系统访问日志 / 操作日志 |
-| `pkg/data/schema/business_domain.go` | `sys_business_domain` | `admin` | `admin` | 平台业务域注册信息 |
-| `pkg/data/schema/service_registry.go` | `sys_service_registry` | `admin` | `admin` | 平台服务注册与归属信息 |
+| `pkg/data/schema/service_registry.go` | `sys_service_registry` | `admin` | `admin` | 平台服务注册信息 |
 | `pkg/data/schema/projection_source_status.go` | `sys_projection_source_status` | `admin` | `admin` | 权限投影源状态与同步观测信息 |
 | `pkg/data/schema/site_message.go` | `sys_site_message` | `common` | `common` | 站内信发布记录、草稿、定时发布、撤回状态 |
 | `pkg/data/schema/site_message_receipt.go` | `sys_site_message_receipt` | `common` | `common` | 站内信收件回执、已读/未读状态 |
@@ -147,7 +145,7 @@
 作用：
 
 - API 权限目录主数据
-- 记录 `path + method -> service_code + domain_code + resources_group` 的接口目录映射
+- 记录 `path + method -> resources_group` 的接口目录映射
 
 直接读写方：
 
@@ -157,9 +155,8 @@
 
 - 前端“API 资源列表”改的是这张表
 - `auth` 的 API 权限判断不直接读这张表，而是吃 `admin -> auth` 的投影同步
-- `domain_code` 是接口的唯一主业务域 owner，不允许同一个 `path + method` 被多个业务域并列拥有
-- `service_code` 是技术服务归属和路由落点，不作为主要业务授权边界
-- 如果一个技术服务承载多个业务域的 API，应以本表的接口级 `domain_code` 判断业务归属，而不是以服务注册表的默认业务域反推
+- `service_code` 不再存放在这张表；网关通过 `sys_service_registry.http_prefix` 推导服务归属和鉴权命名空间
+- `resources_group` 是角色授权粒度
 
 #### `api_resources_roles`
 
@@ -273,27 +270,12 @@
 
 - gateway 的 `httplog` 中间件最终会上报到 `admin`
 
-#### `sys_business_domain`
-
-作用：
-
-- 平台业务域注册表
-- 描述某个业务域的主责服务、组织模型类型、权限范围类型
-
-直接读写方：
-
-- `admin`
-
-备注：
-
-- 这是平台治理元数据，不是具体业务权限主数据
-
 #### `sys_service_registry`
 
 作用：
 
 - 平台服务注册表
-- 描述服务归属哪个业务域、HTTP 前缀、gRPC 服务名、是否启用权限投影
+- 描述服务编码、HTTP 前缀、gRPC 服务名、是否启用权限投影
 
 直接读写方：
 
@@ -301,9 +283,8 @@
 
 备注：
 
-- 用于支撑“服务归属管理”“网关归属治理”“投影源管理”
-- `domain_code` 表示服务的默认或主业务域，用于治理视图和网关推导
-- 它不能替代 `sys_api_resources.domain_code` 作为接口级业务域真相，尤其是一个服务承载多个业务域 API 时
+- 用于支撑服务注册、网关前缀解析和投影源观测
+- 当前只记录服务信息，不再附加额外归属模型
 
 #### `sys_projection_source_status`
 

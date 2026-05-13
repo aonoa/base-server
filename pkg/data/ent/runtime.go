@@ -4,7 +4,6 @@ package ent
 
 import (
 	"base-server/pkg/data/ent/apiresources"
-	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/projectionsourcestatus"
@@ -41,49 +40,10 @@ func init() {
 	apiresources.DefaultUpdateTime = apiresourcesDescUpdateTime.Default.(func() time.Time)
 	// apiresources.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	apiresources.UpdateDefaultUpdateTime = apiresourcesDescUpdateTime.UpdateDefault.(func() time.Time)
-	// apiresourcesDescServiceCode is the schema descriptor for service_code field.
-	apiresourcesDescServiceCode := apiresourcesFields[7].Descriptor()
-	// apiresources.DefaultServiceCode holds the default value on creation for the service_code field.
-	apiresources.DefaultServiceCode = apiresourcesDescServiceCode.Default.(string)
-	// apiresourcesDescDomainCode is the schema descriptor for domain_code field.
-	apiresourcesDescDomainCode := apiresourcesFields[8].Descriptor()
-	// apiresources.DefaultDomainCode holds the default value on creation for the domain_code field.
-	apiresources.DefaultDomainCode = apiresourcesDescDomainCode.Default.(string)
 	// apiresourcesDescID is the schema descriptor for id field.
 	apiresourcesDescID := apiresourcesFields[0].Descriptor()
 	// apiresources.DefaultID holds the default value on creation for the id field.
 	apiresources.DefaultID = apiresourcesDescID.Default.(func() string)
-	businessdomainMixin := schema.BusinessDomain{}.Mixin()
-	businessdomainMixinFields0 := businessdomainMixin[0].Fields()
-	_ = businessdomainMixinFields0
-	businessdomainFields := schema.BusinessDomain{}.Fields()
-	_ = businessdomainFields
-	// businessdomainDescCreateTime is the schema descriptor for create_time field.
-	businessdomainDescCreateTime := businessdomainMixinFields0[0].Descriptor()
-	// businessdomain.DefaultCreateTime holds the default value on creation for the create_time field.
-	businessdomain.DefaultCreateTime = businessdomainDescCreateTime.Default.(func() time.Time)
-	// businessdomainDescUpdateTime is the schema descriptor for update_time field.
-	businessdomainDescUpdateTime := businessdomainMixinFields0[1].Descriptor()
-	// businessdomain.DefaultUpdateTime holds the default value on creation for the update_time field.
-	businessdomain.DefaultUpdateTime = businessdomainDescUpdateTime.Default.(func() time.Time)
-	// businessdomain.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
-	businessdomain.UpdateDefaultUpdateTime = businessdomainDescUpdateTime.UpdateDefault.(func() time.Time)
-	// businessdomainDescStatus is the schema descriptor for status field.
-	businessdomainDescStatus := businessdomainFields[6].Descriptor()
-	// businessdomain.DefaultStatus holds the default value on creation for the status field.
-	businessdomain.DefaultStatus = businessdomainDescStatus.Default.(bool)
-	// businessdomainDescDescription is the schema descriptor for description field.
-	businessdomainDescDescription := businessdomainFields[7].Descriptor()
-	// businessdomain.DefaultDescription holds the default value on creation for the description field.
-	businessdomain.DefaultDescription = businessdomainDescDescription.Default.(string)
-	// businessdomainDescMetaJSON is the schema descriptor for meta_json field.
-	businessdomainDescMetaJSON := businessdomainFields[8].Descriptor()
-	// businessdomain.DefaultMetaJSON holds the default value on creation for the meta_json field.
-	businessdomain.DefaultMetaJSON = businessdomainDescMetaJSON.Default.(string)
-	// businessdomainDescID is the schema descriptor for id field.
-	businessdomainDescID := businessdomainFields[0].Descriptor()
-	// businessdomain.DefaultID holds the default value on creation for the id field.
-	businessdomain.DefaultID = businessdomainDescID.Default.(func() string)
 	deptMixin := schema.Dept{}.Mixin()
 	deptMixinFields0 := deptMixin[0].Fields()
 	_ = deptMixinFields0
@@ -233,32 +193,28 @@ func init() {
 	projectionsourcestatus.DefaultUpdateTime = projectionsourcestatusDescUpdateTime.Default.(func() time.Time)
 	// projectionsourcestatus.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	projectionsourcestatus.UpdateDefaultUpdateTime = projectionsourcestatusDescUpdateTime.UpdateDefault.(func() time.Time)
-	// projectionsourcestatusDescDomainCode is the schema descriptor for domain_code field.
-	projectionsourcestatusDescDomainCode := projectionsourcestatusFields[2].Descriptor()
-	// projectionsourcestatus.DefaultDomainCode holds the default value on creation for the domain_code field.
-	projectionsourcestatus.DefaultDomainCode = projectionsourcestatusDescDomainCode.Default.(string)
 	// projectionsourcestatusDescSyncMode is the schema descriptor for sync_mode field.
-	projectionsourcestatusDescSyncMode := projectionsourcestatusFields[3].Descriptor()
+	projectionsourcestatusDescSyncMode := projectionsourcestatusFields[2].Descriptor()
 	// projectionsourcestatus.DefaultSyncMode holds the default value on creation for the sync_mode field.
 	projectionsourcestatus.DefaultSyncMode = projectionsourcestatusDescSyncMode.Default.(string)
 	// projectionsourcestatusDescState is the schema descriptor for state field.
-	projectionsourcestatusDescState := projectionsourcestatusFields[4].Descriptor()
+	projectionsourcestatusDescState := projectionsourcestatusFields[3].Descriptor()
 	// projectionsourcestatus.DefaultState holds the default value on creation for the state field.
 	projectionsourcestatus.DefaultState = projectionsourcestatusDescState.Default.(string)
 	// projectionsourcestatusDescLastSnapshotRevision is the schema descriptor for last_snapshot_revision field.
-	projectionsourcestatusDescLastSnapshotRevision := projectionsourcestatusFields[5].Descriptor()
+	projectionsourcestatusDescLastSnapshotRevision := projectionsourcestatusFields[4].Descriptor()
 	// projectionsourcestatus.DefaultLastSnapshotRevision holds the default value on creation for the last_snapshot_revision field.
 	projectionsourcestatus.DefaultLastSnapshotRevision = projectionsourcestatusDescLastSnapshotRevision.Default.(uint64)
 	// projectionsourcestatusDescLastSyncTime is the schema descriptor for last_sync_time field.
-	projectionsourcestatusDescLastSyncTime := projectionsourcestatusFields[6].Descriptor()
+	projectionsourcestatusDescLastSyncTime := projectionsourcestatusFields[5].Descriptor()
 	// projectionsourcestatus.DefaultLastSyncTime holds the default value on creation for the last_sync_time field.
 	projectionsourcestatus.DefaultLastSyncTime = projectionsourcestatusDescLastSyncTime.Default.(string)
 	// projectionsourcestatusDescLastError is the schema descriptor for last_error field.
-	projectionsourcestatusDescLastError := projectionsourcestatusFields[7].Descriptor()
+	projectionsourcestatusDescLastError := projectionsourcestatusFields[6].Descriptor()
 	// projectionsourcestatus.DefaultLastError holds the default value on creation for the last_error field.
 	projectionsourcestatus.DefaultLastError = projectionsourcestatusDescLastError.Default.(string)
 	// projectionsourcestatusDescDescription is the schema descriptor for description field.
-	projectionsourcestatusDescDescription := projectionsourcestatusFields[8].Descriptor()
+	projectionsourcestatusDescDescription := projectionsourcestatusFields[7].Descriptor()
 	// projectionsourcestatus.DefaultDescription holds the default value on creation for the description field.
 	projectionsourcestatus.DefaultDescription = projectionsourcestatusDescDescription.Default.(string)
 	// projectionsourcestatusDescID is the schema descriptor for id field.
@@ -315,23 +271,23 @@ func init() {
 	// serviceregistry.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	serviceregistry.UpdateDefaultUpdateTime = serviceregistryDescUpdateTime.UpdateDefault.(func() time.Time)
 	// serviceregistryDescHTTPPrefix is the schema descriptor for http_prefix field.
-	serviceregistryDescHTTPPrefix := serviceregistryFields[4].Descriptor()
+	serviceregistryDescHTTPPrefix := serviceregistryFields[3].Descriptor()
 	// serviceregistry.DefaultHTTPPrefix holds the default value on creation for the http_prefix field.
 	serviceregistry.DefaultHTTPPrefix = serviceregistryDescHTTPPrefix.Default.(string)
 	// serviceregistryDescGrpcService is the schema descriptor for grpc_service field.
-	serviceregistryDescGrpcService := serviceregistryFields[5].Descriptor()
+	serviceregistryDescGrpcService := serviceregistryFields[4].Descriptor()
 	// serviceregistry.DefaultGrpcService holds the default value on creation for the grpc_service field.
 	serviceregistry.DefaultGrpcService = serviceregistryDescGrpcService.Default.(string)
 	// serviceregistryDescStatus is the schema descriptor for status field.
-	serviceregistryDescStatus := serviceregistryFields[6].Descriptor()
+	serviceregistryDescStatus := serviceregistryFields[5].Descriptor()
 	// serviceregistry.DefaultStatus holds the default value on creation for the status field.
 	serviceregistry.DefaultStatus = serviceregistryDescStatus.Default.(bool)
 	// serviceregistryDescProjectionEnabled is the schema descriptor for projection_enabled field.
-	serviceregistryDescProjectionEnabled := serviceregistryFields[7].Descriptor()
+	serviceregistryDescProjectionEnabled := serviceregistryFields[6].Descriptor()
 	// serviceregistry.DefaultProjectionEnabled holds the default value on creation for the projection_enabled field.
 	serviceregistry.DefaultProjectionEnabled = serviceregistryDescProjectionEnabled.Default.(bool)
 	// serviceregistryDescDescription is the schema descriptor for description field.
-	serviceregistryDescDescription := serviceregistryFields[8].Descriptor()
+	serviceregistryDescDescription := serviceregistryFields[7].Descriptor()
 	// serviceregistry.DefaultDescription holds the default value on creation for the description field.
 	serviceregistry.DefaultDescription = serviceregistryDescDescription.Default.(string)
 	// serviceregistryDescID is the schema descriptor for id field.

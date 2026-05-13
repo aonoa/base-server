@@ -26,7 +26,7 @@ Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行
 - `pkg/data`：共享 Ent schema / generated client / templates
 - `pkg/tools`：共享工具函数
 
-权限和接口归属口径：`auth` 不拥有角色、资源、API 目录等权限主数据，只执行认证、授权判定和投影加载；当前平台 API 目录主数据在 `admin.sys_api_resources`。同一个 `path + method` 只能有一个主业务域 `domain_code` owner，完整判定规则见 [docs/api-ownership.md](./docs/api-ownership.md)。
+权限和接口归属口径：`auth` 不拥有角色、资源、API 目录等权限主数据，只执行认证、授权判定和投影加载；当前平台 API 目录主数据在 `admin.sys_api_resources`。同一个 `path + method` 只能有一条 API 目录记录，记录中维护 `resources_group`；服务归属由 `sys_service_registry.http_prefix -> service_code` 推导，完整规则见 [docs/api-ownership.md](./docs/api-ownership.md)。
 
 ## 常用命令
 
@@ -356,20 +356,19 @@ seed 完成后默认账号：
 - `vben / 123456`：root
 - `jack / 123456`：admin
 
-如果你当前还没有真实业务服务，seed 也会先把“平台自身”初始化成第一个业务域：
+seed 会初始化当前平台服务注册和 API 目录：
 
-- 业务域：`platform`
 - 已注册基础服务：`admin`、`auth`、`user`、`common`、`gateway`
-- 现有平台 API 目录会自动补齐 `service_code/domain_code` 归属，便于直接验证控制面和网关服务归属解析链路；其中 `domain_code` 是接口唯一主业务域，`service_code` 是技术服务归属
+- 现有平台 API 目录会自动补齐 `resources_group`，服务归属由服务注册前缀解析，便于验证控制面和网关服务归属链路
 
 ### seed 说明
 
 - `deploy/scripts/seed.sh` 可以重复执行：固定 ID 的基础角色、菜单、用户、API 资源会按 seed 内容更新，关联关系会跳过已存在记录
 - 默认账号 `jack` / `vben` 在重复 seed 时会被归一化到 seed 里的固定记录，避免同名默认账号重复累积
-- `sys_api_resources` 是 API 权限目录主数据；重复 seed 会按 seed 中的平台基础数据补齐 `path/method/resources_group/service_code/domain_code`，从而影响后续 `admin -> auth -> casbin` 投影
-- 同一个 `path + method` 不应在 `sys_api_resources` 中被多个业务域并列拥有；跨域调用、跨域聚合和迁移兼容都应保留唯一主 `domain_code`
+- `sys_api_resources` 是 API 权限目录主数据；重复 seed 会按 seed 中的平台基础数据补齐 `path/method/resources_group`，从而影响后续 `admin -> auth -> casbin` 投影
+- 同一个 `path + method` 不应在 `sys_api_resources` 中重复登记
 - 当前“表归属 / 当前 schema 模型”请以服务迁移代码和 [docs/table-ownership.md](./docs/table-ownership.md) 为准，不要根据 `deploy/sql/seed/*.sql` 的文件名或内容反推
-- 当前 seed 分工为：`deploy/sql/seed/admin.sql` 负责角色、资源、API 资源、业务域、服务注册、用户角色绑定、菜单、部门等 `admin` 主数据；`deploy/sql/seed/user.sql` 只负责 `sys_user`；`deploy/sql/seed/auth.sql` 保留为 no-op 占位，`auth` 侧权限来自 `admin -> auth -> casbin_rules` 投影
+- 当前 seed 分工为：`deploy/sql/seed/admin.sql` 负责角色、资源、API 资源、服务注册、用户角色绑定、菜单、部门等 `admin` 主数据；`deploy/sql/seed/user.sql` 只负责 `sys_user`；`deploy/sql/seed/auth.sql` 保留为 no-op 占位，`auth` 侧权限来自 `admin -> auth -> casbin_rules` 投影
 - `deploy/scripts/seed.sh` 在写入 seed 后会自动触发一次 `admin -> auth` 权限快照同步：容器模式下重启 `admin` 容器，开发模式下执行 `make sync-admin-projection`
 - 如果想回到完全空白的本地依赖环境，建议重建依赖服务后再执行 seed：
 

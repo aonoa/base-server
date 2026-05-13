@@ -33,7 +33,6 @@ func (ProjectionSourceStatus) Fields() []ent.Field {
 		field.String("source_service").
 			Unique().
 			Comment("投影源服务编码"),
-		field.String("domain_code").Default("").Comment("所属业务域"),
 		field.String("sync_mode").Default("").Comment("同步模式"),
 		field.String("state").Default("").Comment("当前状态"),
 		field.Uint64("last_snapshot_revision").Default(0).Comment("最后一次快照版本"),

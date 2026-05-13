@@ -24,8 +24,6 @@ type ProjectionSourceStatus struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// 投影源服务编码
 	SourceService string `json:"source_service,omitempty"`
-	// 所属业务域
-	DomainCode string `json:"domain_code,omitempty"`
 	// 同步模式
 	SyncMode string `json:"sync_mode,omitempty"`
 	// 当前状态
@@ -48,7 +46,7 @@ func (*ProjectionSourceStatus) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case projectionsourcestatus.FieldLastSnapshotRevision:
 			values[i] = new(sql.NullInt64)
-		case projectionsourcestatus.FieldID, projectionsourcestatus.FieldSourceService, projectionsourcestatus.FieldDomainCode, projectionsourcestatus.FieldSyncMode, projectionsourcestatus.FieldState, projectionsourcestatus.FieldLastSyncTime, projectionsourcestatus.FieldLastError, projectionsourcestatus.FieldDescription:
+		case projectionsourcestatus.FieldID, projectionsourcestatus.FieldSourceService, projectionsourcestatus.FieldSyncMode, projectionsourcestatus.FieldState, projectionsourcestatus.FieldLastSyncTime, projectionsourcestatus.FieldLastError, projectionsourcestatus.FieldDescription:
 			values[i] = new(sql.NullString)
 		case projectionsourcestatus.FieldCreateTime, projectionsourcestatus.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -90,12 +88,6 @@ func (_m *ProjectionSourceStatus) assignValues(columns []string, values []any) e
 				return fmt.Errorf("unexpected type %T for field source_service", values[i])
 			} else if value.Valid {
 				_m.SourceService = value.String
-			}
-		case projectionsourcestatus.FieldDomainCode:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field domain_code", values[i])
-			} else if value.Valid {
-				_m.DomainCode = value.String
 			}
 		case projectionsourcestatus.FieldSyncMode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -177,9 +169,6 @@ func (_m *ProjectionSourceStatus) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("source_service=")
 	builder.WriteString(_m.SourceService)
-	builder.WriteString(", ")
-	builder.WriteString("domain_code=")
-	builder.WriteString(_m.DomainCode)
 	builder.WriteString(", ")
 	builder.WriteString("sync_mode=")
 	builder.WriteString(_m.SyncMode)

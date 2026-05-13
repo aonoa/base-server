@@ -16,27 +16,6 @@ func (u *ApiResourcesUpdateOne) UpdateAll(apiresources *ApiResources) *ApiResour
 	update = update.SetModule(apiresources.Module)
 	update = update.SetModuleDescription(apiresources.ModuleDescription)
 	update = update.SetResourcesGroup(apiresources.ResourcesGroup)
-	update = update.SetServiceCode(apiresources.ServiceCode)
-	update = update.SetDomainCode(apiresources.DomainCode)
-	return update
-}
-
-// UpdateAll updates all mutable fields of the BusinessDomain entity (excluding create_time, update_time and immutable fields).
-func (u *BusinessDomainUpdateOne) UpdateAll(businessdomain *BusinessDomain) *BusinessDomainUpdateOne {
-	// Skip if the input entity is nil to avoid panic
-	if businessdomain == nil {
-		return u
-	}
-
-	update := u
-	update = update.SetCode(businessdomain.Code)
-	update = update.SetName(businessdomain.Name)
-	update = update.SetOwnerService(businessdomain.OwnerService)
-	update = update.SetOrgModelType(businessdomain.OrgModelType)
-	update = update.SetAuthScopeType(businessdomain.AuthScopeType)
-	update = update.SetStatus(businessdomain.Status)
-	update = update.SetDescription(businessdomain.Description)
-	update = update.SetMetaJSON(businessdomain.MetaJSON)
 	return update
 }
 
@@ -110,7 +89,6 @@ func (u *ProjectionSourceStatusUpdateOne) UpdateAll(projectionsourcestatus *Proj
 
 	update := u
 	update = update.SetSourceService(projectionsourcestatus.SourceService)
-	update = update.SetDomainCode(projectionsourcestatus.DomainCode)
 	update = update.SetSyncMode(projectionsourcestatus.SyncMode)
 	update = update.SetState(projectionsourcestatus.State)
 	update = update.SetLastSnapshotRevision(projectionsourcestatus.LastSnapshotRevision)
@@ -162,7 +140,6 @@ func (u *ServiceRegistryUpdateOne) UpdateAll(serviceregistry *ServiceRegistry) *
 	update := u
 	update = update.SetServiceCode(serviceregistry.ServiceCode)
 	update = update.SetServiceName(serviceregistry.ServiceName)
-	update = update.SetDomainCode(serviceregistry.DomainCode)
 	update = update.SetHTTPPrefix(serviceregistry.HTTPPrefix)
 	update = update.SetGrpcService(serviceregistry.GrpcService)
 	update = update.SetStatus(serviceregistry.Status)

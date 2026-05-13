@@ -18,14 +18,12 @@ import (
 	"base-server/pkg/authx"
 	"base-server/pkg/data/ent"
 	"base-server/pkg/data/ent/apiresources"
-	"base-server/pkg/data/ent/businessdomain"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/migrate"
 	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
-	"base-server/pkg/data/ent/serviceregistry"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/userrolebinding"
 	"base-server/pkg/tools"
@@ -70,6 +68,10 @@ func NewData(c *conf.Data, services *conf.Services, logger log.Logger) (*Data, f
 		helper.WithContext(ctx).Info(args...)
 	})
 	client := ent.NewClient(ent.Driver(sqlDrv))
+	if err := cleanupLegacyPlatformGovernanceBeforeMigration(context.Background(), db, c.Database.Driver); err != nil {
+		_ = client.Close()
+		return nil, nil, err
+	}
 	if err := cleanupDuplicateAPIResourcesBeforeMigration(context.Background(), db, c.Database.Driver); err != nil {
 		_ = client.Close()
 		return nil, nil, err
@@ -136,7 +138,7 @@ type adminRepo struct {
 func NewAdminRepo(data *Data, logger log.Logger) biz.AdminRepo {
 	repo := &adminRepo{data: data, log: log.NewHelper(logger)}
 	if data != nil && data.projectionClient != nil {
-		data.projectionClient.SetStatusReporter(newAdminProjectionStatusReporter(repo), "platform", "admin permission projection source")
+		data.projectionClient.SetStatusReporter(newAdminProjectionStatusReporter(repo), "admin permission projection source")
 	}
 	return repo
 }
@@ -149,8 +151,6 @@ type bootstrapAPIResource struct {
 	Module            string
 	ModuleDescription string
 	ResourceGroup     string
-	Service           string
-	Domain            string
 }
 
 type bootstrapResource struct {
@@ -203,8 +203,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "api",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-api-create",
@@ -214,8 +212,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "api",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-api-update",
@@ -225,8 +221,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "api",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-api-delete",
@@ -236,8 +230,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "api",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-resource-list",
@@ -247,8 +239,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "data",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-resource-create",
@@ -258,8 +248,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "data",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-resource-update",
@@ -269,8 +257,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "data",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-resource-delete",
@@ -280,52 +266,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "data",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-domain-list",
-		Description:       "获取业务域列表",
-		Path:              "/admin-api/v1/platform/domains",
-		Method:            "GET",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-domain-create",
-		Description:       "新增业务域",
-		Path:              "/admin-api/v1/platform/domains",
-		Method:            "POST",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-domain-update",
-		Description:       "更新业务域",
-		Path:              "/admin-api/v1/platform/domains/{id}",
-		Method:            "PUT",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-domain-delete",
-		Description:       "删除业务域",
-		Path:              "/admin-api/v1/platform/domains/{id}",
-		Method:            "DELETE",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-platform-service-list",
@@ -335,41 +275,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-service-create",
-		Description:       "新增服务注册",
-		Path:              "/admin-api/v1/platform/services",
-		Method:            "POST",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-service-update",
-		Description:       "更新服务注册",
-		Path:              "/admin-api/v1/platform/services/{id}",
-		Method:            "PUT",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-service-delete",
-		Description:       "删除服务注册",
-		Path:              "/admin-api/v1/platform/services/{id}",
-		Method:            "DELETE",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-platform-projection-source-list",
@@ -379,52 +284,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-projection-source-create",
-		Description:       "新增投影源状态",
-		Path:              "/admin-api/v1/platform/projection-sources",
-		Method:            "POST",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-projection-source-update",
-		Description:       "更新投影源状态",
-		Path:              "/admin-api/v1/platform/projection-sources/{id}",
-		Method:            "PUT",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-projection-source-report",
-		Description:       "上报投影源状态",
-		Path:              "/admin-api/v1/platform/projection-sources/report/{source_service}",
-		Method:            "PUT",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
-	},
-	{
-		ID:                "api-admin-platform-projection-source-delete",
-		Description:       "删除投影源状态",
-		Path:              "/admin-api/v1/platform/projection-sources/{id}",
-		Method:            "DELETE",
-		Module:            "admin",
-		ModuleDescription: "管理服务",
-		ResourceGroup:     "admin",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-admin-walk-route",
@@ -434,8 +293,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "系统管理",
 		ResourceGroup:     "api",
-		Service:           "admin",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-my-list",
@@ -445,8 +302,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "default",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-my-unread-count",
@@ -456,8 +311,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "default",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-my-read",
@@ -467,8 +320,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "default",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-my-unread",
@@ -478,8 +329,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "default",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-my-read-all",
@@ -489,8 +338,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "default",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-manage-list",
@@ -500,8 +347,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "site_message_manage",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-manage-create",
@@ -511,8 +356,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "site_message_manage",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-manage-recall",
@@ -522,8 +365,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "site_message_manage",
-		Service:           "common",
-		Domain:            "platform",
 	},
 	{
 		ID:                "api-common-site-message-manage-delete",
@@ -533,8 +374,6 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "common",
 		ModuleDescription: "公共服务",
 		ResourceGroup:     "site_message_manage",
-		Service:           "common",
-		Domain:            "platform",
 	},
 }
 
@@ -700,12 +539,6 @@ func getAPIListQuery(params *v1.GetApiPageParams, isPage bool) func(s *sql.Selec
 		if params.Description != "" {
 			s.Where(sql.Like(apiresources.FieldDescription, "%"+params.Description+"%"))
 		}
-		if params.ServiceCode != "" {
-			s.Where(sql.EQ(apiresources.FieldServiceCode, params.ServiceCode))
-		}
-		if params.DomainCode != "" {
-			s.Where(sql.EQ(apiresources.FieldDomainCode, params.DomainCode))
-		}
 		if isPage {
 			if params.PageSize != 0 {
 				s.Limit(int(params.PageSize))
@@ -846,21 +679,19 @@ ON CONFLICT (id) DO UPDATE SET
 
 func (r *adminRepo) ensureBootstrapAPIResources(ctx context.Context) error {
 	const query = `
-INSERT INTO sys_api_resources (
-  id, create_time, update_time, description, path, method, module, module_description, resources_group, service_code, domain_code
-) VALUES (
-  $1, NOW(), NOW(), $2, $3, $4, $5, $6, $7, $8, $9
-)
-ON CONFLICT (path, method) DO UPDATE SET
-  update_time = NOW(),
-  description = EXCLUDED.description,
-  module = EXCLUDED.module,
-  module_description = EXCLUDED.module_description,
-  resources_group = EXCLUDED.resources_group,
-  service_code = EXCLUDED.service_code,
-  domain_code = EXCLUDED.domain_code`
+	INSERT INTO sys_api_resources (
+	  id, create_time, update_time, description, path, method, module, module_description, resources_group
+	) VALUES (
+	  $1, NOW(), NOW(), $2, $3, $4, $5, $6, $7
+	)
+	ON CONFLICT (path, method) DO UPDATE SET
+	  update_time = NOW(),
+	  description = EXCLUDED.description,
+	  module = EXCLUDED.module,
+	  module_description = EXCLUDED.module_description,
+	  resources_group = EXCLUDED.resources_group`
 	for _, item := range bootstrapAdminAPIResources {
-		if _, err := r.data.sqlDB.ExecContext(ctx, query, item.ID, item.Description, item.Path, item.Method, item.Module, item.ModuleDescription, item.ResourceGroup, item.Service, item.Domain); err != nil {
+		if _, err := r.data.sqlDB.ExecContext(ctx, query, item.ID, item.Description, item.Path, item.Method, item.Module, item.ModuleDescription, item.ResourceGroup); err != nil {
 			return err
 		}
 	}
@@ -1004,7 +835,6 @@ func roleToPolicyRole(item *ent.Role) authx.ProjectionRole {
 		Remark:    item.Desc,
 		MenuIDs:   append([]int32(nil), item.Menus...),
 		Resources: resources,
-		Domain:    "platform",
 	}
 }
 
@@ -1020,8 +850,6 @@ func apiToPolicyAPI(item *ent.ApiResources) *authx.ProjectionAPI {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourceGroup:     item.ResourcesGroup,
-		Service:           item.ServiceCode,
-		Domain:            item.DomainCode,
 	}
 }
 
@@ -1036,7 +864,6 @@ func userRoleBindingToPolicyBinding(item *ent.UserRoleBinding, roleValue string)
 		RoleValue:  roleValue,
 		CreateTime: item.CreateTime.Format(time.RFC3339),
 		UpdateTime: item.UpdateTime.Format(time.RFC3339),
-		Domain:     "platform",
 	}
 }
 
@@ -1145,88 +972,12 @@ func (r *adminRepo) GetDeptById(ctx context.Context, id int64) (*ent.Dept, error
 	return r.data.db.Dept.Get(ctx, id)
 }
 
-func (r *adminRepo) ListBusinessDomains(ctx context.Context) ([]*ent.BusinessDomain, error) {
-	return r.data.db.BusinessDomain.Query().All(ctx)
-}
-
-func (r *adminRepo) GetBusinessDomain(ctx context.Context, id string) (*ent.BusinessDomain, error) {
-	return r.data.db.BusinessDomain.Query().Where(businessdomain.IDEQ(id)).First(ctx)
-}
-
-func (r *adminRepo) AddBusinessDomain(ctx context.Context, req *v1.BusinessDomainItem) (*ent.BusinessDomain, error) {
-	return r.data.db.BusinessDomain.Create().
-		SetCode(req.Code).
-		SetName(req.Name).
-		SetOwnerService(req.OwnerService).
-		SetOrgModelType(req.OrgModelType).
-		SetAuthScopeType(req.AuthScopeType).
-		SetStatus(req.Status != 0).
-		SetDescription(req.Description).
-		SetMetaJSON(req.MetaJson).
-		Save(ctx)
-}
-
-func (r *adminRepo) UpdateBusinessDomain(ctx context.Context, id string, req *v1.BusinessDomainItem) (*ent.BusinessDomain, error) {
-	return r.data.db.BusinessDomain.UpdateOneID(id).
-		SetCode(req.Code).
-		SetName(req.Name).
-		SetOwnerService(req.OwnerService).
-		SetOrgModelType(req.OrgModelType).
-		SetAuthScopeType(req.AuthScopeType).
-		SetStatus(req.Status != 0).
-		SetDescription(req.Description).
-		SetMetaJSON(req.MetaJson).
-		Save(ctx)
-}
-
-func (r *adminRepo) DeleteBusinessDomain(ctx context.Context, id string) error {
-	return r.data.db.BusinessDomain.DeleteOneID(id).Exec(ctx)
-}
-
 func (r *adminRepo) ListServiceRegistries(ctx context.Context) ([]*ent.ServiceRegistry, error) {
 	return r.data.db.ServiceRegistry.Query().All(ctx)
 }
 
-func (r *adminRepo) GetServiceRegistry(ctx context.Context, id string) (*ent.ServiceRegistry, error) {
-	return r.data.db.ServiceRegistry.Query().Where(serviceregistry.IDEQ(id)).First(ctx)
-}
-
-func (r *adminRepo) AddServiceRegistry(ctx context.Context, req *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error) {
-	return r.data.db.ServiceRegistry.Create().
-		SetServiceCode(req.ServiceCode).
-		SetServiceName(req.ServiceName).
-		SetDomainCode(req.DomainCode).
-		SetHTTPPrefix(req.HttpPrefix).
-		SetGrpcService(req.GrpcService).
-		SetStatus(req.Status != 0).
-		SetProjectionEnabled(req.ProjectionEnabled).
-		SetDescription(req.Description).
-		Save(ctx)
-}
-
-func (r *adminRepo) UpdateServiceRegistry(ctx context.Context, id string, req *v1.ServiceRegistryItem) (*ent.ServiceRegistry, error) {
-	return r.data.db.ServiceRegistry.UpdateOneID(id).
-		SetServiceCode(req.ServiceCode).
-		SetServiceName(req.ServiceName).
-		SetDomainCode(req.DomainCode).
-		SetHTTPPrefix(req.HttpPrefix).
-		SetGrpcService(req.GrpcService).
-		SetStatus(req.Status != 0).
-		SetProjectionEnabled(req.ProjectionEnabled).
-		SetDescription(req.Description).
-		Save(ctx)
-}
-
-func (r *adminRepo) DeleteServiceRegistry(ctx context.Context, id string) error {
-	return r.data.db.ServiceRegistry.DeleteOneID(id).Exec(ctx)
-}
-
 func (r *adminRepo) ListProjectionSourceStatuses(ctx context.Context) ([]*ent.ProjectionSourceStatus, error) {
 	return r.data.db.ProjectionSourceStatus.Query().All(ctx)
-}
-
-func (r *adminRepo) GetProjectionSourceStatus(ctx context.Context, id string) (*ent.ProjectionSourceStatus, error) {
-	return r.data.db.ProjectionSourceStatus.Query().Where(projectionsourcestatus.IDEQ(id)).First(ctx)
 }
 
 func (r *adminRepo) GetProjectionSourceStatusBySourceService(ctx context.Context, sourceService string) (*ent.ProjectionSourceStatus, error) {
@@ -1235,45 +986,41 @@ func (r *adminRepo) GetProjectionSourceStatusBySourceService(ctx context.Context
 		First(ctx)
 }
 
-func (r *adminRepo) AddProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error) {
+func (r *adminRepo) addProjectionSourceStatus(ctx context.Context, status authx.ProjectionStatus) (*ent.ProjectionSourceStatus, error) {
 	return r.data.db.ProjectionSourceStatus.Create().
-		SetSourceService(req.SourceService).
-		SetDomainCode(req.DomainCode).
-		SetSyncMode(req.SyncMode).
-		SetState(req.State).
-		SetLastSnapshotRevision(req.LastSnapshotRevision).
-		SetLastSyncTime(req.LastSyncTime).
-		SetLastError(req.LastError).
-		SetDescription(req.Description).
+		SetSourceService(status.SourceService).
+		SetSyncMode(status.SyncMode).
+		SetState(status.State).
+		SetLastSnapshotRevision(status.LastSnapshotRevision).
+		SetLastSyncTime(status.LastSyncTime).
+		SetLastError(status.LastError).
+		SetDescription(status.Description).
 		Save(ctx)
 }
 
-func (r *adminRepo) UpdateProjectionSourceStatus(ctx context.Context, id string, req *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error) {
+func (r *adminRepo) updateProjectionSourceStatus(ctx context.Context, id string, status authx.ProjectionStatus) (*ent.ProjectionSourceStatus, error) {
 	return r.data.db.ProjectionSourceStatus.UpdateOneID(id).
-		SetSourceService(req.SourceService).
-		SetDomainCode(req.DomainCode).
-		SetSyncMode(req.SyncMode).
-		SetState(req.State).
-		SetLastSnapshotRevision(req.LastSnapshotRevision).
-		SetLastSyncTime(req.LastSyncTime).
-		SetLastError(req.LastError).
-		SetDescription(req.Description).
+		SetSourceService(status.SourceService).
+		SetSyncMode(status.SyncMode).
+		SetState(status.State).
+		SetLastSnapshotRevision(status.LastSnapshotRevision).
+		SetLastSyncTime(status.LastSyncTime).
+		SetLastError(status.LastError).
+		SetDescription(status.Description).
 		Save(ctx)
 }
 
-func (r *adminRepo) DeleteProjectionSourceStatus(ctx context.Context, id string) error {
-	return r.data.db.ProjectionSourceStatus.DeleteOneID(id).Exec(ctx)
-}
-
-func (r *adminRepo) ReportProjectionSourceStatus(ctx context.Context, req *v1.ProjectionSourceStatusItem) (*ent.ProjectionSourceStatus, error) {
-	item, err := r.GetProjectionSourceStatusBySourceService(ctx, req.SourceService)
+func (r *adminRepo) SaveProjectionSourceStatus(ctx context.Context, status authx.ProjectionStatus) error {
+	item, err := r.GetProjectionSourceStatusBySourceService(ctx, status.SourceService)
 	if err != nil {
 		if !ent.IsNotFound(err) {
-			return nil, err
+			return err
 		}
-		return r.AddProjectionSourceStatus(ctx, req)
+		_, err = r.addProjectionSourceStatus(ctx, status)
+		return err
 	}
-	return r.UpdateProjectionSourceStatus(ctx, item.ID, req)
+	_, err = r.updateProjectionSourceStatus(ctx, item.ID, status)
+	return err
 }
 
 func (r *adminRepo) CreateSysLog(ctx context.Context, item *ent.SysLogRecord) error {
@@ -1313,7 +1060,6 @@ func adminTables() []*schema.Table {
 		migrate.SysMenuTable,
 		migrate.SysDeptTable,
 		migrate.SysLogTable,
-		migrate.SysBusinessDomainTable,
 		migrate.SysServiceRegistryTable,
 		migrate.SysProjectionSourceStatusTable,
 	}
@@ -1397,6 +1143,97 @@ func tableExists(ctx context.Context, db *dbsql.DB, table string) (bool, error) 
 	var exists bool
 	err := db.QueryRowContext(ctx, "SELECT to_regclass($1) IS NOT NULL", "public."+table).Scan(&exists)
 	return exists, err
+}
+
+func cleanupLegacyPlatformGovernanceBeforeMigration(ctx context.Context, db *dbsql.DB, driver string) error {
+	if db == nil || toEntDialect(driver) != dialect.Postgres {
+		return nil
+	}
+	apiTableExists, err := tableExists(ctx, db, "sys_api_resources")
+	if err != nil {
+		return err
+	}
+	if apiTableExists {
+		roleTableExists, err := tableExists(ctx, db, "api_resources_roles")
+		if err != nil {
+			return err
+		}
+		if roleTableExists {
+			if _, err := db.ExecContext(ctx, `
+DELETE FROM api_resources_roles
+WHERE api_resources_id IN (
+  SELECT id
+  FROM sys_api_resources
+  WHERE path LIKE '/admin-api/v1/platform/domains%'
+     OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
+     OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
+     OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
+     OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
+     OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')
+)`); err != nil {
+				return err
+			}
+		}
+		if _, err := db.ExecContext(ctx, `
+DELETE FROM sys_api_resources
+WHERE path LIKE '/admin-api/v1/platform/domains%'
+   OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
+   OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
+   OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
+   OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
+   OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')`); err != nil {
+			return err
+		}
+		if _, err := db.ExecContext(ctx, `
+ALTER TABLE public.sys_api_resources
+  DROP COLUMN IF EXISTS business_key,
+  DROP COLUMN IF EXISTS service_key,
+  DROP COLUMN IF EXISTS service_code,
+  DROP COLUMN IF EXISTS domain_code`); err != nil {
+			return err
+		}
+	}
+	serviceTableExists, err := tableExists(ctx, db, "sys_service_registry")
+	if err != nil {
+		return err
+	}
+	if serviceTableExists {
+		if _, err := db.ExecContext(ctx, `
+ALTER TABLE public.sys_service_registry
+  DROP COLUMN IF EXISTS domain_code`); err != nil {
+			return err
+		}
+		if _, err := db.ExecContext(ctx, `
+UPDATE sys_service_registry
+SET description = '平台控制面，负责菜单、服务注册、API 目录和投影源状态观测'
+WHERE service_code = 'admin'`); err != nil {
+			return err
+		}
+	}
+	projectionTableExists, err := tableExists(ctx, db, "sys_projection_source_status")
+	if err != nil {
+		return err
+	}
+	if projectionTableExists {
+		if _, err := db.ExecContext(ctx, `
+ALTER TABLE public.sys_projection_source_status
+  DROP COLUMN IF EXISTS domain_code`); err != nil {
+			return err
+		}
+	}
+	menuTableExists, err := tableExists(ctx, db, "sys_menu")
+	if err != nil {
+		return err
+	}
+	if menuTableExists {
+		if _, err := db.ExecContext(ctx, `
+DELETE FROM sys_menu
+WHERE id = 21 OR path = '/system/platform/domain'`); err != nil {
+			return err
+		}
+	}
+	_, err = db.ExecContext(ctx, `DROP TABLE IF EXISTS public.sys_business_domain`)
+	return err
 }
 
 func cleanupDuplicateAPIResources(ctx context.Context, db *dbsql.DB, moveRoleLinks bool) error {

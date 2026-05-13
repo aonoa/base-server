@@ -20,18 +20,6 @@ func (f ApiResourcesFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ApiResourcesMutation", m)
 }
 
-// The BusinessDomainFunc type is an adapter to allow the use of ordinary
-// function as BusinessDomain mutator.
-type BusinessDomainFunc func(context.Context, *ent.BusinessDomainMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f BusinessDomainFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.BusinessDomainMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BusinessDomainMutation", m)
-}
-
 // The DeptFunc type is an adapter to allow the use of ordinary
 // function as Dept mutator.
 type DeptFunc func(context.Context, *ent.DeptMutation) (ent.Value, error)

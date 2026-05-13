@@ -9,9 +9,9 @@
 - [monorepo-overview.md](./monorepo-overview.md)
   - 当前微服务版本线的结构、服务边界、常见改动路径和已知缺口
 - [permission-design.md](./permission-design.md)
-  - 权限模型、`domain_code` / `service_code` / `scope_id` 设计
+  - 当前平台角色、菜单、API 资源组、服务前缀解析和 `scope_id` 权限设计
 - [api-ownership.md](./api-ownership.md)
-  - API 归属和 `path + method` 唯一 owner 规则
+  - API 目录、服务归属和 `path + method` 唯一记录规则
 - [table-ownership.md](./table-ownership.md)
   - 表归属、数据库归属和共享 Ent schema 的使用口径
 - [auth-incremental-sync-design.md](./auth-incremental-sync-design.md)

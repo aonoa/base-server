@@ -191,27 +191,19 @@ func (uc *AuthUsecase) GetAccessCodes(ctx context.Context, userID string) (*v1.G
 }
 
 func (uc *AuthUsecase) CheckAuthorization(ctx context.Context, req *v1.CheckAuthorizationRequest) (*v1.CheckAuthorizationReply, error) {
-	authDomain := authorizationDomain(req.DomainCode, req.Service)
 	action := req.Method
 	if req.Action != "" {
 		action = req.Action
 	}
-	subject := scopedUserKey(req.UserId, authDomain, req.ScopeId)
-	object := qualifiedAPIPath(authDomain, req.Path)
+	service := strings.TrimSpace(req.Service)
+	subject := scopedUserKey(req.UserId, service, req.ScopeId)
+	object := qualifiedAPIPath(service, req.Path)
 	allowed, err := uc.e.Enforce(RoleToApiEnforceContext, subject, object, action)
 	if err != nil {
 		return nil, err
 	}
-	if !allowed && (authDomain != "" || req.ScopeId != "") {
+	if !allowed && (service != "" || req.ScopeId != "") {
 		allowed, err = uc.e.Enforce(RoleToApiEnforceContext, req.UserId, req.Path, req.Method)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if !allowed && req.DomainCode != "" && req.Service != "" && req.DomainCode != req.Service {
-		legacySubject := scopedUserKey(req.UserId, req.Service, req.ScopeId)
-		legacyObject := qualifiedAPIPath(req.Service, req.Path)
-		allowed, err = uc.e.Enforce(RoleToApiEnforceContext, legacySubject, legacyObject, req.Method)
 		if err != nil {
 			return nil, err
 		}
@@ -236,6 +228,7 @@ func (uc *AuthUsecase) RegisterPermissionSnapshot(ctx context.Context, req *v1.R
 		return nil
 	}
 	uc.removeSourceProjection(req.SourceService)
+	uc.removeSourceProjection("platform")
 	uc.applyPermissionSnapshot(req)
 	if err := uc.e.SavePolicy(); err != nil {
 		return err
@@ -262,15 +255,15 @@ func (uc *AuthUsecase) ApplyRoleDelta(ctx context.Context, req *v1.ApplyRoleDelt
 		if before.Value == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "role delta before.value is required")
 		}
-		uc.removeRoleBindings(projectionDomain(before.DomainCode, before.Service), before.Value)
+		uc.removeRoleBindings(projectionService(before.Service), before.Value)
 	default:
 		if after.Value == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "role delta after.value is required")
 		}
-		beforeDomain := projectionDomain(before.DomainCode, before.Service)
-		afterDomain := projectionDomain(after.DomainCode, after.Service)
-		if before.Value != "" && (before.Value != after.Value || beforeDomain != afterDomain) {
-			uc.renameRoleBindings(beforeDomain, before.Value, afterDomain, after.Value)
+		beforeService := projectionService(before.Service)
+		afterService := projectionService(after.Service)
+		if before.Value != "" && (before.Value != after.Value || beforeService != afterService) {
+			uc.renameRoleBindings(beforeService, before.Value, afterService, after.Value)
 		}
 		uc.syncRolePolicies(after)
 	}
@@ -291,12 +284,12 @@ func (uc *AuthUsecase) ApplyApiDelta(ctx context.Context, req *v1.ApplyApiDeltaR
 		if after.Path == "" || after.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
 		}
-		uc.AddServiceAPIToGroup(projectionDomain(after.DomainCode, after.Service), after.Path, after.ResourcesGroup)
+		uc.AddServiceAPIToGroup(projectionService(after.Service), after.Path, after.ResourcesGroup)
 	case after == nil:
 		if before.Path == "" || before.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
 		}
-		uc.removeAPIGroup(projectionDomain(before.DomainCode, before.Service), before.Path, before.ResourcesGroup)
+		uc.removeAPIGroup(projectionService(before.Service), before.Path, before.ResourcesGroup)
 	default:
 		if before.Path == "" || before.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
@@ -304,10 +297,10 @@ func (uc *AuthUsecase) ApplyApiDelta(ctx context.Context, req *v1.ApplyApiDeltaR
 		if after.Path == "" || after.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
 		}
-		beforeDomain := projectionDomain(before.DomainCode, before.Service)
-		afterDomain := projectionDomain(after.DomainCode, after.Service)
-		if before.Path != after.Path || before.ResourcesGroup != after.ResourcesGroup || beforeDomain != afterDomain {
-			uc.updateAPIGroup(beforeDomain, before.Path, before.ResourcesGroup, afterDomain, after.Path, after.ResourcesGroup)
+		beforeService := projectionService(before.Service)
+		afterService := projectionService(after.Service)
+		if before.Path != after.Path || before.ResourcesGroup != after.ResourcesGroup || beforeService != afterService {
+			uc.updateAPIGroup(beforeService, before.Path, before.ResourcesGroup, afterService, after.Path, after.ResourcesGroup)
 		}
 	}
 	uc.log.Infof("api delta applied source=%s revision=%d before=%s after=%s", req.SourceService, req.Revision, apiDeltaValue(before), apiDeltaValue(after))
@@ -326,12 +319,12 @@ func (uc *AuthUsecase) ApplyUserRoleBindingDelta(ctx context.Context, req *v1.Ap
 		if req.After.UserId == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "user role binding after.user_id is required")
 		}
-		uc.replaceUserRoleBinding(req.After.UserId, projectionDomain(req.After.DomainCode, req.After.Service), req.After.ScopeId, defaultRoleValue(req.After.RoleValue))
+		uc.replaceUserRoleBinding(req.After.UserId, projectionService(req.After.Service), req.After.ScopeId, defaultRoleValue(req.After.RoleValue))
 	case req.Before != nil:
 		if req.Before.UserId == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "user role binding before.user_id is required")
 		}
-		uc.replaceUserRoleBinding(req.Before.UserId, projectionDomain(req.Before.DomainCode, req.Before.Service), req.Before.ScopeId, "")
+		uc.replaceUserRoleBinding(req.Before.UserId, projectionService(req.Before.Service), req.Before.ScopeId, "")
 	}
 	uc.log.Infof("user role binding delta applied source=%s revision=%d before=%s after=%s", req.SourceService, req.Revision, bindingDeltaValue(req.Before), bindingDeltaValue(req.After))
 	return nil
@@ -473,15 +466,7 @@ func defaultRoleValue(roleValue string) string {
 	return roleValue
 }
 
-func authorizationDomain(domainCode, service string) string {
-	return projectionDomain(domainCode, service)
-}
-
-func projectionDomain(domainCode, service string) string {
-	domainCode = strings.TrimSpace(domainCode)
-	if domainCode != "" {
-		return domainCode
-	}
+func projectionService(service string) string {
 	return strings.TrimSpace(service)
 }
 
@@ -489,7 +474,7 @@ func roleDeltaValue(item *v1.PolicyRole) string {
 	if item == nil {
 		return "nil"
 	}
-	service := projectionDomain(item.DomainCode, item.Service)
+	service := projectionService(item.Service)
 	if service == "" {
 		return item.Value
 	}
@@ -500,7 +485,7 @@ func apiDeltaValue(item *v1.PolicyApi) string {
 	if item == nil {
 		return "nil"
 	}
-	service := projectionDomain(item.DomainCode, item.Service)
+	service := projectionService(item.Service)
 	if service == "" {
 		return item.Path + "->" + item.ResourcesGroup
 	}
@@ -511,7 +496,7 @@ func bindingDeltaValue(item *v1.PolicyUserRoleBinding) string {
 	if item == nil {
 		return "nil"
 	}
-	return scopedUserKey(item.UserId, projectionDomain(item.DomainCode, item.Service), item.ScopeId) + "->" + item.RoleValue
+	return scopedUserKey(item.UserId, projectionService(item.Service), item.ScopeId) + "->" + item.RoleValue
 }
 
 func (uc *AuthUsecase) replaceUserRoleBinding(userID, service, scope, roleValue string) {
@@ -528,7 +513,7 @@ func (uc *AuthUsecase) syncRolePolicies(role *v1.PolicyRole) {
 	if role == nil || role.Value == "" {
 		return
 	}
-	service := projectionDomain(role.DomainCode, role.Service)
+	service := projectionService(role.Service)
 	uc.removeRolePolicies(service, role.Value)
 	if !role.Status {
 		return
@@ -546,13 +531,13 @@ func (uc *AuthUsecase) applyPermissionSnapshot(req *v1.RegisterPermissionSnapsho
 		if api == nil || api.Path == "" || api.ResourcesGroup == "" {
 			continue
 		}
-		uc.AddServiceAPIToGroup(projectionDomain(api.DomainCode, api.Service), api.Path, api.ResourcesGroup)
+		uc.AddServiceAPIToGroup(projectionService(api.Service), api.Path, api.ResourcesGroup)
 	}
 	for _, binding := range req.Bindings {
 		if binding == nil || binding.UserId == "" {
 			continue
 		}
-		uc.AddScopedUserRoles(binding.UserId, projectionDomain(binding.DomainCode, binding.Service), binding.ScopeId, []string{defaultRoleValue(binding.RoleValue)})
+		uc.AddScopedUserRoles(binding.UserId, projectionService(binding.Service), binding.ScopeId, []string{defaultRoleValue(binding.RoleValue)})
 	}
 	uc.AddUserRoles(BootstrapRootUserID, []string{"root"})
 	for _, role := range req.Roles {
@@ -565,17 +550,17 @@ func snapshotUsesServiceNamespace(req *v1.RegisterPermissionSnapshotRequest) boo
 		return false
 	}
 	for _, role := range req.Roles {
-		if role != nil && (strings.TrimSpace(role.Service) != "" || strings.TrimSpace(role.DomainCode) != "") {
+		if role != nil && strings.TrimSpace(role.Service) != "" {
 			return true
 		}
 	}
 	for _, api := range req.Apis {
-		if api != nil && (strings.TrimSpace(api.Service) != "" || strings.TrimSpace(api.DomainCode) != "") {
+		if api != nil && strings.TrimSpace(api.Service) != "" {
 			return true
 		}
 	}
 	for _, binding := range req.Bindings {
-		if binding != nil && (strings.TrimSpace(binding.Service) != "" || strings.TrimSpace(binding.DomainCode) != "" || strings.TrimSpace(binding.ScopeId) != "") {
+		if binding != nil && (strings.TrimSpace(binding.Service) != "" || strings.TrimSpace(binding.ScopeId) != "") {
 			return true
 		}
 	}

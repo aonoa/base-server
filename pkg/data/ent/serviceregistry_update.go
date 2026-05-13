@@ -63,20 +63,6 @@ func (_u *ServiceRegistryUpdate) SetNillableServiceName(v *string) *ServiceRegis
 	return _u
 }
 
-// SetDomainCode sets the "domain_code" field.
-func (_u *ServiceRegistryUpdate) SetDomainCode(v string) *ServiceRegistryUpdate {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ServiceRegistryUpdate) SetNillableDomainCode(v *string) *ServiceRegistryUpdate {
-	if v != nil {
-		_u.SetDomainCode(*v)
-	}
-	return _u
-}
-
 // SetHTTPPrefix sets the "http_prefix" field.
 func (_u *ServiceRegistryUpdate) SetHTTPPrefix(v string) *ServiceRegistryUpdate {
 	_u.mutation.SetHTTPPrefix(v)
@@ -212,9 +198,6 @@ func (_u *ServiceRegistryUpdate) sqlSave(ctx context.Context) (_node int, err er
 	if value, ok := _u.mutation.ServiceName(); ok {
 		_spec.SetField(serviceregistry.FieldServiceName, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(serviceregistry.FieldDomainCode, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.HTTPPrefix(); ok {
 		_spec.SetField(serviceregistry.FieldHTTPPrefix, field.TypeString, value)
 	}
@@ -282,20 +265,6 @@ func (_u *ServiceRegistryUpdateOne) SetServiceName(v string) *ServiceRegistryUpd
 func (_u *ServiceRegistryUpdateOne) SetNillableServiceName(v *string) *ServiceRegistryUpdateOne {
 	if v != nil {
 		_u.SetServiceName(*v)
-	}
-	return _u
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (_u *ServiceRegistryUpdateOne) SetDomainCode(v string) *ServiceRegistryUpdateOne {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ServiceRegistryUpdateOne) SetNillableDomainCode(v *string) *ServiceRegistryUpdateOne {
-	if v != nil {
-		_u.SetDomainCode(*v)
 	}
 	return _u
 }
@@ -464,9 +433,6 @@ func (_u *ServiceRegistryUpdateOne) sqlSave(ctx context.Context) (_node *Service
 	}
 	if value, ok := _u.mutation.ServiceName(); ok {
 		_spec.SetField(serviceregistry.FieldServiceName, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(serviceregistry.FieldDomainCode, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.HTTPPrefix(); ok {
 		_spec.SetField(serviceregistry.FieldHTTPPrefix, field.TypeString, value)

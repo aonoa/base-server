@@ -21,8 +21,6 @@ const (
 	FieldServiceCode = "service_code"
 	// FieldServiceName holds the string denoting the service_name field in the database.
 	FieldServiceName = "service_name"
-	// FieldDomainCode holds the string denoting the domain_code field in the database.
-	FieldDomainCode = "domain_code"
 	// FieldHTTPPrefix holds the string denoting the http_prefix field in the database.
 	FieldHTTPPrefix = "http_prefix"
 	// FieldGrpcService holds the string denoting the grpc_service field in the database.
@@ -44,7 +42,6 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldServiceCode,
 	FieldServiceName,
-	FieldDomainCode,
 	FieldHTTPPrefix,
 	FieldGrpcService,
 	FieldStatus,
@@ -109,11 +106,6 @@ func ByServiceCode(opts ...sql.OrderTermOption) OrderOption {
 // ByServiceName orders the results by the service_name field.
 func ByServiceName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldServiceName, opts...).ToFunc()
-}
-
-// ByDomainCode orders the results by the domain_code field.
-func ByDomainCode(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDomainCode, opts...).ToFunc()
 }
 
 // ByHTTPPrefix orders the results by the http_prefix field.

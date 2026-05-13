@@ -15,14 +15,11 @@ const apiCatalogCacheTTL = 30 * time.Second
 type apiCatalogEntry struct {
 	path          string
 	method        string
-	serviceCode   string
-	domainCode    string
 	resourceGroup string
 }
 
 type apiOwnership struct {
 	ServiceCode   string
-	DomainCode    string
 	ResourceGroup string
 }
 
@@ -94,8 +91,6 @@ func buildAPICatalogEntries(items []*adminv1.ApiListItem) []apiCatalogEntry {
 		entries = append(entries, apiCatalogEntry{
 			path:          normalizeHTTPPrefix(item.Path),
 			method:        strings.ToUpper(strings.TrimSpace(item.Method)),
-			serviceCode:   strings.TrimSpace(item.ServiceCode),
-			domainCode:    strings.TrimSpace(item.DomainCode),
 			resourceGroup: strings.TrimSpace(item.ResourcesGroup),
 		})
 	}
@@ -111,8 +106,6 @@ func selectAPIOwnership(entries []apiCatalogEntry, path, method string) apiOwner
 		}
 		if entry.path == path || matchAPIPath(path, entry.path) {
 			return apiOwnership{
-				ServiceCode:   entry.serviceCode,
-				DomainCode:    entry.domainCode,
 				ResourceGroup: entry.resourceGroup,
 			}
 		}

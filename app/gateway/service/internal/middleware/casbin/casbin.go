@@ -107,7 +107,6 @@ func Middleware(cfg *configv1.Middleware) (gwmiddleware.Middleware, error) {
 				Method:        req.Method,
 				Service:       ownership.ServiceCode,
 				ScopeId:       strings.TrimSpace(req.Header.Get(authx.HeaderScopeID)),
-				DomainCode:    ownership.DomainCode,
 				ResourceGroup: ownership.ResourceGroup,
 			})
 			if err != nil {
@@ -122,13 +121,14 @@ func Middleware(cfg *configv1.Middleware) (gwmiddleware.Middleware, error) {
 }
 
 func resolveAPIOwnership(path, method string) apiOwnership {
+	serviceCode := resolveServiceFromPath(path)
 	if ownership, err := catalogResolver.Resolve(context.Background(), path, method); err == nil {
-		if ownership.ServiceCode != "" || ownership.DomainCode != "" || ownership.ResourceGroup != "" {
+		if ownership.ResourceGroup != "" {
+			ownership.ServiceCode = serviceCode
 			return ownership
 		}
 	}
-	serviceCode := resolveServiceFromPath(path)
-	return apiOwnership{ServiceCode: serviceCode, DomainCode: serviceCode}
+	return apiOwnership{ServiceCode: serviceCode}
 }
 
 func resolveServiceFromPath(path string) string {

@@ -523,8 +523,6 @@ type GetApiPageParams struct {
 	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Method         string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`
 	ResourcesGroup string                 `protobuf:"bytes,6,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`
-	ServiceCode    string                 `protobuf:"bytes,7,opt,name=service_code,json=serviceCode,proto3" json:"service_code,omitempty"`
-	DomainCode     string                 `protobuf:"bytes,8,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -601,20 +599,6 @@ func (x *GetApiPageParams) GetResourcesGroup() string {
 	return ""
 }
 
-func (x *GetApiPageParams) GetServiceCode() string {
-	if x != nil {
-		return x.ServiceCode
-	}
-	return ""
-}
-
-func (x *GetApiPageParams) GetDomainCode() string {
-	if x != nil {
-		return x.DomainCode
-	}
-	return ""
-}
-
 type ApiListItem struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -624,8 +608,6 @@ type ApiListItem struct {
 	Module            string                 `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`
 	ModuleDescription string                 `protobuf:"bytes,6,opt,name=module_description,json=moduleDescription,proto3" json:"module_description,omitempty"`
 	ResourcesGroup    string                 `protobuf:"bytes,7,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`
-	ServiceCode       string                 `protobuf:"bytes,8,opt,name=service_code,json=serviceCode,proto3" json:"service_code,omitempty"`
-	DomainCode        string                 `protobuf:"bytes,9,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -705,20 +687,6 @@ func (x *ApiListItem) GetModuleDescription() string {
 func (x *ApiListItem) GetResourcesGroup() string {
 	if x != nil {
 		return x.ResourcesGroup
-	}
-	return ""
-}
-
-func (x *ApiListItem) GetServiceCode() string {
-	if x != nil {
-		return x.ServiceCode
-	}
-	return ""
-}
-
-func (x *ApiListItem) GetDomainCode() string {
-	if x != nil {
-		return x.DomainCode
 	}
 	return ""
 }
@@ -1304,8 +1272,6 @@ type AuthApiItem struct {
 	Module            string                 `protobuf:"bytes,5,opt,name=module,proto3" json:"module,omitempty"`
 	ModuleDescription string                 `protobuf:"bytes,6,opt,name=module_description,json=moduleDescription,proto3" json:"module_description,omitempty"`
 	ResourcesGroup    string                 `protobuf:"bytes,7,opt,name=resources_group,json=resourcesGroup,proto3" json:"resources_group,omitempty"`
-	ServiceCode       string                 `protobuf:"bytes,8,opt,name=service_code,json=serviceCode,proto3" json:"service_code,omitempty"`
-	DomainCode        string                 `protobuf:"bytes,9,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1385,20 +1351,6 @@ func (x *AuthApiItem) GetModuleDescription() string {
 func (x *AuthApiItem) GetResourcesGroup() string {
 	if x != nil {
 		return x.ResourcesGroup
-	}
-	return ""
-}
-
-func (x *AuthApiItem) GetServiceCode() string {
-	if x != nil {
-		return x.ServiceCode
-	}
-	return ""
-}
-
-func (x *AuthApiItem) GetDomainCode() string {
-	if x != nil {
-		return x.DomainCode
 	}
 	return ""
 }
@@ -2971,224 +2923,11 @@ func (x *DeleteMenuRequest) GetId() int64 {
 	return 0
 }
 
-type BusinessDomainItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	OwnerService  string                 `protobuf:"bytes,4,opt,name=owner_service,json=ownerService,proto3" json:"owner_service,omitempty"`
-	OrgModelType  string                 `protobuf:"bytes,5,opt,name=org_model_type,json=orgModelType,proto3" json:"org_model_type,omitempty"`
-	AuthScopeType string                 `protobuf:"bytes,6,opt,name=auth_scope_type,json=authScopeType,proto3" json:"auth_scope_type,omitempty"`
-	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
-	Description   string                 `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
-	MetaJson      string                 `protobuf:"bytes,9,opt,name=meta_json,json=metaJson,proto3" json:"meta_json,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,10,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BusinessDomainItem) Reset() {
-	*x = BusinessDomainItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BusinessDomainItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BusinessDomainItem) ProtoMessage() {}
-
-func (x *BusinessDomainItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BusinessDomainItem.ProtoReflect.Descriptor instead.
-func (*BusinessDomainItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{43}
-}
-
-func (x *BusinessDomainItem) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetOwnerService() string {
-	if x != nil {
-		return x.OwnerService
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetOrgModelType() string {
-	if x != nil {
-		return x.OrgModelType
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetAuthScopeType() string {
-	if x != nil {
-		return x.AuthScopeType
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
-}
-
-func (x *BusinessDomainItem) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetMetaJson() string {
-	if x != nil {
-		return x.MetaJson
-	}
-	return ""
-}
-
-func (x *BusinessDomainItem) GetCreateTime() string {
-	if x != nil {
-		return x.CreateTime
-	}
-	return ""
-}
-
-type GetBusinessDomainListReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*BusinessDomainItem  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetBusinessDomainListReply) Reset() {
-	*x = GetBusinessDomainListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetBusinessDomainListReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetBusinessDomainListReply) ProtoMessage() {}
-
-func (x *GetBusinessDomainListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetBusinessDomainListReply.ProtoReflect.Descriptor instead.
-func (*GetBusinessDomainListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{44}
-}
-
-func (x *GetBusinessDomainListReply) GetItems() []*BusinessDomainItem {
-	if x != nil {
-		return x.Items
-	}
-	return nil
-}
-
-func (x *GetBusinessDomainListReply) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-type DeleteBusinessDomainRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteBusinessDomainRequest) Reset() {
-	*x = DeleteBusinessDomainRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteBusinessDomainRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteBusinessDomainRequest) ProtoMessage() {}
-
-func (x *DeleteBusinessDomainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteBusinessDomainRequest.ProtoReflect.Descriptor instead.
-func (*DeleteBusinessDomainRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{45}
-}
-
-func (x *DeleteBusinessDomainRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
 type ServiceRegistryItem struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	ServiceCode       string                 `protobuf:"bytes,2,opt,name=service_code,json=serviceCode,proto3" json:"service_code,omitempty"`
 	ServiceName       string                 `protobuf:"bytes,3,opt,name=service_name,json=serviceName,proto3" json:"service_name,omitempty"`
-	DomainCode        string                 `protobuf:"bytes,4,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	HttpPrefix        string                 `protobuf:"bytes,5,opt,name=http_prefix,json=httpPrefix,proto3" json:"http_prefix,omitempty"`
 	GrpcService       string                 `protobuf:"bytes,6,opt,name=grpc_service,json=grpcService,proto3" json:"grpc_service,omitempty"`
 	Status            int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
@@ -3201,7 +2940,7 @@ type ServiceRegistryItem struct {
 
 func (x *ServiceRegistryItem) Reset() {
 	*x = ServiceRegistryItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3213,7 +2952,7 @@ func (x *ServiceRegistryItem) String() string {
 func (*ServiceRegistryItem) ProtoMessage() {}
 
 func (x *ServiceRegistryItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3226,7 +2965,7 @@ func (x *ServiceRegistryItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceRegistryItem.ProtoReflect.Descriptor instead.
 func (*ServiceRegistryItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{46}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *ServiceRegistryItem) GetId() string {
@@ -3246,13 +2985,6 @@ func (x *ServiceRegistryItem) GetServiceCode() string {
 func (x *ServiceRegistryItem) GetServiceName() string {
 	if x != nil {
 		return x.ServiceName
-	}
-	return ""
-}
-
-func (x *ServiceRegistryItem) GetDomainCode() string {
-	if x != nil {
-		return x.DomainCode
 	}
 	return ""
 }
@@ -3309,7 +3041,7 @@ type GetServiceRegistryListReply struct {
 
 func (x *GetServiceRegistryListReply) Reset() {
 	*x = GetServiceRegistryListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3321,7 +3053,7 @@ func (x *GetServiceRegistryListReply) String() string {
 func (*GetServiceRegistryListReply) ProtoMessage() {}
 
 func (x *GetServiceRegistryListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3334,7 +3066,7 @@ func (x *GetServiceRegistryListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetServiceRegistryListReply.ProtoReflect.Descriptor instead.
 func (*GetServiceRegistryListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{47}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *GetServiceRegistryListReply) GetItems() []*ServiceRegistryItem {
@@ -3351,55 +3083,10 @@ func (x *GetServiceRegistryListReply) GetTotal() int64 {
 	return 0
 }
 
-type DeleteServiceRegistryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteServiceRegistryRequest) Reset() {
-	*x = DeleteServiceRegistryRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteServiceRegistryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteServiceRegistryRequest) ProtoMessage() {}
-
-func (x *DeleteServiceRegistryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteServiceRegistryRequest.ProtoReflect.Descriptor instead.
-func (*DeleteServiceRegistryRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{48}
-}
-
-func (x *DeleteServiceRegistryRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
 type ProjectionSourceStatusItem struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
 	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	SourceService        string                 `protobuf:"bytes,2,opt,name=source_service,json=sourceService,proto3" json:"source_service,omitempty"`
-	DomainCode           string                 `protobuf:"bytes,3,opt,name=domain_code,json=domainCode,proto3" json:"domain_code,omitempty"`
 	SyncMode             string                 `protobuf:"bytes,4,opt,name=sync_mode,json=syncMode,proto3" json:"sync_mode,omitempty"`
 	State                string                 `protobuf:"bytes,5,opt,name=state,proto3" json:"state,omitempty"`
 	LastSnapshotRevision uint64                 `protobuf:"varint,6,opt,name=last_snapshot_revision,json=lastSnapshotRevision,proto3" json:"last_snapshot_revision,omitempty"`
@@ -3413,7 +3100,7 @@ type ProjectionSourceStatusItem struct {
 
 func (x *ProjectionSourceStatusItem) Reset() {
 	*x = ProjectionSourceStatusItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3425,7 +3112,7 @@ func (x *ProjectionSourceStatusItem) String() string {
 func (*ProjectionSourceStatusItem) ProtoMessage() {}
 
 func (x *ProjectionSourceStatusItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3438,7 +3125,7 @@ func (x *ProjectionSourceStatusItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectionSourceStatusItem.ProtoReflect.Descriptor instead.
 func (*ProjectionSourceStatusItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{49}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ProjectionSourceStatusItem) GetId() string {
@@ -3451,13 +3138,6 @@ func (x *ProjectionSourceStatusItem) GetId() string {
 func (x *ProjectionSourceStatusItem) GetSourceService() string {
 	if x != nil {
 		return x.SourceService
-	}
-	return ""
-}
-
-func (x *ProjectionSourceStatusItem) GetDomainCode() string {
-	if x != nil {
-		return x.DomainCode
 	}
 	return ""
 }
@@ -3521,7 +3201,7 @@ type GetProjectionSourceStatusListReply struct {
 
 func (x *GetProjectionSourceStatusListReply) Reset() {
 	*x = GetProjectionSourceStatusListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3533,7 +3213,7 @@ func (x *GetProjectionSourceStatusListReply) String() string {
 func (*GetProjectionSourceStatusListReply) ProtoMessage() {}
 
 func (x *GetProjectionSourceStatusListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3546,7 +3226,7 @@ func (x *GetProjectionSourceStatusListReply) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetProjectionSourceStatusListReply.ProtoReflect.Descriptor instead.
 func (*GetProjectionSourceStatusListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{50}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *GetProjectionSourceStatusListReply) GetItems() []*ProjectionSourceStatusItem {
@@ -3561,50 +3241,6 @@ func (x *GetProjectionSourceStatusListReply) GetTotal() int64 {
 		return x.Total
 	}
 	return 0
-}
-
-type DeleteProjectionSourceStatusRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteProjectionSourceStatusRequest) Reset() {
-	*x = DeleteProjectionSourceStatusRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteProjectionSourceStatusRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteProjectionSourceStatusRequest) ProtoMessage() {}
-
-func (x *DeleteProjectionSourceStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteProjectionSourceStatusRequest.ProtoReflect.Descriptor instead.
-func (*DeleteProjectionSourceStatusRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{51}
-}
-
-func (x *DeleteProjectionSourceStatusRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
 }
 
 type CreateSysLogRequest struct {
@@ -3635,7 +3271,7 @@ type CreateSysLogRequest struct {
 
 func (x *CreateSysLogRequest) Reset() {
 	*x = CreateSysLogRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3647,7 +3283,7 @@ func (x *CreateSysLogRequest) String() string {
 func (*CreateSysLogRequest) ProtoMessage() {}
 
 func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3660,7 +3296,7 @@ func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSysLogRequest.ProtoReflect.Descriptor instead.
 func (*CreateSysLogRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{52}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *CreateSysLogRequest) GetUserId() string {
@@ -3825,7 +3461,7 @@ type GetSysLogListParams struct {
 
 func (x *GetSysLogListParams) Reset() {
 	*x = GetSysLogListParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[53]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3837,7 +3473,7 @@ func (x *GetSysLogListParams) String() string {
 func (*GetSysLogListParams) ProtoMessage() {}
 
 func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[53]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3850,7 +3486,7 @@ func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogListParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{53}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *GetSysLogListParams) GetCurrentPage() int64 {
@@ -3972,7 +3608,7 @@ type SysLogItem struct {
 
 func (x *SysLogItem) Reset() {
 	*x = SysLogItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[54]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3984,7 +3620,7 @@ func (x *SysLogItem) String() string {
 func (*SysLogItem) ProtoMessage() {}
 
 func (x *SysLogItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[54]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3997,7 +3633,7 @@ func (x *SysLogItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SysLogItem.ProtoReflect.Descriptor instead.
 func (*SysLogItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{54}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *SysLogItem) GetId() string {
@@ -4101,7 +3737,7 @@ type GetSysLogListReply struct {
 
 func (x *GetSysLogListReply) Reset() {
 	*x = GetSysLogListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[55]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4113,7 +3749,7 @@ func (x *GetSysLogListReply) String() string {
 func (*GetSysLogListReply) ProtoMessage() {}
 
 func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[55]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4126,7 +3762,7 @@ func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{55}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *GetSysLogListReply) GetItems() []*SysLogItem {
@@ -4152,7 +3788,7 @@ type GetSysLogInfoParams struct {
 
 func (x *GetSysLogInfoParams) Reset() {
 	*x = GetSysLogInfoParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[56]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4164,7 +3800,7 @@ func (x *GetSysLogInfoParams) String() string {
 func (*GetSysLogInfoParams) ProtoMessage() {}
 
 func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[56]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4177,7 +3813,7 @@ func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{56}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GetSysLogInfoParams) GetId() string {
@@ -4217,7 +3853,7 @@ type GetSysLogInfoReply struct {
 
 func (x *GetSysLogInfoReply) Reset() {
 	*x = GetSysLogInfoReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[57]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4229,7 +3865,7 @@ func (x *GetSysLogInfoReply) String() string {
 func (*GetSysLogInfoReply) ProtoMessage() {}
 
 func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[57]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4242,7 +3878,7 @@ func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{57}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *GetSysLogInfoReply) GetId() string {
@@ -4446,17 +4082,14 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1c\n" +
 	"\n" +
 	"DeleteRole\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x8d\x02\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xc9\x01\n" +
 	"\x10GetApiPageParams\x12!\n" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
 	"\x04path\x18\x03 \x01(\tR\x04path\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06method\x18\x05 \x01(\tR\x06method\x12'\n" +
-	"\x0fresources_group\x18\x06 \x01(\tR\x0eresourcesGroup\x12!\n" +
-	"\fservice_code\x18\a \x01(\tR\vserviceCode\x12\x1f\n" +
-	"\vdomain_code\x18\b \x01(\tR\n" +
-	"domainCode\"\x9f\x02\n" +
+	"\x0fresources_group\x18\x06 \x01(\tR\x0eresourcesGroup\"\xdb\x01\n" +
 	"\vApiListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
@@ -4464,10 +4097,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06module\x18\x05 \x01(\tR\x06module\x12-\n" +
 	"\x12module_description\x18\x06 \x01(\tR\x11moduleDescription\x12'\n" +
-	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\x12!\n" +
-	"\fservice_code\x18\b \x01(\tR\vserviceCode\x12\x1f\n" +
-	"\vdomain_code\x18\t \x01(\tR\n" +
-	"domainCode\"f\n" +
+	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"f\n" +
 	"\x15GetApiListByPageReply\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.api.admin.service.v1.ApiListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1b\n" +
@@ -4507,7 +4137,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\bmenu_ids\x18\x06 \x03(\x05R\amenuIds\x12H\n" +
 	"\tresources\x18\a \x03(\v2*.api.admin.service.v1.AuthRoleResourceItemR\tresources\"S\n" +
 	"\x17GetAuthRoleCatalogReply\x128\n" +
-	"\x05items\x18\x01 \x03(\v2\".api.admin.service.v1.AuthRoleItemR\x05items\"\x9f\x02\n" +
+	"\x05items\x18\x01 \x03(\v2\".api.admin.service.v1.AuthRoleItemR\x05items\"\xdb\x01\n" +
 	"\vAuthApiItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
@@ -4515,10 +4145,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
 	"\x06module\x18\x05 \x01(\tR\x06module\x12-\n" +
 	"\x12module_description\x18\x06 \x01(\tR\x11moduleDescription\x12'\n" +
-	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\x12!\n" +
-	"\fservice_code\x18\b \x01(\tR\vserviceCode\x12\x1f\n" +
-	"\vdomain_code\x18\t \x01(\tR\n" +
-	"domainCode\"Q\n" +
+	"\x0fresources_group\x18\a \x01(\tR\x0eresourcesGroup\"Q\n" +
 	"\x16GetAuthApiCatalogReply\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.api.admin.service.v1.AuthApiItemR\x05items\"$\n" +
 	"\x12GetAuthRoleRequest\x12\x0e\n" +
@@ -4675,31 +4302,11 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x15IsMenuPathExistsReply\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\bR\x04data\"#\n" +
 	"\x11DeleteMenuRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xb7\x02\n" +
-	"\x12BusinessDomainItem\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12#\n" +
-	"\rowner_service\x18\x04 \x01(\tR\fownerService\x12$\n" +
-	"\x0eorg_model_type\x18\x05 \x01(\tR\forgModelType\x12&\n" +
-	"\x0fauth_scope_type\x18\x06 \x01(\tR\rauthScopeType\x12\x16\n" +
-	"\x06status\x18\a \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\b \x01(\tR\vdescription\x12\x1b\n" +
-	"\tmeta_json\x18\t \x01(\tR\bmetaJson\x12\x1f\n" +
-	"\vcreate_time\x18\n" +
-	" \x01(\tR\n" +
-	"createTime\"r\n" +
-	"\x1aGetBusinessDomainListReply\x12>\n" +
-	"\x05items\x18\x01 \x03(\v2(.api.admin.service.v1.BusinessDomainItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"-\n" +
-	"\x1bDeleteBusinessDomainRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xda\x02\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\xb9\x02\n" +
 	"\x13ServiceRegistryItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
 	"\fservice_code\x18\x02 \x01(\tR\vserviceCode\x12!\n" +
 	"\fservice_name\x18\x03 \x01(\tR\vserviceName\x12\x1f\n" +
-	"\vdomain_code\x18\x04 \x01(\tR\n" +
-	"domainCode\x12\x1f\n" +
 	"\vhttp_prefix\x18\x05 \x01(\tR\n" +
 	"httpPrefix\x12!\n" +
 	"\fgrpc_service\x18\x06 \x01(\tR\vgrpcService\x12\x16\n" +
@@ -4711,14 +4318,10 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"createTime\"t\n" +
 	"\x1bGetServiceRegistryListReply\x12?\n" +
 	"\x05items\x18\x01 \x03(\v2).api.admin.service.v1.ServiceRegistryItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\".\n" +
-	"\x1cDeleteServiceRegistryRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xe5\x02\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xc4\x02\n" +
 	"\x1aProjectionSourceStatusItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12%\n" +
-	"\x0esource_service\x18\x02 \x01(\tR\rsourceService\x12\x1f\n" +
-	"\vdomain_code\x18\x03 \x01(\tR\n" +
-	"domainCode\x12\x1b\n" +
+	"\x0esource_service\x18\x02 \x01(\tR\rsourceService\x12\x1b\n" +
 	"\tsync_mode\x18\x04 \x01(\tR\bsyncMode\x12\x14\n" +
 	"\x05state\x18\x05 \x01(\tR\x05state\x124\n" +
 	"\x16last_snapshot_revision\x18\x06 \x01(\x04R\x14lastSnapshotRevision\x12$\n" +
@@ -4731,9 +4334,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"createTime\"\x82\x01\n" +
 	"\"GetProjectionSourceStatusListReply\x12F\n" +
 	"\x05items\x18\x01 \x03(\v20.api.admin.service.v1.ProjectionSourceStatusItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"5\n" +
-	"#DeleteProjectionSourceStatusRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\xb3\x04\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xb3\x04\n" +
 	"\x13CreateSysLogRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
 	"\tuser_name\x18\x02 \x01(\tR\buserName\x12\x19\n" +
@@ -4835,7 +4436,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"res_status\x18\x14 \x01(\bR\tresStatus\x12\x14\n" +
 	"\x05stack\x18\x15 \x01(\tR\x05stack\x12\x1f\n" +
 	"\vcreate_time\x18\x16 \x01(\tR\n" +
-	"createTime2\xc13\n" +
+	"createTime2\xad%\n" +
 	"\fAdminService\x12~\n" +
 	"\vGetRoleList\x12$.api.admin.service.v1.RolePageParams\x1a,.api.admin.service.v1.GetRoleListByPageReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/roles\x12q\n" +
 	"\aAddRole\x12\".api.admin.service.v1.RoleListItem\x1a\".api.admin.service.v1.RoleListItem\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin-api/v1/roles\x12y\n" +
@@ -4876,20 +4477,9 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\n" +
 	"UpdateMenu\x12%.api.admin.service.v1.SysMenuListItem\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin-api/v1/menus/{id}\x12o\n" +
 	"\n" +
-	"DeleteMenu\x12'.api.admin.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/menus/{id}\x12\x89\x01\n" +
-	"\x15GetBusinessDomainList\x12\x16.google.protobuf.Empty\x1a0.api.admin.service.v1.GetBusinessDomainListReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/admin-api/v1/platform/domains\x12\x92\x01\n" +
-	"\x11AddBusinessDomain\x12(.api.admin.service.v1.BusinessDomainItem\x1a(.api.admin.service.v1.BusinessDomainItem\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/admin-api/v1/platform/domains\x12\x9a\x01\n" +
-	"\x14UpdateBusinessDomain\x12(.api.admin.service.v1.BusinessDomainItem\x1a(.api.admin.service.v1.BusinessDomainItem\".\x82\xd3\xe4\x93\x02(:\x01*\x1a#/admin-api/v1/platform/domains/{id}\x12\x8e\x01\n" +
-	"\x14DeleteBusinessDomain\x121.api.admin.service.v1.DeleteBusinessDomainRequest\x1a\x16.google.protobuf.Empty\"+\x82\xd3\xe4\x93\x02%*#/admin-api/v1/platform/domains/{id}\x12\x8c\x01\n" +
-	"\x16GetServiceRegistryList\x12\x16.google.protobuf.Empty\x1a1.api.admin.service.v1.GetServiceRegistryListReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/admin-api/v1/platform/services\x12\x96\x01\n" +
-	"\x12AddServiceRegistry\x12).api.admin.service.v1.ServiceRegistryItem\x1a).api.admin.service.v1.ServiceRegistryItem\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/admin-api/v1/platform/services\x12\x9e\x01\n" +
-	"\x15UpdateServiceRegistry\x12).api.admin.service.v1.ServiceRegistryItem\x1a).api.admin.service.v1.ServiceRegistryItem\"/\x82\xd3\xe4\x93\x02):\x01*\x1a$/admin-api/v1/platform/services/{id}\x12\x91\x01\n" +
-	"\x15DeleteServiceRegistry\x122.api.admin.service.v1.DeleteServiceRegistryRequest\x1a\x16.google.protobuf.Empty\",\x82\xd3\xe4\x93\x02&*$/admin-api/v1/platform/services/{id}\x12\xa4\x01\n" +
-	"\x1dGetProjectionSourceStatusList\x12\x16.google.protobuf.Empty\x1a8.api.admin.service.v1.GetProjectionSourceStatusListReply\"1\x82\xd3\xe4\x93\x02+\x12)/admin-api/v1/platform/projection-sources\x12\xb5\x01\n" +
-	"\x19AddProjectionSourceStatus\x120.api.admin.service.v1.ProjectionSourceStatusItem\x1a0.api.admin.service.v1.ProjectionSourceStatusItem\"4\x82\xd3\xe4\x93\x02.:\x01*\")/admin-api/v1/platform/projection-sources\x12\xbd\x01\n" +
-	"\x1cUpdateProjectionSourceStatus\x120.api.admin.service.v1.ProjectionSourceStatusItem\x1a0.api.admin.service.v1.ProjectionSourceStatusItem\"9\x82\xd3\xe4\x93\x023:\x01*\x1a./admin-api/v1/platform/projection-sources/{id}\x12\xd0\x01\n" +
-	"\x1cReportProjectionSourceStatus\x120.api.admin.service.v1.ProjectionSourceStatusItem\x1a0.api.admin.service.v1.ProjectionSourceStatusItem\"L\x82\xd3\xe4\x93\x02F:\x01*\x1aA/admin-api/v1/platform/projection-sources/report/{source_service}\x12\xa9\x01\n" +
-	"\x1cDeleteProjectionSourceStatus\x129.api.admin.service.v1.DeleteProjectionSourceStatusRequest\x1a\x16.google.protobuf.Empty\"6\x82\xd3\xe4\x93\x020*./admin-api/v1/platform/projection-sources/{id}\x12Q\n" +
+	"DeleteMenu\x12'.api.admin.service.v1.DeleteMenuRequest\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a*\x18/admin-api/v1/menus/{id}\x12\x8c\x01\n" +
+	"\x16GetServiceRegistryList\x12\x16.google.protobuf.Empty\x1a1.api.admin.service.v1.GetServiceRegistryListReply\"'\x82\xd3\xe4\x93\x02!\x12\x1f/admin-api/v1/platform/services\x12\xa4\x01\n" +
+	"\x1dGetProjectionSourceStatusList\x12\x16.google.protobuf.Empty\x1a8.api.admin.service.v1.GetProjectionSourceStatusListReply\"1\x82\xd3\xe4\x93\x02+\x12)/admin-api/v1/platform/projection-sources\x12Q\n" +
 	"\fCreateSysLog\x12).api.admin.service.v1.CreateSysLogRequest\x1a\x16.google.protobuf.Empty\x12\x80\x01\n" +
 	"\rGetSysLogList\x12).api.admin.service.v1.GetSysLogListParams\x1a(.api.admin.service.v1.GetSysLogListReply\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/admin-api/v1/logs\x12\x85\x01\n" +
 	"\rGetSysLogInfo\x12).api.admin.service.v1.GetSysLogInfoParams\x1a(.api.admin.service.v1.GetSysLogInfoReply\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/admin-api/v1/logs/{id}BD\n" +
@@ -4907,67 +4497,62 @@ func file_admin_service_v1_admin_proto_rawDescGZIP() []byte {
 	return file_admin_service_v1_admin_proto_rawDescData
 }
 
-var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 58)
+var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
 var file_admin_service_v1_admin_proto_goTypes = []any{
-	(*DeptListItem)(nil),                        // 0: api.admin.service.v1.DeptListItem
-	(*DeleteDept)(nil),                          // 1: api.admin.service.v1.DeleteDept
-	(*GetDeptListReply)(nil),                    // 2: api.admin.service.v1.GetDeptListReply
-	(*RolePageParams)(nil),                      // 3: api.admin.service.v1.RolePageParams
-	(*RoleListItem)(nil),                        // 4: api.admin.service.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),              // 5: api.admin.service.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),                          // 6: api.admin.service.v1.DeleteRole
-	(*GetApiPageParams)(nil),                    // 7: api.admin.service.v1.GetApiPageParams
-	(*ApiListItem)(nil),                         // 8: api.admin.service.v1.ApiListItem
-	(*GetApiListByPageReply)(nil),               // 9: api.admin.service.v1.GetApiListByPageReply
-	(*DeleteApi)(nil),                           // 10: api.admin.service.v1.DeleteApi
-	(*GetResourcePageParams)(nil),               // 11: api.admin.service.v1.GetResourcePageParams
-	(*ResourceListItem)(nil),                    // 12: api.admin.service.v1.ResourceListItem
-	(*GetResourceListByPageReply)(nil),          // 13: api.admin.service.v1.GetResourceListByPageReply
-	(*DeleteResource)(nil),                      // 14: api.admin.service.v1.DeleteResource
-	(*AuthRoleResourceItem)(nil),                // 15: api.admin.service.v1.AuthRoleResourceItem
-	(*AuthRoleItem)(nil),                        // 16: api.admin.service.v1.AuthRoleItem
-	(*GetAuthRoleCatalogReply)(nil),             // 17: api.admin.service.v1.GetAuthRoleCatalogReply
-	(*AuthApiItem)(nil),                         // 18: api.admin.service.v1.AuthApiItem
-	(*GetAuthApiCatalogReply)(nil),              // 19: api.admin.service.v1.GetAuthApiCatalogReply
-	(*GetAuthRoleRequest)(nil),                  // 20: api.admin.service.v1.GetAuthRoleRequest
-	(*ResolveRoleValuesRequest)(nil),            // 21: api.admin.service.v1.ResolveRoleValuesRequest
-	(*ResolveRoleValueItem)(nil),                // 22: api.admin.service.v1.ResolveRoleValueItem
-	(*ResolveRoleValuesReply)(nil),              // 23: api.admin.service.v1.ResolveRoleValuesReply
-	(*GetUserRoleBindingRequest)(nil),           // 24: api.admin.service.v1.GetUserRoleBindingRequest
-	(*UserRoleBindingItem)(nil),                 // 25: api.admin.service.v1.UserRoleBindingItem
-	(*ListUserRoleBindingsReply)(nil),           // 26: api.admin.service.v1.ListUserRoleBindingsReply
-	(*DeleteUserRoleBindingRequest)(nil),        // 27: api.admin.service.v1.DeleteUserRoleBindingRequest
-	(*MenuParams)(nil),                          // 28: api.admin.service.v1.MenuParams
-	(*Meta)(nil),                                // 29: api.admin.service.v1.Meta
-	(*SysMenuListItem)(nil),                     // 30: api.admin.service.v1.SysMenuListItem
-	(*GetSysMenuListReply)(nil),                 // 31: api.admin.service.v1.GetSysMenuListReply
-	(*CurrentUserMenuItem)(nil),                 // 32: api.admin.service.v1.CurrentUserMenuItem
-	(*GetCurrentUserMenusReply)(nil),            // 33: api.admin.service.v1.GetCurrentUserMenusReply
-	(*MenuRecord)(nil),                          // 34: api.admin.service.v1.MenuRecord
-	(*ListMenusReply)(nil),                      // 35: api.admin.service.v1.ListMenusReply
-	(*WalkRouteItem)(nil),                       // 36: api.admin.service.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),                   // 37: api.admin.service.v1.GetWalkRouteReply
-	(*IsMenuNameExistsRequest)(nil),             // 38: api.admin.service.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),               // 39: api.admin.service.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil),             // 40: api.admin.service.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),               // 41: api.admin.service.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),                   // 42: api.admin.service.v1.DeleteMenuRequest
-	(*BusinessDomainItem)(nil),                  // 43: api.admin.service.v1.BusinessDomainItem
-	(*GetBusinessDomainListReply)(nil),          // 44: api.admin.service.v1.GetBusinessDomainListReply
-	(*DeleteBusinessDomainRequest)(nil),         // 45: api.admin.service.v1.DeleteBusinessDomainRequest
-	(*ServiceRegistryItem)(nil),                 // 46: api.admin.service.v1.ServiceRegistryItem
-	(*GetServiceRegistryListReply)(nil),         // 47: api.admin.service.v1.GetServiceRegistryListReply
-	(*DeleteServiceRegistryRequest)(nil),        // 48: api.admin.service.v1.DeleteServiceRegistryRequest
-	(*ProjectionSourceStatusItem)(nil),          // 49: api.admin.service.v1.ProjectionSourceStatusItem
-	(*GetProjectionSourceStatusListReply)(nil),  // 50: api.admin.service.v1.GetProjectionSourceStatusListReply
-	(*DeleteProjectionSourceStatusRequest)(nil), // 51: api.admin.service.v1.DeleteProjectionSourceStatusRequest
-	(*CreateSysLogRequest)(nil),                 // 52: api.admin.service.v1.CreateSysLogRequest
-	(*GetSysLogListParams)(nil),                 // 53: api.admin.service.v1.GetSysLogListParams
-	(*SysLogItem)(nil),                          // 54: api.admin.service.v1.SysLogItem
-	(*GetSysLogListReply)(nil),                  // 55: api.admin.service.v1.GetSysLogListReply
-	(*GetSysLogInfoParams)(nil),                 // 56: api.admin.service.v1.GetSysLogInfoParams
-	(*GetSysLogInfoReply)(nil),                  // 57: api.admin.service.v1.GetSysLogInfoReply
-	(*emptypb.Empty)(nil),                       // 58: google.protobuf.Empty
+	(*DeptListItem)(nil),                       // 0: api.admin.service.v1.DeptListItem
+	(*DeleteDept)(nil),                         // 1: api.admin.service.v1.DeleteDept
+	(*GetDeptListReply)(nil),                   // 2: api.admin.service.v1.GetDeptListReply
+	(*RolePageParams)(nil),                     // 3: api.admin.service.v1.RolePageParams
+	(*RoleListItem)(nil),                       // 4: api.admin.service.v1.RoleListItem
+	(*GetRoleListByPageReply)(nil),             // 5: api.admin.service.v1.GetRoleListByPageReply
+	(*DeleteRole)(nil),                         // 6: api.admin.service.v1.DeleteRole
+	(*GetApiPageParams)(nil),                   // 7: api.admin.service.v1.GetApiPageParams
+	(*ApiListItem)(nil),                        // 8: api.admin.service.v1.ApiListItem
+	(*GetApiListByPageReply)(nil),              // 9: api.admin.service.v1.GetApiListByPageReply
+	(*DeleteApi)(nil),                          // 10: api.admin.service.v1.DeleteApi
+	(*GetResourcePageParams)(nil),              // 11: api.admin.service.v1.GetResourcePageParams
+	(*ResourceListItem)(nil),                   // 12: api.admin.service.v1.ResourceListItem
+	(*GetResourceListByPageReply)(nil),         // 13: api.admin.service.v1.GetResourceListByPageReply
+	(*DeleteResource)(nil),                     // 14: api.admin.service.v1.DeleteResource
+	(*AuthRoleResourceItem)(nil),               // 15: api.admin.service.v1.AuthRoleResourceItem
+	(*AuthRoleItem)(nil),                       // 16: api.admin.service.v1.AuthRoleItem
+	(*GetAuthRoleCatalogReply)(nil),            // 17: api.admin.service.v1.GetAuthRoleCatalogReply
+	(*AuthApiItem)(nil),                        // 18: api.admin.service.v1.AuthApiItem
+	(*GetAuthApiCatalogReply)(nil),             // 19: api.admin.service.v1.GetAuthApiCatalogReply
+	(*GetAuthRoleRequest)(nil),                 // 20: api.admin.service.v1.GetAuthRoleRequest
+	(*ResolveRoleValuesRequest)(nil),           // 21: api.admin.service.v1.ResolveRoleValuesRequest
+	(*ResolveRoleValueItem)(nil),               // 22: api.admin.service.v1.ResolveRoleValueItem
+	(*ResolveRoleValuesReply)(nil),             // 23: api.admin.service.v1.ResolveRoleValuesReply
+	(*GetUserRoleBindingRequest)(nil),          // 24: api.admin.service.v1.GetUserRoleBindingRequest
+	(*UserRoleBindingItem)(nil),                // 25: api.admin.service.v1.UserRoleBindingItem
+	(*ListUserRoleBindingsReply)(nil),          // 26: api.admin.service.v1.ListUserRoleBindingsReply
+	(*DeleteUserRoleBindingRequest)(nil),       // 27: api.admin.service.v1.DeleteUserRoleBindingRequest
+	(*MenuParams)(nil),                         // 28: api.admin.service.v1.MenuParams
+	(*Meta)(nil),                               // 29: api.admin.service.v1.Meta
+	(*SysMenuListItem)(nil),                    // 30: api.admin.service.v1.SysMenuListItem
+	(*GetSysMenuListReply)(nil),                // 31: api.admin.service.v1.GetSysMenuListReply
+	(*CurrentUserMenuItem)(nil),                // 32: api.admin.service.v1.CurrentUserMenuItem
+	(*GetCurrentUserMenusReply)(nil),           // 33: api.admin.service.v1.GetCurrentUserMenusReply
+	(*MenuRecord)(nil),                         // 34: api.admin.service.v1.MenuRecord
+	(*ListMenusReply)(nil),                     // 35: api.admin.service.v1.ListMenusReply
+	(*WalkRouteItem)(nil),                      // 36: api.admin.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),                  // 37: api.admin.service.v1.GetWalkRouteReply
+	(*IsMenuNameExistsRequest)(nil),            // 38: api.admin.service.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),              // 39: api.admin.service.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil),            // 40: api.admin.service.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),              // 41: api.admin.service.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),                  // 42: api.admin.service.v1.DeleteMenuRequest
+	(*ServiceRegistryItem)(nil),                // 43: api.admin.service.v1.ServiceRegistryItem
+	(*GetServiceRegistryListReply)(nil),        // 44: api.admin.service.v1.GetServiceRegistryListReply
+	(*ProjectionSourceStatusItem)(nil),         // 45: api.admin.service.v1.ProjectionSourceStatusItem
+	(*GetProjectionSourceStatusListReply)(nil), // 46: api.admin.service.v1.GetProjectionSourceStatusListReply
+	(*CreateSysLogRequest)(nil),                // 47: api.admin.service.v1.CreateSysLogRequest
+	(*GetSysLogListParams)(nil),                // 48: api.admin.service.v1.GetSysLogListParams
+	(*SysLogItem)(nil),                         // 49: api.admin.service.v1.SysLogItem
+	(*GetSysLogListReply)(nil),                 // 50: api.admin.service.v1.GetSysLogListReply
+	(*GetSysLogInfoParams)(nil),                // 51: api.admin.service.v1.GetSysLogInfoParams
+	(*GetSysLogInfoReply)(nil),                 // 52: api.admin.service.v1.GetSysLogInfoReply
+	(*emptypb.Empty)(nil),                      // 53: google.protobuf.Empty
 }
 var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	0,  // 0: api.admin.service.v1.DeptListItem.children:type_name -> api.admin.service.v1.DeptListItem
@@ -4989,115 +4574,92 @@ var file_admin_service_v1_admin_proto_depIdxs = []int32{
 	29, // 16: api.admin.service.v1.MenuRecord.meta:type_name -> api.admin.service.v1.Meta
 	34, // 17: api.admin.service.v1.ListMenusReply.items:type_name -> api.admin.service.v1.MenuRecord
 	36, // 18: api.admin.service.v1.GetWalkRouteReply.items:type_name -> api.admin.service.v1.WalkRouteItem
-	43, // 19: api.admin.service.v1.GetBusinessDomainListReply.items:type_name -> api.admin.service.v1.BusinessDomainItem
-	46, // 20: api.admin.service.v1.GetServiceRegistryListReply.items:type_name -> api.admin.service.v1.ServiceRegistryItem
-	49, // 21: api.admin.service.v1.GetProjectionSourceStatusListReply.items:type_name -> api.admin.service.v1.ProjectionSourceStatusItem
-	54, // 22: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
-	3,  // 23: api.admin.service.v1.AdminService.GetRoleList:input_type -> api.admin.service.v1.RolePageParams
-	4,  // 24: api.admin.service.v1.AdminService.AddRole:input_type -> api.admin.service.v1.RoleListItem
-	4,  // 25: api.admin.service.v1.AdminService.UpdateRole:input_type -> api.admin.service.v1.RoleListItem
-	6,  // 26: api.admin.service.v1.AdminService.DelRole:input_type -> api.admin.service.v1.DeleteRole
-	7,  // 27: api.admin.service.v1.AdminService.GetApiList:input_type -> api.admin.service.v1.GetApiPageParams
-	8,  // 28: api.admin.service.v1.AdminService.AddApi:input_type -> api.admin.service.v1.ApiListItem
-	8,  // 29: api.admin.service.v1.AdminService.UpdateApi:input_type -> api.admin.service.v1.ApiListItem
-	10, // 30: api.admin.service.v1.AdminService.DelApi:input_type -> api.admin.service.v1.DeleteApi
-	11, // 31: api.admin.service.v1.AdminService.GetResourceList:input_type -> api.admin.service.v1.GetResourcePageParams
-	12, // 32: api.admin.service.v1.AdminService.AddResource:input_type -> api.admin.service.v1.ResourceListItem
-	12, // 33: api.admin.service.v1.AdminService.UpdateResource:input_type -> api.admin.service.v1.ResourceListItem
-	14, // 34: api.admin.service.v1.AdminService.DelResource:input_type -> api.admin.service.v1.DeleteResource
-	58, // 35: api.admin.service.v1.AdminService.GetAuthRoleCatalog:input_type -> google.protobuf.Empty
-	58, // 36: api.admin.service.v1.AdminService.GetAuthApiCatalog:input_type -> google.protobuf.Empty
-	20, // 37: api.admin.service.v1.AdminService.GetAuthRole:input_type -> api.admin.service.v1.GetAuthRoleRequest
-	21, // 38: api.admin.service.v1.AdminService.ResolveRoleValues:input_type -> api.admin.service.v1.ResolveRoleValuesRequest
-	24, // 39: api.admin.service.v1.AdminService.GetUserRoleBinding:input_type -> api.admin.service.v1.GetUserRoleBindingRequest
-	58, // 40: api.admin.service.v1.AdminService.ListUserRoleBindings:input_type -> google.protobuf.Empty
-	25, // 41: api.admin.service.v1.AdminService.UpsertUserRoleBinding:input_type -> api.admin.service.v1.UserRoleBindingItem
-	27, // 42: api.admin.service.v1.AdminService.DeleteUserRoleBinding:input_type -> api.admin.service.v1.DeleteUserRoleBindingRequest
-	58, // 43: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
-	0,  // 44: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
-	0,  // 45: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
-	1,  // 46: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
-	58, // 47: api.admin.service.v1.AdminService.GetCurrentUserMenus:input_type -> google.protobuf.Empty
-	28, // 48: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
-	58, // 49: api.admin.service.v1.AdminService.ListMenus:input_type -> google.protobuf.Empty
-	58, // 50: api.admin.service.v1.AdminService.GetWalkRoute:input_type -> google.protobuf.Empty
-	58, // 51: api.admin.service.v1.AdminService.GetSelfWalkRoute:input_type -> google.protobuf.Empty
-	38, // 52: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
-	40, // 53: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
-	30, // 54: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	30, // 55: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	42, // 56: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
-	58, // 57: api.admin.service.v1.AdminService.GetBusinessDomainList:input_type -> google.protobuf.Empty
-	43, // 58: api.admin.service.v1.AdminService.AddBusinessDomain:input_type -> api.admin.service.v1.BusinessDomainItem
-	43, // 59: api.admin.service.v1.AdminService.UpdateBusinessDomain:input_type -> api.admin.service.v1.BusinessDomainItem
-	45, // 60: api.admin.service.v1.AdminService.DeleteBusinessDomain:input_type -> api.admin.service.v1.DeleteBusinessDomainRequest
-	58, // 61: api.admin.service.v1.AdminService.GetServiceRegistryList:input_type -> google.protobuf.Empty
-	46, // 62: api.admin.service.v1.AdminService.AddServiceRegistry:input_type -> api.admin.service.v1.ServiceRegistryItem
-	46, // 63: api.admin.service.v1.AdminService.UpdateServiceRegistry:input_type -> api.admin.service.v1.ServiceRegistryItem
-	48, // 64: api.admin.service.v1.AdminService.DeleteServiceRegistry:input_type -> api.admin.service.v1.DeleteServiceRegistryRequest
-	58, // 65: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:input_type -> google.protobuf.Empty
-	49, // 66: api.admin.service.v1.AdminService.AddProjectionSourceStatus:input_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	49, // 67: api.admin.service.v1.AdminService.UpdateProjectionSourceStatus:input_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	49, // 68: api.admin.service.v1.AdminService.ReportProjectionSourceStatus:input_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	51, // 69: api.admin.service.v1.AdminService.DeleteProjectionSourceStatus:input_type -> api.admin.service.v1.DeleteProjectionSourceStatusRequest
-	52, // 70: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
-	53, // 71: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
-	56, // 72: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
-	5,  // 73: api.admin.service.v1.AdminService.GetRoleList:output_type -> api.admin.service.v1.GetRoleListByPageReply
-	4,  // 74: api.admin.service.v1.AdminService.AddRole:output_type -> api.admin.service.v1.RoleListItem
-	4,  // 75: api.admin.service.v1.AdminService.UpdateRole:output_type -> api.admin.service.v1.RoleListItem
-	58, // 76: api.admin.service.v1.AdminService.DelRole:output_type -> google.protobuf.Empty
-	9,  // 77: api.admin.service.v1.AdminService.GetApiList:output_type -> api.admin.service.v1.GetApiListByPageReply
-	8,  // 78: api.admin.service.v1.AdminService.AddApi:output_type -> api.admin.service.v1.ApiListItem
-	8,  // 79: api.admin.service.v1.AdminService.UpdateApi:output_type -> api.admin.service.v1.ApiListItem
-	58, // 80: api.admin.service.v1.AdminService.DelApi:output_type -> google.protobuf.Empty
-	13, // 81: api.admin.service.v1.AdminService.GetResourceList:output_type -> api.admin.service.v1.GetResourceListByPageReply
-	12, // 82: api.admin.service.v1.AdminService.AddResource:output_type -> api.admin.service.v1.ResourceListItem
-	12, // 83: api.admin.service.v1.AdminService.UpdateResource:output_type -> api.admin.service.v1.ResourceListItem
-	58, // 84: api.admin.service.v1.AdminService.DelResource:output_type -> google.protobuf.Empty
-	17, // 85: api.admin.service.v1.AdminService.GetAuthRoleCatalog:output_type -> api.admin.service.v1.GetAuthRoleCatalogReply
-	19, // 86: api.admin.service.v1.AdminService.GetAuthApiCatalog:output_type -> api.admin.service.v1.GetAuthApiCatalogReply
-	16, // 87: api.admin.service.v1.AdminService.GetAuthRole:output_type -> api.admin.service.v1.AuthRoleItem
-	23, // 88: api.admin.service.v1.AdminService.ResolveRoleValues:output_type -> api.admin.service.v1.ResolveRoleValuesReply
-	25, // 89: api.admin.service.v1.AdminService.GetUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
-	26, // 90: api.admin.service.v1.AdminService.ListUserRoleBindings:output_type -> api.admin.service.v1.ListUserRoleBindingsReply
-	25, // 91: api.admin.service.v1.AdminService.UpsertUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
-	58, // 92: api.admin.service.v1.AdminService.DeleteUserRoleBinding:output_type -> google.protobuf.Empty
-	2,  // 93: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
-	0,  // 94: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
-	0,  // 95: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
-	58, // 96: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
-	33, // 97: api.admin.service.v1.AdminService.GetCurrentUserMenus:output_type -> api.admin.service.v1.GetCurrentUserMenusReply
-	31, // 98: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
-	35, // 99: api.admin.service.v1.AdminService.ListMenus:output_type -> api.admin.service.v1.ListMenusReply
-	37, // 100: api.admin.service.v1.AdminService.GetWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
-	37, // 101: api.admin.service.v1.AdminService.GetSelfWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
-	39, // 102: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
-	41, // 103: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
-	58, // 104: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
-	58, // 105: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
-	58, // 106: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
-	44, // 107: api.admin.service.v1.AdminService.GetBusinessDomainList:output_type -> api.admin.service.v1.GetBusinessDomainListReply
-	43, // 108: api.admin.service.v1.AdminService.AddBusinessDomain:output_type -> api.admin.service.v1.BusinessDomainItem
-	43, // 109: api.admin.service.v1.AdminService.UpdateBusinessDomain:output_type -> api.admin.service.v1.BusinessDomainItem
-	58, // 110: api.admin.service.v1.AdminService.DeleteBusinessDomain:output_type -> google.protobuf.Empty
-	47, // 111: api.admin.service.v1.AdminService.GetServiceRegistryList:output_type -> api.admin.service.v1.GetServiceRegistryListReply
-	46, // 112: api.admin.service.v1.AdminService.AddServiceRegistry:output_type -> api.admin.service.v1.ServiceRegistryItem
-	46, // 113: api.admin.service.v1.AdminService.UpdateServiceRegistry:output_type -> api.admin.service.v1.ServiceRegistryItem
-	58, // 114: api.admin.service.v1.AdminService.DeleteServiceRegistry:output_type -> google.protobuf.Empty
-	50, // 115: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:output_type -> api.admin.service.v1.GetProjectionSourceStatusListReply
-	49, // 116: api.admin.service.v1.AdminService.AddProjectionSourceStatus:output_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	49, // 117: api.admin.service.v1.AdminService.UpdateProjectionSourceStatus:output_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	49, // 118: api.admin.service.v1.AdminService.ReportProjectionSourceStatus:output_type -> api.admin.service.v1.ProjectionSourceStatusItem
-	58, // 119: api.admin.service.v1.AdminService.DeleteProjectionSourceStatus:output_type -> google.protobuf.Empty
-	58, // 120: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
-	55, // 121: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
-	57, // 122: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
-	73, // [73:123] is the sub-list for method output_type
-	23, // [23:73] is the sub-list for method input_type
-	23, // [23:23] is the sub-list for extension type_name
-	23, // [23:23] is the sub-list for extension extendee
-	0,  // [0:23] is the sub-list for field type_name
+	43, // 19: api.admin.service.v1.GetServiceRegistryListReply.items:type_name -> api.admin.service.v1.ServiceRegistryItem
+	45, // 20: api.admin.service.v1.GetProjectionSourceStatusListReply.items:type_name -> api.admin.service.v1.ProjectionSourceStatusItem
+	49, // 21: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
+	3,  // 22: api.admin.service.v1.AdminService.GetRoleList:input_type -> api.admin.service.v1.RolePageParams
+	4,  // 23: api.admin.service.v1.AdminService.AddRole:input_type -> api.admin.service.v1.RoleListItem
+	4,  // 24: api.admin.service.v1.AdminService.UpdateRole:input_type -> api.admin.service.v1.RoleListItem
+	6,  // 25: api.admin.service.v1.AdminService.DelRole:input_type -> api.admin.service.v1.DeleteRole
+	7,  // 26: api.admin.service.v1.AdminService.GetApiList:input_type -> api.admin.service.v1.GetApiPageParams
+	8,  // 27: api.admin.service.v1.AdminService.AddApi:input_type -> api.admin.service.v1.ApiListItem
+	8,  // 28: api.admin.service.v1.AdminService.UpdateApi:input_type -> api.admin.service.v1.ApiListItem
+	10, // 29: api.admin.service.v1.AdminService.DelApi:input_type -> api.admin.service.v1.DeleteApi
+	11, // 30: api.admin.service.v1.AdminService.GetResourceList:input_type -> api.admin.service.v1.GetResourcePageParams
+	12, // 31: api.admin.service.v1.AdminService.AddResource:input_type -> api.admin.service.v1.ResourceListItem
+	12, // 32: api.admin.service.v1.AdminService.UpdateResource:input_type -> api.admin.service.v1.ResourceListItem
+	14, // 33: api.admin.service.v1.AdminService.DelResource:input_type -> api.admin.service.v1.DeleteResource
+	53, // 34: api.admin.service.v1.AdminService.GetAuthRoleCatalog:input_type -> google.protobuf.Empty
+	53, // 35: api.admin.service.v1.AdminService.GetAuthApiCatalog:input_type -> google.protobuf.Empty
+	20, // 36: api.admin.service.v1.AdminService.GetAuthRole:input_type -> api.admin.service.v1.GetAuthRoleRequest
+	21, // 37: api.admin.service.v1.AdminService.ResolveRoleValues:input_type -> api.admin.service.v1.ResolveRoleValuesRequest
+	24, // 38: api.admin.service.v1.AdminService.GetUserRoleBinding:input_type -> api.admin.service.v1.GetUserRoleBindingRequest
+	53, // 39: api.admin.service.v1.AdminService.ListUserRoleBindings:input_type -> google.protobuf.Empty
+	25, // 40: api.admin.service.v1.AdminService.UpsertUserRoleBinding:input_type -> api.admin.service.v1.UserRoleBindingItem
+	27, // 41: api.admin.service.v1.AdminService.DeleteUserRoleBinding:input_type -> api.admin.service.v1.DeleteUserRoleBindingRequest
+	53, // 42: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
+	0,  // 43: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
+	0,  // 44: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
+	1,  // 45: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
+	53, // 46: api.admin.service.v1.AdminService.GetCurrentUserMenus:input_type -> google.protobuf.Empty
+	28, // 47: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
+	53, // 48: api.admin.service.v1.AdminService.ListMenus:input_type -> google.protobuf.Empty
+	53, // 49: api.admin.service.v1.AdminService.GetWalkRoute:input_type -> google.protobuf.Empty
+	53, // 50: api.admin.service.v1.AdminService.GetSelfWalkRoute:input_type -> google.protobuf.Empty
+	38, // 51: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
+	40, // 52: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
+	30, // 53: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	30, // 54: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	42, // 55: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
+	53, // 56: api.admin.service.v1.AdminService.GetServiceRegistryList:input_type -> google.protobuf.Empty
+	53, // 57: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:input_type -> google.protobuf.Empty
+	47, // 58: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
+	48, // 59: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
+	51, // 60: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
+	5,  // 61: api.admin.service.v1.AdminService.GetRoleList:output_type -> api.admin.service.v1.GetRoleListByPageReply
+	4,  // 62: api.admin.service.v1.AdminService.AddRole:output_type -> api.admin.service.v1.RoleListItem
+	4,  // 63: api.admin.service.v1.AdminService.UpdateRole:output_type -> api.admin.service.v1.RoleListItem
+	53, // 64: api.admin.service.v1.AdminService.DelRole:output_type -> google.protobuf.Empty
+	9,  // 65: api.admin.service.v1.AdminService.GetApiList:output_type -> api.admin.service.v1.GetApiListByPageReply
+	8,  // 66: api.admin.service.v1.AdminService.AddApi:output_type -> api.admin.service.v1.ApiListItem
+	8,  // 67: api.admin.service.v1.AdminService.UpdateApi:output_type -> api.admin.service.v1.ApiListItem
+	53, // 68: api.admin.service.v1.AdminService.DelApi:output_type -> google.protobuf.Empty
+	13, // 69: api.admin.service.v1.AdminService.GetResourceList:output_type -> api.admin.service.v1.GetResourceListByPageReply
+	12, // 70: api.admin.service.v1.AdminService.AddResource:output_type -> api.admin.service.v1.ResourceListItem
+	12, // 71: api.admin.service.v1.AdminService.UpdateResource:output_type -> api.admin.service.v1.ResourceListItem
+	53, // 72: api.admin.service.v1.AdminService.DelResource:output_type -> google.protobuf.Empty
+	17, // 73: api.admin.service.v1.AdminService.GetAuthRoleCatalog:output_type -> api.admin.service.v1.GetAuthRoleCatalogReply
+	19, // 74: api.admin.service.v1.AdminService.GetAuthApiCatalog:output_type -> api.admin.service.v1.GetAuthApiCatalogReply
+	16, // 75: api.admin.service.v1.AdminService.GetAuthRole:output_type -> api.admin.service.v1.AuthRoleItem
+	23, // 76: api.admin.service.v1.AdminService.ResolveRoleValues:output_type -> api.admin.service.v1.ResolveRoleValuesReply
+	25, // 77: api.admin.service.v1.AdminService.GetUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
+	26, // 78: api.admin.service.v1.AdminService.ListUserRoleBindings:output_type -> api.admin.service.v1.ListUserRoleBindingsReply
+	25, // 79: api.admin.service.v1.AdminService.UpsertUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
+	53, // 80: api.admin.service.v1.AdminService.DeleteUserRoleBinding:output_type -> google.protobuf.Empty
+	2,  // 81: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
+	0,  // 82: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
+	0,  // 83: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
+	53, // 84: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
+	33, // 85: api.admin.service.v1.AdminService.GetCurrentUserMenus:output_type -> api.admin.service.v1.GetCurrentUserMenusReply
+	31, // 86: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
+	35, // 87: api.admin.service.v1.AdminService.ListMenus:output_type -> api.admin.service.v1.ListMenusReply
+	37, // 88: api.admin.service.v1.AdminService.GetWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
+	37, // 89: api.admin.service.v1.AdminService.GetSelfWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
+	39, // 90: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
+	41, // 91: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
+	53, // 92: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
+	53, // 93: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
+	53, // 94: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
+	44, // 95: api.admin.service.v1.AdminService.GetServiceRegistryList:output_type -> api.admin.service.v1.GetServiceRegistryListReply
+	46, // 96: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:output_type -> api.admin.service.v1.GetProjectionSourceStatusListReply
+	53, // 97: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
+	50, // 98: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
+	52, // 99: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
+	61, // [61:100] is the sub-list for method output_type
+	22, // [22:61] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_admin_service_v1_admin_proto_init() }
@@ -5115,7 +4677,7 @@ func file_admin_service_v1_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_admin_service_v1_admin_proto_rawDesc), len(file_admin_service_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   58,
+			NumMessages:   53,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

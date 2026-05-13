@@ -25,7 +25,6 @@ auth:
     - /api.admin.service.v1.AdminService/GetUserRoleBinding
     - /api.admin.service.v1.AdminService/ListUserRoleBindings
     - /api.admin.service.v1.AdminService/GetServiceRegistryList
-    - /api.admin.service.v1.AdminService/ReportProjectionSourceStatus
 services:
   user:
     grpc_endpoint: 127.0.0.1:9010

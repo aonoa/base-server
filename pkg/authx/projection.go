@@ -30,7 +30,6 @@ type ProjectionRole struct {
 	MenuIDs   []int32
 	Resources []ProjectionRoleResource
 	Service   string
-	Domain    string
 }
 
 // ProjectionAPI is the normalized API projection payload.
@@ -43,7 +42,6 @@ type ProjectionAPI struct {
 	ModuleDescription string
 	ResourceGroup     string
 	Service           string
-	Domain            string
 }
 
 // UserRoleBindingProjection is the normalized user-role binding payload.
@@ -58,7 +56,6 @@ type UserRoleBindingProjection struct {
 	UpdateTime string
 	Service    string
 	ScopeID    string
-	Domain     string
 }
 
 // PermissionSnapshot is the full projection payload a source service publishes
@@ -78,7 +75,6 @@ type ProjectionClient struct {
 	client         authv1.AuthServiceClient
 	sourceService  string
 	statusReporter ProjectionStatusReporter
-	domainCode     string
 	description    string
 }
 
@@ -89,12 +85,11 @@ func NewProjectionClient(client authv1.AuthServiceClient, sourceService string) 
 	}
 }
 
-func (c *ProjectionClient) SetStatusReporter(reporter ProjectionStatusReporter, domainCode, description string) *ProjectionClient {
+func (c *ProjectionClient) SetStatusReporter(reporter ProjectionStatusReporter, description string) *ProjectionClient {
 	if c == nil {
 		return nil
 	}
 	c.statusReporter = reporter
-	c.domainCode = domainCode
 	c.description = description
 	return c
 }
@@ -216,7 +211,6 @@ func (c *ProjectionClient) reportProjectionStatus(ctx context.Context, sourceSer
 	}
 	_ = c.statusReporter.ReportProjectionStatus(ctx, ProjectionStatus{
 		SourceService:        sourceService,
-		DomainCode:           c.domainCode,
 		SyncMode:             syncMode,
 		State:                state,
 		LastSnapshotRevision: revision,
@@ -244,15 +238,14 @@ func projectionRoleToProto(item ProjectionRole) *authv1.PolicyRole {
 		})
 	}
 	return &authv1.PolicyRole{
-		Id:         item.ID,
-		Name:       item.Name,
-		Value:      item.Value,
-		Status:     item.Status,
-		Remark:     item.Remark,
-		MenuIds:    append([]int32(nil), item.MenuIDs...),
-		Resources:  resources,
-		Service:    item.Service,
-		DomainCode: item.Domain,
+		Id:        item.ID,
+		Name:      item.Name,
+		Value:     item.Value,
+		Status:    item.Status,
+		Remark:    item.Remark,
+		MenuIds:   append([]int32(nil), item.MenuIDs...),
+		Resources: resources,
+		Service:   item.Service,
 	}
 }
 
@@ -273,7 +266,6 @@ func projectionAPIToProto(item ProjectionAPI) *authv1.PolicyApi {
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourceGroup,
 		Service:           item.Service,
-		DomainCode:        item.Domain,
 	}
 }
 
@@ -294,6 +286,5 @@ func userRoleBindingProjectionToProto(item UserRoleBindingProjection) *authv1.Po
 		UpdateTime: item.UpdateTime,
 		Service:    item.Service,
 		ScopeId:    item.ScopeID,
-		DomainCode: item.Domain,
 	}
 }

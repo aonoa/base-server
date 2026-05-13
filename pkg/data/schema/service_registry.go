@@ -34,7 +34,6 @@ func (ServiceRegistry) Fields() []ent.Field {
 			Unique().
 			Comment("服务编码"),
 		field.String("service_name").Comment("服务名称"),
-		field.String("domain_code").Comment("所属业务域"),
 		field.String("http_prefix").Default("").Comment("HTTP 前缀"),
 		field.String("grpc_service").Default("").Comment("gRPC 服务名"),
 		field.Bool("status").Default(true).Comment("0-禁用，1-启用"),

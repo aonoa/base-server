@@ -120,34 +120,6 @@ func (_u *ApiResourcesUpdate) SetNillableResourcesGroup(v *string) *ApiResources
 	return _u
 }
 
-// SetServiceCode sets the "service_code" field.
-func (_u *ApiResourcesUpdate) SetServiceCode(v string) *ApiResourcesUpdate {
-	_u.mutation.SetServiceCode(v)
-	return _u
-}
-
-// SetNillableServiceCode sets the "service_code" field if the given value is not nil.
-func (_u *ApiResourcesUpdate) SetNillableServiceCode(v *string) *ApiResourcesUpdate {
-	if v != nil {
-		_u.SetServiceCode(*v)
-	}
-	return _u
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (_u *ApiResourcesUpdate) SetDomainCode(v string) *ApiResourcesUpdate {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ApiResourcesUpdate) SetNillableDomainCode(v *string) *ApiResourcesUpdate {
-	if v != nil {
-		_u.SetDomainCode(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *ApiResourcesUpdate) AddRoleIDs(ids ...int64) *ApiResourcesUpdate {
 	_u.mutation.AddRoleIDs(ids...)
@@ -260,12 +232,6 @@ func (_u *ApiResourcesUpdate) sqlSave(ctx context.Context) (_node int, err error
 	}
 	if value, ok := _u.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ServiceCode(); ok {
-		_spec.SetField(apiresources.FieldServiceCode, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(apiresources.FieldDomainCode, field.TypeString, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -424,34 +390,6 @@ func (_u *ApiResourcesUpdateOne) SetNillableResourcesGroup(v *string) *ApiResour
 	return _u
 }
 
-// SetServiceCode sets the "service_code" field.
-func (_u *ApiResourcesUpdateOne) SetServiceCode(v string) *ApiResourcesUpdateOne {
-	_u.mutation.SetServiceCode(v)
-	return _u
-}
-
-// SetNillableServiceCode sets the "service_code" field if the given value is not nil.
-func (_u *ApiResourcesUpdateOne) SetNillableServiceCode(v *string) *ApiResourcesUpdateOne {
-	if v != nil {
-		_u.SetServiceCode(*v)
-	}
-	return _u
-}
-
-// SetDomainCode sets the "domain_code" field.
-func (_u *ApiResourcesUpdateOne) SetDomainCode(v string) *ApiResourcesUpdateOne {
-	_u.mutation.SetDomainCode(v)
-	return _u
-}
-
-// SetNillableDomainCode sets the "domain_code" field if the given value is not nil.
-func (_u *ApiResourcesUpdateOne) SetNillableDomainCode(v *string) *ApiResourcesUpdateOne {
-	if v != nil {
-		_u.SetDomainCode(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *ApiResourcesUpdateOne) AddRoleIDs(ids ...int64) *ApiResourcesUpdateOne {
 	_u.mutation.AddRoleIDs(ids...)
@@ -594,12 +532,6 @@ func (_u *ApiResourcesUpdateOne) sqlSave(ctx context.Context) (_node *ApiResourc
 	}
 	if value, ok := _u.mutation.ResourcesGroup(); ok {
 		_spec.SetField(apiresources.FieldResourcesGroup, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ServiceCode(); ok {
-		_spec.SetField(apiresources.FieldServiceCode, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.DomainCode(); ok {
-		_spec.SetField(apiresources.FieldDomainCode, field.TypeString, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{

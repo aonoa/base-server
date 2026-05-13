@@ -79,11 +79,6 @@ func SourceService(v string) predicate.ProjectionSourceStatus {
 	return predicate.ProjectionSourceStatus(sql.FieldEQ(FieldSourceService, v))
 }
 
-// DomainCode applies equality check predicate on the "domain_code" field. It's identical to DomainCodeEQ.
-func DomainCode(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldEQ(FieldDomainCode, v))
-}
-
 // SyncMode applies equality check predicate on the "sync_mode" field. It's identical to SyncModeEQ.
 func SyncMode(v string) predicate.ProjectionSourceStatus {
 	return predicate.ProjectionSourceStatus(sql.FieldEQ(FieldSyncMode, v))
@@ -257,71 +252,6 @@ func SourceServiceEqualFold(v string) predicate.ProjectionSourceStatus {
 // SourceServiceContainsFold applies the ContainsFold predicate on the "source_service" field.
 func SourceServiceContainsFold(v string) predicate.ProjectionSourceStatus {
 	return predicate.ProjectionSourceStatus(sql.FieldContainsFold(FieldSourceService, v))
-}
-
-// DomainCodeEQ applies the EQ predicate on the "domain_code" field.
-func DomainCodeEQ(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldEQ(FieldDomainCode, v))
-}
-
-// DomainCodeNEQ applies the NEQ predicate on the "domain_code" field.
-func DomainCodeNEQ(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldNEQ(FieldDomainCode, v))
-}
-
-// DomainCodeIn applies the In predicate on the "domain_code" field.
-func DomainCodeIn(vs ...string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldIn(FieldDomainCode, vs...))
-}
-
-// DomainCodeNotIn applies the NotIn predicate on the "domain_code" field.
-func DomainCodeNotIn(vs ...string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldNotIn(FieldDomainCode, vs...))
-}
-
-// DomainCodeGT applies the GT predicate on the "domain_code" field.
-func DomainCodeGT(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldGT(FieldDomainCode, v))
-}
-
-// DomainCodeGTE applies the GTE predicate on the "domain_code" field.
-func DomainCodeGTE(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldGTE(FieldDomainCode, v))
-}
-
-// DomainCodeLT applies the LT predicate on the "domain_code" field.
-func DomainCodeLT(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldLT(FieldDomainCode, v))
-}
-
-// DomainCodeLTE applies the LTE predicate on the "domain_code" field.
-func DomainCodeLTE(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldLTE(FieldDomainCode, v))
-}
-
-// DomainCodeContains applies the Contains predicate on the "domain_code" field.
-func DomainCodeContains(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldContains(FieldDomainCode, v))
-}
-
-// DomainCodeHasPrefix applies the HasPrefix predicate on the "domain_code" field.
-func DomainCodeHasPrefix(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldHasPrefix(FieldDomainCode, v))
-}
-
-// DomainCodeHasSuffix applies the HasSuffix predicate on the "domain_code" field.
-func DomainCodeHasSuffix(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldHasSuffix(FieldDomainCode, v))
-}
-
-// DomainCodeEqualFold applies the EqualFold predicate on the "domain_code" field.
-func DomainCodeEqualFold(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldEqualFold(FieldDomainCode, v))
-}
-
-// DomainCodeContainsFold applies the ContainsFold predicate on the "domain_code" field.
-func DomainCodeContainsFold(v string) predicate.ProjectionSourceStatus {
-	return predicate.ProjectionSourceStatus(sql.FieldContainsFold(FieldDomainCode, v))
 }
 
 // SyncModeEQ applies the EQ predicate on the "sync_mode" field.

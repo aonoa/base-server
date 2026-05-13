@@ -37,8 +37,6 @@ func (ApiResources) Fields() []ent.Field {
 		field.String("module").Comment("模块"),
 		field.String("module_description").Comment("模块描述"),
 		field.String("resources_group").Comment("资源组"),
-		field.String("service_code").Default("").Comment("归属服务编码"),
-		field.String("domain_code").Default("").Comment("归属业务域编码"),
 	}
 }
 

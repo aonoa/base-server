@@ -123,7 +123,7 @@ Edit these source locations instead:
 2. Edit that proto file.
 3. Run `make api`.
 4. Update the matching handler under `app/*/service/internal/service/`.
-5. Keep API catalog ownership consistent: one `path + method` has exactly one business `domain_code` owner; `service_code` is only the technical serving/routing service. See `docs/api-ownership.md`.
+5. Keep API catalog ownership consistent: one `path + method` has exactly one API catalog record with `resources_group`; service ownership is resolved from `sys_service_registry.http_prefix`. See `docs/api-ownership.md`.
 
 ### Changing config
 1. Edit the target service’s `app/<service>/service/internal/conf/conf.proto`.

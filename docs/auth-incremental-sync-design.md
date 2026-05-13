@@ -14,7 +14,7 @@
 - `auth` 库里的 `casbin_rules` 是授权投影，不是主数据。
 - `walk-routes` 只用于路由发现/对账，不会自动回写或替代 `sys_api_resources`。
 - 修改 proto 或 HTTP 路由，不会自动推导出对应的 Casbin API 权限变更；只有修改权限主数据服务里的 API 目录，才会触发 `ApplyApiDelta`。
-- 对 API 权限目录来说，同一个 `path + method` 只能有一个主业务域 `domain_code`；多业务消费或跨域编排不等于多业务域并列 owner。
+- 对 API 权限目录来说，同一个 `path + method` 是一条唯一主数据记录，映射到一个 `resources_group`。服务归属由 gateway 通过 `sys_service_registry.http_prefix -> service_code` 推导。
 
 ## 2. v1 目标
 
@@ -131,7 +131,7 @@ message ApplyApiDeltaRequest {
 - 更新 API：`before`、`after` 都非空。
 - 删除 API：`before` 非空，`after` 为空。
 - 如果 `path` 或 `resources_group` 变化，必须带完整 `before/after`。
-- 同一个 `path + method` 不应由多个投影源并列上报为不同业务域 owner；跨域协作应在主业务域 API 下编排。
+- 同一个 `path + method` 不应由多个投影源并列上报为不同资源组。需要共享时，应收敛到一条 API 目录记录和一个明确资源组。
 - `auth.ApplyApiDelta()` 当前会优先用 `UpdateNamedGroupingPolicy(g2, oldRule, newRule)` 更新 API -> 资源组映射。
 - 如果旧规则不存在，则回退为“删除旧规则 + 添加新规则”。
 - 这里更新的是 Casbin 的 `g2` 映射，不会自动修改 `admin` 库里的 `sys_api_resources` 以外的任何路由定义。
@@ -225,8 +225,8 @@ message PolicyUserRoleBinding {
 
 - API 接口级权限判断走 `p2 + g2`。
 - `g2` 表示 `apiPath -> api:<resources_group>` 的分组映射。
-- 当前仓库里，前端编辑“API 资源列表”里的 `path`、`resources_group`、`service_code`、`domain_code`，本质上是在改 `sys_api_resources` 主数据；这会通过 `ApplyApiDelta` 更新 `g2`，并把 `service_code` 投影到 `PolicyApi.service`。
-- `service_code` 在当前投影里用于运行时命名空间兼容和技术服务隔离；目标业务授权边界仍应收敛到 `domain_code + resource_group + action`。
+- 当前仓库里，前端编辑“API 资源列表”里的 `path`、`resources_group`，本质上是在改 `sys_api_resources` 主数据；这会通过 `ApplyApiDelta` 更新 `g2`。
+- 当前接口授权边界收敛为 `service_code + resource_group + method`。其中 `service_code` 由服务注册前缀解析和投影发送端运行时补齐，不再是 API 资源表字段。
 - 仅修改 proto/http route，不会自动改 `sys_api_resources`，因此也不会自动改 Casbin。
 
 ## 6.1 通用发送端
@@ -267,13 +267,12 @@ message PolicyUserRoleBinding {
 
 当前 `admin` 已经切到这套通用 helper，上线新业务服务时可以直接复用同样的启动同步和失败回退模式。
 
-当前代码还已在 [`pkg/authx/projection_status.go`](../pkg/authx/projection_status.go) 增加通用投影状态上报能力：
+当前代码还已在 [`pkg/authx/projection_status.go`](../pkg/authx/projection_status.go) 增加通用投影状态描述能力：
 
 - `ProjectionStatus`
 - `ProjectionStatusReporter`
-- `AdminProjectionStatusReporter`
 
-发送端在调用 `RegisterPermissionSnapshot` / `Apply*Delta` 后，会以 `source_service` 为幂等键，把最近一次同步模式、同步状态、最后快照版本、最后错误信息回写到 `admin` 控制面。
+发送端在调用 `RegisterPermissionSnapshot` / `Apply*Delta` 后，会以 `source_service` 为幂等键，把最近一次同步模式、同步状态、最后快照版本、最后错误信息回写到 `admin` 控制面。当前 `admin` 服务内通过 repo 内部方法上报，不再暴露投影源状态 HTTP/gRPC 写接口。
 
 `auth` 侧当前也已经落地了源级替换逻辑：
 
@@ -377,8 +376,8 @@ v1 可以继续沿用当前“内网 + whitelist + 共享 `api_key`”的方式�
 
 当前代码仍未覆盖或未自动化的点：
 
-- 多业务服务同时向 `auth` 注入授权投影
-- 跨服务、跨业务域投影命名空间隔离的完整目标态落地
+- 多个权限源服务同时向 `auth` 注入授权投影
+- 跨服务投影命名空间隔离的完整目标态落地
 - 事件总线或异步投递
 - 代码路由与 `sys_api_resources` 的自动双向同步
 - 根据 proto/http route 自动推导 API 资源目录
