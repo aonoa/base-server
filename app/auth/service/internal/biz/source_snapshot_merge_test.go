@@ -39,6 +39,7 @@ func newTestAuthUsecase(t *testing.T) *AuthUsecase {
 	if err != nil {
 		t.Fatalf("new enforcer: %v", err)
 	}
+	e.AddNamedMatchingFunc("g2", "KeyMatch6", KeyMatch6)
 	e.SetAdapter(noopAdapter{})
 	return &AuthUsecase{
 		e:   e,
@@ -46,27 +47,26 @@ func newTestAuthUsecase(t *testing.T) *AuthUsecase {
 	}
 }
 
-func TestRegisterPermissionSnapshotMergesDifferentSources(t *testing.T) {
+func TestRegisterPermissionSnapshotRebuildsFullProjection(t *testing.T) {
 	uc := newTestAuthUsecase(t)
 
 	err := uc.RegisterPermissionSnapshot(context.Background(), &v1.RegisterPermissionSnapshotRequest{
-		SourceService: "crm",
-		Revision:      1,
+		Revision: 1,
 		Roles: []*v1.PolicyRole{
 			{
-				Value:   "manager",
-				Status:  true,
-				Service: "crm",
+				Value:          "manager",
+				Status:         true,
+				OrganizationId: "tenant-a",
 				Resources: []*v1.PolicyRoleResource{
 					{Type: "api", Value: "orders", Method: "GET"},
 				},
 			},
 		},
 		Apis: []*v1.PolicyApi{
-			{Path: "/crm-api/v1/orders", Method: "GET", ResourcesGroup: "orders", Service: "crm"},
+			{Path: "/crm-api/v1/orders", Method: "GET", ResourcesGroup: "orders"},
 		},
 		Bindings: []*v1.PolicyUserRoleBinding{
-			{UserId: "u1", RoleValue: "manager", Service: "crm", ScopeId: "tenant-a"},
+			{UserId: "u1", RoleValue: "manager", OrganizationId: "tenant-a"},
 		},
 	})
 	if err != nil {
@@ -74,23 +74,22 @@ func TestRegisterPermissionSnapshotMergesDifferentSources(t *testing.T) {
 	}
 
 	err = uc.RegisterPermissionSnapshot(context.Background(), &v1.RegisterPermissionSnapshotRequest{
-		SourceService: "oms",
-		Revision:      1,
+		Revision: 1,
 		Roles: []*v1.PolicyRole{
 			{
-				Value:   "operator",
-				Status:  true,
-				Service: "oms",
+				Value:          "operator",
+				Status:         true,
+				OrganizationId: "warehouse-a",
 				Resources: []*v1.PolicyRoleResource{
 					{Type: "api", Value: "shipments", Method: "GET"},
 				},
 			},
 		},
 		Apis: []*v1.PolicyApi{
-			{Path: "/oms-api/v1/shipments", Method: "GET", ResourcesGroup: "shipments", Service: "oms"},
+			{Path: "/oms-api/v1/shipments", Method: "GET", ResourcesGroup: "shipments"},
 		},
 		Bindings: []*v1.PolicyUserRoleBinding{
-			{UserId: "u2", RoleValue: "operator", Service: "oms", ScopeId: "warehouse-a"},
+			{UserId: "u2", RoleValue: "operator", OrganizationId: "warehouse-a"},
 		},
 	})
 	if err != nil {
@@ -98,25 +97,23 @@ func TestRegisterPermissionSnapshotMergesDifferentSources(t *testing.T) {
 	}
 
 	res, err := uc.CheckAuthorization(context.Background(), &v1.CheckAuthorizationRequest{
-		UserId:  "u1",
-		Path:    "/crm-api/v1/orders",
-		Method:  "GET",
-		Service: "crm",
-		ScopeId: "tenant-a",
+		UserId:         "u1",
+		Path:           "/crm-api/v1/orders",
+		Method:         "GET",
+		OrganizationId: "tenant-a",
 	})
 	if err != nil {
 		t.Fatalf("crm check authorization: %v", err)
 	}
-	if !res.Allowed {
-		t.Fatalf("expected crm projection to remain after oms snapshot")
+	if res.Allowed {
+		t.Fatalf("expected crm projection to be removed by full snapshot rebuild")
 	}
 
 	res, err = uc.CheckAuthorization(context.Background(), &v1.CheckAuthorizationRequest{
-		UserId:  "u2",
-		Path:    "/oms-api/v1/shipments",
-		Method:  "GET",
-		Service: "oms",
-		ScopeId: "warehouse-a",
+		UserId:         "u2",
+		Path:           "/oms-api/v1/shipments",
+		Method:         "GET",
+		OrganizationId: "warehouse-a",
 	})
 	if err != nil {
 		t.Fatalf("oms check authorization: %v", err)
@@ -130,23 +127,22 @@ func TestRegisterPermissionSnapshotReplacesSingleSourceOnly(t *testing.T) {
 	uc := newTestAuthUsecase(t)
 
 	err := uc.RegisterPermissionSnapshot(context.Background(), &v1.RegisterPermissionSnapshotRequest{
-		SourceService: "crm",
-		Revision:      1,
+		Revision: 1,
 		Roles: []*v1.PolicyRole{
 			{
-				Value:   "manager",
-				Status:  true,
-				Service: "crm",
+				Value:          "manager",
+				Status:         true,
+				OrganizationId: "tenant-a",
 				Resources: []*v1.PolicyRoleResource{
 					{Type: "api", Value: "orders", Method: "GET"},
 				},
 			},
 		},
 		Apis: []*v1.PolicyApi{
-			{Path: "/crm-api/v1/orders", Method: "GET", ResourcesGroup: "orders", Service: "crm"},
+			{Path: "/crm-api/v1/orders", Method: "GET", ResourcesGroup: "orders"},
 		},
 		Bindings: []*v1.PolicyUserRoleBinding{
-			{UserId: "u1", RoleValue: "manager", Service: "crm", ScopeId: "tenant-a"},
+			{UserId: "u1", RoleValue: "manager", OrganizationId: "tenant-a"},
 		},
 	})
 	if err != nil {
@@ -154,23 +150,22 @@ func TestRegisterPermissionSnapshotReplacesSingleSourceOnly(t *testing.T) {
 	}
 
 	err = uc.RegisterPermissionSnapshot(context.Background(), &v1.RegisterPermissionSnapshotRequest{
-		SourceService: "crm",
-		Revision:      2,
+		Revision: 2,
 		Roles: []*v1.PolicyRole{
 			{
-				Value:   "auditor",
-				Status:  true,
-				Service: "crm",
+				Value:          "auditor",
+				Status:         true,
+				OrganizationId: "tenant-a",
 				Resources: []*v1.PolicyRoleResource{
 					{Type: "api", Value: "reports", Method: "GET"},
 				},
 			},
 		},
 		Apis: []*v1.PolicyApi{
-			{Path: "/crm-api/v1/reports", Method: "GET", ResourcesGroup: "reports", Service: "crm"},
+			{Path: "/crm-api/v1/reports", Method: "GET", ResourcesGroup: "reports"},
 		},
 		Bindings: []*v1.PolicyUserRoleBinding{
-			{UserId: "u1", RoleValue: "auditor", Service: "crm", ScopeId: "tenant-a"},
+			{UserId: "u1", RoleValue: "auditor", OrganizationId: "tenant-a"},
 		},
 	})
 	if err != nil {
@@ -178,11 +173,10 @@ func TestRegisterPermissionSnapshotReplacesSingleSourceOnly(t *testing.T) {
 	}
 
 	oldRes, err := uc.CheckAuthorization(context.Background(), &v1.CheckAuthorizationRequest{
-		UserId:  "u1",
-		Path:    "/crm-api/v1/orders",
-		Method:  "GET",
-		Service: "crm",
-		ScopeId: "tenant-a",
+		UserId:         "u1",
+		Path:           "/crm-api/v1/orders",
+		Method:         "GET",
+		OrganizationId: "tenant-a",
 	})
 	if err != nil {
 		t.Fatalf("old crm check authorization: %v", err)
@@ -192,11 +186,10 @@ func TestRegisterPermissionSnapshotReplacesSingleSourceOnly(t *testing.T) {
 	}
 
 	newRes, err := uc.CheckAuthorization(context.Background(), &v1.CheckAuthorizationRequest{
-		UserId:  "u1",
-		Path:    "/crm-api/v1/reports",
-		Method:  "GET",
-		Service: "crm",
-		ScopeId: "tenant-a",
+		UserId:         "u1",
+		Path:           "/crm-api/v1/reports",
+		Method:         "GET",
+		OrganizationId: "tenant-a",
 	})
 	if err != nil {
 		t.Fatalf("new crm check authorization: %v", err)

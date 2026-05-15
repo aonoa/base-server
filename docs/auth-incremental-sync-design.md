@@ -14,7 +14,7 @@
 - `auth` 库里的 `casbin_rules` 是授权投影，不是主数据。
 - `walk-routes` 只用于路由发现/对账，不会自动回写或替代 `sys_api_resources`。
 - 修改 proto 或 HTTP 路由，不会自动推导出对应的 Casbin API 权限变更；只有修改权限主数据服务里的 API 目录，才会触发 `ApplyApiDelta`。
-- 对 API 权限目录来说，同一个 `path + method` 是一条唯一主数据记录，映射到一个 `resources_group`。服务归属由 gateway 通过 `sys_service_registry.http_prefix -> service_code` 推导。
+- 对 API 权限目录来说，同一个 `path + method` 是一条唯一主数据记录，映射到一个 `resources_group`。接口授权不使用服务命名空间。
 
 ## 2. v1 目标
 
@@ -81,12 +81,9 @@ message RegisterPermissionSnapshotRequest {
 
 - `source_service` 表示投影来源服务；当前仓库实际主要用的是 `admin`，但字段和发送端都已经按通用来源服务保留。
 - `revision` 由发送方单调递增，建议先用毫秒时间戳或数据库变更版本号。
-- 当前实现分两种模式：
-  - 遗留快照：如果消息里没有显式 `service/scope` 命名空间，按旧模式 `ClearPolicy()` 后整体重建
-  - 新命名空间快照：如果消息里显式带了 `service`，则先按 `source_service` 移除该源旧投影，再把新快照合并进现有 Casbin 状态
-- 这意味着：
-  - 当前 `admin` 仍可作为遗留单源继续工作
-  - 后续新业务服务可以按 `source_service` 并行向 `auth` 注入，不会互相覆盖
+- 当前组织域模型下，完整快照会 `ClearPolicy()` 后整体重建 Casbin 投影。
+- 运行时 key 不包含 `service_code` 前缀，不能靠 `source_service` 前缀安全清理单源数据。
+- 后续如果要多投影源并存，需要增加显式 source 元数据表或 Casbin 扩展字段，而不是恢复 service-key 拼接。
 
 ### 5.2 角色增量
 
@@ -169,7 +166,9 @@ message PolicyRole {
   string remark = 5;
   repeated int32 menu_ids = 6;
   repeated PolicyRoleResource resources = 7;
-  string service = 8;
+  string organization_id = 9;          // Casbin domain
+  string data_scope = 10;              // 数据范围元数据，不参与 gateway allow/deny
+  repeated int64 data_scope_dept_ids = 11;
 }
 
 message PolicyRoleResource {
@@ -187,7 +186,6 @@ message PolicyApi {
   string module = 5;
   string module_description = 6;
   string resources_group = 7;
-  string service = 8;
 }
 
 message PolicyUserRoleBinding {
@@ -197,8 +195,7 @@ message PolicyUserRoleBinding {
   string role_value = 4;
   string create_time = 5;
   string update_time = 6;
-  string service = 7;
-  string scope_id = 8;
+  string organization_id = 7;          // Casbin domain
 }
 ```
 
@@ -224,9 +221,9 @@ message PolicyUserRoleBinding {
 补充说明：
 
 - API 接口级权限判断走 `p2 + g2`。
-- `g2` 表示 `apiPath -> api:<resources_group>` 的分组映射。
+- `g2` 表示全局 `apiPath -> resources_group` 的分组映射。
 - 当前仓库里，前端编辑“API 资源列表”里的 `path`、`resources_group`，本质上是在改 `sys_api_resources` 主数据；这会通过 `ApplyApiDelta` 更新 `g2`。
-- 当前接口授权边界收敛为 `service_code + resource_group + method`。其中 `service_code` 由服务注册前缀解析和投影发送端运行时补齐，不再是 API 资源表字段。
+- 当前接口授权边界收敛为 `user_id + organization_id + resource_group + method`。
 - 仅修改 proto/http route，不会自动改 `sys_api_resources`，因此也不会自动改 Casbin。
 
 ## 6.1 通用发送端
@@ -274,27 +271,27 @@ message PolicyUserRoleBinding {
 
 发送端在调用 `RegisterPermissionSnapshot` / `Apply*Delta` 后，会以 `source_service` 为幂等键，把最近一次同步模式、同步状态、最后快照版本、最后错误信息回写到 `admin` 控制面。当前 `admin` 服务内通过 repo 内部方法上报，不再暴露投影源状态 HTTP/gRPC 写接口。
 
-`auth` 侧当前也已经落地了源级替换逻辑：
+`auth` 侧当前已经切到组织域快照重建逻辑：
 
-- 对显式 `service` 命名空间的快照，按 `source_service` 删除旧投影后再合并新投影
-- 对旧格式快照，保留整体清空后重建的兼容行为
+- `RegisterPermissionSnapshot` 统一清空并重建完整 Casbin 投影。
+- `ApplyRoleDelta` 按 `role.organization_id` 更新 domain 内角色策略。
+- `ApplyApiDelta` 更新全局 `g2(path, resource_group)`。
+- `ApplyUserRoleBindingDelta` 按 `organization_id` 更新用户在组织 domain 下的角色绑定；`root` 绑定使用 `global` domain。
 
-## 6.2 当前已落地的 service / scope 扩展
+## 6.2 当前已落地的 organization domain 扩展
 
-当前代码已经落地以下兼容扩展：
+当前代码已经落地以下组织域模型：
 
-- `CheckAuthorizationRequest` 新增 `service`、`scope_id`
-- `PolicyRole` 新增 `service`
-- `PolicyApi` 新增 `service`
-- `PolicyUserRoleBinding` 新增 `service`、`scope_id`
+- `CheckAuthorizationRequest` 使用 `organization_id`
+- `PolicyRole` 使用 `organization_id`、`data_scope`、`data_scope_dept_ids`
+- `PolicyApi` 只维护全局 `path + method -> resources_group`
+- `PolicyUserRoleBinding` 使用 `organization_id`
 
 当前行为：
 
-- `gateway` 会优先按 `admin.sys_service_registry.http_prefix` 推导 `service`
-- 如果服务注册表未命中，再回退到仓库内置的 `/admin-api`、`/user-api` 等老前缀规则
-- `gateway` 允许通过请求头 `x-scope-id` 透传 `scope_id`
-- `auth` 在本地 Casbin key 上对 `service` 和 `scope_id` 做名字空间编码
-- 如果请求带了 `service/scope` 但没有命中新投影，`auth` 仍会回退尝试旧的无命名空间 key，保证现有链路兼容
+- `gateway` 允许通过请求头 `x-organization-id` 透传当前组织 ID。
+- `auth` 把 `organization_id` 作为 Casbin domain；缺省时使用默认组织 ID。
+- `auth` 不把 `service_code` 编进 subject / role / API key。
 
 ## 7. 建议的服务内执行流程
 
@@ -353,7 +350,7 @@ message PolicyUserRoleBinding {
 
 - 常态是增量更新。
 - 异常时还有完整修复手段。
-- 迁移过程中不需要一次性删除旧逻辑。
+- 不依赖旧权限 key 或旧数据格式。
 
 ## 9. 白名单与鉴权建议
 

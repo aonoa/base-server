@@ -22,14 +22,16 @@ type ProjectionRoleResource struct {
 
 // ProjectionRole is the normalized role projection payload.
 type ProjectionRole struct {
-	ID        int64
-	Name      string
-	Value     string
-	Status    bool
-	Remark    string
-	MenuIDs   []int32
-	Resources []ProjectionRoleResource
-	Service   string
+	ID               int64
+	Name             string
+	Value            string
+	Status           bool
+	Remark           string
+	MenuIDs          []int32
+	Resources        []ProjectionRoleResource
+	OrganizationID   string
+	DataScope        string
+	DataScopeDeptIDs []int64
 }
 
 // ProjectionAPI is the normalized API projection payload.
@@ -41,21 +43,17 @@ type ProjectionAPI struct {
 	Module            string
 	ModuleDescription string
 	ResourceGroup     string
-	Service           string
 }
 
-// UserRoleBindingProjection is the normalized user-role binding payload.
-// The current auth runtime still projects user bindings only; a later scope-
-// aware version can extend this without forcing services to assemble proto DTOs.
+// UserRoleBindingProjection is the normalized organization-scoped user-role binding payload.
 type UserRoleBindingProjection struct {
-	ID         string
-	UserID     string
-	RoleID     int64
-	RoleValue  string
-	CreateTime string
-	UpdateTime string
-	Service    string
-	ScopeID    string
+	ID             string
+	UserID         string
+	RoleID         int64
+	RoleValue      string
+	CreateTime     string
+	UpdateTime     string
+	OrganizationID string
 }
 
 // PermissionSnapshot is the full projection payload a source service publishes
@@ -238,14 +236,16 @@ func projectionRoleToProto(item ProjectionRole) *authv1.PolicyRole {
 		})
 	}
 	return &authv1.PolicyRole{
-		Id:        item.ID,
-		Name:      item.Name,
-		Value:     item.Value,
-		Status:    item.Status,
-		Remark:    item.Remark,
-		MenuIds:   append([]int32(nil), item.MenuIDs...),
-		Resources: resources,
-		Service:   item.Service,
+		Id:               item.ID,
+		Name:             item.Name,
+		Value:            item.Value,
+		Status:           item.Status,
+		Remark:           item.Remark,
+		MenuIds:          append([]int32(nil), item.MenuIDs...),
+		Resources:        resources,
+		OrganizationId:   item.OrganizationID,
+		DataScope:        item.DataScope,
+		DataScopeDeptIds: append([]int64(nil), item.DataScopeDeptIDs...),
 	}
 }
 
@@ -265,7 +265,6 @@ func projectionAPIToProto(item ProjectionAPI) *authv1.PolicyApi {
 		Module:            item.Module,
 		ModuleDescription: item.ModuleDescription,
 		ResourcesGroup:    item.ResourceGroup,
-		Service:           item.Service,
 	}
 }
 
@@ -278,13 +277,12 @@ func userRoleBindingProjectionPtrToProto(item *UserRoleBindingProjection) *authv
 
 func userRoleBindingProjectionToProto(item UserRoleBindingProjection) *authv1.PolicyUserRoleBinding {
 	return &authv1.PolicyUserRoleBinding{
-		Id:         item.ID,
-		UserId:     item.UserID,
-		RoleId:     item.RoleID,
-		RoleValue:  item.RoleValue,
-		CreateTime: item.CreateTime,
-		UpdateTime: item.UpdateTime,
-		Service:    item.Service,
-		ScopeId:    item.ScopeID,
+		Id:             item.ID,
+		UserId:         item.UserID,
+		RoleId:         item.RoleID,
+		RoleValue:      item.RoleValue,
+		CreateTime:     item.CreateTime,
+		UpdateTime:     item.UpdateTime,
+		OrganizationId: item.OrganizationID,
 	}
 }

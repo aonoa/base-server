@@ -66,6 +66,20 @@ func (_u *RoleUpdate) SetNillableValue(v *string) *RoleUpdate {
 	return _u
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_u *RoleUpdate) SetOrganizationID(v string) *RoleUpdate {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableOrganizationID(v *string) *RoleUpdate {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
+	return _u
+}
+
 // SetStatus sets the "status" field.
 func (_u *RoleUpdate) SetStatus(v bool) *RoleUpdate {
 	_u.mutation.SetStatus(v)
@@ -103,6 +117,38 @@ func (_u *RoleUpdate) SetMenus(v []int32) *RoleUpdate {
 // AppendMenus appends value to the "menus" field.
 func (_u *RoleUpdate) AppendMenus(v []int32) *RoleUpdate {
 	_u.mutation.AppendMenus(v)
+	return _u
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_u *RoleUpdate) SetDataScope(v string) *RoleUpdate {
+	_u.mutation.SetDataScope(v)
+	return _u
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableDataScope(v *string) *RoleUpdate {
+	if v != nil {
+		_u.SetDataScope(*v)
+	}
+	return _u
+}
+
+// SetDataScopeDeptIds sets the "data_scope_dept_ids" field.
+func (_u *RoleUpdate) SetDataScopeDeptIds(v []int64) *RoleUpdate {
+	_u.mutation.SetDataScopeDeptIds(v)
+	return _u
+}
+
+// AppendDataScopeDeptIds appends value to the "data_scope_dept_ids" field.
+func (_u *RoleUpdate) AppendDataScopeDeptIds(v []int64) *RoleUpdate {
+	_u.mutation.AppendDataScopeDeptIds(v)
+	return _u
+}
+
+// ClearDataScopeDeptIds clears the value of the "data_scope_dept_ids" field.
+func (_u *RoleUpdate) ClearDataScopeDeptIds() *RoleUpdate {
+	_u.mutation.ClearDataScopeDeptIds()
 	return _u
 }
 
@@ -243,6 +289,9 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Value(); ok {
 		_spec.SetField(role.FieldValue, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(role.FieldOrganizationID, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeBool, value)
 	}
@@ -256,6 +305,20 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, role.FieldMenus, value)
 		})
+	}
+	if value, ok := _u.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.DataScopeDeptIds(); ok {
+		_spec.SetField(role.FieldDataScopeDeptIds, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedDataScopeDeptIds(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, role.FieldDataScopeDeptIds, value)
+		})
+	}
+	if _u.mutation.DataScopeDeptIdsCleared() {
+		_spec.ClearField(role.FieldDataScopeDeptIds, field.TypeJSON)
 	}
 	if _u.mutation.APICleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -403,6 +466,20 @@ func (_u *RoleUpdateOne) SetNillableValue(v *string) *RoleUpdateOne {
 	return _u
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_u *RoleUpdateOne) SetOrganizationID(v string) *RoleUpdateOne {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableOrganizationID(v *string) *RoleUpdateOne {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
+	return _u
+}
+
 // SetStatus sets the "status" field.
 func (_u *RoleUpdateOne) SetStatus(v bool) *RoleUpdateOne {
 	_u.mutation.SetStatus(v)
@@ -440,6 +517,38 @@ func (_u *RoleUpdateOne) SetMenus(v []int32) *RoleUpdateOne {
 // AppendMenus appends value to the "menus" field.
 func (_u *RoleUpdateOne) AppendMenus(v []int32) *RoleUpdateOne {
 	_u.mutation.AppendMenus(v)
+	return _u
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_u *RoleUpdateOne) SetDataScope(v string) *RoleUpdateOne {
+	_u.mutation.SetDataScope(v)
+	return _u
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableDataScope(v *string) *RoleUpdateOne {
+	if v != nil {
+		_u.SetDataScope(*v)
+	}
+	return _u
+}
+
+// SetDataScopeDeptIds sets the "data_scope_dept_ids" field.
+func (_u *RoleUpdateOne) SetDataScopeDeptIds(v []int64) *RoleUpdateOne {
+	_u.mutation.SetDataScopeDeptIds(v)
+	return _u
+}
+
+// AppendDataScopeDeptIds appends value to the "data_scope_dept_ids" field.
+func (_u *RoleUpdateOne) AppendDataScopeDeptIds(v []int64) *RoleUpdateOne {
+	_u.mutation.AppendDataScopeDeptIds(v)
+	return _u
+}
+
+// ClearDataScopeDeptIds clears the value of the "data_scope_dept_ids" field.
+func (_u *RoleUpdateOne) ClearDataScopeDeptIds() *RoleUpdateOne {
+	_u.mutation.ClearDataScopeDeptIds()
 	return _u
 }
 
@@ -610,6 +719,9 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	if value, ok := _u.mutation.Value(); ok {
 		_spec.SetField(role.FieldValue, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(role.FieldOrganizationID, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeBool, value)
 	}
@@ -623,6 +735,20 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, role.FieldMenus, value)
 		})
+	}
+	if value, ok := _u.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.DataScopeDeptIds(); ok {
+		_spec.SetField(role.FieldDataScopeDeptIds, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedDataScopeDeptIds(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, role.FieldDataScopeDeptIds, value)
+		})
+	}
+	if _u.mutation.DataScopeDeptIdsCleared() {
+		_spec.ClearField(role.FieldDataScopeDeptIds, field.TypeJSON)
 	}
 	if _u.mutation.APICleared() {
 		edge := &sqlgraph.EdgeSpec{

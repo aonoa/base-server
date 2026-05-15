@@ -59,6 +59,66 @@ func (s *AdminService) DeleteUserRoleBinding(ctx context.Context, req *v1.Delete
 	return &emptypb.Empty{}, s.uc.DeleteUserRoleBinding(ctx, req)
 }
 
+func (s *AdminService) GetUserDeptBinding(ctx context.Context, req *v1.GetUserDeptBindingRequest) (*v1.UserDeptBindingItem, error) {
+	return s.uc.GetUserDeptBinding(ctx, req)
+}
+
+func (s *AdminService) UpsertUserDeptBinding(ctx context.Context, req *v1.UserDeptBindingItem) (*v1.UserDeptBindingItem, error) {
+	return s.uc.UpsertUserDeptBinding(ctx, req)
+}
+
+func (s *AdminService) DeleteUserDeptBinding(ctx context.Context, req *v1.DeleteUserDeptBindingRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DeleteUserDeptBinding(ctx, req)
+}
+
+func (s *AdminService) GetOrganizationList(ctx context.Context, req *v1.GetOrganizationListParams) (*v1.GetOrganizationListReply, error) {
+	return s.uc.GetOrganizationList(ctx, req)
+}
+
+func (s *AdminService) AddOrganization(ctx context.Context, req *v1.OrganizationItem) (*v1.OrganizationItem, error) {
+	return s.uc.AddOrganization(ctx, req)
+}
+
+func (s *AdminService) UpdateOrganization(ctx context.Context, req *v1.OrganizationItem) (*v1.OrganizationItem, error) {
+	return s.uc.UpdateOrganization(ctx, req)
+}
+
+func (s *AdminService) DelOrganization(ctx context.Context, req *v1.DeleteOrganization) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.DelOrganization(ctx, req.Id)
+}
+
+func (s *AdminService) GetOrganizationMembers(ctx context.Context, req *v1.GetOrganizationMembersRequest) (*v1.GetOrganizationMembersReply, error) {
+	return s.uc.GetOrganizationMembers(ctx, req)
+}
+
+func (s *AdminService) SaveOrganizationMembers(ctx context.Context, req *v1.SaveOrganizationMembersRequest) (*v1.GetOrganizationMembersReply, error) {
+	return s.uc.SaveOrganizationMembers(ctx, req)
+}
+
+func (s *AdminService) GetOrganizationPermissionScope(ctx context.Context, req *v1.GetOrganizationPermissionScopeRequest) (*v1.OrganizationPermissionScopeReply, error) {
+	return s.uc.GetOrganizationPermissionScope(ctx, req)
+}
+
+func (s *AdminService) SaveOrganizationPermissionScope(ctx context.Context, req *v1.SaveOrganizationPermissionScopeRequest) (*v1.OrganizationPermissionScopeReply, error) {
+	return s.uc.SaveOrganizationPermissionScope(ctx, req)
+}
+
+func (s *AdminService) GetCurrentPermissionCatalog(ctx context.Context, req *emptypb.Empty) (*v1.OrganizationPermissionCatalogReply, error) {
+	return s.uc.GetCurrentPermissionCatalog(ctx)
+}
+
+func (s *AdminService) GetOrganizationPermissionCatalog(ctx context.Context, req *v1.GetOrganizationPermissionCatalogRequest) (*v1.OrganizationPermissionCatalogReply, error) {
+	return s.uc.GetOrganizationPermissionCatalog(ctx, req)
+}
+
+func (s *AdminService) GetMyOrganizations(ctx context.Context, req *emptypb.Empty) (*v1.GetMyOrganizationsReply, error) {
+	return s.uc.GetMyOrganizations(ctx, authx.UserID(ctx))
+}
+
+func (s *AdminService) SwitchCurrentOrganization(ctx context.Context, req *v1.SwitchCurrentOrganizationRequest) (*v1.CurrentOrganizationReply, error) {
+	return s.uc.SwitchCurrentOrganization(ctx, authx.UserID(ctx), req)
+}
+
 func (s *AdminService) GetRoleList(ctx context.Context, req *v1.RolePageParams) (*v1.GetRoleListByPageReply, error) {
 	return s.uc.GetRoleList(ctx, req)
 }
@@ -107,8 +167,8 @@ func (s *AdminService) DelResource(ctx context.Context, req *v1.DeleteResource) 
 	return &emptypb.Empty{}, s.uc.DelResource(ctx, req.Id)
 }
 
-func (s *AdminService) GetDeptList(ctx context.Context, req *emptypb.Empty) (*v1.GetDeptListReply, error) {
-	return s.uc.GetDeptList(ctx)
+func (s *AdminService) GetDeptList(ctx context.Context, req *v1.GetDeptListParams) (*v1.GetDeptListReply, error) {
+	return s.uc.GetDeptList(ctx, req)
 }
 
 func (s *AdminService) AddDept(ctx context.Context, req *v1.DeptListItem) (*v1.DeptListItem, error) {

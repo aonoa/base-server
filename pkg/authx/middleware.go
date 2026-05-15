@@ -14,13 +14,38 @@ import (
 
 func NewWhitelistMatcher(whitelist []string) selector.MatchFunc {
 	allowed := make(map[string]struct{}, len(whitelist))
+	allowedMethods := make(map[string]struct{}, len(whitelist))
 	for _, operation := range whitelist {
+		operation = strings.TrimSpace(operation)
+		if operation == "" {
+			continue
+		}
 		allowed[operation] = struct{}{}
+		allowed[strings.TrimPrefix(operation, "/")] = struct{}{}
+		if method := operationMethod(operation); method != "" {
+			allowedMethods[method] = struct{}{}
+		}
 	}
 	return func(ctx context.Context, operation string) bool {
+		operation = strings.TrimSpace(operation)
 		_, ok := allowed[operation]
+		if !ok {
+			_, ok = allowed[strings.TrimPrefix(operation, "/")]
+		}
+		if !ok {
+			_, ok = allowedMethods[operationMethod(operation)]
+		}
 		return !ok
 	}
+}
+
+func operationMethod(operation string) string {
+	operation = strings.Trim(strings.TrimSpace(operation), "/")
+	if operation == "" {
+		return ""
+	}
+	parts := strings.Split(operation, "/")
+	return strings.TrimSpace(parts[len(parts)-1])
 }
 
 func NewServerMiddleware(signingKey string, whitelist []string) kratosmiddleware.Middleware {

@@ -30,9 +30,17 @@ func (Role) Fields() []ent.Field {
 		field.Int64("id"),
 		field.String("name").Comment("角色名称"),
 		field.String("value").Comment("角色值"),
+		field.String("organization_id").Comment("组织ID"),
 		field.Bool("status").Comment("0-禁用，1-启用"),
 		field.String("desc").Comment("简介"),
 		field.JSON("menus", []int32{}).Comment("权限菜单ID列表"),
+		field.String("data_scope").
+			Default("self").
+			Comment("数据范围: all/self_dept/self_dept_and_child/self/custom_depts"),
+		field.JSON("data_scope_dept_ids", []int64{}).
+			Optional().
+			Default([]int64{}).
+			Comment("自定义数据范围部门ID列表"),
 	}
 }
 

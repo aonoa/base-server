@@ -23,24 +23,1152 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type DeptListItem struct {
+type GetOrganizationListParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Pid           string                 `protobuf:"bytes,2,opt,name=pid,proto3" json:"pid,omitempty"`
+	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
+	PageSize      int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	OrderNo       int32                  `protobuf:"varint,4,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
-	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,7,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	Dom           int64                  `protobuf:"varint,9,opt,name=dom,proto3" json:"dom,omitempty"`
-	Children      []*DeptListItem        `protobuf:"bytes,10,rep,name=children,proto3" json:"children,omitempty"`
+	Code          string                 `protobuf:"bytes,4,opt,name=code,proto3" json:"code,omitempty"`
+	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
+func (x *GetOrganizationListParams) Reset() {
+	*x = GetOrganizationListParams{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationListParams) ProtoMessage() {}
+
+func (x *GetOrganizationListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationListParams.ProtoReflect.Descriptor instead.
+func (*GetOrganizationListParams) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetOrganizationListParams) GetCurrentPage() int64 {
+	if x != nil {
+		return x.CurrentPage
+	}
+	return 0
+}
+
+func (x *GetOrganizationListParams) GetPageSize() int64 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *GetOrganizationListParams) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GetOrganizationListParams) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *GetOrganizationListParams) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type OrganizationItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	OrderNo       int32                  `protobuf:"varint,4,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,7,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,8,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	MemberCount   int64                  `protobuf:"varint,9,opt,name=member_count,json=memberCount,proto3" json:"member_count,omitempty"`
+	DeptCount     int64                  `protobuf:"varint,10,opt,name=dept_count,json=deptCount,proto3" json:"dept_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationItem) Reset() {
+	*x = OrganizationItem{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationItem) ProtoMessage() {}
+
+func (x *OrganizationItem) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationItem.ProtoReflect.Descriptor instead.
+func (*OrganizationItem) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *OrganizationItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetOrderNo() int32 {
+	if x != nil {
+		return x.OrderNo
+	}
+	return 0
+}
+
+func (x *OrganizationItem) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *OrganizationItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *OrganizationItem) GetMemberCount() int64 {
+	if x != nil {
+		return x.MemberCount
+	}
+	return 0
+}
+
+func (x *OrganizationItem) GetDeptCount() int64 {
+	if x != nil {
+		return x.DeptCount
+	}
+	return 0
+}
+
+type GetOrganizationListReply struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*OrganizationItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetOrganizationListReply) Reset() {
+	*x = GetOrganizationListReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationListReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationListReply) ProtoMessage() {}
+
+func (x *GetOrganizationListReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationListReply.ProtoReflect.Descriptor instead.
+func (*GetOrganizationListReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetOrganizationListReply) GetItems() []*OrganizationItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetOrganizationListReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type DeleteOrganization struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteOrganization) Reset() {
+	*x = DeleteOrganization{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteOrganization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteOrganization) ProtoMessage() {}
+
+func (x *DeleteOrganization) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteOrganization.ProtoReflect.Descriptor instead.
+func (*DeleteOrganization) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DeleteOrganization) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetOrganizationMembersRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetOrganizationMembersRequest) Reset() {
+	*x = GetOrganizationMembersRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationMembersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationMembersRequest) ProtoMessage() {}
+
+func (x *GetOrganizationMembersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationMembersRequest.ProtoReflect.Descriptor instead.
+func (*GetOrganizationMembersRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetOrganizationMembersRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type OrganizationMemberItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	Email         string                 `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
+	Avatar        string                 `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	UserStatus    int32                  `protobuf:"varint,6,opt,name=user_status,json=userStatus,proto3" json:"user_status,omitempty"`
+	MemberStatus  int32                  `protobuf:"varint,7,opt,name=member_status,json=memberStatus,proto3" json:"member_status,omitempty"`
+	Primary       bool                   `protobuf:"varint,8,opt,name=primary,proto3" json:"primary,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,9,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationMemberItem) Reset() {
+	*x = OrganizationMemberItem{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationMemberItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationMemberItem) ProtoMessage() {}
+
+func (x *OrganizationMemberItem) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationMemberItem.ProtoReflect.Descriptor instead.
+func (*OrganizationMemberItem) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *OrganizationMemberItem) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *OrganizationMemberItem) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *OrganizationMemberItem) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *OrganizationMemberItem) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *OrganizationMemberItem) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
+}
+
+func (x *OrganizationMemberItem) GetUserStatus() int32 {
+	if x != nil {
+		return x.UserStatus
+	}
+	return 0
+}
+
+func (x *OrganizationMemberItem) GetMemberStatus() int32 {
+	if x != nil {
+		return x.MemberStatus
+	}
+	return 0
+}
+
+func (x *OrganizationMemberItem) GetPrimary() bool {
+	if x != nil {
+		return x.Primary
+	}
+	return false
+}
+
+func (x *OrganizationMemberItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+type GetOrganizationMembersReply struct {
+	state         protoimpl.MessageState    `protogen:"open.v1"`
+	Items         []*OrganizationMemberItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                     `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetOrganizationMembersReply) Reset() {
+	*x = GetOrganizationMembersReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationMembersReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationMembersReply) ProtoMessage() {}
+
+func (x *GetOrganizationMembersReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationMembersReply.ProtoReflect.Descriptor instead.
+func (*GetOrganizationMembersReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetOrganizationMembersReply) GetItems() []*OrganizationMemberItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetOrganizationMembersReply) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type SaveOrganizationMembersRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	UserIds        []string               `protobuf:"bytes,2,rep,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SaveOrganizationMembersRequest) Reset() {
+	*x = SaveOrganizationMembersRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveOrganizationMembersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveOrganizationMembersRequest) ProtoMessage() {}
+
+func (x *SaveOrganizationMembersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveOrganizationMembersRequest.ProtoReflect.Descriptor instead.
+func (*SaveOrganizationMembersRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *SaveOrganizationMembersRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *SaveOrganizationMembersRequest) GetUserIds() []string {
+	if x != nil {
+		return x.UserIds
+	}
+	return nil
+}
+
+type GetOrganizationPermissionScopeRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetOrganizationPermissionScopeRequest) Reset() {
+	*x = GetOrganizationPermissionScopeRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationPermissionScopeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationPermissionScopeRequest) ProtoMessage() {}
+
+func (x *GetOrganizationPermissionScopeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationPermissionScopeRequest.ProtoReflect.Descriptor instead.
+func (*GetOrganizationPermissionScopeRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetOrganizationPermissionScopeRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type SaveOrganizationPermissionScopeRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	MenuIds        []int32                `protobuf:"varint,2,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`
+	ResourceIds    []string               `protobuf:"bytes,3,rep,name=resource_ids,json=resourceIds,proto3" json:"resource_ids,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SaveOrganizationPermissionScopeRequest) Reset() {
+	*x = SaveOrganizationPermissionScopeRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveOrganizationPermissionScopeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveOrganizationPermissionScopeRequest) ProtoMessage() {}
+
+func (x *SaveOrganizationPermissionScopeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveOrganizationPermissionScopeRequest.ProtoReflect.Descriptor instead.
+func (*SaveOrganizationPermissionScopeRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SaveOrganizationPermissionScopeRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *SaveOrganizationPermissionScopeRequest) GetMenuIds() []int32 {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+func (x *SaveOrganizationPermissionScopeRequest) GetResourceIds() []string {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+type OrganizationPermissionScopeReply struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	MenuIds        []int32                `protobuf:"varint,2,rep,packed,name=menu_ids,json=menuIds,proto3" json:"menu_ids,omitempty"`
+	ResourceIds    []string               `protobuf:"bytes,3,rep,name=resource_ids,json=resourceIds,proto3" json:"resource_ids,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *OrganizationPermissionScopeReply) Reset() {
+	*x = OrganizationPermissionScopeReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationPermissionScopeReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationPermissionScopeReply) ProtoMessage() {}
+
+func (x *OrganizationPermissionScopeReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationPermissionScopeReply.ProtoReflect.Descriptor instead.
+func (*OrganizationPermissionScopeReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *OrganizationPermissionScopeReply) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionScopeReply) GetMenuIds() []int32 {
+	if x != nil {
+		return x.MenuIds
+	}
+	return nil
+}
+
+func (x *OrganizationPermissionScopeReply) GetResourceIds() []string {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+type GetOrganizationPermissionCatalogRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetOrganizationPermissionCatalogRequest) Reset() {
+	*x = GetOrganizationPermissionCatalogRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetOrganizationPermissionCatalogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrganizationPermissionCatalogRequest) ProtoMessage() {}
+
+func (x *GetOrganizationPermissionCatalogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrganizationPermissionCatalogRequest.ProtoReflect.Descriptor instead.
+func (*GetOrganizationPermissionCatalogRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetOrganizationPermissionCatalogRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type OrganizationPermissionCatalogReply struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId    string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	Menus             []*SysMenuListItem     `protobuf:"bytes,2,rep,name=menus,proto3" json:"menus,omitempty"`
+	Resources         []*ResourceListItem    `protobuf:"bytes,3,rep,name=resources,proto3" json:"resources,omitempty"`
+	ScopedMenuIds     []int32                `protobuf:"varint,4,rep,packed,name=scoped_menu_ids,json=scopedMenuIds,proto3" json:"scoped_menu_ids,omitempty"`
+	ScopedResourceIds []string               `protobuf:"bytes,5,rep,name=scoped_resource_ids,json=scopedResourceIds,proto3" json:"scoped_resource_ids,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *OrganizationPermissionCatalogReply) Reset() {
+	*x = OrganizationPermissionCatalogReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationPermissionCatalogReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationPermissionCatalogReply) ProtoMessage() {}
+
+func (x *OrganizationPermissionCatalogReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationPermissionCatalogReply.ProtoReflect.Descriptor instead.
+func (*OrganizationPermissionCatalogReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *OrganizationPermissionCatalogReply) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *OrganizationPermissionCatalogReply) GetMenus() []*SysMenuListItem {
+	if x != nil {
+		return x.Menus
+	}
+	return nil
+}
+
+func (x *OrganizationPermissionCatalogReply) GetResources() []*ResourceListItem {
+	if x != nil {
+		return x.Resources
+	}
+	return nil
+}
+
+func (x *OrganizationPermissionCatalogReply) GetScopedMenuIds() []int32 {
+	if x != nil {
+		return x.ScopedMenuIds
+	}
+	return nil
+}
+
+func (x *OrganizationPermissionCatalogReply) GetScopedResourceIds() []string {
+	if x != nil {
+		return x.ScopedResourceIds
+	}
+	return nil
+}
+
+type MyOrganizationItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
+	OrderNo       int32                  `protobuf:"varint,4,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	Current       bool                   `protobuf:"varint,7,opt,name=current,proto3" json:"current,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime    string                 `protobuf:"bytes,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MyOrganizationItem) Reset() {
+	*x = MyOrganizationItem{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MyOrganizationItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MyOrganizationItem) ProtoMessage() {}
+
+func (x *MyOrganizationItem) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MyOrganizationItem.ProtoReflect.Descriptor instead.
+func (*MyOrganizationItem) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *MyOrganizationItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *MyOrganizationItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *MyOrganizationItem) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *MyOrganizationItem) GetOrderNo() int32 {
+	if x != nil {
+		return x.OrderNo
+	}
+	return 0
+}
+
+func (x *MyOrganizationItem) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
+func (x *MyOrganizationItem) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *MyOrganizationItem) GetCurrent() bool {
+	if x != nil {
+		return x.Current
+	}
+	return false
+}
+
+func (x *MyOrganizationItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *MyOrganizationItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+type GetMyOrganizationsReply struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Items                 []*MyOrganizationItem  `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	CurrentOrganizationId string                 `protobuf:"bytes,2,opt,name=current_organization_id,json=currentOrganizationId,proto3" json:"current_organization_id,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *GetMyOrganizationsReply) Reset() {
+	*x = GetMyOrganizationsReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMyOrganizationsReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMyOrganizationsReply) ProtoMessage() {}
+
+func (x *GetMyOrganizationsReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMyOrganizationsReply.ProtoReflect.Descriptor instead.
+func (*GetMyOrganizationsReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetMyOrganizationsReply) GetItems() []*MyOrganizationItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *GetMyOrganizationsReply) GetCurrentOrganizationId() string {
+	if x != nil {
+		return x.CurrentOrganizationId
+	}
+	return ""
+}
+
+type SwitchCurrentOrganizationRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SwitchCurrentOrganizationRequest) Reset() {
+	*x = SwitchCurrentOrganizationRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SwitchCurrentOrganizationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SwitchCurrentOrganizationRequest) ProtoMessage() {}
+
+func (x *SwitchCurrentOrganizationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SwitchCurrentOrganizationRequest.ProtoReflect.Descriptor instead.
+func (*SwitchCurrentOrganizationRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *SwitchCurrentOrganizationRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type CurrentOrganizationReply struct {
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Current               *MyOrganizationItem    `protobuf:"bytes,1,opt,name=current,proto3" json:"current,omitempty"`
+	CurrentOrganizationId string                 `protobuf:"bytes,2,opt,name=current_organization_id,json=currentOrganizationId,proto3" json:"current_organization_id,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *CurrentOrganizationReply) Reset() {
+	*x = CurrentOrganizationReply{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CurrentOrganizationReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CurrentOrganizationReply) ProtoMessage() {}
+
+func (x *CurrentOrganizationReply) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CurrentOrganizationReply.ProtoReflect.Descriptor instead.
+func (*CurrentOrganizationReply) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *CurrentOrganizationReply) GetCurrent() *MyOrganizationItem {
+	if x != nil {
+		return x.Current
+	}
+	return nil
+}
+
+func (x *CurrentOrganizationReply) GetCurrentOrganizationId() string {
+	if x != nil {
+		return x.CurrentOrganizationId
+	}
+	return ""
+}
+
+type GetDeptListParams struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OrganizationId string                 `protobuf:"bytes,1,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetDeptListParams) Reset() {
+	*x = GetDeptListParams{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDeptListParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDeptListParams) ProtoMessage() {}
+
+func (x *GetDeptListParams) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDeptListParams.ProtoReflect.Descriptor instead.
+func (*GetDeptListParams) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetDeptListParams) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type DeptListItem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Pid            string                 `protobuf:"bytes,2,opt,name=pid,proto3" json:"pid,omitempty"`
+	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	OrderNo        int32                  `protobuf:"varint,4,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	Remark         string                 `protobuf:"bytes,5,opt,name=remark,proto3" json:"remark,omitempty"`
+	Status         int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	CreateTime     string                 `protobuf:"bytes,7,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	Children       []*DeptListItem        `protobuf:"bytes,10,rep,name=children,proto3" json:"children,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,11,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
 func (x *DeptListItem) Reset() {
 	*x = DeptListItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[0]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -52,7 +1180,7 @@ func (x *DeptListItem) String() string {
 func (*DeptListItem) ProtoMessage() {}
 
 func (x *DeptListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[0]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -65,7 +1193,7 @@ func (x *DeptListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeptListItem.ProtoReflect.Descriptor instead.
 func (*DeptListItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{0}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeptListItem) GetId() string {
@@ -117,18 +1245,18 @@ func (x *DeptListItem) GetCreateTime() string {
 	return ""
 }
 
-func (x *DeptListItem) GetDom() int64 {
-	if x != nil {
-		return x.Dom
-	}
-	return 0
-}
-
 func (x *DeptListItem) GetChildren() []*DeptListItem {
 	if x != nil {
 		return x.Children
 	}
 	return nil
+}
+
+func (x *DeptListItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
 }
 
 type DeleteDept struct {
@@ -140,7 +1268,7 @@ type DeleteDept struct {
 
 func (x *DeleteDept) Reset() {
 	*x = DeleteDept{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[1]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -152,7 +1280,7 @@ func (x *DeleteDept) String() string {
 func (*DeleteDept) ProtoMessage() {}
 
 func (x *DeleteDept) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[1]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -165,7 +1293,7 @@ func (x *DeleteDept) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDept.ProtoReflect.Descriptor instead.
 func (*DeleteDept) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{1}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *DeleteDept) GetId() string {
@@ -185,7 +1313,7 @@ type GetDeptListReply struct {
 
 func (x *GetDeptListReply) Reset() {
 	*x = GetDeptListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[2]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -197,7 +1325,7 @@ func (x *GetDeptListReply) String() string {
 func (*GetDeptListReply) ProtoMessage() {}
 
 func (x *GetDeptListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[2]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +1338,7 @@ func (x *GetDeptListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeptListReply.ProtoReflect.Descriptor instead.
 func (*GetDeptListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{2}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetDeptListReply) GetItems() []*DeptListItem {
@@ -228,19 +1356,20 @@ func (x *GetDeptListReply) GetTotal() int64 {
 }
 
 type RolePageParams struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CurrentPage   int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
-	PageSize      int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Status        int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	DeptId        string                 `protobuf:"bytes,5,opt,name=dept_id,json=deptId,proto3" json:"dept_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CurrentPage    int64                  `protobuf:"varint,1,opt,name=current_page,json=currentPage,proto3" json:"current_page,omitempty"`
+	PageSize       int64                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Status         int64                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	DeptId         string                 `protobuf:"bytes,5,opt,name=dept_id,json=deptId,proto3" json:"dept_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,6,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *RolePageParams) Reset() {
 	*x = RolePageParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[3]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -252,7 +1381,7 @@ func (x *RolePageParams) String() string {
 func (*RolePageParams) ProtoMessage() {}
 
 func (x *RolePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[3]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -265,7 +1394,7 @@ func (x *RolePageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePageParams.ProtoReflect.Descriptor instead.
 func (*RolePageParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{3}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *RolePageParams) GetCurrentPage() int64 {
@@ -303,25 +1432,35 @@ func (x *RolePageParams) GetDeptId() string {
 	return ""
 }
 
+func (x *RolePageParams) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
 type RoleListItem struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Value          string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
-	Status         int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
-	OrderNo        string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	CreateTime     string                 `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	Remark         string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
-	Permissions    []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"`
-	Dept           string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`
-	ApiPermissions []string               `protobuf:"bytes,10,rep,name=api_permissions,json=apiPermissions,proto3" json:"api_permissions,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name             string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Value            string                 `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
+	Status           int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	OrderNo          string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	CreateTime       string                 `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	Remark           string                 `protobuf:"bytes,7,opt,name=remark,proto3" json:"remark,omitempty"`
+	Permissions      []int32                `protobuf:"varint,8,rep,packed,name=permissions,proto3" json:"permissions,omitempty"`
+	Dept             string                 `protobuf:"bytes,9,opt,name=dept,proto3" json:"dept,omitempty"`
+	ApiPermissions   []string               `protobuf:"bytes,10,rep,name=api_permissions,json=apiPermissions,proto3" json:"api_permissions,omitempty"`
+	OrganizationId   string                 `protobuf:"bytes,11,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	DataScope        string                 `protobuf:"bytes,12,opt,name=data_scope,json=dataScope,proto3" json:"data_scope,omitempty"`
+	DataScopeDeptIds []int64                `protobuf:"varint,13,rep,packed,name=data_scope_dept_ids,json=dataScopeDeptIds,proto3" json:"data_scope_dept_ids,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *RoleListItem) Reset() {
 	*x = RoleListItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[4]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -333,7 +1472,7 @@ func (x *RoleListItem) String() string {
 func (*RoleListItem) ProtoMessage() {}
 
 func (x *RoleListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[4]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -346,7 +1485,7 @@ func (x *RoleListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleListItem.ProtoReflect.Descriptor instead.
 func (*RoleListItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{4}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *RoleListItem) GetId() string {
@@ -419,6 +1558,27 @@ func (x *RoleListItem) GetApiPermissions() []string {
 	return nil
 }
 
+func (x *RoleListItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+func (x *RoleListItem) GetDataScope() string {
+	if x != nil {
+		return x.DataScope
+	}
+	return ""
+}
+
+func (x *RoleListItem) GetDataScopeDeptIds() []int64 {
+	if x != nil {
+		return x.DataScopeDeptIds
+	}
+	return nil
+}
+
 type GetRoleListByPageReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Items         []*RoleListItem        `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
@@ -429,7 +1589,7 @@ type GetRoleListByPageReply struct {
 
 func (x *GetRoleListByPageReply) Reset() {
 	*x = GetRoleListByPageReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[5]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -441,7 +1601,7 @@ func (x *GetRoleListByPageReply) String() string {
 func (*GetRoleListByPageReply) ProtoMessage() {}
 
 func (x *GetRoleListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[5]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -454,7 +1614,7 @@ func (x *GetRoleListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRoleListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetRoleListByPageReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{5}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *GetRoleListByPageReply) GetItems() []*RoleListItem {
@@ -480,7 +1640,7 @@ type DeleteRole struct {
 
 func (x *DeleteRole) Reset() {
 	*x = DeleteRole{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[6]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -492,7 +1652,7 @@ func (x *DeleteRole) String() string {
 func (*DeleteRole) ProtoMessage() {}
 
 func (x *DeleteRole) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[6]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -505,7 +1665,7 @@ func (x *DeleteRole) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRole.ProtoReflect.Descriptor instead.
 func (*DeleteRole) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{6}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DeleteRole) GetId() string {
@@ -529,7 +1689,7 @@ type GetApiPageParams struct {
 
 func (x *GetApiPageParams) Reset() {
 	*x = GetApiPageParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -541,7 +1701,7 @@ func (x *GetApiPageParams) String() string {
 func (*GetApiPageParams) ProtoMessage() {}
 
 func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[7]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -554,7 +1714,7 @@ func (x *GetApiPageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetApiPageParams.ProtoReflect.Descriptor instead.
 func (*GetApiPageParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{7}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetApiPageParams) GetCurrentPage() int64 {
@@ -614,7 +1774,7 @@ type ApiListItem struct {
 
 func (x *ApiListItem) Reset() {
 	*x = ApiListItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -626,7 +1786,7 @@ func (x *ApiListItem) String() string {
 func (*ApiListItem) ProtoMessage() {}
 
 func (x *ApiListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[8]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -639,7 +1799,7 @@ func (x *ApiListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApiListItem.ProtoReflect.Descriptor instead.
 func (*ApiListItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{8}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ApiListItem) GetId() string {
@@ -701,7 +1861,7 @@ type GetApiListByPageReply struct {
 
 func (x *GetApiListByPageReply) Reset() {
 	*x = GetApiListByPageReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -713,7 +1873,7 @@ func (x *GetApiListByPageReply) String() string {
 func (*GetApiListByPageReply) ProtoMessage() {}
 
 func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[9]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -726,7 +1886,7 @@ func (x *GetApiListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetApiListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetApiListByPageReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{9}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *GetApiListByPageReply) GetItems() []*ApiListItem {
@@ -752,7 +1912,7 @@ type DeleteApi struct {
 
 func (x *DeleteApi) Reset() {
 	*x = DeleteApi{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -764,7 +1924,7 @@ func (x *DeleteApi) String() string {
 func (*DeleteApi) ProtoMessage() {}
 
 func (x *DeleteApi) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[10]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -777,7 +1937,7 @@ func (x *DeleteApi) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteApi.ProtoReflect.Descriptor instead.
 func (*DeleteApi) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{10}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *DeleteApi) GetId() string {
@@ -802,7 +1962,7 @@ type GetResourcePageParams struct {
 
 func (x *GetResourcePageParams) Reset() {
 	*x = GetResourcePageParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -814,7 +1974,7 @@ func (x *GetResourcePageParams) String() string {
 func (*GetResourcePageParams) ProtoMessage() {}
 
 func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[11]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -827,7 +1987,7 @@ func (x *GetResourcePageParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourcePageParams.ProtoReflect.Descriptor instead.
 func (*GetResourcePageParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{11}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetResourcePageParams) GetCurrentPage() int64 {
@@ -893,7 +2053,7 @@ type ResourceListItem struct {
 
 func (x *ResourceListItem) Reset() {
 	*x = ResourceListItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -905,7 +2065,7 @@ func (x *ResourceListItem) String() string {
 func (*ResourceListItem) ProtoMessage() {}
 
 func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[12]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -918,7 +2078,7 @@ func (x *ResourceListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResourceListItem.ProtoReflect.Descriptor instead.
 func (*ResourceListItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{12}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ResourceListItem) GetId() string {
@@ -973,7 +2133,7 @@ type GetResourceListByPageReply struct {
 
 func (x *GetResourceListByPageReply) Reset() {
 	*x = GetResourceListByPageReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -985,7 +2145,7 @@ func (x *GetResourceListByPageReply) String() string {
 func (*GetResourceListByPageReply) ProtoMessage() {}
 
 func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[13]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -998,7 +2158,7 @@ func (x *GetResourceListByPageReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetResourceListByPageReply.ProtoReflect.Descriptor instead.
 func (*GetResourceListByPageReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{13}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GetResourceListByPageReply) GetItems() []*ResourceListItem {
@@ -1024,7 +2184,7 @@ type DeleteResource struct {
 
 func (x *DeleteResource) Reset() {
 	*x = DeleteResource{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1036,7 +2196,7 @@ func (x *DeleteResource) String() string {
 func (*DeleteResource) ProtoMessage() {}
 
 func (x *DeleteResource) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[14]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1049,7 +2209,7 @@ func (x *DeleteResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteResource.ProtoReflect.Descriptor instead.
 func (*DeleteResource) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{14}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *DeleteResource) GetId() string {
@@ -1071,7 +2231,7 @@ type AuthRoleResourceItem struct {
 
 func (x *AuthRoleResourceItem) Reset() {
 	*x = AuthRoleResourceItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1083,7 +2243,7 @@ func (x *AuthRoleResourceItem) String() string {
 func (*AuthRoleResourceItem) ProtoMessage() {}
 
 func (x *AuthRoleResourceItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[15]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1096,7 +2256,7 @@ func (x *AuthRoleResourceItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthRoleResourceItem.ProtoReflect.Descriptor instead.
 func (*AuthRoleResourceItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{15}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *AuthRoleResourceItem) GetId() string {
@@ -1142,7 +2302,7 @@ type AuthRoleItem struct {
 
 func (x *AuthRoleItem) Reset() {
 	*x = AuthRoleItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1154,7 +2314,7 @@ func (x *AuthRoleItem) String() string {
 func (*AuthRoleItem) ProtoMessage() {}
 
 func (x *AuthRoleItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[16]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1167,7 +2327,7 @@ func (x *AuthRoleItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthRoleItem.ProtoReflect.Descriptor instead.
 func (*AuthRoleItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{16}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *AuthRoleItem) GetId() int64 {
@@ -1228,7 +2388,7 @@ type GetAuthRoleCatalogReply struct {
 
 func (x *GetAuthRoleCatalogReply) Reset() {
 	*x = GetAuthRoleCatalogReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1240,7 +2400,7 @@ func (x *GetAuthRoleCatalogReply) String() string {
 func (*GetAuthRoleCatalogReply) ProtoMessage() {}
 
 func (x *GetAuthRoleCatalogReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[17]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1253,7 +2413,7 @@ func (x *GetAuthRoleCatalogReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAuthRoleCatalogReply.ProtoReflect.Descriptor instead.
 func (*GetAuthRoleCatalogReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{17}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetAuthRoleCatalogReply) GetItems() []*AuthRoleItem {
@@ -1278,7 +2438,7 @@ type AuthApiItem struct {
 
 func (x *AuthApiItem) Reset() {
 	*x = AuthApiItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1290,7 +2450,7 @@ func (x *AuthApiItem) String() string {
 func (*AuthApiItem) ProtoMessage() {}
 
 func (x *AuthApiItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[18]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1303,7 +2463,7 @@ func (x *AuthApiItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthApiItem.ProtoReflect.Descriptor instead.
 func (*AuthApiItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{18}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *AuthApiItem) GetId() string {
@@ -1364,7 +2524,7 @@ type GetAuthApiCatalogReply struct {
 
 func (x *GetAuthApiCatalogReply) Reset() {
 	*x = GetAuthApiCatalogReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1376,7 +2536,7 @@ func (x *GetAuthApiCatalogReply) String() string {
 func (*GetAuthApiCatalogReply) ProtoMessage() {}
 
 func (x *GetAuthApiCatalogReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[19]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1389,7 +2549,7 @@ func (x *GetAuthApiCatalogReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAuthApiCatalogReply.ProtoReflect.Descriptor instead.
 func (*GetAuthApiCatalogReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{19}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetAuthApiCatalogReply) GetItems() []*AuthApiItem {
@@ -1408,7 +2568,7 @@ type GetAuthRoleRequest struct {
 
 func (x *GetAuthRoleRequest) Reset() {
 	*x = GetAuthRoleRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1420,7 +2580,7 @@ func (x *GetAuthRoleRequest) String() string {
 func (*GetAuthRoleRequest) ProtoMessage() {}
 
 func (x *GetAuthRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[20]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1433,7 +2593,7 @@ func (x *GetAuthRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAuthRoleRequest.ProtoReflect.Descriptor instead.
 func (*GetAuthRoleRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{20}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetAuthRoleRequest) GetId() int64 {
@@ -1452,7 +2612,7 @@ type ResolveRoleValuesRequest struct {
 
 func (x *ResolveRoleValuesRequest) Reset() {
 	*x = ResolveRoleValuesRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1464,7 +2624,7 @@ func (x *ResolveRoleValuesRequest) String() string {
 func (*ResolveRoleValuesRequest) ProtoMessage() {}
 
 func (x *ResolveRoleValuesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[21]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1477,7 +2637,7 @@ func (x *ResolveRoleValuesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveRoleValuesRequest.ProtoReflect.Descriptor instead.
 func (*ResolveRoleValuesRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{21}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ResolveRoleValuesRequest) GetRoleIds() []int64 {
@@ -1497,7 +2657,7 @@ type ResolveRoleValueItem struct {
 
 func (x *ResolveRoleValueItem) Reset() {
 	*x = ResolveRoleValueItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[22]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1509,7 +2669,7 @@ func (x *ResolveRoleValueItem) String() string {
 func (*ResolveRoleValueItem) ProtoMessage() {}
 
 func (x *ResolveRoleValueItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[22]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1522,7 +2682,7 @@ func (x *ResolveRoleValueItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveRoleValueItem.ProtoReflect.Descriptor instead.
 func (*ResolveRoleValueItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{22}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *ResolveRoleValueItem) GetRoleId() int64 {
@@ -1548,7 +2708,7 @@ type ResolveRoleValuesReply struct {
 
 func (x *ResolveRoleValuesReply) Reset() {
 	*x = ResolveRoleValuesReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[23]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1560,7 +2720,7 @@ func (x *ResolveRoleValuesReply) String() string {
 func (*ResolveRoleValuesReply) ProtoMessage() {}
 
 func (x *ResolveRoleValuesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[23]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1573,7 +2733,7 @@ func (x *ResolveRoleValuesReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResolveRoleValuesReply.ProtoReflect.Descriptor instead.
 func (*ResolveRoleValuesReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{23}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *ResolveRoleValuesReply) GetItems() []*ResolveRoleValueItem {
@@ -1584,15 +2744,16 @@ func (x *ResolveRoleValuesReply) GetItems() []*ResolveRoleValueItem {
 }
 
 type GetUserRoleBindingRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GetUserRoleBindingRequest) Reset() {
 	*x = GetUserRoleBindingRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[24]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1604,7 +2765,7 @@ func (x *GetUserRoleBindingRequest) String() string {
 func (*GetUserRoleBindingRequest) ProtoMessage() {}
 
 func (x *GetUserRoleBindingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[24]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1617,7 +2778,7 @@ func (x *GetUserRoleBindingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRoleBindingRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRoleBindingRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{24}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetUserRoleBindingRequest) GetUserId() string {
@@ -1627,21 +2788,29 @@ func (x *GetUserRoleBindingRequest) GetUserId() string {
 	return ""
 }
 
+func (x *GetUserRoleBindingRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
 type UserRoleBindingItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	RoleId        int64                  `protobuf:"varint,3,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,4,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	UpdateTime    string                 `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
-	RoleIds       []int64                `protobuf:"varint,6,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId         string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RoleId         int64                  `protobuf:"varint,3,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
+	CreateTime     string                 `protobuf:"bytes,4,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime     string                 `protobuf:"bytes,5,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	RoleIds        []int64                `protobuf:"varint,6,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,7,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UserRoleBindingItem) Reset() {
 	*x = UserRoleBindingItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[25]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1653,7 +2822,7 @@ func (x *UserRoleBindingItem) String() string {
 func (*UserRoleBindingItem) ProtoMessage() {}
 
 func (x *UserRoleBindingItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[25]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1666,7 +2835,7 @@ func (x *UserRoleBindingItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserRoleBindingItem.ProtoReflect.Descriptor instead.
 func (*UserRoleBindingItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{25}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *UserRoleBindingItem) GetId() string {
@@ -1711,6 +2880,13 @@ func (x *UserRoleBindingItem) GetRoleIds() []int64 {
 	return nil
 }
 
+func (x *UserRoleBindingItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
 type ListUserRoleBindingsReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Items         []*UserRoleBindingItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
@@ -1720,7 +2896,7 @@ type ListUserRoleBindingsReply struct {
 
 func (x *ListUserRoleBindingsReply) Reset() {
 	*x = ListUserRoleBindingsReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[26]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1732,7 +2908,7 @@ func (x *ListUserRoleBindingsReply) String() string {
 func (*ListUserRoleBindingsReply) ProtoMessage() {}
 
 func (x *ListUserRoleBindingsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[26]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1745,7 +2921,7 @@ func (x *ListUserRoleBindingsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserRoleBindingsReply.ProtoReflect.Descriptor instead.
 func (*ListUserRoleBindingsReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{26}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ListUserRoleBindingsReply) GetItems() []*UserRoleBindingItem {
@@ -1756,15 +2932,16 @@ func (x *ListUserRoleBindingsReply) GetItems() []*UserRoleBindingItem {
 }
 
 type DeleteUserRoleBindingRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *DeleteUserRoleBindingRequest) Reset() {
 	*x = DeleteUserRoleBindingRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[27]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1776,7 +2953,7 @@ func (x *DeleteUserRoleBindingRequest) String() string {
 func (*DeleteUserRoleBindingRequest) ProtoMessage() {}
 
 func (x *DeleteUserRoleBindingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[27]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1789,12 +2966,215 @@ func (x *DeleteUserRoleBindingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteUserRoleBindingRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRoleBindingRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{27}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *DeleteUserRoleBindingRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
+	}
+	return ""
+}
+
+func (x *DeleteUserRoleBindingRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type GetUserDeptBindingRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetUserDeptBindingRequest) Reset() {
+	*x = GetUserDeptBindingRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserDeptBindingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserDeptBindingRequest) ProtoMessage() {}
+
+func (x *GetUserDeptBindingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserDeptBindingRequest.ProtoReflect.Descriptor instead.
+func (*GetUserDeptBindingRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *GetUserDeptBindingRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetUserDeptBindingRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type UserDeptBindingItem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId         string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	DeptId         string                 `protobuf:"bytes,3,opt,name=dept_id,json=deptId,proto3" json:"dept_id,omitempty"`
+	DeptName       string                 `protobuf:"bytes,4,opt,name=dept_name,json=deptName,proto3" json:"dept_name,omitempty"`
+	CreateTime     string                 `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime     string                 `protobuf:"bytes,6,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,7,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *UserDeptBindingItem) Reset() {
+	*x = UserDeptBindingItem{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserDeptBindingItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserDeptBindingItem) ProtoMessage() {}
+
+func (x *UserDeptBindingItem) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserDeptBindingItem.ProtoReflect.Descriptor instead.
+func (*UserDeptBindingItem) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *UserDeptBindingItem) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetDeptId() string {
+	if x != nil {
+		return x.DeptId
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetDeptName() string {
+	if x != nil {
+		return x.DeptName
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetUpdateTime() string {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *UserDeptBindingItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
+	}
+	return ""
+}
+
+type DeleteUserDeptBindingRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,2,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *DeleteUserDeptBindingRequest) Reset() {
+	*x = DeleteUserDeptBindingRequest{}
+	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteUserDeptBindingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteUserDeptBindingRequest) ProtoMessage() {}
+
+func (x *DeleteUserDeptBindingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteUserDeptBindingRequest.ProtoReflect.Descriptor instead.
+func (*DeleteUserDeptBindingRequest) Descriptor() ([]byte, []int) {
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *DeleteUserDeptBindingRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *DeleteUserDeptBindingRequest) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
 	}
 	return ""
 }
@@ -1809,7 +3189,7 @@ type MenuParams struct {
 
 func (x *MenuParams) Reset() {
 	*x = MenuParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[28]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1821,7 +3201,7 @@ func (x *MenuParams) String() string {
 func (*MenuParams) ProtoMessage() {}
 
 func (x *MenuParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[28]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1834,7 +3214,7 @@ func (x *MenuParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuParams.ProtoReflect.Descriptor instead.
 func (*MenuParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{28}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *MenuParams) GetMenuName() string {
@@ -1881,7 +3261,7 @@ type Meta struct {
 
 func (x *Meta) Reset() {
 	*x = Meta{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[29]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1893,7 +3273,7 @@ func (x *Meta) String() string {
 func (*Meta) ProtoMessage() {}
 
 func (x *Meta) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[29]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1906,7 +3286,7 @@ func (x *Meta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Meta.ProtoReflect.Descriptor instead.
 func (*Meta) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{29}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *Meta) GetOrder() int64 {
@@ -2083,7 +3463,7 @@ type SysMenuListItem struct {
 
 func (x *SysMenuListItem) Reset() {
 	*x = SysMenuListItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[30]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2095,7 +3475,7 @@ func (x *SysMenuListItem) String() string {
 func (*SysMenuListItem) ProtoMessage() {}
 
 func (x *SysMenuListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[30]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2108,7 +3488,7 @@ func (x *SysMenuListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SysMenuListItem.ProtoReflect.Descriptor instead.
 func (*SysMenuListItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{30}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *SysMenuListItem) GetId() int32 {
@@ -2205,7 +3585,7 @@ type GetSysMenuListReply struct {
 
 func (x *GetSysMenuListReply) Reset() {
 	*x = GetSysMenuListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[31]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2217,7 +3597,7 @@ func (x *GetSysMenuListReply) String() string {
 func (*GetSysMenuListReply) ProtoMessage() {}
 
 func (x *GetSysMenuListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[31]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2230,7 +3610,7 @@ func (x *GetSysMenuListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysMenuListReply.ProtoReflect.Descriptor instead.
 func (*GetSysMenuListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{31}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *GetSysMenuListReply) GetItems() []*SysMenuListItem {
@@ -2267,7 +3647,7 @@ type CurrentUserMenuItem struct {
 
 func (x *CurrentUserMenuItem) Reset() {
 	*x = CurrentUserMenuItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[32]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2279,7 +3659,7 @@ func (x *CurrentUserMenuItem) String() string {
 func (*CurrentUserMenuItem) ProtoMessage() {}
 
 func (x *CurrentUserMenuItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[32]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2292,7 +3672,7 @@ func (x *CurrentUserMenuItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CurrentUserMenuItem.ProtoReflect.Descriptor instead.
 func (*CurrentUserMenuItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{32}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *CurrentUserMenuItem) GetId() int32 {
@@ -2388,7 +3768,7 @@ type GetCurrentUserMenusReply struct {
 
 func (x *GetCurrentUserMenusReply) Reset() {
 	*x = GetCurrentUserMenusReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[33]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2400,7 +3780,7 @@ func (x *GetCurrentUserMenusReply) String() string {
 func (*GetCurrentUserMenusReply) ProtoMessage() {}
 
 func (x *GetCurrentUserMenusReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[33]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2413,7 +3793,7 @@ func (x *GetCurrentUserMenusReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCurrentUserMenusReply.ProtoReflect.Descriptor instead.
 func (*GetCurrentUserMenusReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{33}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *GetCurrentUserMenusReply) GetItems() []*CurrentUserMenuItem {
@@ -2442,7 +3822,7 @@ type MenuRecord struct {
 
 func (x *MenuRecord) Reset() {
 	*x = MenuRecord{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[34]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2454,7 +3834,7 @@ func (x *MenuRecord) String() string {
 func (*MenuRecord) ProtoMessage() {}
 
 func (x *MenuRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[34]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2467,7 +3847,7 @@ func (x *MenuRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuRecord.ProtoReflect.Descriptor instead.
 func (*MenuRecord) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{34}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *MenuRecord) GetId() int32 {
@@ -2556,7 +3936,7 @@ type ListMenusReply struct {
 
 func (x *ListMenusReply) Reset() {
 	*x = ListMenusReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[35]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2568,7 +3948,7 @@ func (x *ListMenusReply) String() string {
 func (*ListMenusReply) ProtoMessage() {}
 
 func (x *ListMenusReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[35]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2581,7 +3961,7 @@ func (x *ListMenusReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMenusReply.ProtoReflect.Descriptor instead.
 func (*ListMenusReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{35}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *ListMenusReply) GetItems() []*MenuRecord {
@@ -2601,7 +3981,7 @@ type WalkRouteItem struct {
 
 func (x *WalkRouteItem) Reset() {
 	*x = WalkRouteItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[36]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2613,7 +3993,7 @@ func (x *WalkRouteItem) String() string {
 func (*WalkRouteItem) ProtoMessage() {}
 
 func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[36]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2626,7 +4006,7 @@ func (x *WalkRouteItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WalkRouteItem.ProtoReflect.Descriptor instead.
 func (*WalkRouteItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{36}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *WalkRouteItem) GetUrl() string {
@@ -2652,7 +4032,7 @@ type GetWalkRouteReply struct {
 
 func (x *GetWalkRouteReply) Reset() {
 	*x = GetWalkRouteReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[37]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2664,7 +4044,7 @@ func (x *GetWalkRouteReply) String() string {
 func (*GetWalkRouteReply) ProtoMessage() {}
 
 func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[37]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2677,7 +4057,7 @@ func (x *GetWalkRouteReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWalkRouteReply.ProtoReflect.Descriptor instead.
 func (*GetWalkRouteReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{37}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *GetWalkRouteReply) GetItems() []*WalkRouteItem {
@@ -2697,7 +4077,7 @@ type IsMenuNameExistsRequest struct {
 
 func (x *IsMenuNameExistsRequest) Reset() {
 	*x = IsMenuNameExistsRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[38]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2709,7 +4089,7 @@ func (x *IsMenuNameExistsRequest) String() string {
 func (*IsMenuNameExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[38]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2722,7 +4102,7 @@ func (x *IsMenuNameExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{38}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *IsMenuNameExistsRequest) GetId() int64 {
@@ -2748,7 +4128,7 @@ type IsMenuNameExistsReply struct {
 
 func (x *IsMenuNameExistsReply) Reset() {
 	*x = IsMenuNameExistsReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[39]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2760,7 +4140,7 @@ func (x *IsMenuNameExistsReply) String() string {
 func (*IsMenuNameExistsReply) ProtoMessage() {}
 
 func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[39]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2773,7 +4153,7 @@ func (x *IsMenuNameExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuNameExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuNameExistsReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{39}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *IsMenuNameExistsReply) GetData() bool {
@@ -2793,7 +4173,7 @@ type IsMenuPathExistsRequest struct {
 
 func (x *IsMenuPathExistsRequest) Reset() {
 	*x = IsMenuPathExistsRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[40]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2805,7 +4185,7 @@ func (x *IsMenuPathExistsRequest) String() string {
 func (*IsMenuPathExistsRequest) ProtoMessage() {}
 
 func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[40]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2818,7 +4198,7 @@ func (x *IsMenuPathExistsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsRequest.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{40}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *IsMenuPathExistsRequest) GetId() int64 {
@@ -2844,7 +4224,7 @@ type IsMenuPathExistsReply struct {
 
 func (x *IsMenuPathExistsReply) Reset() {
 	*x = IsMenuPathExistsReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[41]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2856,7 +4236,7 @@ func (x *IsMenuPathExistsReply) String() string {
 func (*IsMenuPathExistsReply) ProtoMessage() {}
 
 func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[41]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2869,7 +4249,7 @@ func (x *IsMenuPathExistsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsMenuPathExistsReply.ProtoReflect.Descriptor instead.
 func (*IsMenuPathExistsReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{41}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *IsMenuPathExistsReply) GetData() bool {
@@ -2888,7 +4268,7 @@ type DeleteMenuRequest struct {
 
 func (x *DeleteMenuRequest) Reset() {
 	*x = DeleteMenuRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[42]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2900,7 +4280,7 @@ func (x *DeleteMenuRequest) String() string {
 func (*DeleteMenuRequest) ProtoMessage() {}
 
 func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[42]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2913,7 +4293,7 @@ func (x *DeleteMenuRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMenuRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMenuRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{42}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *DeleteMenuRequest) GetId() int64 {
@@ -2940,7 +4320,7 @@ type ServiceRegistryItem struct {
 
 func (x *ServiceRegistryItem) Reset() {
 	*x = ServiceRegistryItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2952,7 +4332,7 @@ func (x *ServiceRegistryItem) String() string {
 func (*ServiceRegistryItem) ProtoMessage() {}
 
 func (x *ServiceRegistryItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[43]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2965,7 +4345,7 @@ func (x *ServiceRegistryItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceRegistryItem.ProtoReflect.Descriptor instead.
 func (*ServiceRegistryItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{43}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *ServiceRegistryItem) GetId() string {
@@ -3041,7 +4421,7 @@ type GetServiceRegistryListReply struct {
 
 func (x *GetServiceRegistryListReply) Reset() {
 	*x = GetServiceRegistryListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3053,7 +4433,7 @@ func (x *GetServiceRegistryListReply) String() string {
 func (*GetServiceRegistryListReply) ProtoMessage() {}
 
 func (x *GetServiceRegistryListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[44]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3066,7 +4446,7 @@ func (x *GetServiceRegistryListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetServiceRegistryListReply.ProtoReflect.Descriptor instead.
 func (*GetServiceRegistryListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{44}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *GetServiceRegistryListReply) GetItems() []*ServiceRegistryItem {
@@ -3100,7 +4480,7 @@ type ProjectionSourceStatusItem struct {
 
 func (x *ProjectionSourceStatusItem) Reset() {
 	*x = ProjectionSourceStatusItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3112,7 +4492,7 @@ func (x *ProjectionSourceStatusItem) String() string {
 func (*ProjectionSourceStatusItem) ProtoMessage() {}
 
 func (x *ProjectionSourceStatusItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[45]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3125,7 +4505,7 @@ func (x *ProjectionSourceStatusItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProjectionSourceStatusItem.ProtoReflect.Descriptor instead.
 func (*ProjectionSourceStatusItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{45}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *ProjectionSourceStatusItem) GetId() string {
@@ -3201,7 +4581,7 @@ type GetProjectionSourceStatusListReply struct {
 
 func (x *GetProjectionSourceStatusListReply) Reset() {
 	*x = GetProjectionSourceStatusListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3213,7 +4593,7 @@ func (x *GetProjectionSourceStatusListReply) String() string {
 func (*GetProjectionSourceStatusListReply) ProtoMessage() {}
 
 func (x *GetProjectionSourceStatusListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[46]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3226,7 +4606,7 @@ func (x *GetProjectionSourceStatusListReply) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use GetProjectionSourceStatusListReply.ProtoReflect.Descriptor instead.
 func (*GetProjectionSourceStatusListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{46}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *GetProjectionSourceStatusListReply) GetItems() []*ProjectionSourceStatusItem {
@@ -3271,7 +4651,7 @@ type CreateSysLogRequest struct {
 
 func (x *CreateSysLogRequest) Reset() {
 	*x = CreateSysLogRequest{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3283,7 +4663,7 @@ func (x *CreateSysLogRequest) String() string {
 func (*CreateSysLogRequest) ProtoMessage() {}
 
 func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[47]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3296,7 +4676,7 @@ func (x *CreateSysLogRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSysLogRequest.ProtoReflect.Descriptor instead.
 func (*CreateSysLogRequest) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{47}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *CreateSysLogRequest) GetUserId() string {
@@ -3461,7 +4841,7 @@ type GetSysLogListParams struct {
 
 func (x *GetSysLogListParams) Reset() {
 	*x = GetSysLogListParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3473,7 +4853,7 @@ func (x *GetSysLogListParams) String() string {
 func (*GetSysLogListParams) ProtoMessage() {}
 
 func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[48]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3486,7 +4866,7 @@ func (x *GetSysLogListParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogListParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{48}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *GetSysLogListParams) GetCurrentPage() int64 {
@@ -3608,7 +4988,7 @@ type SysLogItem struct {
 
 func (x *SysLogItem) Reset() {
 	*x = SysLogItem{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3620,7 +5000,7 @@ func (x *SysLogItem) String() string {
 func (*SysLogItem) ProtoMessage() {}
 
 func (x *SysLogItem) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[49]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3633,7 +5013,7 @@ func (x *SysLogItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SysLogItem.ProtoReflect.Descriptor instead.
 func (*SysLogItem) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{49}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *SysLogItem) GetId() string {
@@ -3737,7 +5117,7 @@ type GetSysLogListReply struct {
 
 func (x *GetSysLogListReply) Reset() {
 	*x = GetSysLogListReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3749,7 +5129,7 @@ func (x *GetSysLogListReply) String() string {
 func (*GetSysLogListReply) ProtoMessage() {}
 
 func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[50]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3762,7 +5142,7 @@ func (x *GetSysLogListReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogListReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogListReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{50}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *GetSysLogListReply) GetItems() []*SysLogItem {
@@ -3788,7 +5168,7 @@ type GetSysLogInfoParams struct {
 
 func (x *GetSysLogInfoParams) Reset() {
 	*x = GetSysLogInfoParams{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3800,7 +5180,7 @@ func (x *GetSysLogInfoParams) String() string {
 func (*GetSysLogInfoParams) ProtoMessage() {}
 
 func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[51]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3813,7 +5193,7 @@ func (x *GetSysLogInfoParams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoParams.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoParams) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{51}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *GetSysLogInfoParams) GetId() string {
@@ -3853,7 +5233,7 @@ type GetSysLogInfoReply struct {
 
 func (x *GetSysLogInfoReply) Reset() {
 	*x = GetSysLogInfoReply{}
-	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3865,7 +5245,7 @@ func (x *GetSysLogInfoReply) String() string {
 func (*GetSysLogInfoReply) ProtoMessage() {}
 
 func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_service_v1_admin_proto_msgTypes[52]
+	mi := &file_admin_service_v1_admin_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3878,7 +5258,7 @@ func (x *GetSysLogInfoReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSysLogInfoReply.ProtoReflect.Descriptor instead.
 func (*GetSysLogInfoReply) Descriptor() ([]byte, []int) {
-	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{52}
+	return file_admin_service_v1_admin_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *GetSysLogInfoReply) GetId() string {
@@ -4039,7 +5419,93 @@ var File_admin_service_v1_admin_proto protoreflect.FileDescriptor
 
 const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x1cadmin/service/v1/admin.proto\x12\x14api.admin.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x82\x02\n" +
+	"\x1cadmin/service/v1/admin.proto\x12\x14api.admin.service.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x9b\x01\n" +
+	"\x19GetOrganizationListParams\x12!\n" +
+	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x04 \x01(\tR\x04code\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\x05R\x06status\"\x99\x02\n" +
+	"\x10OrganizationItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\x12\x19\n" +
+	"\border_no\x18\x04 \x01(\x05R\aorderNo\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x1f\n" +
+	"\vcreate_time\x18\a \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\b \x01(\tR\n" +
+	"updateTime\x12!\n" +
+	"\fmember_count\x18\t \x01(\x03R\vmemberCount\x12\x1d\n" +
+	"\n" +
+	"dept_count\x18\n" +
+	" \x01(\x03R\tdeptCount\"n\n" +
+	"\x18GetOrganizationListReply\x12<\n" +
+	"\x05items\x18\x01 \x03(\v2&.api.admin.service.v1.OrganizationItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"$\n" +
+	"\x12DeleteOrganization\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"H\n" +
+	"\x1dGetOrganizationMembersRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"\x98\x02\n" +
+	"\x16OrganizationMemberItem\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x14\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email\x12\x16\n" +
+	"\x06avatar\x18\x05 \x01(\tR\x06avatar\x12\x1f\n" +
+	"\vuser_status\x18\x06 \x01(\x05R\n" +
+	"userStatus\x12#\n" +
+	"\rmember_status\x18\a \x01(\x05R\fmemberStatus\x12\x18\n" +
+	"\aprimary\x18\b \x01(\bR\aprimary\x12\x1f\n" +
+	"\vcreate_time\x18\t \x01(\tR\n" +
+	"createTime\"w\n" +
+	"\x1bGetOrganizationMembersReply\x12B\n" +
+	"\x05items\x18\x01 \x03(\v2,.api.admin.service.v1.OrganizationMemberItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"d\n" +
+	"\x1eSaveOrganizationMembersRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x12\x19\n" +
+	"\buser_ids\x18\x02 \x03(\tR\auserIds\"P\n" +
+	"%GetOrganizationPermissionScopeRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"\x8f\x01\n" +
+	"&SaveOrganizationPermissionScopeRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x12\x19\n" +
+	"\bmenu_ids\x18\x02 \x03(\x05R\amenuIds\x12!\n" +
+	"\fresource_ids\x18\x03 \x03(\tR\vresourceIds\"\x89\x01\n" +
+	" OrganizationPermissionScopeReply\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x12\x19\n" +
+	"\bmenu_ids\x18\x02 \x03(\x05R\amenuIds\x12!\n" +
+	"\fresource_ids\x18\x03 \x03(\tR\vresourceIds\"R\n" +
+	"'GetOrganizationPermissionCatalogRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"\xa8\x02\n" +
+	"\"OrganizationPermissionCatalogReply\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\x12;\n" +
+	"\x05menus\x18\x02 \x03(\v2%.api.admin.service.v1.SysMenuListItemR\x05menus\x12D\n" +
+	"\tresources\x18\x03 \x03(\v2&.api.admin.service.v1.ResourceListItemR\tresources\x12&\n" +
+	"\x0fscoped_menu_ids\x18\x04 \x03(\x05R\rscopedMenuIds\x12.\n" +
+	"\x13scoped_resource_ids\x18\x05 \x03(\tR\x11scopedResourceIds\"\xf3\x01\n" +
+	"\x12MyOrganizationItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\x12\x19\n" +
+	"\border_no\x18\x04 \x01(\x05R\aorderNo\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x18\n" +
+	"\acurrent\x18\a \x01(\bR\acurrent\x12\x1f\n" +
+	"\vcreate_time\x18\b \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\t \x01(\tR\n" +
+	"updateTime\"\x91\x01\n" +
+	"\x17GetMyOrganizationsReply\x12>\n" +
+	"\x05items\x18\x01 \x03(\v2(.api.admin.service.v1.MyOrganizationItemR\x05items\x126\n" +
+	"\x17current_organization_id\x18\x02 \x01(\tR\x15currentOrganizationId\"K\n" +
+	" SwitchCurrentOrganizationRequest\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"\x96\x01\n" +
+	"\x18CurrentOrganizationReply\x12B\n" +
+	"\acurrent\x18\x01 \x01(\v2(.api.admin.service.v1.MyOrganizationItemR\acurrent\x126\n" +
+	"\x17current_organization_id\x18\x02 \x01(\tR\x15currentOrganizationId\"<\n" +
+	"\x11GetDeptListParams\x12'\n" +
+	"\x0forganization_id\x18\x01 \x01(\tR\x0eorganizationId\"\x9f\x02\n" +
 	"\fDeptListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03pid\x18\x02 \x01(\tR\x03pid\x12\x12\n" +
@@ -4048,22 +5514,24 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x06remark\x18\x05 \x01(\tR\x06remark\x12\x16\n" +
 	"\x06status\x18\x06 \x01(\x05R\x06status\x12\x1f\n" +
 	"\vcreate_time\x18\a \x01(\tR\n" +
-	"createTime\x12\x10\n" +
-	"\x03dom\x18\t \x01(\x03R\x03dom\x12>\n" +
+	"createTime\x12>\n" +
 	"\bchildren\x18\n" +
-	" \x03(\v2\".api.admin.service.v1.DeptListItemR\bchildren\"\x1c\n" +
+	" \x03(\v2\".api.admin.service.v1.DeptListItemR\bchildren\x12'\n" +
+	"\x0forganization_id\x18\v \x01(\tR\x0eorganizationIdJ\x04\b\t\x10\n" +
+	"\"\x1c\n" +
 	"\n" +
 	"DeleteDept\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"b\n" +
 	"\x10GetDeptListReply\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".api.admin.service.v1.DeptListItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\x95\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xbe\x01\n" +
 	"\x0eRolePageParams\x12!\n" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\x03R\x06status\x12\x17\n" +
-	"\adept_id\x18\x05 \x01(\tR\x06deptId\"\x93\x02\n" +
+	"\adept_id\x18\x05 \x01(\tR\x06deptId\x12'\n" +
+	"\x0forganization_id\x18\x06 \x01(\tR\x0eorganizationId\"\x8a\x03\n" +
 	"\fRoleListItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
@@ -4076,7 +5544,11 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\vpermissions\x18\b \x03(\x05R\vpermissions\x12\x12\n" +
 	"\x04dept\x18\t \x01(\tR\x04dept\x12'\n" +
 	"\x0fapi_permissions\x18\n" +
-	" \x03(\tR\x0eapiPermissions\"h\n" +
+	" \x03(\tR\x0eapiPermissions\x12'\n" +
+	"\x0forganization_id\x18\v \x01(\tR\x0eorganizationId\x12\x1d\n" +
+	"\n" +
+	"data_scope\x18\f \x01(\tR\tdataScope\x12-\n" +
+	"\x13data_scope_dept_ids\x18\r \x03(\x03R\x10dataScopeDeptIds\"h\n" +
 	"\x16GetRoleListByPageReply\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".api.admin.service.v1.RoleListItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\x1c\n" +
@@ -4156,9 +5628,10 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\arole_id\x18\x01 \x01(\x03R\x06roleId\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value\"Z\n" +
 	"\x16ResolveRoleValuesReply\x12@\n" +
-	"\x05items\x18\x01 \x03(\v2*.api.admin.service.v1.ResolveRoleValueItemR\x05items\"4\n" +
+	"\x05items\x18\x01 \x03(\v2*.api.admin.service.v1.ResolveRoleValueItemR\x05items\"]\n" +
 	"\x19GetUserRoleBindingRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"\xb4\x01\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
+	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"\xdd\x01\n" +
 	"\x13UserRoleBindingItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x17\n" +
@@ -4167,11 +5640,29 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\x05 \x01(\tR\n" +
 	"updateTime\x12\x19\n" +
-	"\brole_ids\x18\x06 \x03(\x03R\aroleIds\"\\\n" +
+	"\brole_ids\x18\x06 \x03(\x03R\aroleIds\x12'\n" +
+	"\x0forganization_id\x18\a \x01(\tR\x0eorganizationId\"\\\n" +
 	"\x19ListUserRoleBindingsReply\x12?\n" +
-	"\x05items\x18\x01 \x03(\v2).api.admin.service.v1.UserRoleBindingItemR\x05items\"7\n" +
+	"\x05items\x18\x01 \x03(\v2).api.admin.service.v1.UserRoleBindingItemR\x05items\"`\n" +
 	"\x1cDeleteUserRoleBindingRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"A\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
+	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"]\n" +
+	"\x19GetUserDeptBindingRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
+	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"\xdf\x01\n" +
+	"\x13UserDeptBindingItem\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x17\n" +
+	"\adept_id\x18\x03 \x01(\tR\x06deptId\x12\x1b\n" +
+	"\tdept_name\x18\x04 \x01(\tR\bdeptName\x12\x1f\n" +
+	"\vcreate_time\x18\x05 \x01(\tR\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\x06 \x01(\tR\n" +
+	"updateTime\x12'\n" +
+	"\x0forganization_id\x18\a \x01(\tR\x0eorganizationId\"`\n" +
+	"\x1cDeleteUserDeptBindingRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
+	"\x0forganization_id\x18\x02 \x01(\tR\x0eorganizationId\"A\n" +
 	"\n" +
 	"MenuParams\x12\x1b\n" +
 	"\tmenu_name\x18\x01 \x01(\tR\bmenuName\x12\x16\n" +
@@ -4436,7 +5927,7 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"res_status\x18\x14 \x01(\bR\tresStatus\x12\x14\n" +
 	"\x05stack\x18\x15 \x01(\tR\x05stack\x12\x1f\n" +
 	"\vcreate_time\x18\x16 \x01(\tR\n" +
-	"createTime2\xad%\n" +
+	"createTime2\xfb9\n" +
 	"\fAdminService\x12~\n" +
 	"\vGetRoleList\x12$.api.admin.service.v1.RolePageParams\x1a,.api.admin.service.v1.GetRoleListByPageReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/roles\x12q\n" +
 	"\aAddRole\x12\".api.admin.service.v1.RoleListItem\x1a\".api.admin.service.v1.RoleListItem\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin-api/v1/roles\x12y\n" +
@@ -4459,8 +5950,23 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\x12GetUserRoleBinding\x12/.api.admin.service.v1.GetUserRoleBindingRequest\x1a).api.admin.service.v1.UserRoleBindingItem\"2\x82\xd3\xe4\x93\x02,\x12*/admin-api/v1/user-role-bindings/{user_id}\x12\x89\x01\n" +
 	"\x14ListUserRoleBindings\x12\x16.google.protobuf.Empty\x1a/.api.admin.service.v1.ListUserRoleBindingsReply\"(\x82\xd3\xe4\x93\x02\"\x12 /admin-api/v1/user-role-bindings\x12\xa4\x01\n" +
 	"\x15UpsertUserRoleBinding\x12).api.admin.service.v1.UserRoleBindingItem\x1a).api.admin.service.v1.UserRoleBindingItem\"5\x82\xd3\xe4\x93\x02/:\x01*\x1a*/admin-api/v1/user-role-bindings/{user_id}\x12\x97\x01\n" +
-	"\x15DeleteUserRoleBinding\x122.api.admin.service.v1.DeleteUserRoleBindingRequest\x1a\x16.google.protobuf.Empty\"2\x82\xd3\xe4\x93\x02,**/admin-api/v1/user-role-bindings/{user_id}\x12j\n" +
-	"\vGetDeptList\x12\x16.google.protobuf.Empty\x1a&.api.admin.service.v1.GetDeptListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/depts\x12q\n" +
+	"\x15DeleteUserRoleBinding\x122.api.admin.service.v1.DeleteUserRoleBindingRequest\x1a\x16.google.protobuf.Empty\"2\x82\xd3\xe4\x93\x02,**/admin-api/v1/user-role-bindings/{user_id}\x12\xa4\x01\n" +
+	"\x12GetUserDeptBinding\x12/.api.admin.service.v1.GetUserDeptBindingRequest\x1a).api.admin.service.v1.UserDeptBindingItem\"2\x82\xd3\xe4\x93\x02,\x12*/admin-api/v1/user-dept-bindings/{user_id}\x12\xa4\x01\n" +
+	"\x15UpsertUserDeptBinding\x12).api.admin.service.v1.UserDeptBindingItem\x1a).api.admin.service.v1.UserDeptBindingItem\"5\x82\xd3\xe4\x93\x02/:\x01*\x1a*/admin-api/v1/user-dept-bindings/{user_id}\x12\x97\x01\n" +
+	"\x15DeleteUserDeptBinding\x122.api.admin.service.v1.DeleteUserDeptBindingRequest\x1a\x16.google.protobuf.Empty\"2\x82\xd3\xe4\x93\x02,**/admin-api/v1/user-dept-bindings/{user_id}\x12\x9b\x01\n" +
+	"\x13GetOrganizationList\x12/.api.admin.service.v1.GetOrganizationListParams\x1a..api.admin.service.v1.GetOrganizationListReply\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/admin-api/v1/organizations\x12\x89\x01\n" +
+	"\x0fAddOrganization\x12&.api.admin.service.v1.OrganizationItem\x1a&.api.admin.service.v1.OrganizationItem\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/admin-api/v1/organizations\x12\x91\x01\n" +
+	"\x12UpdateOrganization\x12&.api.admin.service.v1.OrganizationItem\x1a&.api.admin.service.v1.OrganizationItem\"+\x82\xd3\xe4\x93\x02%:\x01*\x1a /admin-api/v1/organizations/{id}\x12}\n" +
+	"\x0fDelOrganization\x12(.api.admin.service.v1.DeleteOrganization\x1a\x16.google.protobuf.Empty\"(\x82\xd3\xe4\x93\x02\"* /admin-api/v1/organizations/{id}\x12\xbf\x01\n" +
+	"\x16GetOrganizationMembers\x123.api.admin.service.v1.GetOrganizationMembersRequest\x1a1.api.admin.service.v1.GetOrganizationMembersReply\"=\x82\xd3\xe4\x93\x027\x125/admin-api/v1/organizations/{organization_id}/members\x12\xc4\x01\n" +
+	"\x17SaveOrganizationMembers\x124.api.admin.service.v1.SaveOrganizationMembersRequest\x1a1.api.admin.service.v1.GetOrganizationMembersReply\"@\x82\xd3\xe4\x93\x02::\x01*\x1a5/admin-api/v1/organizations/{organization_id}/members\x12\xdd\x01\n" +
+	"\x1eGetOrganizationPermissionScope\x12;.api.admin.service.v1.GetOrganizationPermissionScopeRequest\x1a6.api.admin.service.v1.OrganizationPermissionScopeReply\"F\x82\xd3\xe4\x93\x02@\x12>/admin-api/v1/organizations/{organization_id}/permission-scope\x12\xe2\x01\n" +
+	"\x1fSaveOrganizationPermissionScope\x12<.api.admin.service.v1.SaveOrganizationPermissionScopeRequest\x1a6.api.admin.service.v1.OrganizationPermissionScopeReply\"I\x82\xd3\xe4\x93\x02C:\x01*\x1a>/admin-api/v1/organizations/{organization_id}/permission-scope\x12\xa1\x01\n" +
+	"\x1bGetCurrentPermissionCatalog\x12\x16.google.protobuf.Empty\x1a8.api.admin.service.v1.OrganizationPermissionCatalogReply\"0\x82\xd3\xe4\x93\x02*\x12(/admin-api/v1/permission-catalog/current\x12\xe5\x01\n" +
+	" GetOrganizationPermissionCatalog\x12=.api.admin.service.v1.GetOrganizationPermissionCatalogRequest\x1a8.api.admin.service.v1.OrganizationPermissionCatalogReply\"H\x82\xd3\xe4\x93\x02B\x12@/admin-api/v1/organizations/{organization_id}/permission-catalog\x12\x83\x01\n" +
+	"\x12GetMyOrganizations\x12\x16.google.protobuf.Empty\x1a-.api.admin.service.v1.GetMyOrganizationsReply\"&\x82\xd3\xe4\x93\x02 \x12\x1e/admin-api/v1/my/organizations\x12\xb5\x01\n" +
+	"\x19SwitchCurrentOrganization\x126.api.admin.service.v1.SwitchCurrentOrganizationRequest\x1a..api.admin.service.v1.CurrentOrganizationReply\"0\x82\xd3\xe4\x93\x02*:\x01*\x1a%/admin-api/v1/my/current-organization\x12{\n" +
+	"\vGetDeptList\x12'.api.admin.service.v1.GetDeptListParams\x1a&.api.admin.service.v1.GetDeptListReply\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/admin-api/v1/depts\x12q\n" +
 	"\aAddDept\x12\".api.admin.service.v1.DeptListItem\x1a\".api.admin.service.v1.DeptListItem\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/admin-api/v1/depts\x12y\n" +
 	"\n" +
 	"UpdateDept\x12\".api.admin.service.v1.DeptListItem\x1a\".api.admin.service.v1.DeptListItem\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/admin-api/v1/depts/{id}\x12e\n" +
@@ -4497,169 +6003,226 @@ func file_admin_service_v1_admin_proto_rawDescGZIP() []byte {
 	return file_admin_service_v1_admin_proto_rawDescData
 }
 
-var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
+var file_admin_service_v1_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 74)
 var file_admin_service_v1_admin_proto_goTypes = []any{
-	(*DeptListItem)(nil),                       // 0: api.admin.service.v1.DeptListItem
-	(*DeleteDept)(nil),                         // 1: api.admin.service.v1.DeleteDept
-	(*GetDeptListReply)(nil),                   // 2: api.admin.service.v1.GetDeptListReply
-	(*RolePageParams)(nil),                     // 3: api.admin.service.v1.RolePageParams
-	(*RoleListItem)(nil),                       // 4: api.admin.service.v1.RoleListItem
-	(*GetRoleListByPageReply)(nil),             // 5: api.admin.service.v1.GetRoleListByPageReply
-	(*DeleteRole)(nil),                         // 6: api.admin.service.v1.DeleteRole
-	(*GetApiPageParams)(nil),                   // 7: api.admin.service.v1.GetApiPageParams
-	(*ApiListItem)(nil),                        // 8: api.admin.service.v1.ApiListItem
-	(*GetApiListByPageReply)(nil),              // 9: api.admin.service.v1.GetApiListByPageReply
-	(*DeleteApi)(nil),                          // 10: api.admin.service.v1.DeleteApi
-	(*GetResourcePageParams)(nil),              // 11: api.admin.service.v1.GetResourcePageParams
-	(*ResourceListItem)(nil),                   // 12: api.admin.service.v1.ResourceListItem
-	(*GetResourceListByPageReply)(nil),         // 13: api.admin.service.v1.GetResourceListByPageReply
-	(*DeleteResource)(nil),                     // 14: api.admin.service.v1.DeleteResource
-	(*AuthRoleResourceItem)(nil),               // 15: api.admin.service.v1.AuthRoleResourceItem
-	(*AuthRoleItem)(nil),                       // 16: api.admin.service.v1.AuthRoleItem
-	(*GetAuthRoleCatalogReply)(nil),            // 17: api.admin.service.v1.GetAuthRoleCatalogReply
-	(*AuthApiItem)(nil),                        // 18: api.admin.service.v1.AuthApiItem
-	(*GetAuthApiCatalogReply)(nil),             // 19: api.admin.service.v1.GetAuthApiCatalogReply
-	(*GetAuthRoleRequest)(nil),                 // 20: api.admin.service.v1.GetAuthRoleRequest
-	(*ResolveRoleValuesRequest)(nil),           // 21: api.admin.service.v1.ResolveRoleValuesRequest
-	(*ResolveRoleValueItem)(nil),               // 22: api.admin.service.v1.ResolveRoleValueItem
-	(*ResolveRoleValuesReply)(nil),             // 23: api.admin.service.v1.ResolveRoleValuesReply
-	(*GetUserRoleBindingRequest)(nil),          // 24: api.admin.service.v1.GetUserRoleBindingRequest
-	(*UserRoleBindingItem)(nil),                // 25: api.admin.service.v1.UserRoleBindingItem
-	(*ListUserRoleBindingsReply)(nil),          // 26: api.admin.service.v1.ListUserRoleBindingsReply
-	(*DeleteUserRoleBindingRequest)(nil),       // 27: api.admin.service.v1.DeleteUserRoleBindingRequest
-	(*MenuParams)(nil),                         // 28: api.admin.service.v1.MenuParams
-	(*Meta)(nil),                               // 29: api.admin.service.v1.Meta
-	(*SysMenuListItem)(nil),                    // 30: api.admin.service.v1.SysMenuListItem
-	(*GetSysMenuListReply)(nil),                // 31: api.admin.service.v1.GetSysMenuListReply
-	(*CurrentUserMenuItem)(nil),                // 32: api.admin.service.v1.CurrentUserMenuItem
-	(*GetCurrentUserMenusReply)(nil),           // 33: api.admin.service.v1.GetCurrentUserMenusReply
-	(*MenuRecord)(nil),                         // 34: api.admin.service.v1.MenuRecord
-	(*ListMenusReply)(nil),                     // 35: api.admin.service.v1.ListMenusReply
-	(*WalkRouteItem)(nil),                      // 36: api.admin.service.v1.WalkRouteItem
-	(*GetWalkRouteReply)(nil),                  // 37: api.admin.service.v1.GetWalkRouteReply
-	(*IsMenuNameExistsRequest)(nil),            // 38: api.admin.service.v1.IsMenuNameExistsRequest
-	(*IsMenuNameExistsReply)(nil),              // 39: api.admin.service.v1.IsMenuNameExistsReply
-	(*IsMenuPathExistsRequest)(nil),            // 40: api.admin.service.v1.IsMenuPathExistsRequest
-	(*IsMenuPathExistsReply)(nil),              // 41: api.admin.service.v1.IsMenuPathExistsReply
-	(*DeleteMenuRequest)(nil),                  // 42: api.admin.service.v1.DeleteMenuRequest
-	(*ServiceRegistryItem)(nil),                // 43: api.admin.service.v1.ServiceRegistryItem
-	(*GetServiceRegistryListReply)(nil),        // 44: api.admin.service.v1.GetServiceRegistryListReply
-	(*ProjectionSourceStatusItem)(nil),         // 45: api.admin.service.v1.ProjectionSourceStatusItem
-	(*GetProjectionSourceStatusListReply)(nil), // 46: api.admin.service.v1.GetProjectionSourceStatusListReply
-	(*CreateSysLogRequest)(nil),                // 47: api.admin.service.v1.CreateSysLogRequest
-	(*GetSysLogListParams)(nil),                // 48: api.admin.service.v1.GetSysLogListParams
-	(*SysLogItem)(nil),                         // 49: api.admin.service.v1.SysLogItem
-	(*GetSysLogListReply)(nil),                 // 50: api.admin.service.v1.GetSysLogListReply
-	(*GetSysLogInfoParams)(nil),                // 51: api.admin.service.v1.GetSysLogInfoParams
-	(*GetSysLogInfoReply)(nil),                 // 52: api.admin.service.v1.GetSysLogInfoReply
-	(*emptypb.Empty)(nil),                      // 53: google.protobuf.Empty
+	(*GetOrganizationListParams)(nil),               // 0: api.admin.service.v1.GetOrganizationListParams
+	(*OrganizationItem)(nil),                        // 1: api.admin.service.v1.OrganizationItem
+	(*GetOrganizationListReply)(nil),                // 2: api.admin.service.v1.GetOrganizationListReply
+	(*DeleteOrganization)(nil),                      // 3: api.admin.service.v1.DeleteOrganization
+	(*GetOrganizationMembersRequest)(nil),           // 4: api.admin.service.v1.GetOrganizationMembersRequest
+	(*OrganizationMemberItem)(nil),                  // 5: api.admin.service.v1.OrganizationMemberItem
+	(*GetOrganizationMembersReply)(nil),             // 6: api.admin.service.v1.GetOrganizationMembersReply
+	(*SaveOrganizationMembersRequest)(nil),          // 7: api.admin.service.v1.SaveOrganizationMembersRequest
+	(*GetOrganizationPermissionScopeRequest)(nil),   // 8: api.admin.service.v1.GetOrganizationPermissionScopeRequest
+	(*SaveOrganizationPermissionScopeRequest)(nil),  // 9: api.admin.service.v1.SaveOrganizationPermissionScopeRequest
+	(*OrganizationPermissionScopeReply)(nil),        // 10: api.admin.service.v1.OrganizationPermissionScopeReply
+	(*GetOrganizationPermissionCatalogRequest)(nil), // 11: api.admin.service.v1.GetOrganizationPermissionCatalogRequest
+	(*OrganizationPermissionCatalogReply)(nil),      // 12: api.admin.service.v1.OrganizationPermissionCatalogReply
+	(*MyOrganizationItem)(nil),                      // 13: api.admin.service.v1.MyOrganizationItem
+	(*GetMyOrganizationsReply)(nil),                 // 14: api.admin.service.v1.GetMyOrganizationsReply
+	(*SwitchCurrentOrganizationRequest)(nil),        // 15: api.admin.service.v1.SwitchCurrentOrganizationRequest
+	(*CurrentOrganizationReply)(nil),                // 16: api.admin.service.v1.CurrentOrganizationReply
+	(*GetDeptListParams)(nil),                       // 17: api.admin.service.v1.GetDeptListParams
+	(*DeptListItem)(nil),                            // 18: api.admin.service.v1.DeptListItem
+	(*DeleteDept)(nil),                              // 19: api.admin.service.v1.DeleteDept
+	(*GetDeptListReply)(nil),                        // 20: api.admin.service.v1.GetDeptListReply
+	(*RolePageParams)(nil),                          // 21: api.admin.service.v1.RolePageParams
+	(*RoleListItem)(nil),                            // 22: api.admin.service.v1.RoleListItem
+	(*GetRoleListByPageReply)(nil),                  // 23: api.admin.service.v1.GetRoleListByPageReply
+	(*DeleteRole)(nil),                              // 24: api.admin.service.v1.DeleteRole
+	(*GetApiPageParams)(nil),                        // 25: api.admin.service.v1.GetApiPageParams
+	(*ApiListItem)(nil),                             // 26: api.admin.service.v1.ApiListItem
+	(*GetApiListByPageReply)(nil),                   // 27: api.admin.service.v1.GetApiListByPageReply
+	(*DeleteApi)(nil),                               // 28: api.admin.service.v1.DeleteApi
+	(*GetResourcePageParams)(nil),                   // 29: api.admin.service.v1.GetResourcePageParams
+	(*ResourceListItem)(nil),                        // 30: api.admin.service.v1.ResourceListItem
+	(*GetResourceListByPageReply)(nil),              // 31: api.admin.service.v1.GetResourceListByPageReply
+	(*DeleteResource)(nil),                          // 32: api.admin.service.v1.DeleteResource
+	(*AuthRoleResourceItem)(nil),                    // 33: api.admin.service.v1.AuthRoleResourceItem
+	(*AuthRoleItem)(nil),                            // 34: api.admin.service.v1.AuthRoleItem
+	(*GetAuthRoleCatalogReply)(nil),                 // 35: api.admin.service.v1.GetAuthRoleCatalogReply
+	(*AuthApiItem)(nil),                             // 36: api.admin.service.v1.AuthApiItem
+	(*GetAuthApiCatalogReply)(nil),                  // 37: api.admin.service.v1.GetAuthApiCatalogReply
+	(*GetAuthRoleRequest)(nil),                      // 38: api.admin.service.v1.GetAuthRoleRequest
+	(*ResolveRoleValuesRequest)(nil),                // 39: api.admin.service.v1.ResolveRoleValuesRequest
+	(*ResolveRoleValueItem)(nil),                    // 40: api.admin.service.v1.ResolveRoleValueItem
+	(*ResolveRoleValuesReply)(nil),                  // 41: api.admin.service.v1.ResolveRoleValuesReply
+	(*GetUserRoleBindingRequest)(nil),               // 42: api.admin.service.v1.GetUserRoleBindingRequest
+	(*UserRoleBindingItem)(nil),                     // 43: api.admin.service.v1.UserRoleBindingItem
+	(*ListUserRoleBindingsReply)(nil),               // 44: api.admin.service.v1.ListUserRoleBindingsReply
+	(*DeleteUserRoleBindingRequest)(nil),            // 45: api.admin.service.v1.DeleteUserRoleBindingRequest
+	(*GetUserDeptBindingRequest)(nil),               // 46: api.admin.service.v1.GetUserDeptBindingRequest
+	(*UserDeptBindingItem)(nil),                     // 47: api.admin.service.v1.UserDeptBindingItem
+	(*DeleteUserDeptBindingRequest)(nil),            // 48: api.admin.service.v1.DeleteUserDeptBindingRequest
+	(*MenuParams)(nil),                              // 49: api.admin.service.v1.MenuParams
+	(*Meta)(nil),                                    // 50: api.admin.service.v1.Meta
+	(*SysMenuListItem)(nil),                         // 51: api.admin.service.v1.SysMenuListItem
+	(*GetSysMenuListReply)(nil),                     // 52: api.admin.service.v1.GetSysMenuListReply
+	(*CurrentUserMenuItem)(nil),                     // 53: api.admin.service.v1.CurrentUserMenuItem
+	(*GetCurrentUserMenusReply)(nil),                // 54: api.admin.service.v1.GetCurrentUserMenusReply
+	(*MenuRecord)(nil),                              // 55: api.admin.service.v1.MenuRecord
+	(*ListMenusReply)(nil),                          // 56: api.admin.service.v1.ListMenusReply
+	(*WalkRouteItem)(nil),                           // 57: api.admin.service.v1.WalkRouteItem
+	(*GetWalkRouteReply)(nil),                       // 58: api.admin.service.v1.GetWalkRouteReply
+	(*IsMenuNameExistsRequest)(nil),                 // 59: api.admin.service.v1.IsMenuNameExistsRequest
+	(*IsMenuNameExistsReply)(nil),                   // 60: api.admin.service.v1.IsMenuNameExistsReply
+	(*IsMenuPathExistsRequest)(nil),                 // 61: api.admin.service.v1.IsMenuPathExistsRequest
+	(*IsMenuPathExistsReply)(nil),                   // 62: api.admin.service.v1.IsMenuPathExistsReply
+	(*DeleteMenuRequest)(nil),                       // 63: api.admin.service.v1.DeleteMenuRequest
+	(*ServiceRegistryItem)(nil),                     // 64: api.admin.service.v1.ServiceRegistryItem
+	(*GetServiceRegistryListReply)(nil),             // 65: api.admin.service.v1.GetServiceRegistryListReply
+	(*ProjectionSourceStatusItem)(nil),              // 66: api.admin.service.v1.ProjectionSourceStatusItem
+	(*GetProjectionSourceStatusListReply)(nil),      // 67: api.admin.service.v1.GetProjectionSourceStatusListReply
+	(*CreateSysLogRequest)(nil),                     // 68: api.admin.service.v1.CreateSysLogRequest
+	(*GetSysLogListParams)(nil),                     // 69: api.admin.service.v1.GetSysLogListParams
+	(*SysLogItem)(nil),                              // 70: api.admin.service.v1.SysLogItem
+	(*GetSysLogListReply)(nil),                      // 71: api.admin.service.v1.GetSysLogListReply
+	(*GetSysLogInfoParams)(nil),                     // 72: api.admin.service.v1.GetSysLogInfoParams
+	(*GetSysLogInfoReply)(nil),                      // 73: api.admin.service.v1.GetSysLogInfoReply
+	(*emptypb.Empty)(nil),                           // 74: google.protobuf.Empty
 }
 var file_admin_service_v1_admin_proto_depIdxs = []int32{
-	0,  // 0: api.admin.service.v1.DeptListItem.children:type_name -> api.admin.service.v1.DeptListItem
-	0,  // 1: api.admin.service.v1.GetDeptListReply.items:type_name -> api.admin.service.v1.DeptListItem
-	4,  // 2: api.admin.service.v1.GetRoleListByPageReply.items:type_name -> api.admin.service.v1.RoleListItem
-	8,  // 3: api.admin.service.v1.GetApiListByPageReply.items:type_name -> api.admin.service.v1.ApiListItem
-	12, // 4: api.admin.service.v1.GetResourceListByPageReply.items:type_name -> api.admin.service.v1.ResourceListItem
-	15, // 5: api.admin.service.v1.AuthRoleItem.resources:type_name -> api.admin.service.v1.AuthRoleResourceItem
-	16, // 6: api.admin.service.v1.GetAuthRoleCatalogReply.items:type_name -> api.admin.service.v1.AuthRoleItem
-	18, // 7: api.admin.service.v1.GetAuthApiCatalogReply.items:type_name -> api.admin.service.v1.AuthApiItem
-	22, // 8: api.admin.service.v1.ResolveRoleValuesReply.items:type_name -> api.admin.service.v1.ResolveRoleValueItem
-	25, // 9: api.admin.service.v1.ListUserRoleBindingsReply.items:type_name -> api.admin.service.v1.UserRoleBindingItem
-	29, // 10: api.admin.service.v1.SysMenuListItem.meta:type_name -> api.admin.service.v1.Meta
-	30, // 11: api.admin.service.v1.SysMenuListItem.children:type_name -> api.admin.service.v1.SysMenuListItem
-	30, // 12: api.admin.service.v1.GetSysMenuListReply.items:type_name -> api.admin.service.v1.SysMenuListItem
-	29, // 13: api.admin.service.v1.CurrentUserMenuItem.meta:type_name -> api.admin.service.v1.Meta
-	32, // 14: api.admin.service.v1.CurrentUserMenuItem.children:type_name -> api.admin.service.v1.CurrentUserMenuItem
-	32, // 15: api.admin.service.v1.GetCurrentUserMenusReply.items:type_name -> api.admin.service.v1.CurrentUserMenuItem
-	29, // 16: api.admin.service.v1.MenuRecord.meta:type_name -> api.admin.service.v1.Meta
-	34, // 17: api.admin.service.v1.ListMenusReply.items:type_name -> api.admin.service.v1.MenuRecord
-	36, // 18: api.admin.service.v1.GetWalkRouteReply.items:type_name -> api.admin.service.v1.WalkRouteItem
-	43, // 19: api.admin.service.v1.GetServiceRegistryListReply.items:type_name -> api.admin.service.v1.ServiceRegistryItem
-	45, // 20: api.admin.service.v1.GetProjectionSourceStatusListReply.items:type_name -> api.admin.service.v1.ProjectionSourceStatusItem
-	49, // 21: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
-	3,  // 22: api.admin.service.v1.AdminService.GetRoleList:input_type -> api.admin.service.v1.RolePageParams
-	4,  // 23: api.admin.service.v1.AdminService.AddRole:input_type -> api.admin.service.v1.RoleListItem
-	4,  // 24: api.admin.service.v1.AdminService.UpdateRole:input_type -> api.admin.service.v1.RoleListItem
-	6,  // 25: api.admin.service.v1.AdminService.DelRole:input_type -> api.admin.service.v1.DeleteRole
-	7,  // 26: api.admin.service.v1.AdminService.GetApiList:input_type -> api.admin.service.v1.GetApiPageParams
-	8,  // 27: api.admin.service.v1.AdminService.AddApi:input_type -> api.admin.service.v1.ApiListItem
-	8,  // 28: api.admin.service.v1.AdminService.UpdateApi:input_type -> api.admin.service.v1.ApiListItem
-	10, // 29: api.admin.service.v1.AdminService.DelApi:input_type -> api.admin.service.v1.DeleteApi
-	11, // 30: api.admin.service.v1.AdminService.GetResourceList:input_type -> api.admin.service.v1.GetResourcePageParams
-	12, // 31: api.admin.service.v1.AdminService.AddResource:input_type -> api.admin.service.v1.ResourceListItem
-	12, // 32: api.admin.service.v1.AdminService.UpdateResource:input_type -> api.admin.service.v1.ResourceListItem
-	14, // 33: api.admin.service.v1.AdminService.DelResource:input_type -> api.admin.service.v1.DeleteResource
-	53, // 34: api.admin.service.v1.AdminService.GetAuthRoleCatalog:input_type -> google.protobuf.Empty
-	53, // 35: api.admin.service.v1.AdminService.GetAuthApiCatalog:input_type -> google.protobuf.Empty
-	20, // 36: api.admin.service.v1.AdminService.GetAuthRole:input_type -> api.admin.service.v1.GetAuthRoleRequest
-	21, // 37: api.admin.service.v1.AdminService.ResolveRoleValues:input_type -> api.admin.service.v1.ResolveRoleValuesRequest
-	24, // 38: api.admin.service.v1.AdminService.GetUserRoleBinding:input_type -> api.admin.service.v1.GetUserRoleBindingRequest
-	53, // 39: api.admin.service.v1.AdminService.ListUserRoleBindings:input_type -> google.protobuf.Empty
-	25, // 40: api.admin.service.v1.AdminService.UpsertUserRoleBinding:input_type -> api.admin.service.v1.UserRoleBindingItem
-	27, // 41: api.admin.service.v1.AdminService.DeleteUserRoleBinding:input_type -> api.admin.service.v1.DeleteUserRoleBindingRequest
-	53, // 42: api.admin.service.v1.AdminService.GetDeptList:input_type -> google.protobuf.Empty
-	0,  // 43: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
-	0,  // 44: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
-	1,  // 45: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
-	53, // 46: api.admin.service.v1.AdminService.GetCurrentUserMenus:input_type -> google.protobuf.Empty
-	28, // 47: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
-	53, // 48: api.admin.service.v1.AdminService.ListMenus:input_type -> google.protobuf.Empty
-	53, // 49: api.admin.service.v1.AdminService.GetWalkRoute:input_type -> google.protobuf.Empty
-	53, // 50: api.admin.service.v1.AdminService.GetSelfWalkRoute:input_type -> google.protobuf.Empty
-	38, // 51: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
-	40, // 52: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
-	30, // 53: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	30, // 54: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
-	42, // 55: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
-	53, // 56: api.admin.service.v1.AdminService.GetServiceRegistryList:input_type -> google.protobuf.Empty
-	53, // 57: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:input_type -> google.protobuf.Empty
-	47, // 58: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
-	48, // 59: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
-	51, // 60: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
-	5,  // 61: api.admin.service.v1.AdminService.GetRoleList:output_type -> api.admin.service.v1.GetRoleListByPageReply
-	4,  // 62: api.admin.service.v1.AdminService.AddRole:output_type -> api.admin.service.v1.RoleListItem
-	4,  // 63: api.admin.service.v1.AdminService.UpdateRole:output_type -> api.admin.service.v1.RoleListItem
-	53, // 64: api.admin.service.v1.AdminService.DelRole:output_type -> google.protobuf.Empty
-	9,  // 65: api.admin.service.v1.AdminService.GetApiList:output_type -> api.admin.service.v1.GetApiListByPageReply
-	8,  // 66: api.admin.service.v1.AdminService.AddApi:output_type -> api.admin.service.v1.ApiListItem
-	8,  // 67: api.admin.service.v1.AdminService.UpdateApi:output_type -> api.admin.service.v1.ApiListItem
-	53, // 68: api.admin.service.v1.AdminService.DelApi:output_type -> google.protobuf.Empty
-	13, // 69: api.admin.service.v1.AdminService.GetResourceList:output_type -> api.admin.service.v1.GetResourceListByPageReply
-	12, // 70: api.admin.service.v1.AdminService.AddResource:output_type -> api.admin.service.v1.ResourceListItem
-	12, // 71: api.admin.service.v1.AdminService.UpdateResource:output_type -> api.admin.service.v1.ResourceListItem
-	53, // 72: api.admin.service.v1.AdminService.DelResource:output_type -> google.protobuf.Empty
-	17, // 73: api.admin.service.v1.AdminService.GetAuthRoleCatalog:output_type -> api.admin.service.v1.GetAuthRoleCatalogReply
-	19, // 74: api.admin.service.v1.AdminService.GetAuthApiCatalog:output_type -> api.admin.service.v1.GetAuthApiCatalogReply
-	16, // 75: api.admin.service.v1.AdminService.GetAuthRole:output_type -> api.admin.service.v1.AuthRoleItem
-	23, // 76: api.admin.service.v1.AdminService.ResolveRoleValues:output_type -> api.admin.service.v1.ResolveRoleValuesReply
-	25, // 77: api.admin.service.v1.AdminService.GetUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
-	26, // 78: api.admin.service.v1.AdminService.ListUserRoleBindings:output_type -> api.admin.service.v1.ListUserRoleBindingsReply
-	25, // 79: api.admin.service.v1.AdminService.UpsertUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
-	53, // 80: api.admin.service.v1.AdminService.DeleteUserRoleBinding:output_type -> google.protobuf.Empty
-	2,  // 81: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
-	0,  // 82: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
-	0,  // 83: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
-	53, // 84: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
-	33, // 85: api.admin.service.v1.AdminService.GetCurrentUserMenus:output_type -> api.admin.service.v1.GetCurrentUserMenusReply
-	31, // 86: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
-	35, // 87: api.admin.service.v1.AdminService.ListMenus:output_type -> api.admin.service.v1.ListMenusReply
-	37, // 88: api.admin.service.v1.AdminService.GetWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
-	37, // 89: api.admin.service.v1.AdminService.GetSelfWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
-	39, // 90: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
-	41, // 91: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
-	53, // 92: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
-	53, // 93: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
-	53, // 94: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
-	44, // 95: api.admin.service.v1.AdminService.GetServiceRegistryList:output_type -> api.admin.service.v1.GetServiceRegistryListReply
-	46, // 96: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:output_type -> api.admin.service.v1.GetProjectionSourceStatusListReply
-	53, // 97: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
-	50, // 98: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
-	52, // 99: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
-	61, // [61:100] is the sub-list for method output_type
-	22, // [22:61] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	1,  // 0: api.admin.service.v1.GetOrganizationListReply.items:type_name -> api.admin.service.v1.OrganizationItem
+	5,  // 1: api.admin.service.v1.GetOrganizationMembersReply.items:type_name -> api.admin.service.v1.OrganizationMemberItem
+	51, // 2: api.admin.service.v1.OrganizationPermissionCatalogReply.menus:type_name -> api.admin.service.v1.SysMenuListItem
+	30, // 3: api.admin.service.v1.OrganizationPermissionCatalogReply.resources:type_name -> api.admin.service.v1.ResourceListItem
+	13, // 4: api.admin.service.v1.GetMyOrganizationsReply.items:type_name -> api.admin.service.v1.MyOrganizationItem
+	13, // 5: api.admin.service.v1.CurrentOrganizationReply.current:type_name -> api.admin.service.v1.MyOrganizationItem
+	18, // 6: api.admin.service.v1.DeptListItem.children:type_name -> api.admin.service.v1.DeptListItem
+	18, // 7: api.admin.service.v1.GetDeptListReply.items:type_name -> api.admin.service.v1.DeptListItem
+	22, // 8: api.admin.service.v1.GetRoleListByPageReply.items:type_name -> api.admin.service.v1.RoleListItem
+	26, // 9: api.admin.service.v1.GetApiListByPageReply.items:type_name -> api.admin.service.v1.ApiListItem
+	30, // 10: api.admin.service.v1.GetResourceListByPageReply.items:type_name -> api.admin.service.v1.ResourceListItem
+	33, // 11: api.admin.service.v1.AuthRoleItem.resources:type_name -> api.admin.service.v1.AuthRoleResourceItem
+	34, // 12: api.admin.service.v1.GetAuthRoleCatalogReply.items:type_name -> api.admin.service.v1.AuthRoleItem
+	36, // 13: api.admin.service.v1.GetAuthApiCatalogReply.items:type_name -> api.admin.service.v1.AuthApiItem
+	40, // 14: api.admin.service.v1.ResolveRoleValuesReply.items:type_name -> api.admin.service.v1.ResolveRoleValueItem
+	43, // 15: api.admin.service.v1.ListUserRoleBindingsReply.items:type_name -> api.admin.service.v1.UserRoleBindingItem
+	50, // 16: api.admin.service.v1.SysMenuListItem.meta:type_name -> api.admin.service.v1.Meta
+	51, // 17: api.admin.service.v1.SysMenuListItem.children:type_name -> api.admin.service.v1.SysMenuListItem
+	51, // 18: api.admin.service.v1.GetSysMenuListReply.items:type_name -> api.admin.service.v1.SysMenuListItem
+	50, // 19: api.admin.service.v1.CurrentUserMenuItem.meta:type_name -> api.admin.service.v1.Meta
+	53, // 20: api.admin.service.v1.CurrentUserMenuItem.children:type_name -> api.admin.service.v1.CurrentUserMenuItem
+	53, // 21: api.admin.service.v1.GetCurrentUserMenusReply.items:type_name -> api.admin.service.v1.CurrentUserMenuItem
+	50, // 22: api.admin.service.v1.MenuRecord.meta:type_name -> api.admin.service.v1.Meta
+	55, // 23: api.admin.service.v1.ListMenusReply.items:type_name -> api.admin.service.v1.MenuRecord
+	57, // 24: api.admin.service.v1.GetWalkRouteReply.items:type_name -> api.admin.service.v1.WalkRouteItem
+	64, // 25: api.admin.service.v1.GetServiceRegistryListReply.items:type_name -> api.admin.service.v1.ServiceRegistryItem
+	66, // 26: api.admin.service.v1.GetProjectionSourceStatusListReply.items:type_name -> api.admin.service.v1.ProjectionSourceStatusItem
+	70, // 27: api.admin.service.v1.GetSysLogListReply.items:type_name -> api.admin.service.v1.SysLogItem
+	21, // 28: api.admin.service.v1.AdminService.GetRoleList:input_type -> api.admin.service.v1.RolePageParams
+	22, // 29: api.admin.service.v1.AdminService.AddRole:input_type -> api.admin.service.v1.RoleListItem
+	22, // 30: api.admin.service.v1.AdminService.UpdateRole:input_type -> api.admin.service.v1.RoleListItem
+	24, // 31: api.admin.service.v1.AdminService.DelRole:input_type -> api.admin.service.v1.DeleteRole
+	25, // 32: api.admin.service.v1.AdminService.GetApiList:input_type -> api.admin.service.v1.GetApiPageParams
+	26, // 33: api.admin.service.v1.AdminService.AddApi:input_type -> api.admin.service.v1.ApiListItem
+	26, // 34: api.admin.service.v1.AdminService.UpdateApi:input_type -> api.admin.service.v1.ApiListItem
+	28, // 35: api.admin.service.v1.AdminService.DelApi:input_type -> api.admin.service.v1.DeleteApi
+	29, // 36: api.admin.service.v1.AdminService.GetResourceList:input_type -> api.admin.service.v1.GetResourcePageParams
+	30, // 37: api.admin.service.v1.AdminService.AddResource:input_type -> api.admin.service.v1.ResourceListItem
+	30, // 38: api.admin.service.v1.AdminService.UpdateResource:input_type -> api.admin.service.v1.ResourceListItem
+	32, // 39: api.admin.service.v1.AdminService.DelResource:input_type -> api.admin.service.v1.DeleteResource
+	74, // 40: api.admin.service.v1.AdminService.GetAuthRoleCatalog:input_type -> google.protobuf.Empty
+	74, // 41: api.admin.service.v1.AdminService.GetAuthApiCatalog:input_type -> google.protobuf.Empty
+	38, // 42: api.admin.service.v1.AdminService.GetAuthRole:input_type -> api.admin.service.v1.GetAuthRoleRequest
+	39, // 43: api.admin.service.v1.AdminService.ResolveRoleValues:input_type -> api.admin.service.v1.ResolveRoleValuesRequest
+	42, // 44: api.admin.service.v1.AdminService.GetUserRoleBinding:input_type -> api.admin.service.v1.GetUserRoleBindingRequest
+	74, // 45: api.admin.service.v1.AdminService.ListUserRoleBindings:input_type -> google.protobuf.Empty
+	43, // 46: api.admin.service.v1.AdminService.UpsertUserRoleBinding:input_type -> api.admin.service.v1.UserRoleBindingItem
+	45, // 47: api.admin.service.v1.AdminService.DeleteUserRoleBinding:input_type -> api.admin.service.v1.DeleteUserRoleBindingRequest
+	46, // 48: api.admin.service.v1.AdminService.GetUserDeptBinding:input_type -> api.admin.service.v1.GetUserDeptBindingRequest
+	47, // 49: api.admin.service.v1.AdminService.UpsertUserDeptBinding:input_type -> api.admin.service.v1.UserDeptBindingItem
+	48, // 50: api.admin.service.v1.AdminService.DeleteUserDeptBinding:input_type -> api.admin.service.v1.DeleteUserDeptBindingRequest
+	0,  // 51: api.admin.service.v1.AdminService.GetOrganizationList:input_type -> api.admin.service.v1.GetOrganizationListParams
+	1,  // 52: api.admin.service.v1.AdminService.AddOrganization:input_type -> api.admin.service.v1.OrganizationItem
+	1,  // 53: api.admin.service.v1.AdminService.UpdateOrganization:input_type -> api.admin.service.v1.OrganizationItem
+	3,  // 54: api.admin.service.v1.AdminService.DelOrganization:input_type -> api.admin.service.v1.DeleteOrganization
+	4,  // 55: api.admin.service.v1.AdminService.GetOrganizationMembers:input_type -> api.admin.service.v1.GetOrganizationMembersRequest
+	7,  // 56: api.admin.service.v1.AdminService.SaveOrganizationMembers:input_type -> api.admin.service.v1.SaveOrganizationMembersRequest
+	8,  // 57: api.admin.service.v1.AdminService.GetOrganizationPermissionScope:input_type -> api.admin.service.v1.GetOrganizationPermissionScopeRequest
+	9,  // 58: api.admin.service.v1.AdminService.SaveOrganizationPermissionScope:input_type -> api.admin.service.v1.SaveOrganizationPermissionScopeRequest
+	74, // 59: api.admin.service.v1.AdminService.GetCurrentPermissionCatalog:input_type -> google.protobuf.Empty
+	11, // 60: api.admin.service.v1.AdminService.GetOrganizationPermissionCatalog:input_type -> api.admin.service.v1.GetOrganizationPermissionCatalogRequest
+	74, // 61: api.admin.service.v1.AdminService.GetMyOrganizations:input_type -> google.protobuf.Empty
+	15, // 62: api.admin.service.v1.AdminService.SwitchCurrentOrganization:input_type -> api.admin.service.v1.SwitchCurrentOrganizationRequest
+	17, // 63: api.admin.service.v1.AdminService.GetDeptList:input_type -> api.admin.service.v1.GetDeptListParams
+	18, // 64: api.admin.service.v1.AdminService.AddDept:input_type -> api.admin.service.v1.DeptListItem
+	18, // 65: api.admin.service.v1.AdminService.UpdateDept:input_type -> api.admin.service.v1.DeptListItem
+	19, // 66: api.admin.service.v1.AdminService.DelDept:input_type -> api.admin.service.v1.DeleteDept
+	74, // 67: api.admin.service.v1.AdminService.GetCurrentUserMenus:input_type -> google.protobuf.Empty
+	49, // 68: api.admin.service.v1.AdminService.GetSysMenuList:input_type -> api.admin.service.v1.MenuParams
+	74, // 69: api.admin.service.v1.AdminService.ListMenus:input_type -> google.protobuf.Empty
+	74, // 70: api.admin.service.v1.AdminService.GetWalkRoute:input_type -> google.protobuf.Empty
+	74, // 71: api.admin.service.v1.AdminService.GetSelfWalkRoute:input_type -> google.protobuf.Empty
+	59, // 72: api.admin.service.v1.AdminService.IsMenuNameExists:input_type -> api.admin.service.v1.IsMenuNameExistsRequest
+	61, // 73: api.admin.service.v1.AdminService.IsMenuPathExists:input_type -> api.admin.service.v1.IsMenuPathExistsRequest
+	51, // 74: api.admin.service.v1.AdminService.CreateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	51, // 75: api.admin.service.v1.AdminService.UpdateMenu:input_type -> api.admin.service.v1.SysMenuListItem
+	63, // 76: api.admin.service.v1.AdminService.DeleteMenu:input_type -> api.admin.service.v1.DeleteMenuRequest
+	74, // 77: api.admin.service.v1.AdminService.GetServiceRegistryList:input_type -> google.protobuf.Empty
+	74, // 78: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:input_type -> google.protobuf.Empty
+	68, // 79: api.admin.service.v1.AdminService.CreateSysLog:input_type -> api.admin.service.v1.CreateSysLogRequest
+	69, // 80: api.admin.service.v1.AdminService.GetSysLogList:input_type -> api.admin.service.v1.GetSysLogListParams
+	72, // 81: api.admin.service.v1.AdminService.GetSysLogInfo:input_type -> api.admin.service.v1.GetSysLogInfoParams
+	23, // 82: api.admin.service.v1.AdminService.GetRoleList:output_type -> api.admin.service.v1.GetRoleListByPageReply
+	22, // 83: api.admin.service.v1.AdminService.AddRole:output_type -> api.admin.service.v1.RoleListItem
+	22, // 84: api.admin.service.v1.AdminService.UpdateRole:output_type -> api.admin.service.v1.RoleListItem
+	74, // 85: api.admin.service.v1.AdminService.DelRole:output_type -> google.protobuf.Empty
+	27, // 86: api.admin.service.v1.AdminService.GetApiList:output_type -> api.admin.service.v1.GetApiListByPageReply
+	26, // 87: api.admin.service.v1.AdminService.AddApi:output_type -> api.admin.service.v1.ApiListItem
+	26, // 88: api.admin.service.v1.AdminService.UpdateApi:output_type -> api.admin.service.v1.ApiListItem
+	74, // 89: api.admin.service.v1.AdminService.DelApi:output_type -> google.protobuf.Empty
+	31, // 90: api.admin.service.v1.AdminService.GetResourceList:output_type -> api.admin.service.v1.GetResourceListByPageReply
+	30, // 91: api.admin.service.v1.AdminService.AddResource:output_type -> api.admin.service.v1.ResourceListItem
+	30, // 92: api.admin.service.v1.AdminService.UpdateResource:output_type -> api.admin.service.v1.ResourceListItem
+	74, // 93: api.admin.service.v1.AdminService.DelResource:output_type -> google.protobuf.Empty
+	35, // 94: api.admin.service.v1.AdminService.GetAuthRoleCatalog:output_type -> api.admin.service.v1.GetAuthRoleCatalogReply
+	37, // 95: api.admin.service.v1.AdminService.GetAuthApiCatalog:output_type -> api.admin.service.v1.GetAuthApiCatalogReply
+	34, // 96: api.admin.service.v1.AdminService.GetAuthRole:output_type -> api.admin.service.v1.AuthRoleItem
+	41, // 97: api.admin.service.v1.AdminService.ResolveRoleValues:output_type -> api.admin.service.v1.ResolveRoleValuesReply
+	43, // 98: api.admin.service.v1.AdminService.GetUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
+	44, // 99: api.admin.service.v1.AdminService.ListUserRoleBindings:output_type -> api.admin.service.v1.ListUserRoleBindingsReply
+	43, // 100: api.admin.service.v1.AdminService.UpsertUserRoleBinding:output_type -> api.admin.service.v1.UserRoleBindingItem
+	74, // 101: api.admin.service.v1.AdminService.DeleteUserRoleBinding:output_type -> google.protobuf.Empty
+	47, // 102: api.admin.service.v1.AdminService.GetUserDeptBinding:output_type -> api.admin.service.v1.UserDeptBindingItem
+	47, // 103: api.admin.service.v1.AdminService.UpsertUserDeptBinding:output_type -> api.admin.service.v1.UserDeptBindingItem
+	74, // 104: api.admin.service.v1.AdminService.DeleteUserDeptBinding:output_type -> google.protobuf.Empty
+	2,  // 105: api.admin.service.v1.AdminService.GetOrganizationList:output_type -> api.admin.service.v1.GetOrganizationListReply
+	1,  // 106: api.admin.service.v1.AdminService.AddOrganization:output_type -> api.admin.service.v1.OrganizationItem
+	1,  // 107: api.admin.service.v1.AdminService.UpdateOrganization:output_type -> api.admin.service.v1.OrganizationItem
+	74, // 108: api.admin.service.v1.AdminService.DelOrganization:output_type -> google.protobuf.Empty
+	6,  // 109: api.admin.service.v1.AdminService.GetOrganizationMembers:output_type -> api.admin.service.v1.GetOrganizationMembersReply
+	6,  // 110: api.admin.service.v1.AdminService.SaveOrganizationMembers:output_type -> api.admin.service.v1.GetOrganizationMembersReply
+	10, // 111: api.admin.service.v1.AdminService.GetOrganizationPermissionScope:output_type -> api.admin.service.v1.OrganizationPermissionScopeReply
+	10, // 112: api.admin.service.v1.AdminService.SaveOrganizationPermissionScope:output_type -> api.admin.service.v1.OrganizationPermissionScopeReply
+	12, // 113: api.admin.service.v1.AdminService.GetCurrentPermissionCatalog:output_type -> api.admin.service.v1.OrganizationPermissionCatalogReply
+	12, // 114: api.admin.service.v1.AdminService.GetOrganizationPermissionCatalog:output_type -> api.admin.service.v1.OrganizationPermissionCatalogReply
+	14, // 115: api.admin.service.v1.AdminService.GetMyOrganizations:output_type -> api.admin.service.v1.GetMyOrganizationsReply
+	16, // 116: api.admin.service.v1.AdminService.SwitchCurrentOrganization:output_type -> api.admin.service.v1.CurrentOrganizationReply
+	20, // 117: api.admin.service.v1.AdminService.GetDeptList:output_type -> api.admin.service.v1.GetDeptListReply
+	18, // 118: api.admin.service.v1.AdminService.AddDept:output_type -> api.admin.service.v1.DeptListItem
+	18, // 119: api.admin.service.v1.AdminService.UpdateDept:output_type -> api.admin.service.v1.DeptListItem
+	74, // 120: api.admin.service.v1.AdminService.DelDept:output_type -> google.protobuf.Empty
+	54, // 121: api.admin.service.v1.AdminService.GetCurrentUserMenus:output_type -> api.admin.service.v1.GetCurrentUserMenusReply
+	52, // 122: api.admin.service.v1.AdminService.GetSysMenuList:output_type -> api.admin.service.v1.GetSysMenuListReply
+	56, // 123: api.admin.service.v1.AdminService.ListMenus:output_type -> api.admin.service.v1.ListMenusReply
+	58, // 124: api.admin.service.v1.AdminService.GetWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
+	58, // 125: api.admin.service.v1.AdminService.GetSelfWalkRoute:output_type -> api.admin.service.v1.GetWalkRouteReply
+	60, // 126: api.admin.service.v1.AdminService.IsMenuNameExists:output_type -> api.admin.service.v1.IsMenuNameExistsReply
+	62, // 127: api.admin.service.v1.AdminService.IsMenuPathExists:output_type -> api.admin.service.v1.IsMenuPathExistsReply
+	74, // 128: api.admin.service.v1.AdminService.CreateMenu:output_type -> google.protobuf.Empty
+	74, // 129: api.admin.service.v1.AdminService.UpdateMenu:output_type -> google.protobuf.Empty
+	74, // 130: api.admin.service.v1.AdminService.DeleteMenu:output_type -> google.protobuf.Empty
+	65, // 131: api.admin.service.v1.AdminService.GetServiceRegistryList:output_type -> api.admin.service.v1.GetServiceRegistryListReply
+	67, // 132: api.admin.service.v1.AdminService.GetProjectionSourceStatusList:output_type -> api.admin.service.v1.GetProjectionSourceStatusListReply
+	74, // 133: api.admin.service.v1.AdminService.CreateSysLog:output_type -> google.protobuf.Empty
+	71, // 134: api.admin.service.v1.AdminService.GetSysLogList:output_type -> api.admin.service.v1.GetSysLogListReply
+	73, // 135: api.admin.service.v1.AdminService.GetSysLogInfo:output_type -> api.admin.service.v1.GetSysLogInfoReply
+	82, // [82:136] is the sub-list for method output_type
+	28, // [28:82] is the sub-list for method input_type
+	28, // [28:28] is the sub-list for extension type_name
+	28, // [28:28] is the sub-list for extension extendee
+	0,  // [0:28] is the sub-list for field type_name
 }
 
 func init() { file_admin_service_v1_admin_proto_init() }
@@ -4667,17 +6230,17 @@ func file_admin_service_v1_admin_proto_init() {
 	if File_admin_service_v1_admin_proto != nil {
 		return
 	}
-	file_admin_service_v1_admin_proto_msgTypes[29].OneofWrappers = []any{}
-	file_admin_service_v1_admin_proto_msgTypes[30].OneofWrappers = []any{}
-	file_admin_service_v1_admin_proto_msgTypes[32].OneofWrappers = []any{}
-	file_admin_service_v1_admin_proto_msgTypes[34].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[50].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[51].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[53].OneofWrappers = []any{}
+	file_admin_service_v1_admin_proto_msgTypes[55].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_admin_service_v1_admin_proto_rawDesc), len(file_admin_service_v1_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   53,
+			NumMessages:   74,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

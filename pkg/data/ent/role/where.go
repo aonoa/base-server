@@ -75,6 +75,11 @@ func Value(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldValue, v))
 }
 
+// OrganizationID applies equality check predicate on the "organization_id" field. It's identical to OrganizationIDEQ.
+func OrganizationID(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldOrganizationID, v))
+}
+
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
 func Status(v bool) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldStatus, v))
@@ -83,6 +88,11 @@ func Status(v bool) predicate.Role {
 // Desc applies equality check predicate on the "desc" field. It's identical to DescEQ.
 func Desc(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldDesc, v))
+}
+
+// DataScope applies equality check predicate on the "data_scope" field. It's identical to DataScopeEQ.
+func DataScope(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -295,6 +305,71 @@ func ValueContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldValue, v))
 }
 
+// OrganizationIDEQ applies the EQ predicate on the "organization_id" field.
+func OrganizationIDEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDNEQ applies the NEQ predicate on the "organization_id" field.
+func OrganizationIDNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDIn applies the In predicate on the "organization_id" field.
+func OrganizationIDIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDNotIn applies the NotIn predicate on the "organization_id" field.
+func OrganizationIDNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDGT applies the GT predicate on the "organization_id" field.
+func OrganizationIDGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldOrganizationID, v))
+}
+
+// OrganizationIDGTE applies the GTE predicate on the "organization_id" field.
+func OrganizationIDGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDLT applies the LT predicate on the "organization_id" field.
+func OrganizationIDLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldOrganizationID, v))
+}
+
+// OrganizationIDLTE applies the LTE predicate on the "organization_id" field.
+func OrganizationIDLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDContains applies the Contains predicate on the "organization_id" field.
+func OrganizationIDContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasPrefix applies the HasPrefix predicate on the "organization_id" field.
+func OrganizationIDHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasSuffix applies the HasSuffix predicate on the "organization_id" field.
+func OrganizationIDHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldOrganizationID, v))
+}
+
+// OrganizationIDEqualFold applies the EqualFold predicate on the "organization_id" field.
+func OrganizationIDEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldOrganizationID, v))
+}
+
+// OrganizationIDContainsFold applies the ContainsFold predicate on the "organization_id" field.
+func OrganizationIDContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldOrganizationID, v))
+}
+
 // StatusEQ applies the EQ predicate on the "status" field.
 func StatusEQ(v bool) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldStatus, v))
@@ -368,6 +443,81 @@ func DescEqualFold(v string) predicate.Role {
 // DescContainsFold applies the ContainsFold predicate on the "desc" field.
 func DescContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldDesc, v))
+}
+
+// DataScopeEQ applies the EQ predicate on the "data_scope" field.
+func DataScopeEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldDataScope, v))
+}
+
+// DataScopeNEQ applies the NEQ predicate on the "data_scope" field.
+func DataScopeNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldDataScope, v))
+}
+
+// DataScopeIn applies the In predicate on the "data_scope" field.
+func DataScopeIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldDataScope, vs...))
+}
+
+// DataScopeNotIn applies the NotIn predicate on the "data_scope" field.
+func DataScopeNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldDataScope, vs...))
+}
+
+// DataScopeGT applies the GT predicate on the "data_scope" field.
+func DataScopeGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldDataScope, v))
+}
+
+// DataScopeGTE applies the GTE predicate on the "data_scope" field.
+func DataScopeGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldDataScope, v))
+}
+
+// DataScopeLT applies the LT predicate on the "data_scope" field.
+func DataScopeLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldDataScope, v))
+}
+
+// DataScopeLTE applies the LTE predicate on the "data_scope" field.
+func DataScopeLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldDataScope, v))
+}
+
+// DataScopeContains applies the Contains predicate on the "data_scope" field.
+func DataScopeContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldDataScope, v))
+}
+
+// DataScopeHasPrefix applies the HasPrefix predicate on the "data_scope" field.
+func DataScopeHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldDataScope, v))
+}
+
+// DataScopeHasSuffix applies the HasSuffix predicate on the "data_scope" field.
+func DataScopeHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldDataScope, v))
+}
+
+// DataScopeEqualFold applies the EqualFold predicate on the "data_scope" field.
+func DataScopeEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldDataScope, v))
+}
+
+// DataScopeContainsFold applies the ContainsFold predicate on the "data_scope" field.
+func DataScopeContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldDataScope, v))
+}
+
+// DataScopeDeptIdsIsNil applies the IsNil predicate on the "data_scope_dept_ids" field.
+func DataScopeDeptIdsIsNil() predicate.Role {
+	return predicate.Role(sql.FieldIsNull(FieldDataScopeDeptIds))
+}
+
+// DataScopeDeptIdsNotNil applies the NotNil predicate on the "data_scope_dept_ids" field.
+func DataScopeDeptIdsNotNil() predicate.Role {
+	return predicate.Role(sql.FieldNotNull(FieldDataScopeDeptIds))
 }
 
 // HasAPI applies the HasEdge predicate on the "api" edge.

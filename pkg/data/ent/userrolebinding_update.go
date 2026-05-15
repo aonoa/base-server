@@ -70,6 +70,20 @@ func (_u *UserRoleBindingUpdate) AddRoleID(v int64) *UserRoleBindingUpdate {
 	return _u
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_u *UserRoleBindingUpdate) SetOrganizationID(v string) *UserRoleBindingUpdate {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *UserRoleBindingUpdate) SetNillableOrganizationID(v *string) *UserRoleBindingUpdate {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
+	return _u
+}
+
 // Mutation returns the UserRoleBindingMutation object of the builder.
 func (_u *UserRoleBindingUpdate) Mutation() *UserRoleBindingMutation {
 	return _u.mutation
@@ -138,6 +152,9 @@ func (_u *UserRoleBindingUpdate) sqlSave(ctx context.Context) (_node int, err er
 	if value, ok := _u.mutation.AddedRoleID(); ok {
 		_spec.AddField(userrolebinding.FieldRoleID, field.TypeInt64, value)
 	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(userrolebinding.FieldOrganizationID, field.TypeString, value)
+	}
 	_spec.AddModifiers(_u.modifiers...)
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -198,6 +215,20 @@ func (_u *UserRoleBindingUpdateOne) SetNillableRoleID(v *int64) *UserRoleBinding
 // AddRoleID adds value to the "role_id" field.
 func (_u *UserRoleBindingUpdateOne) AddRoleID(v int64) *UserRoleBindingUpdateOne {
 	_u.mutation.AddRoleID(v)
+	return _u
+}
+
+// SetOrganizationID sets the "organization_id" field.
+func (_u *UserRoleBindingUpdateOne) SetOrganizationID(v string) *UserRoleBindingUpdateOne {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *UserRoleBindingUpdateOne) SetNillableOrganizationID(v *string) *UserRoleBindingUpdateOne {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
 	return _u
 }
 
@@ -298,6 +329,9 @@ func (_u *UserRoleBindingUpdateOne) sqlSave(ctx context.Context) (_node *UserRol
 	}
 	if value, ok := _u.mutation.AddedRoleID(); ok {
 		_spec.AddField(userrolebinding.FieldRoleID, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(userrolebinding.FieldOrganizationID, field.TypeString, value)
 	}
 	_spec.AddModifiers(_u.modifiers...)
 	_node = &UserRoleBinding{config: _u.config}

@@ -78,9 +78,9 @@ func (_c *DeptCreate) SetExtension(v string) *DeptCreate {
 	return _c
 }
 
-// SetDom sets the "dom" field.
-func (_c *DeptCreate) SetDom(v int64) *DeptCreate {
-	_c.mutation.SetDom(v)
+// SetOrganizationID sets the "organization_id" field.
+func (_c *DeptCreate) SetOrganizationID(v string) *DeptCreate {
+	_c.mutation.SetOrganizationID(v)
 	return _c
 }
 
@@ -206,8 +206,8 @@ func (_c *DeptCreate) check() error {
 	if _, ok := _c.mutation.Extension(); !ok {
 		return &ValidationError{Name: "extension", err: errors.New(`ent: missing required field "Dept.extension"`)}
 	}
-	if _, ok := _c.mutation.Dom(); !ok {
-		return &ValidationError{Name: "dom", err: errors.New(`ent: missing required field "Dept.dom"`)}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		return &ValidationError{Name: "organization_id", err: errors.New(`ent: missing required field "Dept.organization_id"`)}
 	}
 	return nil
 }
@@ -269,9 +269,9 @@ func (_c *DeptCreate) createSpec() (*Dept, *sqlgraph.CreateSpec) {
 		_spec.SetField(dept.FieldExtension, field.TypeString, value)
 		_node.Extension = value
 	}
-	if value, ok := _c.mutation.Dom(); ok {
-		_spec.SetField(dept.FieldDom, field.TypeInt64, value)
-		_node.Dom = value
+	if value, ok := _c.mutation.OrganizationID(); ok {
+		_spec.SetField(dept.FieldOrganizationID, field.TypeString, value)
+		_node.OrganizationID = value
 	}
 	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

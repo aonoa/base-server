@@ -38,22 +38,24 @@ var (
 	PolicyUserToApi              = "p2"
 	PolicyApiToData              = "p3"
 	BootstrapRootUserID          = "f4f9e258-fa13-4467-95fb-c86019a377f9"
+	DefaultOrganizationID        = "9f740c1b-0210-4e3a-858d-d128edea924d"
+	GlobalRootDomain             = "global"
 )
 
 var textModel = `
 [request_definition]
-r = sub, obj, act
+r = sub, dom, obj, act
 
 [policy_definition]
-p = sub, obj, act
-p2 = sub, obj, act
-p3 = sub, obj, act
+p = sub, dom, obj, act
+p2 = sub, dom, obj, act
+p3 = sub, dom, obj, act
 # p （用户->资源）
 # p2 （用户->api）
 # p3 （api->资源）
 
 [role_definition]
-g = _, _
+g = _, _, _
 g2 = _, _
 g3 = _, _
 # g  (用户->角色）
@@ -64,11 +66,11 @@ g3 = _, _
 e = some(where (p.eft == allow))
 
 [matchers]
-m = g(r.sub, p.sub) && g3(r.obj, p.obj) && regexMatch(r.act, p.act) || g(r.sub, "role:root")   # 角色对普通资源组权限
+m = (g(r.sub, p.sub, r.dom) && g3(r.obj, p.obj) && regexMatch(r.act, p.act)) || g(r.sub, "root", "global")   # 角色对普通资源组权限
 # 角色对api的权限 匹配key1:/diagnoseClass/1/diagnoseRow/aa?2  key2:/diagnoseClass/{id}/diagnoseRow/*
 # 支持{id},?参数和*通配符，当api为刷新token时，直接通过
-m2 = r.obj == "/auth-api/v1/refresh" || g(r.sub, p2.sub) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act) || g(r.sub, "role:root")
-m3 = g2(r.sub, p3.sub) && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act) || g(r.sub, "role:root") # api对资源组的权限（公共资源）（目前未使用）
+m2 = r.obj == "/auth-api/v1/refresh" || (g(r.sub, p2.sub, r.dom) && g2(r.obj, p2.obj) && regexMatch(r.act, p2.act)) || g(r.sub, "root", "global")
+m3 = (g2(r.sub, p3.sub) && r.dom == p3.dom && g3(r.obj, p3.obj) && regexMatch(r.act, p3.act)) || g(r.sub, "root", "global") # api对资源组的权限（公共资源）（目前未使用）
 `
 
 type AuthRepo interface {
@@ -195,18 +197,10 @@ func (uc *AuthUsecase) CheckAuthorization(ctx context.Context, req *v1.CheckAuth
 	if req.Action != "" {
 		action = req.Action
 	}
-	service := strings.TrimSpace(req.Service)
-	subject := scopedUserKey(req.UserId, service, req.ScopeId)
-	object := qualifiedAPIPath(service, req.Path)
-	allowed, err := uc.e.Enforce(RoleToApiEnforceContext, subject, object, action)
+	domain := organizationDomain(req.OrganizationId)
+	allowed, err := uc.enforceWithDefaultRoleFallback(req.UserId, domain, req.Path, action)
 	if err != nil {
 		return nil, err
-	}
-	if !allowed && (service != "" || req.ScopeId != "") {
-		allowed, err = uc.e.Enforce(RoleToApiEnforceContext, req.UserId, req.Path, req.Method)
-		if err != nil {
-			return nil, err
-		}
 	}
 	return &v1.CheckAuthorizationReply{Allowed: allowed}, nil
 }
@@ -218,22 +212,12 @@ func (uc *AuthUsecase) RegisterPermissionSnapshot(ctx context.Context, req *v1.R
 	}
 	uc.projectionMu.Lock()
 	defer uc.projectionMu.Unlock()
-	if !snapshotUsesServiceNamespace(req) {
-		uc.e.ClearPolicy()
-		uc.applyPermissionSnapshot(req)
-		if err := uc.e.SavePolicy(); err != nil {
-			return err
-		}
-		uc.log.Infof("permission snapshot applied source=%s revision=%d roles=%d apis=%d bindings=%d mode=legacy-clear-all", req.SourceService, req.Revision, len(req.Roles), len(req.Apis), len(req.Bindings))
-		return nil
-	}
-	uc.removeSourceProjection(req.SourceService)
-	uc.removeSourceProjection("platform")
+	uc.e.ClearPolicy()
 	uc.applyPermissionSnapshot(req)
 	if err := uc.e.SavePolicy(); err != nil {
 		return err
 	}
-	uc.log.Infof("permission snapshot applied source=%s revision=%d roles=%d apis=%d bindings=%d mode=source-merge", req.SourceService, req.Revision, len(req.Roles), len(req.Apis), len(req.Bindings))
+	uc.log.Infof("permission snapshot applied source=%s revision=%d roles=%d apis=%d bindings=%d mode=domain-clear-all", req.SourceService, req.Revision, len(req.Roles), len(req.Apis), len(req.Bindings))
 	return nil
 }
 
@@ -255,15 +239,15 @@ func (uc *AuthUsecase) ApplyRoleDelta(ctx context.Context, req *v1.ApplyRoleDelt
 		if before.Value == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "role delta before.value is required")
 		}
-		uc.removeRoleBindings(projectionService(before.Service), before.Value)
+		uc.removeRoleBindings(roleDomain(before), before.Value)
 	default:
 		if after.Value == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "role delta after.value is required")
 		}
-		beforeService := projectionService(before.Service)
-		afterService := projectionService(after.Service)
-		if before.Value != "" && (before.Value != after.Value || beforeService != afterService) {
-			uc.renameRoleBindings(beforeService, before.Value, afterService, after.Value)
+		beforeDomain := roleDomain(before)
+		afterDomain := roleDomain(after)
+		if before.Value != "" && (before.Value != after.Value || beforeDomain != afterDomain) {
+			uc.renameRoleBindings(beforeDomain, before.Value, afterDomain, after.Value)
 		}
 		uc.syncRolePolicies(after)
 	}
@@ -284,12 +268,12 @@ func (uc *AuthUsecase) ApplyApiDelta(ctx context.Context, req *v1.ApplyApiDeltaR
 		if after.Path == "" || after.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
 		}
-		uc.AddServiceAPIToGroup(projectionService(after.Service), after.Path, after.ResourcesGroup)
+		uc.AddAPIToGroup(after.Path, after.ResourcesGroup)
 	case after == nil:
 		if before.Path == "" || before.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
 		}
-		uc.removeAPIGroup(projectionService(before.Service), before.Path, before.ResourcesGroup)
+		uc.removeAPIGroup(before.Path, before.ResourcesGroup)
 	default:
 		if before.Path == "" || before.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta before.path and before.resources_group are required")
@@ -297,10 +281,8 @@ func (uc *AuthUsecase) ApplyApiDelta(ctx context.Context, req *v1.ApplyApiDeltaR
 		if after.Path == "" || after.ResourcesGroup == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "api delta after.path and after.resources_group are required")
 		}
-		beforeService := projectionService(before.Service)
-		afterService := projectionService(after.Service)
-		if before.Path != after.Path || before.ResourcesGroup != after.ResourcesGroup || beforeService != afterService {
-			uc.updateAPIGroup(beforeService, before.Path, before.ResourcesGroup, afterService, after.Path, after.ResourcesGroup)
+		if before.Path != after.Path || before.ResourcesGroup != after.ResourcesGroup {
+			uc.updateAPIGroup(before.Path, before.ResourcesGroup, after.Path, after.ResourcesGroup)
 		}
 	}
 	uc.log.Infof("api delta applied source=%s revision=%d before=%s after=%s", req.SourceService, req.Revision, apiDeltaValue(before), apiDeltaValue(after))
@@ -314,30 +296,30 @@ func (uc *AuthUsecase) ApplyUserRoleBindingDelta(ctx context.Context, req *v1.Ap
 	}
 	uc.projectionMu.Lock()
 	defer uc.projectionMu.Unlock()
-	switch {
-	case req.After != nil:
-		if req.After.UserId == "" {
-			return kratoserrors.BadRequest("BAD_REQUEST", "user role binding after.user_id is required")
-		}
-		uc.replaceUserRoleBinding(req.After.UserId, projectionService(req.After.Service), req.After.ScopeId, defaultRoleValue(req.After.RoleValue))
-	case req.Before != nil:
+	if req.Before != nil {
 		if req.Before.UserId == "" {
 			return kratoserrors.BadRequest("BAD_REQUEST", "user role binding before.user_id is required")
 		}
-		uc.replaceUserRoleBinding(req.Before.UserId, projectionService(req.Before.Service), req.Before.ScopeId, "")
+		uc.removeUserRoleBinding(req.Before.UserId, effectiveBindingDomain(req.Before), defaultRoleValue(req.Before.RoleValue))
+	}
+	if req.After != nil {
+		if req.After.UserId == "" {
+			return kratoserrors.BadRequest("BAD_REQUEST", "user role binding after.user_id is required")
+		}
+		uc.addUserRoleBinding(req.After.UserId, effectiveBindingDomain(req.After), defaultRoleValue(req.After.RoleValue))
 	}
 	uc.log.Infof("user role binding delta applied source=%s revision=%d before=%s after=%s", req.SourceService, req.Revision, bindingDeltaValue(req.Before), bindingDeltaValue(req.After))
 	return nil
 }
 
 func (uc *AuthUsecase) AddUserRoles(user string, roles []string) {
-	uc.AddScopedUserRoles(user, "", "", roles)
+	uc.AddDomainUserRoles(user, DefaultOrganizationID, roles)
 }
 
-func (uc *AuthUsecase) AddScopedUserRoles(user, service, scope string, roles []string) {
-	subject := scopedUserKey(user, service, scope)
+func (uc *AuthUsecase) AddDomainUserRoles(user, domain string, roles []string) {
+	domain = organizationDomain(domain)
 	for _, roleValue := range roles {
-		_, err := uc.e.AddNamedGroupingPolicy(UserToRole, subject, qualifiedRoleKey(service, roleValue))
+		_, err := uc.e.AddNamedGroupingPolicy(UserToRole, user, roleValue, domain)
 		if err != nil {
 			uc.log.Error(err)
 		}
@@ -345,26 +327,26 @@ func (uc *AuthUsecase) AddScopedUserRoles(user, service, scope string, roles []s
 }
 
 func (uc *AuthUsecase) AddApiToGroup(apiPath, apiGroup string) {
-	uc.AddServiceAPIToGroup("", apiPath, apiGroup)
+	uc.AddAPIToGroup(apiPath, apiGroup)
 }
 
-func (uc *AuthUsecase) AddServiceAPIToGroup(service, apiPath, apiGroup string) {
-	_, err := uc.e.AddNamedGroupingPolicy(ApiToGroup, qualifiedAPIPath(service, apiPath), qualifiedAPIGroupKey(service, apiGroup))
+func (uc *AuthUsecase) AddAPIToGroup(apiPath, apiGroup string) {
+	_, err := uc.e.AddNamedGroupingPolicy(ApiToGroup, apiPath, apiGroup)
 	if err != nil {
 		uc.log.Error(err)
 	}
 }
 
 func (uc *AuthUsecase) AddPolicy(roleValue, typeStr, dataGroup, method string) {
-	uc.AddServicePolicy("", roleValue, typeStr, dataGroup, method)
+	uc.AddDomainPolicy(DefaultOrganizationID, roleValue, typeStr, dataGroup, method)
 }
 
-func (uc *AuthUsecase) AddServicePolicy(service, roleValue, typeStr, dataGroup, method string) {
+func (uc *AuthUsecase) AddDomainPolicy(domain, roleValue, typeStr, dataGroup, method string) {
 	policyType := PolicyUserToData
 	if typeStr == "api" {
 		policyType = PolicyUserToApi
 	}
-	_, err := uc.e.AddNamedPolicy(policyType, qualifiedRoleKey(service, roleValue), qualifiedDataKey(service, typeStr, dataGroup), method)
+	_, err := uc.e.AddNamedPolicy(policyType, roleValue, organizationDomain(domain), dataGroup, method)
 	if err != nil {
 		uc.log.Error(err)
 	}
@@ -381,14 +363,83 @@ func (uc *AuthUsecase) AddPolicies(typeStr string, rules [][]string) {
 	}
 }
 
-func (uc *AuthUsecase) renameRoleBindings(oldService, oldRole, newService, newRole string) {
-	oldKey := qualifiedRoleKey(oldService, oldRole)
-	newKey := qualifiedRoleKey(newService, newRole)
-	namedGroupingPolicy, err := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 1, oldKey)
+func (uc *AuthUsecase) enforceWithDefaultRoleFallback(subject, domain, object, action string) (bool, error) {
+	domain = organizationDomain(domain)
+	allowed, err := uc.e.Enforce(RoleToApiEnforceContext, subject, domain, object, action)
+	if err != nil || allowed {
+		return allowed, err
+	}
+	hasBinding, err := uc.hasExplicitRoleBinding(subject, domain)
+	if err != nil || hasBinding {
+		return allowed, err
+	}
+	return uc.isDefaultRoleAllowed(domain, object, action)
+}
+
+func (uc *AuthUsecase) hasExplicitRoleBinding(subject, domain string) (bool, error) {
+	policies, err := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 0, subject)
+	if err != nil {
+		return false, err
+	}
+	for _, policy := range policies {
+		if len(policy) >= 3 && policy[2] == organizationDomain(domain) {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (uc *AuthUsecase) isDefaultRoleAllowed(domain, object, action string) (bool, error) {
+	apiGroups, err := uc.matchingAPIGroups(object)
+	if err != nil {
+		return false, err
+	}
+	for _, apiGroup := range apiGroups {
+		if len(apiGroup) < 2 {
+			continue
+		}
+		resourceGroup := apiGroup[1]
+		policies, err := uc.e.GetFilteredNamedPolicy(PolicyUserToApi, 0, "default", organizationDomain(domain), resourceGroup)
+		if err != nil {
+			return false, err
+		}
+		for _, policy := range policies {
+			if len(policy) < 4 {
+				continue
+			}
+			if util.RegexMatch(action, policy[3]) {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
+}
+
+func (uc *AuthUsecase) matchingAPIGroups(object string) ([][]string, error) {
+	apiGroups, err := uc.e.GetNamedGroupingPolicy(ApiToGroup)
+	if err != nil {
+		return nil, err
+	}
+	items := make([][]string, 0)
+	for _, apiGroup := range apiGroups {
+		if len(apiGroup) < 2 {
+			continue
+		}
+		if apiGroup[0] == object || KeyMatch6(object, apiGroup[0]) {
+			items = append(items, apiGroup)
+		}
+	}
+	return items, nil
+}
+
+func (uc *AuthUsecase) renameRoleBindings(oldDomain, oldRole, newDomain, newRole string) {
+	oldDomain = organizationDomain(oldDomain)
+	newDomain = organizationDomain(newDomain)
+	namedGroupingPolicy, err := uc.e.GetFilteredNamedGroupingPolicy(UserToRole, 1, oldRole, oldDomain)
 	if err == nil && len(namedGroupingPolicy) > 0 {
 		rules := make([][]string, 0, len(namedGroupingPolicy))
 		for _, policy := range namedGroupingPolicy {
-			rules = append(rules, []string{policy[0], newKey})
+			rules = append(rules, []string{policy[0], newRole, newDomain})
 		}
 		if _, err = uc.e.UpdateNamedGroupingPolicies(UserToRole, namedGroupingPolicy, rules); err != nil {
 			uc.log.Error(err)
@@ -396,13 +447,13 @@ func (uc *AuthUsecase) renameRoleBindings(oldService, oldRole, newService, newRo
 	}
 
 	for _, policyType := range []string{PolicyUserToData, PolicyUserToApi} {
-		policyList, err := uc.e.GetFilteredNamedPolicy(policyType, 0, oldKey)
+		policyList, err := uc.e.GetFilteredNamedPolicy(policyType, 0, oldRole, oldDomain)
 		if err != nil || len(policyList) == 0 {
 			continue
 		}
 		rules := make([][]string, 0, len(policyList))
 		for _, policy := range policyList {
-			rules = append(rules, []string{newKey, policy[1], policy[2]})
+			rules = append(rules, []string{newRole, newDomain, policy[2], policy[3]})
 		}
 		if _, err = uc.e.UpdateNamedPolicies(policyType, policyList, rules); err != nil {
 			uc.log.Error(err)
@@ -410,27 +461,27 @@ func (uc *AuthUsecase) renameRoleBindings(oldService, oldRole, newService, newRo
 	}
 }
 
-func (uc *AuthUsecase) removeRolePolicies(service, role string) {
-	roleKey := qualifiedRoleKey(service, role)
-	if _, err := uc.e.RemoveFilteredNamedPolicy(PolicyUserToData, 0, roleKey); err != nil {
+func (uc *AuthUsecase) removeRolePolicies(domain, role string) {
+	domain = organizationDomain(domain)
+	if _, err := uc.e.RemoveFilteredNamedPolicy(PolicyUserToData, 0, role, domain); err != nil {
 		uc.log.Error(err)
 	}
-	if _, err := uc.e.RemoveFilteredNamedPolicy(PolicyUserToApi, 0, roleKey); err != nil {
+	if _, err := uc.e.RemoveFilteredNamedPolicy(PolicyUserToApi, 0, role, domain); err != nil {
 		uc.log.Error(err)
 	}
 }
 
-func (uc *AuthUsecase) removeRoleBindings(service, role string) {
-	roleKey := qualifiedRoleKey(service, role)
-	if _, err := uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 1, roleKey); err != nil {
+func (uc *AuthUsecase) removeRoleBindings(domain, role string) {
+	domain = organizationDomain(domain)
+	if _, err := uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 1, role, domain); err != nil {
 		uc.log.Error(err)
 	}
-	uc.removeRolePolicies(service, role)
+	uc.removeRolePolicies(domain, role)
 }
 
-func (uc *AuthUsecase) updateAPIGroup(oldService, oldPath, oldGroup, newService, newPath, newGroup string) {
-	oldRule := []string{qualifiedAPIPath(oldService, oldPath), qualifiedAPIGroupKey(oldService, oldGroup)}
-	newRule := []string{qualifiedAPIPath(newService, newPath), qualifiedAPIGroupKey(newService, newGroup)}
+func (uc *AuthUsecase) updateAPIGroup(oldPath, oldGroup, newPath, newGroup string) {
+	oldRule := []string{oldPath, oldGroup}
+	newRule := []string{newPath, newGroup}
 	updated, err := uc.e.UpdateNamedGroupingPolicy(ApiToGroup, oldRule, newRule)
 	if err != nil {
 		uc.log.Error(err)
@@ -439,12 +490,12 @@ func (uc *AuthUsecase) updateAPIGroup(oldService, oldPath, oldGroup, newService,
 	if updated {
 		return
 	}
-	uc.removeAPIGroup(oldService, oldPath, oldGroup)
-	uc.AddServiceAPIToGroup(newService, newPath, newGroup)
+	uc.removeAPIGroup(oldPath, oldGroup)
+	uc.AddAPIToGroup(newPath, newGroup)
 }
 
-func (uc *AuthUsecase) removeAPIGroup(service, apiPath, apiGroup string) {
-	if _, err := uc.e.RemoveNamedGroupingPolicy(ApiToGroup, qualifiedAPIPath(service, apiPath), qualifiedAPIGroupKey(service, apiGroup)); err != nil {
+func (uc *AuthUsecase) removeAPIGroup(apiPath, apiGroup string) {
+	if _, err := uc.e.RemoveNamedGroupingPolicy(ApiToGroup, apiPath, apiGroup); err != nil {
 		uc.log.Error(err)
 	}
 }
@@ -466,55 +517,84 @@ func defaultRoleValue(roleValue string) string {
 	return roleValue
 }
 
-func projectionService(service string) string {
-	return strings.TrimSpace(service)
+func organizationDomain(scope string) string {
+	scope = strings.TrimSpace(scope)
+	if scope == "" {
+		return DefaultOrganizationID
+	}
+	return scope
+}
+
+func roleDomain(role *v1.PolicyRole) string {
+	if role == nil {
+		return DefaultOrganizationID
+	}
+	return organizationDomain(role.OrganizationId)
 }
 
 func roleDeltaValue(item *v1.PolicyRole) string {
 	if item == nil {
 		return "nil"
 	}
-	service := projectionService(item.Service)
-	if service == "" {
-		return item.Value
-	}
-	return service + ":" + item.Value
+	return roleDomain(item) + ":" + item.Value
 }
 
 func apiDeltaValue(item *v1.PolicyApi) string {
 	if item == nil {
 		return "nil"
 	}
-	service := projectionService(item.Service)
-	if service == "" {
-		return item.Path + "->" + item.ResourcesGroup
-	}
-	return service + ":" + item.Path + "->" + item.ResourcesGroup
+	return item.Path + "->" + item.ResourcesGroup
 }
 
 func bindingDeltaValue(item *v1.PolicyUserRoleBinding) string {
 	if item == nil {
 		return "nil"
 	}
-	return scopedUserKey(item.UserId, projectionService(item.Service), item.ScopeId) + "->" + item.RoleValue
+	return item.UserId + ":" + effectiveBindingDomain(item) + "->" + item.RoleValue
 }
 
-func (uc *AuthUsecase) replaceUserRoleBinding(userID, service, scope, roleValue string) {
-	subject := scopedUserKey(userID, service, scope)
-	if _, err := uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 0, subject); err != nil {
+func effectiveBindingDomain(binding *v1.PolicyUserRoleBinding) string {
+	if binding == nil {
+		return DefaultOrganizationID
+	}
+	return roleBindingDomain(binding.OrganizationId, defaultRoleValue(binding.RoleValue))
+}
+
+func roleBindingDomain(scope, roleValue string) string {
+	domain := organizationDomain(scope)
+	if roleValue == "root" {
+		return GlobalRootDomain
+	}
+	return domain
+}
+
+func (uc *AuthUsecase) removeUserRoleBinding(userID, domain, roleValue string) {
+	domain = roleBindingDomain(domain, roleValue)
+	if roleValue == "" {
+		if _, err := uc.e.RemoveFilteredNamedGroupingPolicy(UserToRole, 0, userID, domain); err != nil {
+			uc.log.Error(err)
+		}
+		return
+	}
+	if _, err := uc.e.RemoveNamedGroupingPolicy(UserToRole, userID, roleValue, domain); err != nil {
 		uc.log.Error(err)
 	}
-	if roleValue != "" {
-		uc.AddScopedUserRoles(userID, service, scope, []string{roleValue})
+}
+
+func (uc *AuthUsecase) addUserRoleBinding(userID, domain, roleValue string) {
+	domain = roleBindingDomain(domain, roleValue)
+	if roleValue == "" {
+		return
 	}
+	uc.AddDomainUserRoles(userID, domain, []string{roleValue})
 }
 
 func (uc *AuthUsecase) syncRolePolicies(role *v1.PolicyRole) {
 	if role == nil || role.Value == "" {
 		return
 	}
-	service := projectionService(role.Service)
-	uc.removeRolePolicies(service, role.Value)
+	domain := roleDomain(role)
+	uc.removeRolePolicies(domain, role.Value)
 	if !role.Status {
 		return
 	}
@@ -522,7 +602,7 @@ func (uc *AuthUsecase) syncRolePolicies(role *v1.PolicyRole) {
 		if resource == nil || resource.Type == "" || resource.Value == "" {
 			continue
 		}
-		uc.AddServicePolicy(service, role.Value, resource.Type, resource.Value, resource.Method)
+		uc.AddDomainPolicy(domain, role.Value, resource.Type, resource.Value, resource.Method)
 	}
 }
 
@@ -531,145 +611,18 @@ func (uc *AuthUsecase) applyPermissionSnapshot(req *v1.RegisterPermissionSnapsho
 		if api == nil || api.Path == "" || api.ResourcesGroup == "" {
 			continue
 		}
-		uc.AddServiceAPIToGroup(projectionService(api.Service), api.Path, api.ResourcesGroup)
+		uc.AddAPIToGroup(api.Path, api.ResourcesGroup)
 	}
 	for _, binding := range req.Bindings {
 		if binding == nil || binding.UserId == "" {
 			continue
 		}
-		uc.AddScopedUserRoles(binding.UserId, projectionService(binding.Service), binding.ScopeId, []string{defaultRoleValue(binding.RoleValue)})
+		roleValue := defaultRoleValue(binding.RoleValue)
+		domain := roleBindingDomain(binding.OrganizationId, roleValue)
+		uc.AddDomainUserRoles(binding.UserId, domain, []string{roleValue})
 	}
-	uc.AddUserRoles(BootstrapRootUserID, []string{"root"})
+	uc.AddDomainUserRoles(BootstrapRootUserID, GlobalRootDomain, []string{"root"})
 	for _, role := range req.Roles {
 		uc.syncRolePolicies(role)
 	}
-}
-
-func snapshotUsesServiceNamespace(req *v1.RegisterPermissionSnapshotRequest) bool {
-	if req == nil {
-		return false
-	}
-	for _, role := range req.Roles {
-		if role != nil && strings.TrimSpace(role.Service) != "" {
-			return true
-		}
-	}
-	for _, api := range req.Apis {
-		if api != nil && strings.TrimSpace(api.Service) != "" {
-			return true
-		}
-	}
-	for _, binding := range req.Bindings {
-		if binding != nil && (strings.TrimSpace(binding.Service) != "" || strings.TrimSpace(binding.ScopeId) != "") {
-			return true
-		}
-	}
-	return false
-}
-
-func (uc *AuthUsecase) removeSourceProjection(source string) {
-	source = strings.TrimSpace(source)
-	if source == "" {
-		return
-	}
-	rolePrefix := "role:" + source + ":"
-	subjectPrefix := "subject:" + source + ":"
-	apiPathPrefix := source + ":"
-	apiGroupPrefix := "api:" + source + ":"
-
-	uc.removeNamedPolicyByPrefix(PolicyUserToData, 0, rolePrefix)
-	uc.removeNamedPolicyByPrefix(PolicyUserToApi, 0, rolePrefix)
-	uc.removeNamedGroupingPolicyByPrefix(UserToRole, 0, subjectPrefix)
-	uc.removeNamedGroupingPolicyByPrefix(UserToRole, 1, rolePrefix)
-	uc.removeNamedGroupingPolicyByPrefix(ApiToGroup, 0, apiPathPrefix)
-	uc.removeNamedGroupingPolicyByPrefix(ApiToGroup, 1, apiGroupPrefix)
-}
-
-func (uc *AuthUsecase) removeNamedPolicyByPrefix(policyType string, fieldIndex int, prefix string) {
-	policies, err := uc.e.GetNamedPolicy(policyType)
-	if err != nil {
-		uc.log.Error(err)
-		return
-	}
-	for _, policy := range policies {
-		if fieldIndex >= len(policy) {
-			continue
-		}
-		if strings.HasPrefix(policy[fieldIndex], prefix) {
-			if _, err := uc.e.RemoveNamedPolicy(policyType, stringSliceToInterfaces(policy)...); err != nil {
-				uc.log.Error(err)
-			}
-		}
-	}
-}
-
-func (uc *AuthUsecase) removeNamedGroupingPolicyByPrefix(groupingType string, fieldIndex int, prefix string) {
-	policies, err := uc.e.GetNamedGroupingPolicy(groupingType)
-	if err != nil {
-		uc.log.Error(err)
-		return
-	}
-	for _, policy := range policies {
-		if fieldIndex >= len(policy) {
-			continue
-		}
-		if strings.HasPrefix(policy[fieldIndex], prefix) {
-			if _, err := uc.e.RemoveNamedGroupingPolicy(groupingType, stringSliceToInterfaces(policy)...); err != nil {
-				uc.log.Error(err)
-			}
-		}
-	}
-}
-
-func stringSliceToInterfaces(items []string) []interface{} {
-	out := make([]interface{}, 0, len(items))
-	for _, item := range items {
-		out = append(out, item)
-	}
-	return out
-}
-
-func scopedUserKey(userID, service, scope string) string {
-	service = strings.TrimSpace(service)
-	scope = strings.TrimSpace(scope)
-	switch {
-	case service == "" && scope == "":
-		return userID
-	case scope == "":
-		return "subject:" + service + ":" + userID
-	default:
-		return "subject:" + service + ":" + scope + ":" + userID
-	}
-}
-
-func qualifiedRoleKey(service, roleValue string) string {
-	service = strings.TrimSpace(service)
-	if service == "" {
-		return "role:" + roleValue
-	}
-	return "role:" + service + ":" + roleValue
-}
-
-func qualifiedAPIGroupKey(service, group string) string {
-	service = strings.TrimSpace(service)
-	if service == "" {
-		return "api:" + group
-	}
-	return "api:" + service + ":" + group
-}
-
-func qualifiedDataKey(service, typeStr, value string) string {
-	service = strings.TrimSpace(service)
-	if service == "" {
-		return typeStr + ":" + value
-	}
-	return typeStr + ":" + service + ":" + value
-}
-
-func qualifiedAPIPath(service, path string) string {
-	service = strings.TrimSpace(service)
-	if service == "" {
-		return path
-	}
-	return service + ":" + path
 }

@@ -24,7 +24,7 @@ func (c *DeptCreate) CreateAll(Dept *Dept) *DeptCreate {
 	builder = builder.SetStatus(Dept.Status)
 	builder = builder.SetDesc(Dept.Desc)
 	builder = builder.SetExtension(Dept.Extension)
-	builder = builder.SetDom(Dept.Dom)
+	builder = builder.SetOrganizationID(Dept.OrganizationID)
 	builder = builder.SetPid(Dept.Pid)
 	return builder
 }
@@ -68,6 +68,30 @@ func (c *MenuCreate) CreateAll(Menu *Menu) *MenuCreate {
 	return builder
 }
 
+// CreateAll creates a new Organization entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *OrganizationCreate) CreateAll(Organization *Organization) *OrganizationCreate {
+	builder := c
+	builder = builder.SetName(Organization.Name)
+	builder = builder.SetCode(Organization.Code)
+	builder = builder.SetSort(Organization.Sort)
+	builder = builder.SetStatus(Organization.Status)
+	builder = builder.SetDesc(Organization.Desc)
+	builder = builder.SetExtension(Organization.Extension)
+	return builder
+}
+
+// CreateAll creates a new OrganizationPermissionScope entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *OrganizationPermissionScopeCreate) CreateAll(OrganizationPermissionScope *OrganizationPermissionScope) *OrganizationPermissionScopeCreate {
+	builder := c
+	builder = builder.SetOrganizationID(OrganizationPermissionScope.OrganizationID)
+	builder = builder.SetPermissionType(OrganizationPermissionScope.PermissionType)
+	builder = builder.SetPermissionRef(OrganizationPermissionScope.PermissionRef)
+	builder = builder.SetCreatedBy(OrganizationPermissionScope.CreatedBy)
+	return builder
+}
+
 // CreateAll creates a new ProjectionSourceStatus entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *ProjectionSourceStatusCreate) CreateAll(ProjectionSourceStatus *ProjectionSourceStatus) *ProjectionSourceStatusCreate {
@@ -100,9 +124,12 @@ func (c *RoleCreate) CreateAll(Role *Role) *RoleCreate {
 	builder := c
 	builder = builder.SetName(Role.Name)
 	builder = builder.SetValue(Role.Value)
+	builder = builder.SetOrganizationID(Role.OrganizationID)
 	builder = builder.SetStatus(Role.Status)
 	builder = builder.SetDesc(Role.Desc)
 	builder = builder.SetMenus(Role.Menus)
+	builder = builder.SetDataScope(Role.DataScope)
+	builder = builder.SetDataScopeDeptIds(Role.DataScopeDeptIds)
 	return builder
 }
 
@@ -191,11 +218,33 @@ func (c *UserCreate) CreateAll(User *User) *UserCreate {
 	return builder
 }
 
+// CreateAll creates a new UserDeptMembership entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *UserDeptMembershipCreate) CreateAll(UserDeptMembership *UserDeptMembership) *UserDeptMembershipCreate {
+	builder := c
+	builder = builder.SetUserID(UserDeptMembership.UserID)
+	builder = builder.SetDeptID(UserDeptMembership.DeptID)
+	builder = builder.SetOrganizationID(UserDeptMembership.OrganizationID)
+	return builder
+}
+
+// CreateAll creates a new UserOrganization entity with all fields set
+// (excluding auto-generated fields like ID, create_time, update_time).
+func (c *UserOrganizationCreate) CreateAll(UserOrganization *UserOrganization) *UserOrganizationCreate {
+	builder := c
+	builder = builder.SetUserID(UserOrganization.UserID)
+	builder = builder.SetOrganizationID(UserOrganization.OrganizationID)
+	builder = builder.SetIsPrimary(UserOrganization.IsPrimary)
+	builder = builder.SetStatus(UserOrganization.Status)
+	return builder
+}
+
 // CreateAll creates a new UserRoleBinding entity with all fields set
 // (excluding auto-generated fields like ID, create_time, update_time).
 func (c *UserRoleBindingCreate) CreateAll(UserRoleBinding *UserRoleBinding) *UserRoleBindingCreate {
 	builder := c
 	builder = builder.SetUserID(UserRoleBinding.UserID)
 	builder = builder.SetRoleID(UserRoleBinding.RoleID)
+	builder = builder.SetOrganizationID(UserRoleBinding.OrganizationID)
 	return builder
 }

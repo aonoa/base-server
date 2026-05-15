@@ -112,24 +112,17 @@ func (_u *DeptUpdate) SetNillableExtension(v *string) *DeptUpdate {
 	return _u
 }
 
-// SetDom sets the "dom" field.
-func (_u *DeptUpdate) SetDom(v int64) *DeptUpdate {
-	_u.mutation.ResetDom()
-	_u.mutation.SetDom(v)
+// SetOrganizationID sets the "organization_id" field.
+func (_u *DeptUpdate) SetOrganizationID(v string) *DeptUpdate {
+	_u.mutation.SetOrganizationID(v)
 	return _u
 }
 
-// SetNillableDom sets the "dom" field if the given value is not nil.
-func (_u *DeptUpdate) SetNillableDom(v *int64) *DeptUpdate {
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *DeptUpdate) SetNillableOrganizationID(v *string) *DeptUpdate {
 	if v != nil {
-		_u.SetDom(*v)
+		_u.SetOrganizationID(*v)
 	}
-	return _u
-}
-
-// AddDom adds value to the "dom" field.
-func (_u *DeptUpdate) AddDom(v int64) *DeptUpdate {
-	_u.mutation.AddDom(v)
 	return _u
 }
 
@@ -291,11 +284,8 @@ func (_u *DeptUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Extension(); ok {
 		_spec.SetField(dept.FieldExtension, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Dom(); ok {
-		_spec.SetField(dept.FieldDom, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedDom(); ok {
-		_spec.AddField(dept.FieldDom, field.TypeInt64, value)
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(dept.FieldOrganizationID, field.TypeString, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -476,24 +466,17 @@ func (_u *DeptUpdateOne) SetNillableExtension(v *string) *DeptUpdateOne {
 	return _u
 }
 
-// SetDom sets the "dom" field.
-func (_u *DeptUpdateOne) SetDom(v int64) *DeptUpdateOne {
-	_u.mutation.ResetDom()
-	_u.mutation.SetDom(v)
+// SetOrganizationID sets the "organization_id" field.
+func (_u *DeptUpdateOne) SetOrganizationID(v string) *DeptUpdateOne {
+	_u.mutation.SetOrganizationID(v)
 	return _u
 }
 
-// SetNillableDom sets the "dom" field if the given value is not nil.
-func (_u *DeptUpdateOne) SetNillableDom(v *int64) *DeptUpdateOne {
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *DeptUpdateOne) SetNillableOrganizationID(v *string) *DeptUpdateOne {
 	if v != nil {
-		_u.SetDom(*v)
+		_u.SetOrganizationID(*v)
 	}
-	return _u
-}
-
-// AddDom adds value to the "dom" field.
-func (_u *DeptUpdateOne) AddDom(v int64) *DeptUpdateOne {
-	_u.mutation.AddDom(v)
 	return _u
 }
 
@@ -685,11 +668,8 @@ func (_u *DeptUpdateOne) sqlSave(ctx context.Context) (_node *Dept, err error) {
 	if value, ok := _u.mutation.Extension(); ok {
 		_spec.SetField(dept.FieldExtension, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Dom(); ok {
-		_spec.SetField(dept.FieldDom, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedDom(); ok {
-		_spec.AddField(dept.FieldDom, field.TypeInt64, value)
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(dept.FieldOrganizationID, field.TypeString, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{

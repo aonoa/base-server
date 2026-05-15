@@ -18,10 +18,10 @@ const (
 	AudienceLogin   = "login"
 	AudienceRefresh = "refresh"
 
-	HeaderAuthorization = "Authorization"
-	HeaderAction        = "x-action"
-	HeaderScopeID       = "x-scope-id"
-	ActionRefreshToken  = "refreshToken"
+	HeaderAuthorization  = "Authorization"
+	HeaderAction         = "x-action"
+	HeaderOrganizationID = "x-organization-id"
+	ActionRefreshToken   = "refreshToken"
 )
 
 func ClaimsFromContext(ctx context.Context) (jwtv5.MapClaims, bool) {

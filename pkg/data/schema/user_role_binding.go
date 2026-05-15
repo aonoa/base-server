@@ -29,12 +29,13 @@ func (UserRoleBinding) Fields() []ent.Field {
 		field.Int64("id"),
 		field.String("user_id").Comment("用户ID"),
 		field.Int64("role_id").Comment("角色ID"),
+		field.String("organization_id").Comment("组织ID"),
 	}
 }
 
 func (UserRoleBinding) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id", "role_id").Unique(),
+		index.Fields("user_id", "role_id", "organization_id").Unique(),
 	}
 }
 

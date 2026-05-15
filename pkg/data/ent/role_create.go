@@ -62,6 +62,12 @@ func (_c *RoleCreate) SetValue(v string) *RoleCreate {
 	return _c
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_c *RoleCreate) SetOrganizationID(v string) *RoleCreate {
+	_c.mutation.SetOrganizationID(v)
+	return _c
+}
+
 // SetStatus sets the "status" field.
 func (_c *RoleCreate) SetStatus(v bool) *RoleCreate {
 	_c.mutation.SetStatus(v)
@@ -77,6 +83,26 @@ func (_c *RoleCreate) SetDesc(v string) *RoleCreate {
 // SetMenus sets the "menus" field.
 func (_c *RoleCreate) SetMenus(v []int32) *RoleCreate {
 	_c.mutation.SetMenus(v)
+	return _c
+}
+
+// SetDataScope sets the "data_scope" field.
+func (_c *RoleCreate) SetDataScope(v string) *RoleCreate {
+	_c.mutation.SetDataScope(v)
+	return _c
+}
+
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableDataScope(v *string) *RoleCreate {
+	if v != nil {
+		_c.SetDataScope(*v)
+	}
+	return _c
+}
+
+// SetDataScopeDeptIds sets the "data_scope_dept_ids" field.
+func (_c *RoleCreate) SetDataScopeDeptIds(v []int64) *RoleCreate {
+	_c.mutation.SetDataScopeDeptIds(v)
 	return _c
 }
 
@@ -159,6 +185,14 @@ func (_c *RoleCreate) defaults() {
 		v := role.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
+	if _, ok := _c.mutation.DataScope(); !ok {
+		v := role.DefaultDataScope
+		_c.mutation.SetDataScope(v)
+	}
+	if _, ok := _c.mutation.DataScopeDeptIds(); !ok {
+		v := role.DefaultDataScopeDeptIds
+		_c.mutation.SetDataScopeDeptIds(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -175,6 +209,9 @@ func (_c *RoleCreate) check() error {
 	if _, ok := _c.mutation.Value(); !ok {
 		return &ValidationError{Name: "value", err: errors.New(`ent: missing required field "Role.value"`)}
 	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		return &ValidationError{Name: "organization_id", err: errors.New(`ent: missing required field "Role.organization_id"`)}
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Role.status"`)}
 	}
@@ -183,6 +220,9 @@ func (_c *RoleCreate) check() error {
 	}
 	if _, ok := _c.mutation.Menus(); !ok {
 		return &ValidationError{Name: "menus", err: errors.New(`ent: missing required field "Role.menus"`)}
+	}
+	if _, ok := _c.mutation.DataScope(); !ok {
+		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Role.data_scope"`)}
 	}
 	return nil
 }
@@ -232,6 +272,10 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldValue, field.TypeString, value)
 		_node.Value = value
 	}
+	if value, ok := _c.mutation.OrganizationID(); ok {
+		_spec.SetField(role.FieldOrganizationID, field.TypeString, value)
+		_node.OrganizationID = value
+	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeBool, value)
 		_node.Status = value
@@ -243,6 +287,14 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Menus(); ok {
 		_spec.SetField(role.FieldMenus, field.TypeJSON, value)
 		_node.Menus = value
+	}
+	if value, ok := _c.mutation.DataScope(); ok {
+		_spec.SetField(role.FieldDataScope, field.TypeString, value)
+		_node.DataScope = value
+	}
+	if value, ok := _c.mutation.DataScopeDeptIds(); ok {
+		_spec.SetField(role.FieldDataScopeDeptIds, field.TypeJSON, value)
+		_node.DataScopeDeptIds = value
 	}
 	if nodes := _c.mutation.APIIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -41,6 +41,9 @@
   - `api_resources_roles`
   - `resource_roles`
   - `sys_user_role_binding`
+  - `sys_user_dept_membership`
+  - `sys_organization`
+  - `sys_user_organization`
   - `sys_menu`
   - `sys_dept`
   - `sys_log`
@@ -74,8 +77,11 @@
 | `pkg/data/schema/resource.go` | `sys_resources` | `admin` | `admin` | 资源主数据已归 `admin` |
 | `pkg/data/schema/api_resources.go` | `sys_api_resources` | `admin` | `admin` | API 资源目录主数据已归 `admin` |
 | `pkg/data/schema/user_role_binding.go` | `sys_user_role_binding` | `admin` | `admin` | 当前用户角色绑定主数据已归 `admin` |
+| `pkg/data/schema/user_dept_membership.go` | `sys_user_dept_membership` | `admin` | `admin` | 当前组织作用域下的用户部门绑定主数据 |
+| `pkg/data/schema/organization.go` | `sys_organization` | `admin` | `admin` | 组织主数据；只表示组织结构，不表示多平台、业务域或租户 |
+| `pkg/data/schema/user_organization.go` | `sys_user_organization` | `admin` | `admin` | 用户与组织的多对多成员关系；用户基础资料仍归 `user` |
 | `pkg/data/schema/menu.go` | `sys_menu` | `admin` | `admin` | 系统菜单 |
-| `pkg/data/schema/dept.go` | `sys_dept` | `admin` | `admin` | 部门树 |
+| `pkg/data/schema/dept.go` | `sys_dept` | `admin` | `admin` | 部门树；通过 `organization_id` 归属到组织 |
 | `pkg/data/schema/log.go` | `sys_log` | `admin` | `admin` | 系统访问日志 / 操作日志 |
 | `pkg/data/schema/service_registry.go` | `sys_service_registry` | `admin` | `admin` | 平台服务注册信息 |
 | `pkg/data/schema/projection_source_status.go` | `sys_projection_source_status` | `admin` | `admin` | 权限投影源状态与同步观测信息 |
@@ -115,6 +121,7 @@
 作用：
 
 - 角色主数据
+- 通过 `organization_id` 归属到组织
 
 直接读写方：
 
@@ -124,6 +131,11 @@
 
 - `auth` 不直接读这张表
 - `admin` 会把角色快照 / delta 同步给 `auth`，最终投影到 `casbin_rules`
+
+备注：
+
+- 角色管理接口未显式传组织 ID 时使用当前组织上下文。
+- 当前投影到 `auth` 的角色 key 是 `role.value + organization_id`，`organization_id` 是 Casbin domain。因此不同组织可以复用同一个 `role.value`，不会在投影层合并。
 
 #### `sys_resources`
 
@@ -155,7 +167,7 @@
 
 - 前端“API 资源列表”改的是这张表
 - `auth` 的 API 权限判断不直接读这张表，而是吃 `admin -> auth` 的投影同步
-- `service_code` 不再存放在这张表；网关通过 `sys_service_registry.http_prefix` 推导服务归属和鉴权命名空间
+- `service_code` 不再存放在这张表，也不参与鉴权命名空间
 - `resources_group` 是角色授权粒度
 
 #### `api_resources_roles`
@@ -182,7 +194,7 @@
 
 作用：
 
-- 用户到角色的绑定关系
+- 用户在某个组织下到角色的绑定关系
 
 直接读写方：
 
@@ -190,8 +202,74 @@
 
 备注：
 
-- 当前这是“谁拥有什么角色”的主数据表
+- 当前这是“谁在某个组织下拥有什么角色”的主数据表
 - `auth` 不直接读这张表，而是由 `admin` 同步到 Casbin 分组策略
+- `organization_id` 会作为权限投影的 Casbin domain，运行时由前端请求头 `x-organization-id` 传到 gateway / auth
+- 组织移除成员时，会同步删除该用户在该组织下的角色绑定并刷新权限投影
+
+#### `sys_user_dept_membership`
+
+作用：
+
+- 用户在某个组织下绑定到哪个部门
+- 一个用户在同一个组织下最多一个部门绑定
+
+直接读写方：
+
+- `admin`
+
+备注：
+
+- 这是组织成员和部门树之间的组织作用域关联表。
+- 组织移除成员时，会同步清掉该组织下的部门绑定。
+- 删除部门时，也会同步清掉绑定到该部门的用户关系。
+
+#### `sys_organization`
+
+作用：
+
+- 组织主数据
+- 组织名称、编码、状态、排序、备注
+
+直接读写方：
+
+- `admin`
+
+备注：
+
+- 组织不是业务域、多平台或租户。
+- 当前组织 ID 会作为 `x-organization-id` 参与接口授权，并在 `auth` 中作为 Casbin domain，使用户角色绑定按组织生效。
+- 组织同时约束组织结构、成员归属、角色上下文和部门树归属。
+- `sys_organization.id` 是 UUID 字符串，不能使用自增数值对外暴露。
+- 默认组织编码为 `default`，固定 ID 为 `9f740c1b-0210-4e3a-858d-d128edea924d`，seed 和启动迁移都会保证默认组织存在。
+- 默认组织是全员组织，所有用户都会被确保加入默认组织，成员管理不能把用户移出默认组织。
+
+#### `sys_user_organization`
+
+作用：
+
+- 用户与组织的多对多成员关系
+- 一个用户可以属于多个组织
+- `is_primary` 当前作为用户“当前组织”标记，而不是不可变的主组织属性
+
+直接读写方：
+
+- `admin`
+
+间接依赖方：
+
+- `user` 服务仍只拥有用户基础资料；组织成员列表展示时由 `admin` 调用 `user.GetUserList` 补齐用户名、昵称、邮箱等展示字段；前端人员管理页按当前组织读取该成员列表，而不是直接展示全局用户列表。
+
+备注：
+
+- seed 会把 `user.sys_user` 的所有用户同步到默认组织。
+- 查询组织列表、查询默认组织成员和保存默认组织成员时，`admin` 会重新拉取用户列表，确保所有用户仍在默认组织中。
+- `admin` 调用 `user.GetUserList` 时必须转发当前请求的 `Authorization`，否则会被 `user` 服务自身 JWT 中间件拒绝。
+- `sys_user_organization.organization_id` 是 UUID 字符串。
+- 登录用户通过 `GET /admin-api/v1/my/organizations` 查询自己所属组织，通过 `PUT /admin-api/v1/my/current-organization` 切换当前组织；切换时只更新该用户自己的 `is_primary`。
+- 未显式传组织 ID 的部门和角色接口会读取当前用户的 `is_primary=true` 成员关系作为默认组织上下文。
+- 前端在当前组织经过 `/my/organizations` 校验后，会把当前组织 ID 作为 `x-organization-id` 发给 gateway。
+- 用户从某组织移除时，`admin` 会同步清理该组织下的角色绑定和部门绑定；如果被移除组织是用户当前组织，当前组织会回退到有效剩余组织。
 
 #### `sys_menu`
 
@@ -212,10 +290,18 @@
 作用：
 
 - 部门树
+- 每个部门归属一个组织
+- 不同组织维护各自独立的部门树
 
 直接读写方：
 
 - `admin`
+
+备注：
+
+- `sys_dept.organization_id` 是部门树隔离键。
+- 创建/更新部门时，父部门必须属于同一组织。
+- `sys_dept.organization_id` 和 `sys_role.organization_id` 都保存 UUID 字符串，不再保存自增数值。
 
 #### `sys_log`
 
@@ -345,17 +431,9 @@
 - `schema 在共享目录` = `Ent 统一生成方便`
 - `服务实际归属` = `哪个服务迁移它 + 哪个服务直接读写它`
 
-### 7.2 历史 seed / README 不能替代当前迁移代码
+### 7.2 表归属判断优先级
 
-仓库里仍然存在一些历史遗留信息，例如：
-
-- 旧版 seed SQL
-- 旧版 README 描述
-- 迁移中的权限设计文档
-
-这些内容可能还保留着“`auth` 管角色/资源/API 主数据”时期的痕迹。
-
-因此当前判断表归属时，**优先级应该是**：
+当前项目尚未投入实际使用，不再保留旧数据格式兼容口径。判断表归属时，**优先级应该是**：
 
 1. 服务启动时实际迁移了哪些表
 2. 服务 repo/usecase 实际直接读写哪些表
@@ -399,6 +477,6 @@
 当前代码里可以直接按下面记：
 
 - `user` 服务：只直接拥有 `sys_user`
-- `admin` 服务：直接拥有角色、资源、API 资源目录、用户角色绑定、菜单、部门、日志
+- `admin` 服务：直接拥有角色、资源、API 资源目录、用户角色绑定、组织、组织成员、菜单、部门、日志
 - `auth` 服务：不拥有这些权限主数据表，只拥有 `casbin_rules` 这类授权投影
-- `common` 服务：当前还没有落到 `pkg/data/schema` 的业务表
+- `common` 服务：直接拥有站内信发布记录和收件回执

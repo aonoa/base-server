@@ -32,7 +32,7 @@ func (u *DeptUpdateOne) UpdateAll(dept *Dept) *DeptUpdateOne {
 	update = update.SetStatus(dept.Status)
 	update = update.SetDesc(dept.Desc)
 	update = update.SetExtension(dept.Extension)
-	update = update.SetDom(dept.Dom)
+	update = update.SetOrganizationID(dept.OrganizationID)
 	update = update.SetPid(dept.Pid)
 	return update
 }
@@ -80,6 +80,38 @@ func (u *MenuUpdateOne) UpdateAll(menu *Menu) *MenuUpdateOne {
 	return update
 }
 
+// UpdateAll updates all mutable fields of the Organization entity (excluding create_time, update_time and immutable fields).
+func (u *OrganizationUpdateOne) UpdateAll(organization *Organization) *OrganizationUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if organization == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetName(organization.Name)
+	update = update.SetCode(organization.Code)
+	update = update.SetSort(organization.Sort)
+	update = update.SetStatus(organization.Status)
+	update = update.SetDesc(organization.Desc)
+	update = update.SetExtension(organization.Extension)
+	return update
+}
+
+// UpdateAll updates all mutable fields of the OrganizationPermissionScope entity (excluding create_time, update_time and immutable fields).
+func (u *OrganizationPermissionScopeUpdateOne) UpdateAll(organizationpermissionscope *OrganizationPermissionScope) *OrganizationPermissionScopeUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if organizationpermissionscope == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetOrganizationID(organizationpermissionscope.OrganizationID)
+	update = update.SetPermissionType(organizationpermissionscope.PermissionType)
+	update = update.SetPermissionRef(organizationpermissionscope.PermissionRef)
+	update = update.SetCreatedBy(organizationpermissionscope.CreatedBy)
+	return update
+}
+
 // UpdateAll updates all mutable fields of the ProjectionSourceStatus entity (excluding create_time, update_time and immutable fields).
 func (u *ProjectionSourceStatusUpdateOne) UpdateAll(projectionsourcestatus *ProjectionSourceStatus) *ProjectionSourceStatusUpdateOne {
 	// Skip if the input entity is nil to avoid panic
@@ -124,9 +156,12 @@ func (u *RoleUpdateOne) UpdateAll(role *Role) *RoleUpdateOne {
 	update := u
 	update = update.SetName(role.Name)
 	update = update.SetValue(role.Value)
+	update = update.SetOrganizationID(role.OrganizationID)
 	update = update.SetStatus(role.Status)
 	update = update.SetDesc(role.Desc)
 	update = update.SetMenus(role.Menus)
+	update = update.SetDataScope(role.DataScope)
+	update = update.SetDataScopeDeptIds(role.DataScopeDeptIds)
 	return update
 }
 
@@ -247,6 +282,35 @@ func (u *UserUpdateOne) UpdateAll(user *User) *UserUpdateOne {
 	return update
 }
 
+// UpdateAll updates all mutable fields of the UserDeptMembership entity (excluding create_time, update_time and immutable fields).
+func (u *UserDeptMembershipUpdateOne) UpdateAll(userdeptmembership *UserDeptMembership) *UserDeptMembershipUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if userdeptmembership == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetUserID(userdeptmembership.UserID)
+	update = update.SetDeptID(userdeptmembership.DeptID)
+	update = update.SetOrganizationID(userdeptmembership.OrganizationID)
+	return update
+}
+
+// UpdateAll updates all mutable fields of the UserOrganization entity (excluding create_time, update_time and immutable fields).
+func (u *UserOrganizationUpdateOne) UpdateAll(userorganization *UserOrganization) *UserOrganizationUpdateOne {
+	// Skip if the input entity is nil to avoid panic
+	if userorganization == nil {
+		return u
+	}
+
+	update := u
+	update = update.SetUserID(userorganization.UserID)
+	update = update.SetOrganizationID(userorganization.OrganizationID)
+	update = update.SetIsPrimary(userorganization.IsPrimary)
+	update = update.SetStatus(userorganization.Status)
+	return update
+}
+
 // UpdateAll updates all mutable fields of the UserRoleBinding entity (excluding create_time, update_time and immutable fields).
 func (u *UserRoleBindingUpdateOne) UpdateAll(userrolebinding *UserRoleBinding) *UserRoleBindingUpdateOne {
 	// Skip if the input entity is nil to avoid panic
@@ -257,5 +321,6 @@ func (u *UserRoleBindingUpdateOne) UpdateAll(userrolebinding *UserRoleBinding) *
 	update := u
 	update = update.SetUserID(userrolebinding.UserID)
 	update = update.SetRoleID(userrolebinding.RoleID)
+	update = update.SetOrganizationID(userrolebinding.OrganizationID)
 	return update
 }

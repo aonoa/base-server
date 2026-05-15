@@ -22,12 +22,18 @@ const (
 	FieldName = "name"
 	// FieldValue holds the string denoting the value field in the database.
 	FieldValue = "value"
+	// FieldOrganizationID holds the string denoting the organization_id field in the database.
+	FieldOrganizationID = "organization_id"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldDesc holds the string denoting the desc field in the database.
 	FieldDesc = "desc"
 	// FieldMenus holds the string denoting the menus field in the database.
 	FieldMenus = "menus"
+	// FieldDataScope holds the string denoting the data_scope field in the database.
+	FieldDataScope = "data_scope"
+	// FieldDataScopeDeptIds holds the string denoting the data_scope_dept_ids field in the database.
+	FieldDataScopeDeptIds = "data_scope_dept_ids"
 	// EdgeAPI holds the string denoting the api edge name in mutations.
 	EdgeAPI = "api"
 	// EdgeResource holds the string denoting the resource edge name in mutations.
@@ -53,9 +59,12 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldName,
 	FieldValue,
+	FieldOrganizationID,
 	FieldStatus,
 	FieldDesc,
 	FieldMenus,
+	FieldDataScope,
+	FieldDataScopeDeptIds,
 }
 
 var (
@@ -84,6 +93,10 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultDataScope holds the default value on creation for the "data_scope" field.
+	DefaultDataScope string
+	// DefaultDataScopeDeptIds holds the default value on creation for the "data_scope_dept_ids" field.
+	DefaultDataScopeDeptIds []int64
 )
 
 // OrderOption defines the ordering options for the Role queries.
@@ -114,6 +127,11 @@ func ByValue(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldValue, opts...).ToFunc()
 }
 
+// ByOrganizationID orders the results by the organization_id field.
+func ByOrganizationID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizationID, opts...).ToFunc()
+}
+
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
@@ -122,6 +140,11 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 // ByDesc orders the results by the desc field.
 func ByDesc(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDesc, opts...).ToFunc()
+}
+
+// ByDataScope orders the results by the data_scope field.
+func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
 }
 
 // ByAPICount orders the results by api count.

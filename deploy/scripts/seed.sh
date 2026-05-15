@@ -80,7 +80,7 @@ wait_for_table() {
 }
 
 wait_for_policy_projection() {
-  until compose_cmd "$POSTGRES_COMPOSE_FILE" exec -T postgres psql -U postgres -d auth -tAc "SELECT EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g' AND v0 = 'f4f9e258-fa13-4467-95fb-c86019a377f9' AND v1 = 'role:root') AND EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g' AND v0 = 'a0bb672a-a4b1-4ec9-807a-ba11e000d2a4' AND v1 = 'role:admin') AND EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g2' AND v0 = '/admin-api/v1/menus' AND v1 = 'api:menu')" | grep -q t; do
+  until compose_cmd "$POSTGRES_COMPOSE_FILE" exec -T postgres psql -U postgres -d auth -tAc "SELECT EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g' AND v0 = 'f4f9e258-fa13-4467-95fb-c86019a377f9' AND v1 = 'root' AND v2 = 'global') AND EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g' AND v0 = 'a0bb672a-a4b1-4ec9-807a-ba11e000d2a4' AND v1 = 'admin' AND v2 = '9f740c1b-0210-4e3a-858d-d128edea924d') AND EXISTS (SELECT 1 FROM casbin_rules WHERE ptype = 'g2' AND v0 = '/admin-api/v1/menus' AND v1 = 'menu')" | grep -q t; do
     sleep 2
   done
 }
@@ -107,11 +107,32 @@ apply_seed() {
   "${POSTGRES_EXEC[@]}" -d "$db" < "$file"
 }
 
+sync_default_organization_members() {
+  printf 'Syncing default organization members\n'
+  wait_for_table admin sys_user_organization
+  while IFS= read -r user_id; do
+    [ -n "$user_id" ] || continue
+    local escaped_user_id
+    escaped_user_id="${user_id//\'/\'\'}"
+    "${POSTGRES_EXEC[@]}" -d admin -c "
+INSERT INTO sys_user_organization (
+  create_time, update_time, user_id, organization_id, is_primary, status
+) VALUES (
+  NOW(), NOW(), '${escaped_user_id}', '9f740c1b-0210-4e3a-858d-d128edea924d', true, true
+)
+ON CONFLICT (user_id, organization_id) DO UPDATE SET
+  update_time = NOW(),
+  status = true;
+" >/dev/null
+  done < <(compose_cmd "$POSTGRES_COMPOSE_FILE" exec -T postgres psql -U postgres -d user -tAc "SELECT id FROM sys_user ORDER BY id")
+}
+
 wait_for_postgres
 wait_for_table admin sys_role
 wait_for_table admin sys_api_resources
 wait_for_table admin sys_user_role_binding
 wait_for_table user sys_user
+wait_for_table admin sys_organization_permission_scope
 wait_for_table admin sys_menu
 wait_for_table admin sys_dept
 wait_for_table admin sys_service_registry
@@ -119,6 +140,7 @@ wait_for_table admin sys_projection_source_status
 
 apply_seed admin "$ROOT_DIR/deploy/sql/seed/admin.sql"
 apply_seed user "$ROOT_DIR/deploy/sql/seed/user.sql"
+sync_default_organization_members
 apply_seed auth "$ROOT_DIR/deploy/sql/seed/auth.sql"
 
 if [ "$MODE" = "compose" ]; then

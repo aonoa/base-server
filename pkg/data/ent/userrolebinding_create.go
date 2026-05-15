@@ -60,6 +60,12 @@ func (_c *UserRoleBindingCreate) SetRoleID(v int64) *UserRoleBindingCreate {
 	return _c
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_c *UserRoleBindingCreate) SetOrganizationID(v string) *UserRoleBindingCreate {
+	_c.mutation.SetOrganizationID(v)
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *UserRoleBindingCreate) SetID(v int64) *UserRoleBindingCreate {
 	_c.mutation.SetID(v)
@@ -125,6 +131,9 @@ func (_c *UserRoleBindingCreate) check() error {
 	if _, ok := _c.mutation.RoleID(); !ok {
 		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "UserRoleBinding.role_id"`)}
 	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		return &ValidationError{Name: "organization_id", err: errors.New(`ent: missing required field "UserRoleBinding.organization_id"`)}
+	}
 	return nil
 }
 
@@ -172,6 +181,10 @@ func (_c *UserRoleBindingCreate) createSpec() (*UserRoleBinding, *sqlgraph.Creat
 	if value, ok := _c.mutation.RoleID(); ok {
 		_spec.SetField(userrolebinding.FieldRoleID, field.TypeInt64, value)
 		_node.RoleID = value
+	}
+	if value, ok := _c.mutation.OrganizationID(); ok {
+		_spec.SetField(userrolebinding.FieldOrganizationID, field.TypeString, value)
+		_node.OrganizationID = value
 	}
 	return _node, _spec
 }

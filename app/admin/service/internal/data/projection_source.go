@@ -44,7 +44,7 @@ func (s *adminProjectionSource) ListProjectionAPIs(ctx context.Context) ([]authx
 }
 
 func (s *adminProjectionSource) ListProjectionBindings(ctx context.Context) ([]authx.UserRoleBindingProjection, error) {
-	bindingList, err := s.repo.ListUserRoleBindings(ctx)
+	bindingList, err := s.repo.listExplicitUserRoleBindings(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -6,6 +6,8 @@ import (
 	"base-server/pkg/data/ent/apiresources"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
+	"base-server/pkg/data/ent/organization"
+	"base-server/pkg/data/ent/organizationpermissionscope"
 	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
@@ -14,6 +16,8 @@ import (
 	"base-server/pkg/data/ent/sitemessagereceipt"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
+	"base-server/pkg/data/ent/userdeptmembership"
+	"base-server/pkg/data/ent/userorganization"
 	"base-server/pkg/data/ent/userrolebinding"
 	"context"
 	"errors"
@@ -84,18 +88,22 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			apiresources.Table:           apiresources.ValidColumn,
-			dept.Table:                   dept.ValidColumn,
-			menu.Table:                   menu.ValidColumn,
-			projectionsourcestatus.Table: projectionsourcestatus.ValidColumn,
-			resource.Table:               resource.ValidColumn,
-			role.Table:                   role.ValidColumn,
-			serviceregistry.Table:        serviceregistry.ValidColumn,
-			sitemessage.Table:            sitemessage.ValidColumn,
-			sitemessagereceipt.Table:     sitemessagereceipt.ValidColumn,
-			syslogrecord.Table:           syslogrecord.ValidColumn,
-			user.Table:                   user.ValidColumn,
-			userrolebinding.Table:        userrolebinding.ValidColumn,
+			apiresources.Table:                apiresources.ValidColumn,
+			dept.Table:                        dept.ValidColumn,
+			menu.Table:                        menu.ValidColumn,
+			organization.Table:                organization.ValidColumn,
+			organizationpermissionscope.Table: organizationpermissionscope.ValidColumn,
+			projectionsourcestatus.Table:      projectionsourcestatus.ValidColumn,
+			resource.Table:                    resource.ValidColumn,
+			role.Table:                        role.ValidColumn,
+			serviceregistry.Table:             serviceregistry.ValidColumn,
+			sitemessage.Table:                 sitemessage.ValidColumn,
+			sitemessagereceipt.Table:          sitemessagereceipt.ValidColumn,
+			syslogrecord.Table:                syslogrecord.ValidColumn,
+			user.Table:                        user.ValidColumn,
+			userdeptmembership.Table:          userdeptmembership.ValidColumn,
+			userorganization.Table:            userorganization.ValidColumn,
+			userrolebinding.Table:             userrolebinding.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

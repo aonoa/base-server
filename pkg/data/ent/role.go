@@ -26,12 +26,18 @@ type Role struct {
 	Name string `json:"name,omitempty"`
 	// 角色值
 	Value string `json:"value,omitempty"`
+	// 组织ID
+	OrganizationID string `json:"organization_id,omitempty"`
 	// 0-禁用，1-启用
 	Status bool `json:"status,omitempty"`
 	// 简介
 	Desc string `json:"desc,omitempty"`
 	// 权限菜单ID列表
 	Menus []int32 `json:"menus,omitempty"`
+	// 数据范围: all/self_dept/self_dept_and_child/self/custom_depts
+	DataScope string `json:"data_scope,omitempty"`
+	// 自定义数据范围部门ID列表
+	DataScopeDeptIds []int64 `json:"data_scope_dept_ids,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -72,13 +78,13 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldMenus:
+		case role.FieldMenus, role.FieldDataScopeDeptIds:
 			values[i] = new([]byte)
 		case role.FieldStatus:
 			values[i] = new(sql.NullBool)
 		case role.FieldID:
 			values[i] = new(sql.NullInt64)
-		case role.FieldName, role.FieldValue, role.FieldDesc:
+		case role.FieldName, role.FieldValue, role.FieldOrganizationID, role.FieldDesc, role.FieldDataScope:
 			values[i] = new(sql.NullString)
 		case role.FieldCreateTime, role.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -127,6 +133,12 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Value = value.String
 			}
+		case role.FieldOrganizationID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field organization_id", values[i])
+			} else if value.Valid {
+				_m.OrganizationID = value.String
+			}
 		case role.FieldStatus:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
@@ -145,6 +157,20 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			} else if value != nil && len(*value) > 0 {
 				if err := json.Unmarshal(*value, &_m.Menus); err != nil {
 					return fmt.Errorf("unmarshal field menus: %w", err)
+				}
+			}
+		case role.FieldDataScope:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
+			} else if value.Valid {
+				_m.DataScope = value.String
+			}
+		case role.FieldDataScopeDeptIds:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field data_scope_dept_ids", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &_m.DataScopeDeptIds); err != nil {
+					return fmt.Errorf("unmarshal field data_scope_dept_ids: %w", err)
 				}
 			}
 		default:
@@ -205,6 +231,9 @@ func (_m *Role) String() string {
 	builder.WriteString("value=")
 	builder.WriteString(_m.Value)
 	builder.WriteString(", ")
+	builder.WriteString("organization_id=")
+	builder.WriteString(_m.OrganizationID)
+	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
@@ -213,6 +242,12 @@ func (_m *Role) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("menus=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Menus))
+	builder.WriteString(", ")
+	builder.WriteString("data_scope=")
+	builder.WriteString(_m.DataScope)
+	builder.WriteString(", ")
+	builder.WriteString("data_scope_dept_ids=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DataScopeDeptIds))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -103,6 +103,11 @@ paths:
             tags:
                 - AdminService
             operationId: AdminService_GetDeptList
+            parameters:
+                - name: organizationId
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -378,6 +383,237 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/my/current-organization:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_SwitchCurrentOrganization
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.SwitchCurrentOrganizationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.CurrentOrganizationReply'
+    /admin-api/v1/my/organizations:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetMyOrganizations
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetMyOrganizationsReply'
+    /admin-api/v1/organizations:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetOrganizationList
+            parameters:
+                - name: currentPage
+                  in: query
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetOrganizationListReply'
+        post:
+            tags:
+                - AdminService
+            operationId: AdminService_AddOrganization
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
+    /admin-api/v1/organizations/{id}:
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpdateOrganization
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DelOrganization
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /admin-api/v1/organizations/{organizationId}/members:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetOrganizationMembers
+            parameters:
+                - name: organizationId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetOrganizationMembersReply'
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_SaveOrganizationMembers
+            parameters:
+                - name: organizationId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.SaveOrganizationMembersRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.GetOrganizationMembersReply'
+    /admin-api/v1/organizations/{organizationId}/permission-catalog:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetOrganizationPermissionCatalog
+            parameters:
+                - name: organizationId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationPermissionCatalogReply'
+    /admin-api/v1/organizations/{organizationId}/permission-scope:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetOrganizationPermissionScope
+            parameters:
+                - name: organizationId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationPermissionScopeReply'
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_SaveOrganizationPermissionScope
+            parameters:
+                - name: organizationId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.SaveOrganizationPermissionScopeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationPermissionScopeReply'
+    /admin-api/v1/permission-catalog/current:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetCurrentPermissionCatalog
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.OrganizationPermissionCatalogReply'
     /admin-api/v1/platform/projection-sources:
         get:
             tags:
@@ -524,6 +760,10 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: organizationId
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -586,6 +826,69 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin-api/v1/user-dept-bindings/{userId}:
+        get:
+            tags:
+                - AdminService
+            operationId: AdminService_GetUserDeptBinding
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: organizationId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.UserDeptBindingItem'
+        put:
+            tags:
+                - AdminService
+            operationId: AdminService_UpsertUserDeptBinding
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.admin.service.v1.UserDeptBindingItem'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.admin.service.v1.UserDeptBindingItem'
+        delete:
+            tags:
+                - AdminService
+            operationId: AdminService_DeleteUserDeptBinding
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: organizationId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /admin-api/v1/user-role-bindings:
         get:
             tags:
@@ -607,6 +910,10 @@ paths:
                 - name: userId
                   in: path
                   required: true
+                  schema:
+                    type: string
+                - name: organizationId
+                  in: query
                   schema:
                     type: string
             responses:
@@ -647,6 +954,10 @@ paths:
                 - name: userId
                   in: path
                   required: true
+                  schema:
+                    type: string
+                - name: organizationId
+                  in: query
                   schema:
                     type: string
             responses:
@@ -1106,6 +1417,13 @@ components:
                     type: string
                 resourcesGroup:
                     type: string
+        api.admin.service.v1.CurrentOrganizationReply:
+            type: object
+            properties:
+                current:
+                    $ref: '#/components/schemas/api.admin.service.v1.MyOrganizationItem'
+                currentOrganizationId:
+                    type: string
         api.admin.service.v1.CurrentUserMenuItem:
             type: object
             properties:
@@ -1156,12 +1474,12 @@ components:
                     format: int32
                 createTime:
                     type: string
-                dom:
-                    type: string
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                organizationId:
+                    type: string
         api.admin.service.v1.GetApiListByPageReply:
             type: object
             properties:
@@ -1185,6 +1503,33 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.admin.service.v1.DeptListItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetMyOrganizationsReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.MyOrganizationItem'
+                currentOrganizationId:
+                    type: string
+        api.admin.service.v1.GetOrganizationListReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
+                total:
+                    type: string
+        api.admin.service.v1.GetOrganizationMembersReply:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.OrganizationMemberItem'
                 total:
                     type: string
         api.admin.service.v1.GetProjectionSourceStatusListReply:
@@ -1362,6 +1707,113 @@ components:
                     type: array
                     items:
                         type: string
+        api.admin.service.v1.MyOrganizationItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                code:
+                    type: string
+                orderNo:
+                    type: integer
+                    format: int32
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                current:
+                    type: boolean
+                createTime:
+                    type: string
+                updateTime:
+                    type: string
+        api.admin.service.v1.OrganizationItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                code:
+                    type: string
+                orderNo:
+                    type: integer
+                    format: int32
+                remark:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                createTime:
+                    type: string
+                updateTime:
+                    type: string
+                memberCount:
+                    type: string
+                deptCount:
+                    type: string
+        api.admin.service.v1.OrganizationMemberItem:
+            type: object
+            properties:
+                userId:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                email:
+                    type: string
+                avatar:
+                    type: string
+                userStatus:
+                    type: integer
+                    format: int32
+                memberStatus:
+                    type: integer
+                    format: int32
+                primary:
+                    type: boolean
+                createTime:
+                    type: string
+        api.admin.service.v1.OrganizationPermissionCatalogReply:
+            type: object
+            properties:
+                organizationId:
+                    type: string
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.admin.service.v1.ResourceListItem'
+                scopedMenuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                scopedResourceIds:
+                    type: array
+                    items:
+                        type: string
+        api.admin.service.v1.OrganizationPermissionScopeReply:
+            type: object
+            properties:
+                organizationId:
+                    type: string
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                resourceIds:
+                    type: array
+                    items:
+                        type: string
         api.admin.service.v1.ProjectionSourceStatusItem:
             type: object
             properties:
@@ -1427,6 +1879,37 @@ components:
                     type: array
                     items:
                         type: string
+                organizationId:
+                    type: string
+                dataScope:
+                    type: string
+                dataScopeDeptIds:
+                    type: array
+                    items:
+                        type: string
+        api.admin.service.v1.SaveOrganizationMembersRequest:
+            type: object
+            properties:
+                organizationId:
+                    type: string
+                userIds:
+                    type: array
+                    items:
+                        type: string
+        api.admin.service.v1.SaveOrganizationPermissionScopeRequest:
+            type: object
+            properties:
+                organizationId:
+                    type: string
+                menuIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+                resourceIds:
+                    type: array
+                    items:
+                        type: string
         api.admin.service.v1.ServiceRegistryItem:
             type: object
             properties:
@@ -1448,6 +1931,11 @@ components:
                 description:
                     type: string
                 createTime:
+                    type: string
+        api.admin.service.v1.SwitchCurrentOrganizationRequest:
+            type: object
+            properties:
+                organizationId:
                     type: string
         api.admin.service.v1.SysLogItem:
             type: object
@@ -1510,6 +1998,23 @@ components:
                         $ref: '#/components/schemas/api.admin.service.v1.SysMenuListItem'
                 createTime:
                     type: string
+        api.admin.service.v1.UserDeptBindingItem:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                deptId:
+                    type: string
+                deptName:
+                    type: string
+                createTime:
+                    type: string
+                updateTime:
+                    type: string
+                organizationId:
+                    type: string
         api.admin.service.v1.UserRoleBindingItem:
             type: object
             properties:
@@ -1527,6 +2032,8 @@ components:
                     type: array
                     items:
                         type: string
+                organizationId:
+                    type: string
         api.admin.service.v1.WalkRouteItem:
             type: object
             properties:

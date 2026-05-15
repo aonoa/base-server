@@ -31,8 +31,8 @@ type Dept struct {
 	Desc string `json:"desc,omitempty"`
 	// 扩展信息
 	Extension string `json:"extension,omitempty"`
-	// 域
-	Dom int64 `json:"dom,omitempty"`
+	// 组织ID
+	OrganizationID string `json:"organization_id,omitempty"`
 	// 父节点id
 	Pid int64 `json:"pid,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -79,9 +79,9 @@ func (*Dept) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case dept.FieldStatus:
 			values[i] = new(sql.NullBool)
-		case dept.FieldID, dept.FieldSort, dept.FieldDom, dept.FieldPid:
+		case dept.FieldID, dept.FieldSort, dept.FieldPid:
 			values[i] = new(sql.NullInt64)
-		case dept.FieldName, dept.FieldDesc, dept.FieldExtension:
+		case dept.FieldName, dept.FieldDesc, dept.FieldExtension, dept.FieldOrganizationID:
 			values[i] = new(sql.NullString)
 		case dept.FieldCreateTime, dept.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -148,11 +148,11 @@ func (_m *Dept) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Extension = value.String
 			}
-		case dept.FieldDom:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field dom", values[i])
+		case dept.FieldOrganizationID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field organization_id", values[i])
 			} else if value.Valid {
-				_m.Dom = value.Int64
+				_m.OrganizationID = value.String
 			}
 		case dept.FieldPid:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -227,8 +227,8 @@ func (_m *Dept) String() string {
 	builder.WriteString("extension=")
 	builder.WriteString(_m.Extension)
 	builder.WriteString(", ")
-	builder.WriteString("dom=")
-	builder.WriteString(fmt.Sprintf("%v", _m.Dom))
+	builder.WriteString("organization_id=")
+	builder.WriteString(_m.OrganizationID)
 	builder.WriteString(", ")
 	builder.WriteString("pid=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Pid))

@@ -1,43 +1,6 @@
 BEGIN;
 
 -- Permission master data is owned by the admin service.
-DELETE FROM api_resources_roles
-WHERE api_resources_id IN (
-  SELECT id
-  FROM sys_api_resources
-  WHERE path LIKE '/admin-api/v1/platform/domains%'
-     OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
-     OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
-     OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
-     OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
-     OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')
-);
-
-DELETE FROM sys_api_resources
-WHERE path LIKE '/admin-api/v1/platform/domains%'
-   OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
-   OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
-   OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
-   OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
-   OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT');
-
-ALTER TABLE sys_api_resources
-  DROP COLUMN IF EXISTS business_key,
-  DROP COLUMN IF EXISTS service_key,
-  DROP COLUMN IF EXISTS service_code,
-  DROP COLUMN IF EXISTS domain_code;
-
-ALTER TABLE sys_service_registry
-  DROP COLUMN IF EXISTS domain_code;
-
-ALTER TABLE sys_projection_source_status
-  DROP COLUMN IF EXISTS domain_code;
-
-DROP TABLE IF EXISTS sys_business_domain;
-
-DELETE FROM sys_menu
-WHERE id = 21 OR path = '/system/platform/domain';
-
 INSERT INTO sys_service_registry (
   id, create_time, update_time, service_code, service_name, http_prefix, grpc_service, status, projection_enabled, description
 )
@@ -56,19 +19,28 @@ ON CONFLICT (service_code) DO UPDATE SET
   projection_enabled = EXCLUDED.projection_enabled,
   description = EXCLUDED.description;
 
-INSERT INTO sys_role (id, create_time, update_time, name, value, status, "desc", menus)
+DELETE FROM sys_service_registry
+WHERE service_code NOT IN ('admin', 'auth', 'common', 'gateway', 'user');
+
+DELETE FROM sys_projection_source_status
+WHERE source_service NOT IN ('admin');
+
+INSERT INTO sys_role (id, create_time, update_time, name, value, organization_id, status, "desc", menus, data_scope, data_scope_dept_ids)
 VALUES
-  (0, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '默认角色', 'default', true, '', '[10, 11, 12, 13, 14, 15, 24]'),
-  (1, '2025-02-25 00:00:39.255+08', '2025-08-22 00:47:56.788297+08', '超级管理员', 'root', true, '在系统层就拥有全部权限，不用设置', 'null'),
-  (2, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '管理员', 'admin', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 22, 23, 24, 25]')
+  (0, '2025-02-25 00:00:39.255+08', '2026-05-09 00:00:00+08', '默认角色', 'default', '9f740c1b-0210-4e3a-858d-d128edea924d', true, '', '[10, 11, 12, 13, 14, 15, 24]', 'self', '[]'),
+  (1, '2025-02-25 00:00:39.255+08', '2025-08-22 00:47:56.788297+08', '超级管理员', 'root', '9f740c1b-0210-4e3a-858d-d128edea924d', true, '在系统层就拥有全部权限，不用设置', 'null', 'all', '[]'),
+  (2, '2025-02-25 00:00:39.255+08', '2026-05-13 00:00:00+08', '管理员', 'admin', '9f740c1b-0210-4e3a-858d-d128edea924d', true, '', '[10, 11, 12, 13, 14, 15, 16, 17, 18, 3, 20, 22, 23, 24, 25, 26]', 'all', '[]')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
   name = EXCLUDED.name,
   value = EXCLUDED.value,
+  organization_id = EXCLUDED.organization_id,
   status = EXCLUDED.status,
   "desc" = EXCLUDED."desc",
-  menus = EXCLUDED.menus;
+  menus = EXCLUDED.menus,
+  data_scope = EXCLUDED.data_scope,
+  data_scope_dept_ids = EXCLUDED.data_scope_dept_ids;
 
 INSERT INTO sys_resources (id, create_time, update_time, name, type, value, method, description)
 VALUES
@@ -79,6 +51,8 @@ VALUES
   ('a0f9309e-d04a-42c8-9bf5-7dd8b1af6e36', '2025-08-06 21:29:31.728041+08', '2025-08-20 19:03:27.329457+08', '基础api组', 'api', 'default', '(GET|POST|PUT|DELETE)', ''),
   ('a3e1fca5-e7ab-41f2-b7a9-2ab46f3640ea', '2025-08-06 22:08:19.563908+08', '2025-08-06 22:08:19.563908+08', '系统管理api组', 'api', 'api', '(GET|POST|PUT|DELETE)', ''),
   ('d3213f61-23d8-4be3-a44a-63f49d8c6cec', '2025-08-06 22:09:52.787831+08', '2025-08-06 22:09:52.787831+08', '系统管理部门组', 'api', 'dept', '(GET|POST|PUT|DELETE)', ''),
+  ('6e24d8e7-d0e4-4c41-a19d-64fc2f1cf9df', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '组织管理接口权限', 'api', 'organization', '(GET|POST|PUT|DELETE)', '组织管理页接口权限'),
+  ('94d41386-8054-423a-9de2-af80f424b424', '2026-05-15 00:00:00+08', '2026-05-15 00:00:00+08', '组织权限范围接口权限', 'api', 'organization_permission_scope', '(GET|PUT)', '组织可用权限范围配置接口权限'),
   ('9da89181-e2d3-4b7a-9860-a12badd4b415', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '站内信管理接口权限', 'api', 'site_message_manage', '(GET|POST|DELETE)', '站内信管理页接口权限'),
   ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', '2025-08-06 22:13:24.978161+08', '2025-08-06 22:13:24.978161+08', 'admin接口操作权限', 'api', 'admin', '(GET|POST|PUT|DELETE)', '')
 ON CONFLICT (id) DO UPDATE SET
@@ -98,6 +72,10 @@ VALUES
   ('a3e1fca5-e7ab-41f2-b7a9-2ab46f3640ea', 2),
   ('7d6b49f5-3ef5-41e1-a4e5-0ccb96da5a95', 1),
   ('7d6b49f5-3ef5-41e1-a4e5-0ccb96da5a95', 2),
+  ('6e24d8e7-d0e4-4c41-a19d-64fc2f1cf9df', 1),
+  ('6e24d8e7-d0e4-4c41-a19d-64fc2f1cf9df', 2),
+  ('94d41386-8054-423a-9de2-af80f424b424', 1),
+  ('94d41386-8054-423a-9de2-af80f424b424', 2),
   ('9da89181-e2d3-4b7a-9860-a12badd4b415', 1),
   ('9da89181-e2d3-4b7a-9860-a12badd4b415', 2),
   ('f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705', 1),
@@ -134,6 +112,10 @@ VALUES
   ('api-user-check', '2025-08-04 15:05:44+08', '2025-08-04 15:19:59+08', '用户存在检查', '/user-api/v1/users/check', 'GET', 'user', '用户服务', 'default'),
   ('api-user-password', '2025-08-04 15:13:33+08', '2025-08-04 15:13:33+08', '修改用户密码', '/user-api/v1/users/{user_id}/password', 'POST', 'user', '用户服务', 'default'),
   ('api-admin-menu-current', '2025-08-04 15:06:10+08', '2025-08-04 15:20:12+08', '获取当前用户菜单', '/admin-api/v1/menus/current', 'GET', 'admin', '管理服务', 'default'),
+  ('api-admin-role-list', '2026-05-14 00:00:00+08', '2026-05-14 00:00:00+08', '获取角色列表', '/admin-api/v1/roles', 'GET', 'admin', '管理服务', 'role'),
+  ('api-admin-role-create', '2026-05-14 00:00:00+08', '2026-05-14 00:00:00+08', '新增角色', '/admin-api/v1/roles', 'POST', 'admin', '管理服务', 'role'),
+  ('api-admin-role-update', '2026-05-14 00:00:00+08', '2026-05-14 00:00:00+08', '更新角色', '/admin-api/v1/roles/{id}', 'PUT', 'admin', '管理服务', 'role'),
+  ('api-admin-role-delete', '2026-05-14 00:00:00+08', '2026-05-14 00:00:00+08', '删除角色', '/admin-api/v1/roles/{id}', 'DELETE', 'admin', '管理服务', 'role'),
   ('api-admin-menu-list', '2025-08-04 15:06:14+08', '2025-08-04 15:20:17+08', '获取系统菜单列表', '/admin-api/v1/menus', 'GET', 'admin', '管理服务', 'menu'),
   ('api-admin-menu-create', '2025-08-04 15:06:39+08', '2025-08-04 15:20:24+08', '新增菜单', '/admin-api/v1/menus', 'POST', 'admin', '管理服务', 'menu'),
   ('api-admin-menu-update', '2025-08-04 15:06:59+08', '2025-08-04 15:20:33+08', '更新菜单', '/admin-api/v1/menus/{id}', 'PUT', 'admin', '管理服务', 'menu'),
@@ -160,6 +142,18 @@ VALUES
   ('api-admin-resource-delete', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '删除资源', '/admin-api/v1/resources/{id}', 'DELETE', 'admin', '管理服务', 'data'),
   ('api-admin-platform-service-list', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '获取服务注册列表', '/admin-api/v1/platform/services', 'GET', 'admin', '管理服务', 'admin'),
   ('api-admin-platform-projection-source-list', '2026-04-30 00:00:00+08', '2026-04-30 00:00:00+08', '获取投影源状态列表', '/admin-api/v1/platform/projection-sources', 'GET', 'admin', '管理服务', 'admin'),
+  ('api-admin-organization-list', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '获取组织列表', '/admin-api/v1/organizations', 'GET', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-create', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '新增组织', '/admin-api/v1/organizations', 'POST', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-update', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '更新组织', '/admin-api/v1/organizations/{id}', 'PUT', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-delete', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '删除组织', '/admin-api/v1/organizations/{id}', 'DELETE', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-member-list', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '获取组织成员', '/admin-api/v1/organizations/{organization_id}/members', 'GET', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-member-save', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '保存组织成员', '/admin-api/v1/organizations/{organization_id}/members', 'PUT', 'admin', '管理服务', 'organization'),
+  ('api-admin-organization-permission-scope-get', '2026-05-15 00:00:00+08', '2026-05-15 00:00:00+08', '获取组织权限范围', '/admin-api/v1/organizations/{organization_id}/permission-scope', 'GET', 'admin', '管理服务', 'organization_permission_scope'),
+  ('api-admin-organization-permission-scope-save', '2026-05-15 00:00:00+08', '2026-05-15 00:00:00+08', '保存组织权限范围', '/admin-api/v1/organizations/{organization_id}/permission-scope', 'PUT', 'admin', '管理服务', 'organization_permission_scope'),
+  ('api-admin-permission-catalog-current', '2026-05-15 00:00:00+08', '2026-05-15 00:00:00+08', '获取当前组织权限目录', '/admin-api/v1/permission-catalog/current', 'GET', 'admin', '管理服务', 'role'),
+  ('api-admin-organization-permission-catalog', '2026-05-15 00:00:00+08', '2026-05-15 00:00:00+08', '获取指定组织权限目录', '/admin-api/v1/organizations/{organization_id}/permission-catalog', 'GET', 'admin', '管理服务', 'organization_permission_scope'),
+  ('api-admin-my-organization-list', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '获取我的组织', '/admin-api/v1/my/organizations', 'GET', 'admin', '管理服务', 'default'),
+  ('api-admin-my-current-organization-switch', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '切换当前组织', '/admin-api/v1/my/current-organization', 'PUT', 'admin', '管理服务', 'default'),
   ('api-admin-walk-route', '2026-03-28 00:00:00+08', '2026-03-28 00:00:00+08', '获取系统所有api接口', '/admin-api/v1/walk-routes', 'GET', 'admin', '系统管理', 'api'),
   ('api-common-site-message-my-list', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信列表', '/common-api/v1/site-messages/my', 'GET', 'common', '公共服务', 'default'),
   ('api-common-site-message-my-unread-count', '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', '获取我的站内信未读数量', '/common-api/v1/site-messages/my/unread-count', 'GET', 'common', '公共服务', 'default'),
@@ -188,6 +182,10 @@ INSERT INTO api_resources_roles (api_resources_id, role_id)
 SELECT id, 2
 FROM sys_api_resources
 WHERE (path, method) IN (
+  ('/admin-api/v1/roles', 'GET'),
+  ('/admin-api/v1/roles', 'POST'),
+  ('/admin-api/v1/roles/{id}', 'PUT'),
+  ('/admin-api/v1/roles/{id}', 'DELETE'),
   ('/admin-api/v1/apis', 'GET'),
   ('/admin-api/v1/apis', 'POST'),
   ('/admin-api/v1/apis/{id}', 'PUT'),
@@ -198,6 +196,16 @@ WHERE (path, method) IN (
   ('/admin-api/v1/resources/{id}', 'DELETE'),
   ('/admin-api/v1/platform/services', 'GET'),
   ('/admin-api/v1/platform/projection-sources', 'GET'),
+  ('/admin-api/v1/organizations', 'GET'),
+  ('/admin-api/v1/organizations', 'POST'),
+  ('/admin-api/v1/organizations/{id}', 'PUT'),
+  ('/admin-api/v1/organizations/{id}', 'DELETE'),
+  ('/admin-api/v1/organizations/{organization_id}/members', 'GET'),
+  ('/admin-api/v1/organizations/{organization_id}/members', 'PUT'),
+  ('/admin-api/v1/organizations/{organization_id}/permission-scope', 'GET'),
+  ('/admin-api/v1/organizations/{organization_id}/permission-scope', 'PUT'),
+  ('/admin-api/v1/permission-catalog/current', 'GET'),
+  ('/admin-api/v1/organizations/{organization_id}/permission-catalog', 'GET'),
   ('/admin-api/v1/walk-routes', 'GET'),
   ('/common-api/v1/site-messages/manage', 'GET'),
   ('/common-api/v1/site-messages/manage', 'POST'),
@@ -206,11 +214,11 @@ WHERE (path, method) IN (
 )
 ON CONFLICT DO NOTHING;
 
-INSERT INTO sys_dept (id, create_time, update_time, name, sort, status, "desc", extension, dom, pid)
+INSERT INTO sys_dept (id, create_time, update_time, name, sort, status, "desc", extension, pid, organization_id)
 VALUES
-  (8, '2025-07-19 18:50:12.54752+08', '2025-07-19 18:50:12.547521+08', 'test', 3, true, '', '', 0, NULL),
-  (9, '2025-07-19 18:50:16.996763+08', '2026-01-07 20:55:19.212511+08', 'test', 0, false, '', '', 0, NULL),
-  (15, '2025-07-19 19:48:38.083376+08', '2026-01-07 20:54:57.34244+08', 'test3', 0, true, '', '', 0, 8)
+  (8, '2025-07-19 18:50:12.54752+08', '2025-07-19 18:50:12.547521+08', 'test', 3, true, '', '', NULL, '9f740c1b-0210-4e3a-858d-d128edea924d'),
+  (9, '2025-07-19 18:50:16.996763+08', '2026-01-07 20:55:19.212511+08', 'test', 0, false, '', '', NULL, '9f740c1b-0210-4e3a-858d-d128edea924d'),
+  (15, '2025-07-19 19:48:38.083376+08', '2026-01-07 20:54:57.34244+08', 'test3', 0, true, '', '', 8, '9f740c1b-0210-4e3a-858d-d128edea924d')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -219,8 +227,29 @@ ON CONFLICT (id) DO UPDATE SET
   status = EXCLUDED.status,
   "desc" = EXCLUDED."desc",
   extension = EXCLUDED.extension,
-  dom = EXCLUDED.dom,
-  pid = EXCLUDED.pid;
+  pid = EXCLUDED.pid,
+  organization_id = EXCLUDED.organization_id;
+
+INSERT INTO sys_organization (id, create_time, update_time, name, code, sort, status, "desc", extension)
+VALUES
+  ('9f740c1b-0210-4e3a-858d-d128edea924d', '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', '默认组织', 'default', 0, true, '系统默认组织', '')
+ON CONFLICT (id) DO UPDATE SET
+  update_time = EXCLUDED.update_time,
+  name = EXCLUDED.name,
+  code = EXCLUDED.code,
+  sort = EXCLUDED.sort,
+  status = EXCLUDED.status,
+  "desc" = EXCLUDED."desc",
+  extension = EXCLUDED.extension;
+
+INSERT INTO sys_user_organization (create_time, update_time, user_id, organization_id, is_primary, status)
+VALUES
+  ('2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', 'a0bb672a-a4b1-4ec9-807a-ba11e000d2a4', '9f740c1b-0210-4e3a-858d-d128edea924d', true, true),
+  ('2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', 'e8a4dc57-a916-4d35-8b57-9f4dfae0d5b0', '9f740c1b-0210-4e3a-858d-d128edea924d', false, true),
+  ('2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', 'f4f9e258-fa13-4467-95fb-c86019a377f9', '9f740c1b-0210-4e3a-858d-d128edea924d', true, true)
+ON CONFLICT (user_id, organization_id) DO UPDATE SET
+  update_time = EXCLUDED.update_time,
+  status = EXCLUDED.status;
 
 INSERT INTO sys_menu (
   id, create_time, update_time, pid, type, status, path, redirect, alias, name, component, icon, title, "order",
@@ -252,7 +281,8 @@ VALUES
   (22, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/service', '', '', 'ServiceRegistry', '/system/platform/service/index', 'carbon:container-services', '服务注册', 1006, false, false, false, '', '', '', '/system/platform/service', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (23, '2026-04-20 00:00:00+08', '2026-04-20 00:00:00+08', 20, 'menu', true, '/system/platform/projection-source', '', '', 'ProjectionSource', '/system/platform/projection-source/index', 'carbon:data-check', '投影源状态', 1007, false, false, false, '', '', '', '/system/platform/projection-source', 0, false, true, '', false, 0, false, false, false, false, false, '', '', ''),
   (24, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 0, 'menu', true, '/messages', '', '', 'SiteMessageInbox', '/_core/messages/inbox', 'lucide:mail', '站内信收件箱', 9999, false, false, false, '', '', '', '/messages', 0, false, false, '', false, 0, true, false, false, false, true, '', 'normal', 'success'),
-  (25, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 16, 'menu', true, '/system/site-message', '', '', 'SiteMessageManage', '/_core/messages/manage', 'lucide:mail', '站内信管理', 1008, false, false, false, '', '', '', '/system/site-message', 0, false, false, '', false, 0, false, false, false, false, true, '', 'normal', 'success')
+  (25, '2026-05-09 00:00:00+08', '2026-05-09 00:00:00+08', 16, 'menu', true, '/system/site-message', '', '', 'SiteMessageManage', '/_core/messages/manage', 'lucide:mail', '站内信管理', 1008, false, false, false, '', '', '', '/system/site-message', 0, false, false, '', false, 0, false, false, false, false, true, '', 'normal', 'success'),
+  (26, '2026-05-13 00:00:00+08', '2026-05-13 00:00:00+08', 16, 'menu', true, '/system/organization', '', '', 'Organization', '/system/organization/index', 'lucide:building-2', '组织管理', 1009, false, false, false, '', '', '', '/system/organization', 0, false, false, '', false, 0, false, false, false, false, true, '', '', '')
 ON CONFLICT (id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time,
@@ -289,17 +319,32 @@ ON CONFLICT (id) DO UPDATE SET
   badge_type = EXCLUDED.badge_type,
   badge_variants = EXCLUDED.badge_variants;
 
-INSERT INTO sys_user_role_binding (create_time, update_time, user_id, role_id)
+INSERT INTO sys_organization_permission_scope (
+  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+)
+SELECT NOW(), NOW(), '9f740c1b-0210-4e3a-858d-d128edea924d', 'menu', id::text, ''
+FROM sys_menu
+ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING;
+
+INSERT INTO sys_organization_permission_scope (
+  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+)
+SELECT NOW(), NOW(), '9f740c1b-0210-4e3a-858d-d128edea924d', 'resource', id, ''
+FROM sys_resources
+ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING;
+
+INSERT INTO sys_user_role_binding (create_time, update_time, user_id, role_id, organization_id)
 VALUES
-  ('2025-02-26 18:59:32.728386+08', '2025-08-21 23:59:22.110609+08', 'a0bb672a-a4b1-4ec9-807a-ba11e000d2a4', 2),
-  ('2025-08-22 17:51:43.539781+08', '2025-08-22 17:51:43.539782+08', 'e8a4dc57-a916-4d35-8b57-9f4dfae0d5b0', 0),
-  ('2023-05-17 22:29:18.185161+08', '2025-08-21 22:54:39.196075+08', 'f4f9e258-fa13-4467-95fb-c86019a377f9', 1)
-ON CONFLICT (user_id, role_id) DO UPDATE SET
+  ('2025-02-26 18:59:32.728386+08', '2025-08-21 23:59:22.110609+08', 'a0bb672a-a4b1-4ec9-807a-ba11e000d2a4', 2, '9f740c1b-0210-4e3a-858d-d128edea924d'),
+  ('2025-08-22 17:51:43.539781+08', '2025-08-22 17:51:43.539782+08', 'e8a4dc57-a916-4d35-8b57-9f4dfae0d5b0', 0, '9f740c1b-0210-4e3a-858d-d128edea924d'),
+  ('2023-05-17 22:29:18.185161+08', '2025-08-21 22:54:39.196075+08', 'f4f9e258-fa13-4467-95fb-c86019a377f9', 1, '9f740c1b-0210-4e3a-858d-d128edea924d')
+ON CONFLICT (user_id, role_id, organization_id) DO UPDATE SET
   create_time = EXCLUDED.create_time,
   update_time = EXCLUDED.update_time;
 
 SELECT setval(pg_get_serial_sequence('sys_role', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_role), 0), 2), true);
+SELECT setval(pg_get_serial_sequence('sys_user_organization', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_user_organization), 0), 1), true);
 SELECT setval(pg_get_serial_sequence('sys_dept', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_dept), 0), 15), true);
-SELECT setval(pg_get_serial_sequence('sys_menu', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_menu), 0), 25), true);
+SELECT setval(pg_get_serial_sequence('sys_menu', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM sys_menu), 0), 26), true);
 
 COMMIT;

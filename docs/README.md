@@ -9,7 +9,9 @@
 - [monorepo-overview.md](./monorepo-overview.md)
   - 当前微服务版本线的结构、服务边界、常见改动路径和已知缺口
 - [permission-design.md](./permission-design.md)
-  - 当前平台角色、菜单、API 资源组、服务前缀解析和 `scope_id` 权限设计
+  - 当前平台角色、菜单、API 资源组、服务前缀解析和组织域权限设计
+- [organization-permission-scope-design.md](./organization-permission-scope-design.md)
+  - 组织域权限、全局 API 目录、组织可用范围和组织管理员越权边界的目标设计草案
 - [api-ownership.md](./api-ownership.md)
   - API 目录、服务归属和 `path + method` 唯一记录规则
 - [table-ownership.md](./table-ownership.md)

@@ -6,6 +6,8 @@ import (
 	"base-server/pkg/data/ent/apiresources"
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
+	"base-server/pkg/data/ent/organization"
+	"base-server/pkg/data/ent/organizationpermissionscope"
 	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
@@ -14,6 +16,8 @@ import (
 	"base-server/pkg/data/ent/sitemessagereceipt"
 	"base-server/pkg/data/ent/syslogrecord"
 	"base-server/pkg/data/ent/user"
+	"base-server/pkg/data/ent/userdeptmembership"
+	"base-server/pkg/data/ent/userorganization"
 	"base-server/pkg/data/ent/userrolebinding"
 	"base-server/pkg/data/schema"
 	"time"
@@ -178,6 +182,64 @@ func init() {
 	menuDescBadgeVariants := menuFields[32].Descriptor()
 	// menu.DefaultBadgeVariants holds the default value on creation for the badgeVariants field.
 	menu.DefaultBadgeVariants = menuDescBadgeVariants.Default.(string)
+	organizationMixin := schema.Organization{}.Mixin()
+	organizationMixinFields0 := organizationMixin[0].Fields()
+	_ = organizationMixinFields0
+	organizationFields := schema.Organization{}.Fields()
+	_ = organizationFields
+	// organizationDescCreateTime is the schema descriptor for create_time field.
+	organizationDescCreateTime := organizationMixinFields0[0].Descriptor()
+	// organization.DefaultCreateTime holds the default value on creation for the create_time field.
+	organization.DefaultCreateTime = organizationDescCreateTime.Default.(func() time.Time)
+	// organizationDescUpdateTime is the schema descriptor for update_time field.
+	organizationDescUpdateTime := organizationMixinFields0[1].Descriptor()
+	// organization.DefaultUpdateTime holds the default value on creation for the update_time field.
+	organization.DefaultUpdateTime = organizationDescUpdateTime.Default.(func() time.Time)
+	// organization.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	organization.UpdateDefaultUpdateTime = organizationDescUpdateTime.UpdateDefault.(func() time.Time)
+	// organizationDescSort is the schema descriptor for sort field.
+	organizationDescSort := organizationFields[3].Descriptor()
+	// organization.DefaultSort holds the default value on creation for the sort field.
+	organization.DefaultSort = organizationDescSort.Default.(int32)
+	// organizationDescStatus is the schema descriptor for status field.
+	organizationDescStatus := organizationFields[4].Descriptor()
+	// organization.DefaultStatus holds the default value on creation for the status field.
+	organization.DefaultStatus = organizationDescStatus.Default.(bool)
+	// organizationDescDesc is the schema descriptor for desc field.
+	organizationDescDesc := organizationFields[5].Descriptor()
+	// organization.DefaultDesc holds the default value on creation for the desc field.
+	organization.DefaultDesc = organizationDescDesc.Default.(string)
+	// organizationDescExtension is the schema descriptor for extension field.
+	organizationDescExtension := organizationFields[6].Descriptor()
+	// organization.DefaultExtension holds the default value on creation for the extension field.
+	organization.DefaultExtension = organizationDescExtension.Default.(string)
+	// organizationDescID is the schema descriptor for id field.
+	organizationDescID := organizationFields[0].Descriptor()
+	// organization.DefaultID holds the default value on creation for the id field.
+	organization.DefaultID = organizationDescID.Default.(func() string)
+	organizationpermissionscopeMixin := schema.OrganizationPermissionScope{}.Mixin()
+	organizationpermissionscopeMixinFields0 := organizationpermissionscopeMixin[0].Fields()
+	_ = organizationpermissionscopeMixinFields0
+	organizationpermissionscopeFields := schema.OrganizationPermissionScope{}.Fields()
+	_ = organizationpermissionscopeFields
+	// organizationpermissionscopeDescCreateTime is the schema descriptor for create_time field.
+	organizationpermissionscopeDescCreateTime := organizationpermissionscopeMixinFields0[0].Descriptor()
+	// organizationpermissionscope.DefaultCreateTime holds the default value on creation for the create_time field.
+	organizationpermissionscope.DefaultCreateTime = organizationpermissionscopeDescCreateTime.Default.(func() time.Time)
+	// organizationpermissionscopeDescUpdateTime is the schema descriptor for update_time field.
+	organizationpermissionscopeDescUpdateTime := organizationpermissionscopeMixinFields0[1].Descriptor()
+	// organizationpermissionscope.DefaultUpdateTime holds the default value on creation for the update_time field.
+	organizationpermissionscope.DefaultUpdateTime = organizationpermissionscopeDescUpdateTime.Default.(func() time.Time)
+	// organizationpermissionscope.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	organizationpermissionscope.UpdateDefaultUpdateTime = organizationpermissionscopeDescUpdateTime.UpdateDefault.(func() time.Time)
+	// organizationpermissionscopeDescCreatedBy is the schema descriptor for created_by field.
+	organizationpermissionscopeDescCreatedBy := organizationpermissionscopeFields[4].Descriptor()
+	// organizationpermissionscope.DefaultCreatedBy holds the default value on creation for the created_by field.
+	organizationpermissionscope.DefaultCreatedBy = organizationpermissionscopeDescCreatedBy.Default.(string)
+	// organizationpermissionscopeDescID is the schema descriptor for id field.
+	organizationpermissionscopeDescID := organizationpermissionscopeFields[0].Descriptor()
+	// organizationpermissionscope.DefaultID holds the default value on creation for the id field.
+	organizationpermissionscope.DefaultID = organizationpermissionscopeDescID.Default.(func() string)
 	projectionsourcestatusMixin := schema.ProjectionSourceStatus{}.Mixin()
 	projectionsourcestatusMixinFields0 := projectionsourcestatusMixin[0].Fields()
 	_ = projectionsourcestatusMixinFields0
@@ -255,6 +317,14 @@ func init() {
 	role.DefaultUpdateTime = roleDescUpdateTime.Default.(func() time.Time)
 	// role.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	role.UpdateDefaultUpdateTime = roleDescUpdateTime.UpdateDefault.(func() time.Time)
+	// roleDescDataScope is the schema descriptor for data_scope field.
+	roleDescDataScope := roleFields[7].Descriptor()
+	// role.DefaultDataScope holds the default value on creation for the data_scope field.
+	role.DefaultDataScope = roleDescDataScope.Default.(string)
+	// roleDescDataScopeDeptIds is the schema descriptor for data_scope_dept_ids field.
+	roleDescDataScopeDeptIds := roleFields[8].Descriptor()
+	// role.DefaultDataScopeDeptIds holds the default value on creation for the data_scope_dept_ids field.
+	role.DefaultDataScopeDeptIds = roleDescDataScopeDeptIds.Default.([]int64)
 	serviceregistryMixin := schema.ServiceRegistry{}.Mixin()
 	serviceregistryMixinFields0 := serviceregistryMixin[0].Fields()
 	_ = serviceregistryMixinFields0
@@ -401,6 +471,44 @@ func init() {
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
 	user.DefaultID = userDescID.Default.(func() uuid.UUID)
+	userdeptmembershipMixin := schema.UserDeptMembership{}.Mixin()
+	userdeptmembershipMixinFields0 := userdeptmembershipMixin[0].Fields()
+	_ = userdeptmembershipMixinFields0
+	userdeptmembershipFields := schema.UserDeptMembership{}.Fields()
+	_ = userdeptmembershipFields
+	// userdeptmembershipDescCreateTime is the schema descriptor for create_time field.
+	userdeptmembershipDescCreateTime := userdeptmembershipMixinFields0[0].Descriptor()
+	// userdeptmembership.DefaultCreateTime holds the default value on creation for the create_time field.
+	userdeptmembership.DefaultCreateTime = userdeptmembershipDescCreateTime.Default.(func() time.Time)
+	// userdeptmembershipDescUpdateTime is the schema descriptor for update_time field.
+	userdeptmembershipDescUpdateTime := userdeptmembershipMixinFields0[1].Descriptor()
+	// userdeptmembership.DefaultUpdateTime holds the default value on creation for the update_time field.
+	userdeptmembership.DefaultUpdateTime = userdeptmembershipDescUpdateTime.Default.(func() time.Time)
+	// userdeptmembership.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	userdeptmembership.UpdateDefaultUpdateTime = userdeptmembershipDescUpdateTime.UpdateDefault.(func() time.Time)
+	userorganizationMixin := schema.UserOrganization{}.Mixin()
+	userorganizationMixinFields0 := userorganizationMixin[0].Fields()
+	_ = userorganizationMixinFields0
+	userorganizationFields := schema.UserOrganization{}.Fields()
+	_ = userorganizationFields
+	// userorganizationDescCreateTime is the schema descriptor for create_time field.
+	userorganizationDescCreateTime := userorganizationMixinFields0[0].Descriptor()
+	// userorganization.DefaultCreateTime holds the default value on creation for the create_time field.
+	userorganization.DefaultCreateTime = userorganizationDescCreateTime.Default.(func() time.Time)
+	// userorganizationDescUpdateTime is the schema descriptor for update_time field.
+	userorganizationDescUpdateTime := userorganizationMixinFields0[1].Descriptor()
+	// userorganization.DefaultUpdateTime holds the default value on creation for the update_time field.
+	userorganization.DefaultUpdateTime = userorganizationDescUpdateTime.Default.(func() time.Time)
+	// userorganization.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	userorganization.UpdateDefaultUpdateTime = userorganizationDescUpdateTime.UpdateDefault.(func() time.Time)
+	// userorganizationDescIsPrimary is the schema descriptor for is_primary field.
+	userorganizationDescIsPrimary := userorganizationFields[3].Descriptor()
+	// userorganization.DefaultIsPrimary holds the default value on creation for the is_primary field.
+	userorganization.DefaultIsPrimary = userorganizationDescIsPrimary.Default.(bool)
+	// userorganizationDescStatus is the schema descriptor for status field.
+	userorganizationDescStatus := userorganizationFields[4].Descriptor()
+	// userorganization.DefaultStatus holds the default value on creation for the status field.
+	userorganization.DefaultStatus = userorganizationDescStatus.Default.(bool)
 	userrolebindingMixin := schema.UserRoleBinding{}.Mixin()
 	userrolebindingMixinFields0 := userrolebindingMixin[0].Fields()
 	_ = userrolebindingMixinFields0

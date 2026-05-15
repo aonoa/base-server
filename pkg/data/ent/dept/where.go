@@ -90,9 +90,9 @@ func Extension(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldEQ(FieldExtension, v))
 }
 
-// Dom applies equality check predicate on the "dom" field. It's identical to DomEQ.
-func Dom(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldDom, v))
+// OrganizationID applies equality check predicate on the "organization_id" field. It's identical to OrganizationIDEQ.
+func OrganizationID(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldOrganizationID, v))
 }
 
 // Pid applies equality check predicate on the "pid" field. It's identical to PidEQ.
@@ -425,44 +425,69 @@ func ExtensionContainsFold(v string) predicate.Dept {
 	return predicate.Dept(sql.FieldContainsFold(FieldExtension, v))
 }
 
-// DomEQ applies the EQ predicate on the "dom" field.
-func DomEQ(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldEQ(FieldDom, v))
+// OrganizationIDEQ applies the EQ predicate on the "organization_id" field.
+func OrganizationIDEQ(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldEQ(FieldOrganizationID, v))
 }
 
-// DomNEQ applies the NEQ predicate on the "dom" field.
-func DomNEQ(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldNEQ(FieldDom, v))
+// OrganizationIDNEQ applies the NEQ predicate on the "organization_id" field.
+func OrganizationIDNEQ(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldNEQ(FieldOrganizationID, v))
 }
 
-// DomIn applies the In predicate on the "dom" field.
-func DomIn(vs ...int64) predicate.Dept {
-	return predicate.Dept(sql.FieldIn(FieldDom, vs...))
+// OrganizationIDIn applies the In predicate on the "organization_id" field.
+func OrganizationIDIn(vs ...string) predicate.Dept {
+	return predicate.Dept(sql.FieldIn(FieldOrganizationID, vs...))
 }
 
-// DomNotIn applies the NotIn predicate on the "dom" field.
-func DomNotIn(vs ...int64) predicate.Dept {
-	return predicate.Dept(sql.FieldNotIn(FieldDom, vs...))
+// OrganizationIDNotIn applies the NotIn predicate on the "organization_id" field.
+func OrganizationIDNotIn(vs ...string) predicate.Dept {
+	return predicate.Dept(sql.FieldNotIn(FieldOrganizationID, vs...))
 }
 
-// DomGT applies the GT predicate on the "dom" field.
-func DomGT(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldGT(FieldDom, v))
+// OrganizationIDGT applies the GT predicate on the "organization_id" field.
+func OrganizationIDGT(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldGT(FieldOrganizationID, v))
 }
 
-// DomGTE applies the GTE predicate on the "dom" field.
-func DomGTE(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldGTE(FieldDom, v))
+// OrganizationIDGTE applies the GTE predicate on the "organization_id" field.
+func OrganizationIDGTE(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldGTE(FieldOrganizationID, v))
 }
 
-// DomLT applies the LT predicate on the "dom" field.
-func DomLT(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldLT(FieldDom, v))
+// OrganizationIDLT applies the LT predicate on the "organization_id" field.
+func OrganizationIDLT(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldLT(FieldOrganizationID, v))
 }
 
-// DomLTE applies the LTE predicate on the "dom" field.
-func DomLTE(v int64) predicate.Dept {
-	return predicate.Dept(sql.FieldLTE(FieldDom, v))
+// OrganizationIDLTE applies the LTE predicate on the "organization_id" field.
+func OrganizationIDLTE(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldLTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDContains applies the Contains predicate on the "organization_id" field.
+func OrganizationIDContains(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldContains(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasPrefix applies the HasPrefix predicate on the "organization_id" field.
+func OrganizationIDHasPrefix(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldHasPrefix(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasSuffix applies the HasSuffix predicate on the "organization_id" field.
+func OrganizationIDHasSuffix(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldHasSuffix(FieldOrganizationID, v))
+}
+
+// OrganizationIDEqualFold applies the EqualFold predicate on the "organization_id" field.
+func OrganizationIDEqualFold(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldEqualFold(FieldOrganizationID, v))
+}
+
+// OrganizationIDContainsFold applies the ContainsFold predicate on the "organization_id" field.
+func OrganizationIDContainsFold(v string) predicate.Dept {
+	return predicate.Dept(sql.FieldContainsFold(FieldOrganizationID, v))
 }
 
 // PidEQ applies the EQ predicate on the "pid" field.

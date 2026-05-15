@@ -35,6 +35,12 @@ func (uc *AdminUsecase) ensureBuiltinSiteMessageBootstrap(ctx context.Context) e
 		return err
 	}
 	for _, roleItem := range roleList {
+		scope, err := uc.GetOrganizationPermissionScope(ctx, &v1.GetOrganizationPermissionScopeRequest{
+			OrganizationId: roleItem.OrganizationID,
+		})
+		if err != nil {
+			return err
+		}
 		status := int32(0)
 		if roleItem.Status {
 			status = 1
@@ -44,24 +50,29 @@ func (uc *AdminUsecase) ensureBuiltinSiteMessageBootstrap(ctx context.Context) e
 			roleItem.Menus,
 			int32(inboxMenu.ID),
 			int32(manageMenu.ID),
+			scope.GetMenuIds(),
 		)
 		currentResources := resourceIDsFromRole(roleItem)
 		nextResources := normalizeSiteMessageResourceIDs(
 			roleItem.Value,
 			currentResources,
 			manageResourceID,
+			scope.GetResourceIds(),
 		)
 		if equalInt32Slices(nextMenus, roleItem.Menus) && equalStringSets(nextResources, currentResources) {
 			continue
 		}
 		if _, err := uc.repo.UpdateRole(ctx, roleItem.ID, &v1.RoleListItem{
-			Id:             fmt.Sprintf("%d", roleItem.ID),
-			Name:           roleItem.Name,
-			Value:          roleItem.Value,
-			Status:         status,
-			Remark:         roleItem.Desc,
-			Permissions:    nextMenus,
-			ApiPermissions: nextResources,
+			Id:               fmt.Sprintf("%d", roleItem.ID),
+			Name:             roleItem.Name,
+			Value:            roleItem.Value,
+			Status:           status,
+			Remark:           roleItem.Desc,
+			Permissions:      nextMenus,
+			ApiPermissions:   nextResources,
+			OrganizationId:   roleItem.OrganizationID,
+			DataScope:        roleItem.DataScope,
+			DataScopeDeptIds: append([]int64(nil), roleItem.DataScopeDeptIds...),
 		}); err != nil {
 			return err
 		}
@@ -81,16 +92,24 @@ func (uc *AdminUsecase) normalizeSiteMessageRoleRequest(ctx context.Context, req
 	if err != nil {
 		return err
 	}
+	scope, err := uc.GetOrganizationPermissionScope(ctx, &v1.GetOrganizationPermissionScopeRequest{
+		OrganizationId: req.GetOrganizationId(),
+	})
+	if err != nil {
+		return err
+	}
 	req.Permissions = normalizeSiteMessageMenuIDs(
 		req.Value,
 		req.Permissions,
 		int32(inboxMenu.ID),
 		int32(manageMenu.ID),
+		scope.GetMenuIds(),
 	)
 	req.ApiPermissions = normalizeSiteMessageResourceIDs(
 		req.Value,
 		req.ApiPermissions,
 		manageResourceID,
+		scope.GetResourceIds(),
 	)
 	return nil
 }
@@ -246,29 +265,47 @@ func findMenuByPathOrName(menuList []*ent.Menu, path, name string) *ent.Menu {
 	return nil
 }
 
-func normalizeSiteMessageMenuIDs(roleValue string, permissions []int32, inboxMenuID, manageMenuID int32) []int32 {
+func normalizeSiteMessageMenuIDs(roleValue string, permissions []int32, inboxMenuID, manageMenuID int32, scopedMenuIDs []int32) []int32 {
 	if roleValue == "root" {
 		return permissions
 	}
 	next := removeMenuIDs(permissions, inboxMenuID, manageMenuID)
-	if roleValue == "default" || roleValue == "admin" {
+	if (roleValue == "default" || roleValue == "admin") && permissionScopeAllowsMenu(scopedMenuIDs, inboxMenuID) {
 		next = appendMenuID(next, inboxMenuID)
 	}
-	if roleValue == "admin" {
+	if roleValue == "admin" && permissionScopeAllowsMenu(scopedMenuIDs, manageMenuID) {
 		next = appendMenuID(next, manageMenuID)
 	}
 	return next
 }
 
-func normalizeSiteMessageResourceIDs(roleValue string, apiPermissions []string, manageResourceID string) []string {
+func normalizeSiteMessageResourceIDs(roleValue string, apiPermissions []string, manageResourceID string, scopedResourceIDs []string) []string {
 	if roleValue == "root" {
 		return append([]string(nil), apiPermissions...)
 	}
 	next := removeStringIDs(apiPermissions, manageResourceID)
-	if roleValue == "admin" {
+	if roleValue == "admin" && permissionScopeAllowsResource(scopedResourceIDs, manageResourceID) {
 		next = appendStringID(next, manageResourceID)
 	}
 	return next
+}
+
+func permissionScopeAllowsMenu(scopedMenuIDs []int32, menuID int32) bool {
+	for _, item := range scopedMenuIDs {
+		if item == menuID {
+			return true
+		}
+	}
+	return false
+}
+
+func permissionScopeAllowsResource(scopedResourceIDs []string, resourceID string) bool {
+	for _, item := range scopedResourceIDs {
+		if item == resourceID {
+			return true
+		}
+	}
+	return false
 }
 
 func resourceIDsFromRole(item *ent.Role) []string {

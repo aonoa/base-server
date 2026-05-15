@@ -18,6 +18,10 @@ type Tx struct {
 	Dept *DeptClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// Organization is the client for interacting with the Organization builders.
+	Organization *OrganizationClient
+	// OrganizationPermissionScope is the client for interacting with the OrganizationPermissionScope builders.
+	OrganizationPermissionScope *OrganizationPermissionScopeClient
 	// ProjectionSourceStatus is the client for interacting with the ProjectionSourceStatus builders.
 	ProjectionSourceStatus *ProjectionSourceStatusClient
 	// Resource is the client for interacting with the Resource builders.
@@ -34,6 +38,10 @@ type Tx struct {
 	SysLogRecord *SysLogRecordClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserDeptMembership is the client for interacting with the UserDeptMembership builders.
+	UserDeptMembership *UserDeptMembershipClient
+	// UserOrganization is the client for interacting with the UserOrganization builders.
+	UserOrganization *UserOrganizationClient
 	// UserRoleBinding is the client for interacting with the UserRoleBinding builders.
 	UserRoleBinding *UserRoleBindingClient
 
@@ -170,6 +178,8 @@ func (tx *Tx) init() {
 	tx.ApiResources = NewApiResourcesClient(tx.config)
 	tx.Dept = NewDeptClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.Organization = NewOrganizationClient(tx.config)
+	tx.OrganizationPermissionScope = NewOrganizationPermissionScopeClient(tx.config)
 	tx.ProjectionSourceStatus = NewProjectionSourceStatusClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
@@ -178,6 +188,8 @@ func (tx *Tx) init() {
 	tx.SiteMessageReceipt = NewSiteMessageReceiptClient(tx.config)
 	tx.SysLogRecord = NewSysLogRecordClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserDeptMembership = NewUserDeptMembershipClient(tx.config)
+	tx.UserOrganization = NewUserOrganizationClient(tx.config)
 	tx.UserRoleBinding = NewUserRoleBindingClient(tx.config)
 }
 

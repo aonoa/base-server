@@ -24,8 +24,10 @@ type UserRoleBinding struct {
 	// 用户ID
 	UserID string `json:"user_id,omitempty"`
 	// 角色ID
-	RoleID       int64 `json:"role_id,omitempty"`
-	selectValues sql.SelectValues
+	RoleID int64 `json:"role_id,omitempty"`
+	// 组织ID
+	OrganizationID string `json:"organization_id,omitempty"`
+	selectValues   sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -35,7 +37,7 @@ func (*UserRoleBinding) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case userrolebinding.FieldID, userrolebinding.FieldRoleID:
 			values[i] = new(sql.NullInt64)
-		case userrolebinding.FieldUserID:
+		case userrolebinding.FieldUserID, userrolebinding.FieldOrganizationID:
 			values[i] = new(sql.NullString)
 		case userrolebinding.FieldCreateTime, userrolebinding.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -84,6 +86,12 @@ func (_m *UserRoleBinding) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.RoleID = value.Int64
 			}
+		case userrolebinding.FieldOrganizationID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field organization_id", values[i])
+			} else if value.Valid {
+				_m.OrganizationID = value.String
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -131,6 +139,9 @@ func (_m *UserRoleBinding) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("role_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.RoleID))
+	builder.WriteString(", ")
+	builder.WriteString("organization_id=")
+	builder.WriteString(_m.OrganizationID)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -40,12 +40,6 @@ func NewProxyServer(c *conf.Server, gc *conf.Gateway, services *conf.Services, c
 		}
 		return clients.Auth
 	})
-	gwcasbin.SetAdminClient(func() adminv1.AdminServiceClient {
-		if clients == nil {
-			return nil
-		}
-		return clients.Admin
-	})
 	gwhttplog.SetAdminClient(func() adminv1.AdminServiceClient {
 		if clients == nil {
 			return nil

@@ -40,7 +40,7 @@ func (Dept) Fields() []ent.Field {
 		field.Bool("status").Comment("0-锁定，1-正常"),
 		field.String("desc").Comment("备注"),
 		field.String("extension").Comment("扩展信息"),
-		field.Int64("dom").Comment("域"),
+		field.String("organization_id").Comment("组织ID"),
 		field.Int64("pid").Comment("父节点id").
 			Optional(),
 	}

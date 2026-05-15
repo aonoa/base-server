@@ -3,7 +3,9 @@ package data
 import (
 	"context"
 	dbsql "database/sql"
+	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -21,10 +23,14 @@ import (
 	"base-server/pkg/data/ent/dept"
 	"base-server/pkg/data/ent/menu"
 	"base-server/pkg/data/ent/migrate"
+	"base-server/pkg/data/ent/organization"
+	"base-server/pkg/data/ent/organizationpermissionscope"
 	"base-server/pkg/data/ent/projectionsourcestatus"
 	"base-server/pkg/data/ent/resource"
 	"base-server/pkg/data/ent/role"
 	"base-server/pkg/data/ent/syslogrecord"
+	"base-server/pkg/data/ent/userdeptmembership"
+	"base-server/pkg/data/ent/userorganization"
 	"base-server/pkg/data/ent/userrolebinding"
 	"base-server/pkg/tools"
 
@@ -41,6 +47,8 @@ import (
 
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(NewData, NewAdminRepo)
+
+const defaultOrganizationID = "9f740c1b-0210-4e3a-858d-d128edea924d"
 
 // Data .
 type Data struct {
@@ -68,19 +76,11 @@ func NewData(c *conf.Data, services *conf.Services, logger log.Logger) (*Data, f
 		helper.WithContext(ctx).Info(args...)
 	})
 	client := ent.NewClient(ent.Driver(sqlDrv))
-	if err := cleanupLegacyPlatformGovernanceBeforeMigration(context.Background(), db, c.Database.Driver); err != nil {
-		_ = client.Close()
-		return nil, nil, err
-	}
-	if err := cleanupDuplicateAPIResourcesBeforeMigration(context.Background(), db, c.Database.Driver); err != nil {
-		_ = client.Close()
-		return nil, nil, err
-	}
-	if err := cleanupUserRoleBindingBeforeMigration(context.Background(), db, c.Database.Driver); err != nil {
-		_ = client.Close()
-		return nil, nil, err
-	}
 	if err := migrate.Create(context.Background(), migrate.NewSchema(sqlDrv), adminTables(), schema.WithForeignKeys(false)); err != nil {
+		_ = client.Close()
+		return nil, nil, err
+	}
+	if err := ensureDefaultOrganizationAfterMigration(context.Background(), db, c.Database.Driver); err != nil {
 		_ = client.Close()
 		return nil, nil, err
 	}
@@ -178,6 +178,13 @@ var bootstrapAPIResourceGroups = []bootstrapResource{
 		Method: "(GET|POST|PUT|DELETE)",
 	},
 	{
+		ID:     "33c2ca63-4b51-43c6-b432-075047e083d7",
+		Name:   "系统管理角色组",
+		Type:   "api",
+		Value:  "role",
+		Method: "(GET|POST|PUT|DELETE)",
+	},
+	{
 		ID:     "f1ea1c6e-b1d4-4845-b0f5-07e2ddeae705",
 		Name:   "admin接口操作权限",
 		Type:   "api",
@@ -192,9 +199,61 @@ var bootstrapAPIResourceGroups = []bootstrapResource{
 		Method:      "(GET|POST|DELETE)",
 		Description: "站内信管理页接口权限",
 	},
+	{
+		ID:          "6e24d8e7-d0e4-4c41-a19d-64fc2f1cf9df",
+		Name:        "组织管理接口权限",
+		Type:        "api",
+		Value:       "organization",
+		Method:      "(GET|POST|PUT|DELETE)",
+		Description: "组织管理页接口权限",
+	},
+	{
+		ID:          "94d41386-8054-423a-9de2-af80f424b424",
+		Name:        "组织权限范围接口权限",
+		Type:        "api",
+		Value:       "organization_permission_scope",
+		Method:      "(GET|PUT)",
+		Description: "组织可用权限范围配置接口权限",
+	},
 }
 
 var bootstrapAdminAPIResources = []bootstrapAPIResource{
+	{
+		ID:                "api-admin-role-list",
+		Description:       "获取角色列表",
+		Path:              "/admin-api/v1/roles",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "role",
+	},
+	{
+		ID:                "api-admin-role-create",
+		Description:       "新增角色",
+		Path:              "/admin-api/v1/roles",
+		Method:            "POST",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "role",
+	},
+	{
+		ID:                "api-admin-role-update",
+		Description:       "更新角色",
+		Path:              "/admin-api/v1/roles/{id}",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "role",
+	},
+	{
+		ID:                "api-admin-role-delete",
+		Description:       "删除角色",
+		Path:              "/admin-api/v1/roles/{id}",
+		Method:            "DELETE",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "role",
+	},
 	{
 		ID:                "api-admin-api-list",
 		Description:       "获取 API 列表",
@@ -284,6 +343,141 @@ var bootstrapAdminAPIResources = []bootstrapAPIResource{
 		Module:            "admin",
 		ModuleDescription: "管理服务",
 		ResourceGroup:     "admin",
+	},
+	{
+		ID:                "api-admin-organization-list",
+		Description:       "获取组织列表",
+		Path:              "/admin-api/v1/organizations",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-create",
+		Description:       "新增组织",
+		Path:              "/admin-api/v1/organizations",
+		Method:            "POST",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-update",
+		Description:       "更新组织",
+		Path:              "/admin-api/v1/organizations/{id}",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-delete",
+		Description:       "删除组织",
+		Path:              "/admin-api/v1/organizations/{id}",
+		Method:            "DELETE",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-member-list",
+		Description:       "获取组织成员",
+		Path:              "/admin-api/v1/organizations/{organization_id}/members",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-member-save",
+		Description:       "保存组织成员",
+		Path:              "/admin-api/v1/organizations/{organization_id}/members",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-organization-permission-scope-get",
+		Description:       "获取组织权限范围",
+		Path:              "/admin-api/v1/organizations/{organization_id}/permission-scope",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization_permission_scope",
+	},
+	{
+		ID:                "api-admin-organization-permission-scope-save",
+		Description:       "保存组织权限范围",
+		Path:              "/admin-api/v1/organizations/{organization_id}/permission-scope",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization_permission_scope",
+	},
+	{
+		ID:                "api-admin-permission-catalog-current",
+		Description:       "获取当前组织权限目录",
+		Path:              "/admin-api/v1/permission-catalog/current",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "role",
+	},
+	{
+		ID:                "api-admin-organization-permission-catalog",
+		Description:       "获取指定组织权限目录",
+		Path:              "/admin-api/v1/organizations/{organization_id}/permission-catalog",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization_permission_scope",
+	},
+	{
+		ID:                "api-admin-user-dept-binding-get",
+		Description:       "获取用户部门绑定",
+		Path:              "/admin-api/v1/user-dept-bindings/{user_id}",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-user-dept-binding-upsert",
+		Description:       "保存用户部门绑定",
+		Path:              "/admin-api/v1/user-dept-bindings/{user_id}",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-user-dept-binding-delete",
+		Description:       "删除用户部门绑定",
+		Path:              "/admin-api/v1/user-dept-bindings/{user_id}",
+		Method:            "DELETE",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "organization",
+	},
+	{
+		ID:                "api-admin-my-organization-list",
+		Description:       "获取我的组织",
+		Path:              "/admin-api/v1/my/organizations",
+		Method:            "GET",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "default",
+	},
+	{
+		ID:                "api-admin-my-current-organization-switch",
+		Description:       "切换当前组织",
+		Path:              "/admin-api/v1/my/current-organization",
+		Method:            "PUT",
+		Module:            "admin",
+		ModuleDescription: "管理服务",
+		ResourceGroup:     "default",
 	},
 	{
 		ID:                "api-admin-walk-route",
@@ -392,6 +586,9 @@ func (r *adminRepo) ListRoles(ctx context.Context, req *v1.RolePageParams) ([]*e
 	if req.Status == 1 {
 		query = query.Where(role.StatusEQ(true))
 	}
+	if organizationID := strings.TrimSpace(req.OrganizationId); organizationID != "" {
+		query = query.Where(role.OrganizationIDEQ(organizationID))
+	}
 	query.WithResource(func(query *ent.ResourceQuery) {
 		query.Select(resource.FieldID, resource.FieldType, resource.FieldValue, resource.FieldMethod)
 	})
@@ -417,20 +614,73 @@ func (r *adminRepo) ResolveRoleValues(ctx context.Context, roleIDs []int64) (map
 	return values, nil
 }
 
-func (r *adminRepo) GetUserRoleBindings(ctx context.Context, userID string) ([]*ent.UserRoleBinding, error) {
-	return r.data.db.UserRoleBinding.Query().
-		Where(userrolebinding.UserIDEQ(userID)).
+func (r *adminRepo) getDefaultUserRole(ctx context.Context) (*ent.Role, error) {
+	return r.data.db.Role.Query().
+		Where(
+			role.OrganizationIDEQ(defaultOrganizationID),
+			role.ValueEQ("default"),
+			role.StatusEQ(true),
+		).
+		First(ctx)
+}
+
+func (r *adminRepo) GetUserRoleBindings(ctx context.Context, userID string, organizationID string) ([]*ent.UserRoleBinding, error) {
+	items, err := r.data.db.UserRoleBinding.Query().
+		Where(
+			userrolebinding.UserIDEQ(userID),
+			userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
 		Order(userrolebinding.ByRoleID()).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.withDefaultRoleFallbackForUser(ctx, userID, organizationID, items)
+}
+
+func (r *adminRepo) ListUserOrganizationRoles(ctx context.Context, userID string, organizationID string) ([]*ent.Role, error) {
+	bindings, err := r.GetUserRoleBindings(ctx, strings.TrimSpace(userID), strings.TrimSpace(organizationID))
+	if err != nil {
+		return nil, err
+	}
+	roleIDs := make([]int64, 0, len(bindings))
+	seen := make(map[int64]struct{}, len(bindings))
+	for _, item := range bindings {
+		if item == nil || item.RoleID <= 0 {
+			continue
+		}
+		if _, ok := seen[item.RoleID]; ok {
+			continue
+		}
+		seen[item.RoleID] = struct{}{}
+		roleIDs = append(roleIDs, item.RoleID)
+	}
+	if len(roleIDs) == 0 {
+		return []*ent.Role{}, nil
+	}
+	return r.data.db.Role.Query().
+		Where(role.IDIn(roleIDs...)).
+		WithResource(func(query *ent.ResourceQuery) {
+			query.Select(resource.FieldID, resource.FieldType, resource.FieldValue, resource.FieldMethod)
+		}).
 		All(ctx)
 }
 
 func (r *adminRepo) ListUserRoleBindings(ctx context.Context) ([]*ent.UserRoleBinding, error) {
+	items, err := r.listExplicitUserRoleBindings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.withDefaultRoleFallbackForAllUsers(ctx, items)
+}
+
+func (r *adminRepo) listExplicitUserRoleBindings(ctx context.Context) ([]*ent.UserRoleBinding, error) {
 	return r.data.db.UserRoleBinding.Query().
-		Order(userrolebinding.ByUserID(), userrolebinding.ByRoleID()).
+		Order(userrolebinding.ByOrganizationID(), userrolebinding.ByUserID(), userrolebinding.ByRoleID()).
 		All(ctx)
 }
 
-func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, roleIDs []int64) ([]*ent.UserRoleBinding, error) {
+func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, organizationID string, roleIDs []int64) ([]*ent.UserRoleBinding, error) {
 	tx, err := r.data.db.Tx(ctx)
 	if err != nil {
 		return nil, err
@@ -442,7 +692,10 @@ func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, ro
 		}
 	}()
 
-	query := tx.UserRoleBinding.Delete().Where(userrolebinding.UserIDEQ(userID))
+	query := tx.UserRoleBinding.Delete().Where(
+		userrolebinding.UserIDEQ(userID),
+		userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+	)
 	if len(roleIDs) > 0 {
 		query = query.Where(userrolebinding.RoleIDNotIn(roleIDs...))
 	}
@@ -450,7 +703,10 @@ func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, ro
 		return nil, err
 	}
 	existing, err := tx.UserRoleBinding.Query().
-		Where(userrolebinding.UserIDEQ(userID)).
+		Where(
+			userrolebinding.UserIDEQ(userID),
+			userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
 		All(ctx)
 	if err != nil {
 		return nil, err
@@ -465,13 +721,17 @@ func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, ro
 		}
 		if _, err := tx.UserRoleBinding.Create().
 			SetUserID(userID).
+			SetOrganizationID(strings.TrimSpace(organizationID)).
 			SetRoleID(roleID).
 			Save(ctx); err != nil {
 			return nil, err
 		}
 	}
 	items, err := tx.UserRoleBinding.Query().
-		Where(userrolebinding.UserIDEQ(userID)).
+		Where(
+			userrolebinding.UserIDEQ(userID),
+			userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
 		Order(userrolebinding.ByRoleID()).
 		All(ctx)
 	if err != nil {
@@ -484,32 +744,740 @@ func (r *adminRepo) UpsertUserRoleBinding(ctx context.Context, userID string, ro
 	return items, nil
 }
 
-func (r *adminRepo) DeleteUserRoleBinding(ctx context.Context, userID string) error {
-	_, err := r.data.db.UserRoleBinding.Delete().Where(userrolebinding.UserIDEQ(userID)).Exec(ctx)
+func (r *adminRepo) DeleteUserRoleBinding(ctx context.Context, userID string, organizationID string) error {
+	_, err := r.data.db.UserRoleBinding.Delete().
+		Where(
+			userrolebinding.UserIDEQ(userID),
+			userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
+		Exec(ctx)
 	return err
 }
 
-func (r *adminRepo) AddRole(ctx context.Context, req *v1.RoleListItem) (*ent.Role, error) {
-	return r.data.db.Role.Create().
-		SetName(req.Name).
-		SetValue(req.Value).
-		SetStatus(req.Status != 0).
-		SetDesc(req.Remark).
-		SetMenus(req.Permissions).
-		AddResourceIDs(req.ApiPermissions...).
+func (r *adminRepo) GetUserDeptBinding(ctx context.Context, userID string, organizationID string) (*ent.UserDeptMembership, error) {
+	return r.data.db.UserDeptMembership.Query().
+		Where(
+			userdeptmembership.UserIDEQ(strings.TrimSpace(userID)),
+			userdeptmembership.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
+		Only(ctx)
+}
+
+func (r *adminRepo) UpsertUserDeptBinding(ctx context.Context, userID string, organizationID string, deptID int64) (*ent.UserDeptMembership, error) {
+	userID = strings.TrimSpace(userID)
+	organizationID = strings.TrimSpace(organizationID)
+	existing, err := r.data.db.UserDeptMembership.Query().
+		Where(
+			userdeptmembership.UserIDEQ(userID),
+			userdeptmembership.OrganizationIDEQ(organizationID),
+		).
+		Only(ctx)
+	if err != nil && !ent.IsNotFound(err) {
+		return nil, err
+	}
+	if existing != nil {
+		return r.data.db.UserDeptMembership.UpdateOne(existing).
+			SetDeptID(deptID).
+			Save(ctx)
+	}
+	return r.data.db.UserDeptMembership.Create().
+		SetUserID(userID).
+		SetOrganizationID(organizationID).
+		SetDeptID(deptID).
 		Save(ctx)
 }
 
+func (r *adminRepo) DeleteUserDeptBinding(ctx context.Context, userID string, organizationID string) error {
+	_, err := r.data.db.UserDeptMembership.Delete().
+		Where(
+			userdeptmembership.UserIDEQ(strings.TrimSpace(userID)),
+			userdeptmembership.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
+		Exec(ctx)
+	return err
+}
+
+func (r *adminRepo) RemoveOrganizationRoleBindings(ctx context.Context, userID string, organizationID string) error {
+	_, err := r.data.db.UserRoleBinding.Delete().
+		Where(
+			userrolebinding.UserIDEQ(strings.TrimSpace(userID)),
+			userrolebinding.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
+		Exec(ctx)
+	return err
+}
+
+func (r *adminRepo) RemoveOrganizationDeptBinding(ctx context.Context, userID string, organizationID string) error {
+	_, err := r.data.db.UserDeptMembership.Delete().
+		Where(
+			userdeptmembership.UserIDEQ(strings.TrimSpace(userID)),
+			userdeptmembership.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+		).
+		Exec(ctx)
+	return err
+}
+
+func (r *adminRepo) ListOrganizationPermissionScopes(ctx context.Context, organizationID string) ([]*ent.OrganizationPermissionScope, error) {
+	return r.data.db.OrganizationPermissionScope.Query().
+		Where(organizationpermissionscope.OrganizationIDEQ(strings.TrimSpace(organizationID))).
+		Order(
+			organizationpermissionscope.ByPermissionType(),
+			organizationpermissionscope.ByPermissionRef(),
+		).
+		All(ctx)
+}
+
+func (r *adminRepo) SaveOrganizationPermissionScopes(ctx context.Context, organizationID string, menuIDs []int32, resourceIDs []string, createdBy string) ([]*ent.OrganizationPermissionScope, error) {
+	organizationID = strings.TrimSpace(organizationID)
+	createdBy = strings.TrimSpace(createdBy)
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	if _, err = tx.OrganizationPermissionScope.Delete().
+		Where(organizationpermissionscope.OrganizationIDEQ(organizationID)).
+		Exec(ctx); err != nil {
+		return nil, err
+	}
+	builders := make([]*ent.OrganizationPermissionScopeCreate, 0, len(menuIDs)+len(resourceIDs))
+	for _, menuID := range menuIDs {
+		if menuID <= 0 {
+			continue
+		}
+		builders = append(builders, tx.OrganizationPermissionScope.Create().
+			SetOrganizationID(organizationID).
+			SetPermissionType("menu").
+			SetPermissionRef(strconv.FormatInt(int64(menuID), 10)).
+			SetCreatedBy(createdBy))
+	}
+	for _, resourceID := range resourceIDs {
+		resourceID = strings.TrimSpace(resourceID)
+		if resourceID == "" {
+			continue
+		}
+		builders = append(builders, tx.OrganizationPermissionScope.Create().
+			SetOrganizationID(organizationID).
+			SetPermissionType("resource").
+			SetPermissionRef(resourceID).
+			SetCreatedBy(createdBy))
+	}
+	if len(builders) > 0 {
+		if _, err = tx.OrganizationPermissionScope.CreateBulk(builders...).Save(ctx); err != nil {
+			return nil, err
+		}
+	}
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
+	return r.ListOrganizationPermissionScopes(ctx, organizationID)
+}
+
+func (r *adminRepo) withDefaultRoleFallbackForUser(ctx context.Context, userID string, organizationID string, items []*ent.UserRoleBinding) ([]*ent.UserRoleBinding, error) {
+	if len(items) > 0 || strings.TrimSpace(userID) == "" {
+		return items, nil
+	}
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if strings.TrimSpace(organizationID) != defaultOrganizationID {
+		return items, nil
+	}
+	defaultRole, err := r.getDefaultUserRole(ctx)
+	if ent.IsNotFound(err) {
+		return items, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return []*ent.UserRoleBinding{syntheticUserRoleBinding(userID, defaultOrganizationID, defaultRole.ID)}, nil
+}
+
+func (r *adminRepo) withDefaultRoleFallbackForAllUsers(ctx context.Context, items []*ent.UserRoleBinding) ([]*ent.UserRoleBinding, error) {
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defaultRole, err := r.getDefaultUserRole(ctx)
+	if ent.IsNotFound(err) {
+		return items, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	userIDs, err := r.listAllUserIDs(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if len(userIDs) == 0 {
+		return items, nil
+	}
+	next := make([]*ent.UserRoleBinding, 0, len(items)+len(userIDs))
+	next = append(next, items...)
+	boundUserIDs := make(map[string]struct{}, len(items))
+	for _, item := range items {
+		if item == nil || strings.TrimSpace(item.UserID) == "" {
+			continue
+		}
+		boundUserIDs[item.UserID+"|"+strings.TrimSpace(item.OrganizationID)] = struct{}{}
+	}
+	for _, userID := range userIDs {
+		key := userID + "|" + defaultOrganizationID
+		if _, ok := boundUserIDs[key]; ok {
+			continue
+		}
+		next = append(next, syntheticUserRoleBinding(userID, defaultOrganizationID, defaultRole.ID))
+	}
+	sort.SliceStable(next, func(i, j int) bool {
+		left := next[i]
+		right := next[j]
+		if left == nil {
+			return false
+		}
+		if right == nil {
+			return true
+		}
+		if left.OrganizationID != right.OrganizationID {
+			return left.OrganizationID < right.OrganizationID
+		}
+		if left.UserID != right.UserID {
+			return left.UserID < right.UserID
+		}
+		return left.RoleID < right.RoleID
+	})
+	return next, nil
+}
+
+func syntheticUserRoleBinding(userID string, organizationID string, roleID int64) *ent.UserRoleBinding {
+	return &ent.UserRoleBinding{
+		OrganizationID: strings.TrimSpace(organizationID),
+		UserID:         strings.TrimSpace(userID),
+		RoleID:         roleID,
+	}
+}
+
+func (r *adminRepo) ListOrganizations(ctx context.Context, req *v1.GetOrganizationListParams) ([]*ent.Organization, int64, error) {
+	query := r.data.db.Organization.Query()
+	if req.Name != "" {
+		query = query.Where(organization.NameContains(req.Name))
+	}
+	if req.Code != "" {
+		query = query.Where(organization.CodeContains(req.Code))
+	}
+	if req.Status == 1 {
+		query = query.Where(organization.StatusEQ(true))
+	} else if req.Status == 2 {
+		query = query.Where(organization.StatusEQ(false))
+	}
+	count, err := query.Clone().Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	query = query.Order(organization.BySort(), organization.ByID())
+	if req.PageSize > 0 {
+		query = query.Limit(int(req.PageSize))
+		if req.CurrentPage > 0 {
+			query = query.Offset(int(tools.GetPageOffset(req.CurrentPage, req.PageSize)))
+		}
+	}
+	items, err := query.All(ctx)
+	return items, int64(count), err
+}
+
+func (r *adminRepo) GetOrganization(ctx context.Context, id string) (*ent.Organization, error) {
+	return r.data.db.Organization.Get(ctx, id)
+}
+
+func (r *adminRepo) AddOrganization(ctx context.Context, req *v1.OrganizationItem) (*ent.Organization, error) {
+	return r.data.db.Organization.Create().
+		SetName(req.Name).
+		SetCode(req.Code).
+		SetSort(req.OrderNo).
+		SetStatus(req.Status != 0).
+		SetDesc(req.Remark).
+		SetExtension("").
+		Save(ctx)
+}
+
+func (r *adminRepo) UpdateOrganization(ctx context.Context, id string, req *v1.OrganizationItem) (*ent.Organization, error) {
+	return r.data.db.Organization.UpdateOneID(id).
+		SetName(req.Name).
+		SetCode(req.Code).
+		SetSort(req.OrderNo).
+		SetStatus(req.Status != 0).
+		SetDesc(req.Remark).
+		SetExtension("").
+		Save(ctx)
+}
+
+func (r *adminRepo) DelOrganization(ctx context.Context, id string) error {
+	return r.data.db.Organization.DeleteOneID(id).Exec(ctx)
+}
+
+func (r *adminRepo) GetDefaultOrganizationID(ctx context.Context) (string, error) {
+	item, err := r.data.db.Organization.Query().
+		Where(organization.CodeEQ("default")).
+		First(ctx)
+	if err != nil {
+		return "", err
+	}
+	return item.ID, nil
+}
+
+func (r *adminRepo) CountOrganizationDepts(ctx context.Context, organizationID string) (int64, error) {
+	count, err := r.data.db.Dept.Query().
+		Where(dept.OrganizationIDEQ(organizationID)).
+		Count(ctx)
+	return int64(count), err
+}
+
+func (r *adminRepo) CountOrganizationMembers(ctx context.Context, organizationID string) (int64, error) {
+	count, err := r.data.db.UserOrganization.Query().
+		Where(userorganization.OrganizationIDEQ(organizationID)).
+		Count(ctx)
+	return int64(count), err
+}
+
+func (r *adminRepo) ListOrganizationMembers(ctx context.Context, organizationID string) ([]*v1.OrganizationMemberItem, error) {
+	members, err := r.data.db.UserOrganization.Query().
+		Where(userorganization.OrganizationIDEQ(organizationID)).
+		Order(userorganization.ByUserID()).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.organizationMembersToReply(ctx, members)
+}
+
+func (r *adminRepo) SaveOrganizationMembers(ctx context.Context, organizationID string, userIDs []string) ([]*v1.OrganizationMemberItem, error) {
+	normalizedUserIDs := normalizeUserIDs(userIDs)
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if organizationID == defaultOrganizationID {
+		normalizedUserIDs, err = r.listAllUserIDs(ctx)
+		if err != nil {
+			return nil, err
+		}
+	}
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			_ = tx.Rollback()
+		}
+	}()
+
+	query := tx.UserOrganization.Delete().Where(userorganization.OrganizationIDEQ(organizationID))
+	if len(normalizedUserIDs) > 0 {
+		query = query.Where(userorganization.UserIDNotIn(normalizedUserIDs...))
+	}
+	if _, err := query.Exec(ctx); err != nil {
+		return nil, err
+	}
+	existing, err := tx.UserOrganization.Query().
+		Where(userorganization.OrganizationIDEQ(organizationID)).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	existingUserIDs := make(map[string]struct{}, len(existing))
+	for _, item := range existing {
+		existingUserIDs[item.UserID] = struct{}{}
+	}
+	for _, userID := range normalizedUserIDs {
+		if _, ok := existingUserIDs[userID]; ok {
+			if _, err := tx.UserOrganization.Update().
+				Where(
+					userorganization.OrganizationIDEQ(organizationID),
+					userorganization.UserIDEQ(userID),
+				).
+				SetStatus(true).
+				Save(ctx); err != nil {
+				return nil, err
+			}
+			continue
+		}
+		if _, err := tx.UserOrganization.Create().
+			SetOrganizationID(organizationID).
+			SetUserID(userID).
+			SetIsPrimary(false).
+			SetStatus(true).
+			Save(ctx); err != nil {
+			return nil, err
+		}
+	}
+	items, err := tx.UserOrganization.Query().
+		Where(userorganization.OrganizationIDEQ(organizationID)).
+		Order(userorganization.ByUserID()).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+	committed = true
+	if organizationID != defaultOrganizationID {
+		normalizedUserIDSet := make(map[string]struct{}, len(normalizedUserIDs))
+		for _, userID := range normalizedUserIDs {
+			normalizedUserIDSet[userID] = struct{}{}
+		}
+		existingMemberUserIDs := make(map[string]struct{}, len(existing))
+		for _, item := range existing {
+			if item == nil {
+				continue
+			}
+			existingMemberUserIDs[item.UserID] = struct{}{}
+		}
+		for userID := range existingMemberUserIDs {
+			if _, ok := normalizedUserIDSet[userID]; ok {
+				continue
+			}
+			currentOrganizationID, currentErr := r.GetCurrentOrganizationID(ctx, userID)
+			if currentErr != nil {
+				return nil, currentErr
+			}
+			if currentOrganizationID != organizationID {
+				continue
+			}
+			if switchErr := r.SwitchCurrentOrganization(ctx, userID, defaultOrganizationID); switchErr != nil {
+				return nil, switchErr
+			}
+		}
+	}
+	return r.organizationMembersToReply(ctx, items)
+}
+
+func (r *adminRepo) EnsureAllUsersInDefaultOrganization(ctx context.Context) error {
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return err
+	}
+	userIDs, err := r.listAllUserIDs(ctx)
+	if err != nil {
+		return err
+	}
+	existing, err := r.data.db.UserOrganization.Query().
+		Where(userorganization.OrganizationIDEQ(defaultOrganizationID)).
+		All(ctx)
+	if err != nil {
+		return err
+	}
+	existingByUserID := make(map[string]*ent.UserOrganization, len(existing))
+	for _, item := range existing {
+		existingByUserID[item.UserID] = item
+	}
+	for _, userID := range userIDs {
+		if item, ok := existingByUserID[userID]; ok {
+			if _, err := r.data.db.UserOrganization.UpdateOneID(item.ID).
+				SetStatus(true).
+				Save(ctx); err != nil {
+				return err
+			}
+			continue
+		}
+		hasPrimary, err := r.userHasCurrentOrganization(ctx, userID)
+		if err != nil {
+			return err
+		}
+		if _, err := r.data.db.UserOrganization.Create().
+			SetUserID(userID).
+			SetOrganizationID(defaultOrganizationID).
+			SetIsPrimary(!hasPrimary).
+			SetStatus(true).
+			Save(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *adminRepo) EnsureUserInDefaultOrganization(ctx context.Context, userID string) error {
+	userID = strings.TrimSpace(userID)
+	if userID == "" {
+		return fmt.Errorf("user id is required")
+	}
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return err
+	}
+	hasPrimary, err := r.userHasCurrentOrganization(ctx, userID)
+	if err != nil {
+		return err
+	}
+	item, err := r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.OrganizationIDEQ(defaultOrganizationID),
+		).
+		First(ctx)
+	if err != nil {
+		if !ent.IsNotFound(err) {
+			return err
+		}
+		_, err = r.data.db.UserOrganization.Create().
+			SetUserID(userID).
+			SetOrganizationID(defaultOrganizationID).
+			SetIsPrimary(!hasPrimary).
+			SetStatus(true).
+			Save(ctx)
+		return err
+	}
+	cmd := r.data.db.UserOrganization.UpdateOneID(item.ID).SetStatus(true)
+	if !hasPrimary {
+		cmd = cmd.SetIsPrimary(true)
+	}
+	_, err = cmd.Save(ctx)
+	return err
+}
+
+func (r *adminRepo) ListUserOrganizations(ctx context.Context, userID string) ([]*ent.UserOrganization, error) {
+	userID = strings.TrimSpace(userID)
+	if userID == "" {
+		return nil, fmt.Errorf("user id is required")
+	}
+	return r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.StatusEQ(true),
+		).
+		Order(
+			userorganization.ByIsPrimary(sql.OrderDesc()),
+			userorganization.ByCreateTime(),
+			userorganization.ByOrganizationID(),
+		).
+		All(ctx)
+}
+
+func (r *adminRepo) GetCurrentOrganizationID(ctx context.Context, userID string) (string, error) {
+	userID = strings.TrimSpace(userID)
+	if userID == "" {
+		return "", fmt.Errorf("user id is required")
+	}
+	if err := r.EnsureUserInDefaultOrganization(ctx, userID); err != nil {
+		return "", err
+	}
+	item, err := r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.StatusEQ(true),
+			userorganization.IsPrimaryEQ(true),
+		).
+		Order(userorganization.ByID()).
+		First(ctx)
+	if err == nil {
+		organizationItem, orgErr := r.GetOrganization(ctx, item.OrganizationID)
+		if orgErr == nil && organizationItem.Status {
+			return item.OrganizationID, nil
+		}
+		if orgErr != nil && !ent.IsNotFound(orgErr) {
+			return "", orgErr
+		}
+		defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+		if err != nil {
+			return "", err
+		}
+		if err := r.SwitchCurrentOrganization(ctx, userID, defaultOrganizationID); err != nil {
+			return "", err
+		}
+		return defaultOrganizationID, nil
+	}
+	if !ent.IsNotFound(err) {
+		return "", err
+	}
+	defaultOrganizationID, err := r.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return "", err
+	}
+	if err := r.SwitchCurrentOrganization(ctx, userID, defaultOrganizationID); err != nil {
+		return "", err
+	}
+	return defaultOrganizationID, nil
+}
+
+func (r *adminRepo) UserBelongsToOrganization(ctx context.Context, userID string, organizationID string) (bool, error) {
+	userID = strings.TrimSpace(userID)
+	organizationID = strings.TrimSpace(organizationID)
+	if userID == "" || organizationID == "" {
+		return false, nil
+	}
+	return r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.OrganizationIDEQ(organizationID),
+			userorganization.StatusEQ(true),
+		).
+		Exist(ctx)
+}
+
+func (r *adminRepo) SwitchCurrentOrganization(ctx context.Context, userID string, organizationID string) error {
+	userID = strings.TrimSpace(userID)
+	organizationID = strings.TrimSpace(organizationID)
+	if userID == "" {
+		return fmt.Errorf("user id is required")
+	}
+	if organizationID == "" {
+		return fmt.Errorf("organization id is required")
+	}
+	tx, err := r.data.db.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			_ = tx.Rollback()
+		}
+	}()
+	if _, err := tx.UserOrganization.Update().
+		Where(userorganization.UserIDEQ(userID)).
+		SetIsPrimary(false).
+		Save(ctx); err != nil {
+		return err
+	}
+	affected, err := tx.UserOrganization.Update().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.OrganizationIDEQ(organizationID),
+			userorganization.StatusEQ(true),
+		).
+		SetIsPrimary(true).
+		Save(ctx)
+	if err != nil {
+		return err
+	}
+	if affected == 0 {
+		return fmt.Errorf("user is not a member of organization")
+	}
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	committed = true
+	return nil
+}
+
+func (r *adminRepo) userHasCurrentOrganization(ctx context.Context, userID string) (bool, error) {
+	return r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.UserIDEQ(userID),
+			userorganization.StatusEQ(true),
+			userorganization.IsPrimaryEQ(true),
+		).
+		Exist(ctx)
+}
+
+func (r *adminRepo) listAllUserIDs(ctx context.Context) ([]string, error) {
+	const pageSize int64 = 1000
+	var (
+		currentPage int64 = 1
+		userIDs           = make([]string, 0)
+	)
+	for {
+		res, err := r.getUserList(ctx, &userv1.GetUserParams{
+			CurrentPage: currentPage,
+			PageSize:    pageSize,
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, item := range res.Items {
+			if item != nil && strings.TrimSpace(item.Id) != "" {
+				userIDs = append(userIDs, item.Id)
+			}
+		}
+		if int64(len(userIDs)) >= res.Total || len(res.Items) == 0 {
+			return normalizeUserIDs(userIDs), nil
+		}
+		currentPage++
+	}
+}
+
+func (r *adminRepo) organizationMembersToReply(ctx context.Context, members []*ent.UserOrganization) ([]*v1.OrganizationMemberItem, error) {
+	if len(members) == 0 {
+		return []*v1.OrganizationMemberItem{}, nil
+	}
+	res, err := r.getUserList(ctx, &userv1.GetUserParams{CurrentPage: 1, PageSize: 10000})
+	if err != nil {
+		return nil, err
+	}
+	userMap := make(map[string]*userv1.UserListItem, len(res.Items))
+	for _, item := range res.Items {
+		if item != nil {
+			userMap[item.Id] = item
+		}
+	}
+	items := make([]*v1.OrganizationMemberItem, 0, len(members))
+	for _, member := range members {
+		userItem := userMap[member.UserID]
+		memberStatus := int32(0)
+		if member.Status {
+			memberStatus = 1
+		}
+		reply := &v1.OrganizationMemberItem{
+			UserId:       member.UserID,
+			MemberStatus: memberStatus,
+			Primary:      member.IsPrimary,
+			CreateTime:   member.CreateTime.Format(time.DateTime),
+		}
+		if userItem != nil {
+			reply.Username = userItem.Username
+			reply.Nickname = userItem.Nickname
+			reply.Email = userItem.Email
+			reply.Avatar = userItem.Avatar
+			reply.UserStatus = userItem.Status
+		}
+		items = append(items, reply)
+	}
+	return items, nil
+}
+
+func (r *adminRepo) getUserList(ctx context.Context, req *userv1.GetUserParams) (*userv1.GetUserListReply, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	return r.data.userClient.GetUserList(ctx, req)
+}
+
+func (r *adminRepo) AddRole(ctx context.Context, req *v1.RoleListItem) (*ent.Role, error) {
+	cmd := r.data.db.Role.Create().
+		SetName(req.Name).
+		SetValue(req.Value).
+		SetOrganizationID(defaultOrganizationID).
+		SetStatus(req.Status != 0).
+		SetDesc(req.Remark).
+		SetMenus(req.Permissions).
+		SetDataScope(req.DataScope).
+		SetDataScopeDeptIds(req.DataScopeDeptIds).
+		AddResourceIDs(req.ApiPermissions...)
+	if organizationID := strings.TrimSpace(req.OrganizationId); organizationID != "" {
+		cmd = cmd.SetOrganizationID(organizationID)
+	}
+	return cmd.Save(ctx)
+}
+
 func (r *adminRepo) UpdateRole(ctx context.Context, roleID int64, req *v1.RoleListItem) (*ent.Role, error) {
-	return r.data.db.Role.UpdateOneID(roleID).
+	cmd := r.data.db.Role.UpdateOneID(roleID).
 		SetName(req.Name).
 		SetValue(req.Value).
 		SetStatus(req.Status != 0).
 		SetDesc(req.Remark).
 		SetMenus(req.Permissions).
+		SetDataScope(req.DataScope).
+		SetDataScopeDeptIds(req.DataScopeDeptIds).
 		ClearResource().
-		AddResourceIDs(req.ApiPermissions...).
-		Save(ctx)
+		AddResourceIDs(req.ApiPermissions...)
+	if organizationID := strings.TrimSpace(req.OrganizationId); organizationID != "" {
+		cmd = cmd.SetOrganizationID(organizationID)
+	}
+	return cmd.Save(ctx)
 }
 
 func (r *adminRepo) DelRole(ctx context.Context, id int64) error {
@@ -638,11 +1606,6 @@ func (r *adminRepo) EnsurePermissionBootstrap(ctx context.Context) error {
 	if r == nil || r.data == nil || r.data.sqlDB == nil {
 		return nil
 	}
-	if toEntDialect(r.data.dbDriver) == dialect.Postgres {
-		if err := cleanupDuplicateAPIResources(ctx, r.data.sqlDB, true); err != nil {
-			return err
-		}
-	}
 	if err := r.ensureBootstrapResourceGroups(ctx); err != nil {
 		return err
 	}
@@ -652,7 +1615,10 @@ func (r *adminRepo) EnsurePermissionBootstrap(ctx context.Context) error {
 	if err := r.ensureBootstrapResourceRoles(ctx); err != nil {
 		return err
 	}
-	return r.ensureBootstrapAPIRoles(ctx)
+	if err := r.ensureBootstrapAPIRoles(ctx); err != nil {
+		return err
+	}
+	return r.ensureDefaultOrganizationPermissionScope(ctx)
 }
 
 func (r *adminRepo) ensureBootstrapResourceGroups(ctx context.Context) error {
@@ -727,6 +1693,37 @@ ON CONFLICT DO NOTHING`
 		}
 	}
 	return nil
+}
+
+func (r *adminRepo) ensureDefaultOrganizationPermissionScope(ctx context.Context) error {
+	if err := r.ensureDefaultOrganizationMenuScope(ctx); err != nil {
+		return err
+	}
+	return r.ensureDefaultOrganizationResourceScope(ctx)
+}
+
+func (r *adminRepo) ensureDefaultOrganizationMenuScope(ctx context.Context) error {
+	const query = `
+INSERT INTO sys_organization_permission_scope (
+  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+)
+SELECT NOW(), NOW(), $1, 'menu', id::text, ''
+FROM sys_menu
+ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING`
+	_, err := r.data.sqlDB.ExecContext(ctx, query, defaultOrganizationID)
+	return err
+}
+
+func (r *adminRepo) ensureDefaultOrganizationResourceScope(ctx context.Context) error {
+	const query = `
+INSERT INTO sys_organization_permission_scope (
+  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+)
+SELECT NOW(), NOW(), $1, 'resource', id, ''
+FROM sys_resources
+ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING`
+	_, err := r.data.sqlDB.ExecContext(ctx, query, defaultOrganizationID)
+	return err
 }
 
 func (r *adminRepo) RegisterPermissionSnapshot(ctx context.Context) error {
@@ -828,13 +1825,16 @@ func roleToPolicyRole(item *ent.Role) authx.ProjectionRole {
 		})
 	}
 	return authx.ProjectionRole{
-		ID:        item.ID,
-		Name:      item.Name,
-		Value:     item.Value,
-		Status:    item.Status,
-		Remark:    item.Desc,
-		MenuIDs:   append([]int32(nil), item.Menus...),
-		Resources: resources,
+		ID:               item.ID,
+		Name:             item.Name,
+		Value:            item.Value,
+		Status:           item.Status,
+		Remark:           item.Desc,
+		MenuIDs:          append([]int32(nil), item.Menus...),
+		Resources:        resources,
+		OrganizationID:   item.OrganizationID,
+		DataScope:        item.DataScope,
+		DataScopeDeptIDs: append([]int64(nil), item.DataScopeDeptIds...),
 	}
 }
 
@@ -858,12 +1858,13 @@ func userRoleBindingToPolicyBinding(item *ent.UserRoleBinding, roleValue string)
 		return authx.UserRoleBindingProjection{}
 	}
 	return authx.UserRoleBindingProjection{
-		ID:         strconv.FormatInt(item.ID, 10),
-		UserID:     item.UserID,
-		RoleID:     item.RoleID,
-		RoleValue:  roleValue,
-		CreateTime: item.CreateTime.Format(time.RFC3339),
-		UpdateTime: item.UpdateTime.Format(time.RFC3339),
+		ID:             strconv.FormatInt(item.ID, 10),
+		UserID:         item.UserID,
+		RoleID:         item.RoleID,
+		RoleValue:      roleValue,
+		CreateTime:     item.CreateTime.Format(time.RFC3339),
+		OrganizationID: item.OrganizationID,
+		UpdateTime:     item.UpdateTime.Format(time.RFC3339),
 	}
 }
 
@@ -921,10 +1922,13 @@ func (r *adminRepo) DeleteMenu(ctx context.Context, id int64) error {
 	return r.data.db.Menu.DeleteOneID(id).Exec(entcache.Evict(ctx))
 }
 
-func (r *adminRepo) GetDeptList(ctx context.Context) ([]*ent.Dept, error) {
-	return r.data.db.Dept.Query().Order(dept.ByPid(func(options *sql.OrderTermOptions) {
-		options.NullsFirst = true
-	})).All(ctx)
+func (r *adminRepo) GetDeptList(ctx context.Context, organizationID string) ([]*ent.Dept, error) {
+	return r.data.db.Dept.Query().
+		Where(dept.OrganizationIDEQ(organizationID)).
+		Order(dept.ByPid(func(options *sql.OrderTermOptions) {
+			options.NullsFirst = true
+		}), dept.BySort(), dept.ByID()).
+		All(ctx)
 }
 
 func (r *adminRepo) AddDept(ctx context.Context, req *v1.DeptListItem) (*ent.Dept, error) {
@@ -933,8 +1937,10 @@ func (r *adminRepo) AddDept(ctx context.Context, req *v1.DeptListItem) (*ent.Dep
 		SetSort(req.OrderNo).
 		SetStatus(req.Status != 0).
 		SetDesc(req.Remark).
-		SetExtension("").
-		SetDom(req.Dom)
+		SetExtension("")
+	if organizationID := strings.TrimSpace(req.OrganizationId); organizationID != "" {
+		cmd = cmd.SetOrganizationID(organizationID)
+	}
 	pid, err := strconv.ParseInt(req.Pid, 10, 32)
 	if err == nil && pid > 0 {
 		cmd = cmd.SetPid(pid)
@@ -949,9 +1955,14 @@ func (r *adminRepo) UpdateDept(ctx context.Context, deptID int64, req *v1.DeptLi
 		SetStatus(req.Status != 0).
 		SetDesc(req.Remark).
 		SetExtension("")
+	if organizationID := strings.TrimSpace(req.OrganizationId); organizationID != "" {
+		cmd = cmd.SetOrganizationID(organizationID)
+	}
 	pid, err := strconv.ParseInt(req.Pid, 10, 32)
 	if err == nil && pid > 0 {
 		cmd = cmd.SetPid(pid)
+	} else {
+		cmd = cmd.ClearPid()
 	}
 	return cmd.Save(ctx)
 }
@@ -970,6 +1981,13 @@ func (r *adminRepo) GetDeptLeafsChildren(ctx context.Context, id int64) ([]*ent.
 
 func (r *adminRepo) GetDeptById(ctx context.Context, id int64) (*ent.Dept, error) {
 	return r.data.db.Dept.Get(ctx, id)
+}
+
+func (r *adminRepo) RemoveDeptBindings(ctx context.Context, deptID int64) error {
+	_, err := r.data.db.UserDeptMembership.Delete().
+		Where(userdeptmembership.DeptIDEQ(deptID)).
+		Exec(ctx)
+	return err
 }
 
 func (r *adminRepo) ListServiceRegistries(ctx context.Context) ([]*ent.ServiceRegistry, error) {
@@ -1057,6 +2075,10 @@ func adminTables() []*schema.Table {
 		migrate.APIResourcesRolesTable,
 		migrate.ResourceRolesTable,
 		migrate.SysUserRoleBindingTable,
+		migrate.SysUserDeptMembershipTable,
+		migrate.SysOrganizationTable,
+		migrate.SysOrganizationPermissionScopeTable,
+		migrate.SysUserOrganizationTable,
 		migrate.SysMenuTable,
 		migrate.SysDeptTable,
 		migrate.SysLogTable,
@@ -1065,77 +2087,44 @@ func adminTables() []*schema.Table {
 	}
 }
 
-func cleanupDuplicateAPIResourcesBeforeMigration(ctx context.Context, db *dbsql.DB, driver string) error {
-	if toEntDialect(driver) != dialect.Postgres {
+func ensureDefaultOrganizationAfterMigration(ctx context.Context, db *dbsql.DB, driver string) error {
+	if db == nil || toEntDialect(driver) != dialect.Postgres {
 		return nil
 	}
-	exists, err := tableExists(ctx, db, "sys_api_resources")
-	if err != nil || !exists {
-		return err
-	}
-	roleTableExists, err := tableExists(ctx, db, "api_resources_roles")
-	if err != nil {
-		return err
-	}
-	return cleanupDuplicateAPIResources(ctx, db, roleTableExists)
-}
-
-func cleanupUserRoleBindingBeforeMigration(ctx context.Context, db *dbsql.DB, driver string) error {
-	if toEntDialect(driver) != dialect.Postgres {
-		return nil
-	}
-	exists, err := tableExists(ctx, db, "sys_user_role_binding")
-	if err != nil || !exists {
+	organizationExists, err := tableExists(ctx, db, "sys_organization")
+	if err != nil || !organizationExists {
 		return err
 	}
 	if _, err := db.ExecContext(ctx, `
-WITH ranked AS (
-  SELECT
-    id,
-    ROW_NUMBER() OVER (
-      PARTITION BY user_id, role_id
-      ORDER BY create_time, id
-    ) AS rn
-  FROM sys_user_role_binding
+INSERT INTO public.sys_organization (
+  id, create_time, update_time, name, code, sort, status, "desc", extension
+) VALUES (
+  $1, NOW(), NOW(), '默认组织', 'default', 0, true, '系统默认组织', ''
 )
-DELETE FROM sys_user_role_binding
-WHERE id IN (SELECT id FROM ranked WHERE rn > 1)`); err != nil {
+ON CONFLICT (id) DO UPDATE SET
+  update_time = NOW(),
+  name = EXCLUDED.name,
+  code = EXCLUDED.code,
+  sort = EXCLUDED.sort,
+  status = EXCLUDED.status,
+  "desc" = EXCLUDED."desc",
+  extension = EXCLUDED.extension`, defaultOrganizationID); err != nil {
+		return err
+	}
+	if _, err := db.ExecContext(ctx, `
+UPDATE public.sys_role
+SET data_scope = CASE
+  WHEN value IN ('root', 'admin') THEN 'all'
+  WHEN data_scope IS NULL OR data_scope = '' THEN 'self'
+  ELSE data_scope
+END
+WHERE data_scope IS NULL OR data_scope = '' OR value IN ('root', 'admin')`); err != nil {
 		return err
 	}
 	_, err = db.ExecContext(ctx, `
-DO $$
-DECLARE
-  item record;
-BEGIN
-  FOR item IN
-    SELECT c.conname
-    FROM pg_constraint c
-    JOIN LATERAL unnest(c.conkey) AS k(attnum) ON true
-    JOIN pg_attribute a ON a.attrelid = c.conrelid AND a.attnum = k.attnum
-    WHERE c.conrelid = 'public.sys_user_role_binding'::regclass
-      AND c.contype = 'u'
-    GROUP BY c.conname
-    HAVING bool_or(a.attname = 'user_id') AND NOT bool_or(a.attname = 'role_id')
-  LOOP
-    EXECUTE format('ALTER TABLE public.sys_user_role_binding DROP CONSTRAINT %I', item.conname);
-  END LOOP;
-
-  FOR item IN
-    SELECT i.relname
-    FROM pg_class t
-    JOIN pg_index ix ON t.oid = ix.indrelid
-    JOIN pg_class i ON i.oid = ix.indexrelid
-    JOIN LATERAL unnest(ix.indkey) AS k(attnum) ON true
-    JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = k.attnum
-    WHERE t.oid = 'public.sys_user_role_binding'::regclass
-      AND ix.indisunique
-      AND NOT ix.indisprimary
-    GROUP BY i.relname
-    HAVING bool_or(a.attname = 'user_id') AND NOT bool_or(a.attname = 'role_id')
-  LOOP
-    EXECUTE format('DROP INDEX IF EXISTS public.%I', item.relname);
-  END LOOP;
-END $$`)
+UPDATE public.sys_role
+SET data_scope_dept_ids = '[]'
+WHERE data_scope_dept_ids IS NULL`)
 	return err
 }
 
@@ -1143,170 +2132,6 @@ func tableExists(ctx context.Context, db *dbsql.DB, table string) (bool, error) 
 	var exists bool
 	err := db.QueryRowContext(ctx, "SELECT to_regclass($1) IS NOT NULL", "public."+table).Scan(&exists)
 	return exists, err
-}
-
-func cleanupLegacyPlatformGovernanceBeforeMigration(ctx context.Context, db *dbsql.DB, driver string) error {
-	if db == nil || toEntDialect(driver) != dialect.Postgres {
-		return nil
-	}
-	apiTableExists, err := tableExists(ctx, db, "sys_api_resources")
-	if err != nil {
-		return err
-	}
-	if apiTableExists {
-		roleTableExists, err := tableExists(ctx, db, "api_resources_roles")
-		if err != nil {
-			return err
-		}
-		if roleTableExists {
-			if _, err := db.ExecContext(ctx, `
-DELETE FROM api_resources_roles
-WHERE api_resources_id IN (
-  SELECT id
-  FROM sys_api_resources
-  WHERE path LIKE '/admin-api/v1/platform/domains%'
-     OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
-     OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
-     OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
-     OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
-     OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')
-)`); err != nil {
-				return err
-			}
-		}
-		if _, err := db.ExecContext(ctx, `
-DELETE FROM sys_api_resources
-WHERE path LIKE '/admin-api/v1/platform/domains%'
-   OR (path = '/admin-api/v1/platform/services' AND method = 'POST')
-   OR (path = '/admin-api/v1/platform/services/{id}' AND method IN ('PUT', 'DELETE'))
-   OR (path = '/admin-api/v1/platform/projection-sources' AND method = 'POST')
-   OR (path = '/admin-api/v1/platform/projection-sources/{id}' AND method IN ('PUT', 'DELETE'))
-   OR (path = '/admin-api/v1/platform/projection-sources/report/{source_service}' AND method = 'PUT')`); err != nil {
-			return err
-		}
-		if _, err := db.ExecContext(ctx, `
-ALTER TABLE public.sys_api_resources
-  DROP COLUMN IF EXISTS business_key,
-  DROP COLUMN IF EXISTS service_key,
-  DROP COLUMN IF EXISTS service_code,
-  DROP COLUMN IF EXISTS domain_code`); err != nil {
-			return err
-		}
-	}
-	serviceTableExists, err := tableExists(ctx, db, "sys_service_registry")
-	if err != nil {
-		return err
-	}
-	if serviceTableExists {
-		if _, err := db.ExecContext(ctx, `
-ALTER TABLE public.sys_service_registry
-  DROP COLUMN IF EXISTS domain_code`); err != nil {
-			return err
-		}
-		if _, err := db.ExecContext(ctx, `
-UPDATE sys_service_registry
-SET description = '平台控制面，负责菜单、服务注册、API 目录和投影源状态观测'
-WHERE service_code = 'admin'`); err != nil {
-			return err
-		}
-	}
-	projectionTableExists, err := tableExists(ctx, db, "sys_projection_source_status")
-	if err != nil {
-		return err
-	}
-	if projectionTableExists {
-		if _, err := db.ExecContext(ctx, `
-ALTER TABLE public.sys_projection_source_status
-  DROP COLUMN IF EXISTS domain_code`); err != nil {
-			return err
-		}
-	}
-	menuTableExists, err := tableExists(ctx, db, "sys_menu")
-	if err != nil {
-		return err
-	}
-	if menuTableExists {
-		if _, err := db.ExecContext(ctx, `
-DELETE FROM sys_menu
-WHERE id = 21 OR path = '/system/platform/domain'`); err != nil {
-			return err
-		}
-	}
-	_, err = db.ExecContext(ctx, `DROP TABLE IF EXISTS public.sys_business_domain`)
-	return err
-}
-
-func cleanupDuplicateAPIResources(ctx context.Context, db *dbsql.DB, moveRoleLinks bool) error {
-	if db == nil {
-		return nil
-	}
-	if moveRoleLinks {
-		if _, err := db.ExecContext(ctx, `
-WITH ranked AS (
-  SELECT
-    id,
-    FIRST_VALUE(id) OVER (
-      PARTITION BY path, method
-      ORDER BY
-        CASE WHEN id LIKE 'api-%' THEN 0 ELSE 1 END,
-        create_time,
-        id
-    ) AS keep_id,
-    ROW_NUMBER() OVER (
-      PARTITION BY path, method
-      ORDER BY
-        CASE WHEN id LIKE 'api-%' THEN 0 ELSE 1 END,
-        create_time,
-        id
-    ) AS rn
-  FROM sys_api_resources
-),
-duplicate_links AS (
-  SELECT ranked.keep_id, api_resources_roles.role_id
-  FROM ranked
-  JOIN api_resources_roles ON api_resources_roles.api_resources_id = ranked.id
-  WHERE ranked.rn > 1
-)
-INSERT INTO api_resources_roles (api_resources_id, role_id)
-SELECT keep_id, role_id
-FROM duplicate_links
-ON CONFLICT DO NOTHING`); err != nil {
-			return err
-		}
-		if _, err := db.ExecContext(ctx, `
-WITH ranked AS (
-  SELECT
-    id,
-    ROW_NUMBER() OVER (
-      PARTITION BY path, method
-      ORDER BY
-        CASE WHEN id LIKE 'api-%' THEN 0 ELSE 1 END,
-        create_time,
-        id
-    ) AS rn
-  FROM sys_api_resources
-)
-DELETE FROM api_resources_roles
-WHERE api_resources_id IN (SELECT id FROM ranked WHERE rn > 1)`); err != nil {
-			return err
-		}
-	}
-	_, err := db.ExecContext(ctx, `
-WITH ranked AS (
-  SELECT
-    id,
-    ROW_NUMBER() OVER (
-      PARTITION BY path, method
-      ORDER BY
-        CASE WHEN id LIKE 'api-%' THEN 0 ELSE 1 END,
-        create_time,
-        id
-    ) AS rn
-  FROM sys_api_resources
-)
-DELETE FROM sys_api_resources
-WHERE id IN (SELECT id FROM ranked WHERE rn > 1)`)
-	return err
 }
 
 func getSysLogListQuery(params *v1.GetSysLogListParams, isPage bool) func(s *sql.Selector) {
@@ -1378,6 +2203,23 @@ func replaceBracesIfExists(str string) (bool, string) {
 	}
 	re := regexp.MustCompile(`{[^}]*}`)
 	return true, re.ReplaceAllString(str, "%")
+}
+
+func normalizeUserIDs(userIDs []string) []string {
+	seen := make(map[string]struct{}, len(userIDs))
+	items := make([]string, 0, len(userIDs))
+	for _, userID := range userIDs {
+		userID = strings.TrimSpace(userID)
+		if userID == "" {
+			continue
+		}
+		if _, ok := seen[userID]; ok {
+			continue
+		}
+		seen[userID] = struct{}{}
+		items = append(items, userID)
+	}
+	return items
 }
 
 func toEntDialect(driver string) string {

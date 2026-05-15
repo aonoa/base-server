@@ -22,18 +22,27 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationAdminServiceAddApi = "/api.admin.service.v1.AdminService/AddApi"
 const OperationAdminServiceAddDept = "/api.admin.service.v1.AdminService/AddDept"
+const OperationAdminServiceAddOrganization = "/api.admin.service.v1.AdminService/AddOrganization"
 const OperationAdminServiceAddResource = "/api.admin.service.v1.AdminService/AddResource"
 const OperationAdminServiceAddRole = "/api.admin.service.v1.AdminService/AddRole"
 const OperationAdminServiceCreateMenu = "/api.admin.service.v1.AdminService/CreateMenu"
 const OperationAdminServiceDelApi = "/api.admin.service.v1.AdminService/DelApi"
 const OperationAdminServiceDelDept = "/api.admin.service.v1.AdminService/DelDept"
+const OperationAdminServiceDelOrganization = "/api.admin.service.v1.AdminService/DelOrganization"
 const OperationAdminServiceDelResource = "/api.admin.service.v1.AdminService/DelResource"
 const OperationAdminServiceDelRole = "/api.admin.service.v1.AdminService/DelRole"
 const OperationAdminServiceDeleteMenu = "/api.admin.service.v1.AdminService/DeleteMenu"
+const OperationAdminServiceDeleteUserDeptBinding = "/api.admin.service.v1.AdminService/DeleteUserDeptBinding"
 const OperationAdminServiceDeleteUserRoleBinding = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
 const OperationAdminServiceGetApiList = "/api.admin.service.v1.AdminService/GetApiList"
+const OperationAdminServiceGetCurrentPermissionCatalog = "/api.admin.service.v1.AdminService/GetCurrentPermissionCatalog"
 const OperationAdminServiceGetCurrentUserMenus = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
 const OperationAdminServiceGetDeptList = "/api.admin.service.v1.AdminService/GetDeptList"
+const OperationAdminServiceGetMyOrganizations = "/api.admin.service.v1.AdminService/GetMyOrganizations"
+const OperationAdminServiceGetOrganizationList = "/api.admin.service.v1.AdminService/GetOrganizationList"
+const OperationAdminServiceGetOrganizationMembers = "/api.admin.service.v1.AdminService/GetOrganizationMembers"
+const OperationAdminServiceGetOrganizationPermissionCatalog = "/api.admin.service.v1.AdminService/GetOrganizationPermissionCatalog"
+const OperationAdminServiceGetOrganizationPermissionScope = "/api.admin.service.v1.AdminService/GetOrganizationPermissionScope"
 const OperationAdminServiceGetProjectionSourceStatusList = "/api.admin.service.v1.AdminService/GetProjectionSourceStatusList"
 const OperationAdminServiceGetResourceList = "/api.admin.service.v1.AdminService/GetResourceList"
 const OperationAdminServiceGetRoleList = "/api.admin.service.v1.AdminService/GetRoleList"
@@ -41,33 +50,48 @@ const OperationAdminServiceGetServiceRegistryList = "/api.admin.service.v1.Admin
 const OperationAdminServiceGetSysLogInfo = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 const OperationAdminServiceGetSysLogList = "/api.admin.service.v1.AdminService/GetSysLogList"
 const OperationAdminServiceGetSysMenuList = "/api.admin.service.v1.AdminService/GetSysMenuList"
+const OperationAdminServiceGetUserDeptBinding = "/api.admin.service.v1.AdminService/GetUserDeptBinding"
 const OperationAdminServiceGetUserRoleBinding = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
 const OperationAdminServiceGetWalkRoute = "/api.admin.service.v1.AdminService/GetWalkRoute"
 const OperationAdminServiceIsMenuNameExists = "/api.admin.service.v1.AdminService/IsMenuNameExists"
 const OperationAdminServiceIsMenuPathExists = "/api.admin.service.v1.AdminService/IsMenuPathExists"
 const OperationAdminServiceListUserRoleBindings = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
+const OperationAdminServiceSaveOrganizationMembers = "/api.admin.service.v1.AdminService/SaveOrganizationMembers"
+const OperationAdminServiceSaveOrganizationPermissionScope = "/api.admin.service.v1.AdminService/SaveOrganizationPermissionScope"
+const OperationAdminServiceSwitchCurrentOrganization = "/api.admin.service.v1.AdminService/SwitchCurrentOrganization"
 const OperationAdminServiceUpdateApi = "/api.admin.service.v1.AdminService/UpdateApi"
 const OperationAdminServiceUpdateDept = "/api.admin.service.v1.AdminService/UpdateDept"
 const OperationAdminServiceUpdateMenu = "/api.admin.service.v1.AdminService/UpdateMenu"
+const OperationAdminServiceUpdateOrganization = "/api.admin.service.v1.AdminService/UpdateOrganization"
 const OperationAdminServiceUpdateResource = "/api.admin.service.v1.AdminService/UpdateResource"
 const OperationAdminServiceUpdateRole = "/api.admin.service.v1.AdminService/UpdateRole"
+const OperationAdminServiceUpsertUserDeptBinding = "/api.admin.service.v1.AdminService/UpsertUserDeptBinding"
 const OperationAdminServiceUpsertUserRoleBinding = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
 
 type AdminServiceHTTPServer interface {
 	AddApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
+	AddOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error)
 	AddResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	AddRole(context.Context, *RoleListItem) (*RoleListItem, error)
 	CreateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
 	DelApi(context.Context, *DeleteApi) (*emptypb.Empty, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
+	DelOrganization(context.Context, *DeleteOrganization) (*emptypb.Empty, error)
 	DelResource(context.Context, *DeleteResource) (*emptypb.Empty, error)
 	DelRole(context.Context, *DeleteRole) (*emptypb.Empty, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
+	DeleteUserDeptBinding(context.Context, *DeleteUserDeptBindingRequest) (*emptypb.Empty, error)
 	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
 	GetApiList(context.Context, *GetApiPageParams) (*GetApiListByPageReply, error)
+	GetCurrentPermissionCatalog(context.Context, *emptypb.Empty) (*OrganizationPermissionCatalogReply, error)
 	GetCurrentUserMenus(context.Context, *emptypb.Empty) (*GetCurrentUserMenusReply, error)
-	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
+	GetDeptList(context.Context, *GetDeptListParams) (*GetDeptListReply, error)
+	GetMyOrganizations(context.Context, *emptypb.Empty) (*GetMyOrganizationsReply, error)
+	GetOrganizationList(context.Context, *GetOrganizationListParams) (*GetOrganizationListReply, error)
+	GetOrganizationMembers(context.Context, *GetOrganizationMembersRequest) (*GetOrganizationMembersReply, error)
+	GetOrganizationPermissionCatalog(context.Context, *GetOrganizationPermissionCatalogRequest) (*OrganizationPermissionCatalogReply, error)
+	GetOrganizationPermissionScope(context.Context, *GetOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error)
 	GetProjectionSourceStatusList(context.Context, *emptypb.Empty) (*GetProjectionSourceStatusListReply, error)
 	GetResourceList(context.Context, *GetResourcePageParams) (*GetResourceListByPageReply, error)
 	GetRoleList(context.Context, *RolePageParams) (*GetRoleListByPageReply, error)
@@ -75,16 +99,22 @@ type AdminServiceHTTPServer interface {
 	GetSysLogInfo(context.Context, *GetSysLogInfoParams) (*GetSysLogInfoReply, error)
 	GetSysLogList(context.Context, *GetSysLogListParams) (*GetSysLogListReply, error)
 	GetSysMenuList(context.Context, *MenuParams) (*GetSysMenuListReply, error)
+	GetUserDeptBinding(context.Context, *GetUserDeptBindingRequest) (*UserDeptBindingItem, error)
 	GetUserRoleBinding(context.Context, *GetUserRoleBindingRequest) (*UserRoleBindingItem, error)
 	GetWalkRoute(context.Context, *emptypb.Empty) (*GetWalkRouteReply, error)
 	IsMenuNameExists(context.Context, *IsMenuNameExistsRequest) (*IsMenuNameExistsReply, error)
 	IsMenuPathExists(context.Context, *IsMenuPathExistsRequest) (*IsMenuPathExistsReply, error)
 	ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error)
+	SaveOrganizationMembers(context.Context, *SaveOrganizationMembersRequest) (*GetOrganizationMembersReply, error)
+	SaveOrganizationPermissionScope(context.Context, *SaveOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error)
+	SwitchCurrentOrganization(context.Context, *SwitchCurrentOrganizationRequest) (*CurrentOrganizationReply, error)
 	UpdateApi(context.Context, *ApiListItem) (*ApiListItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateMenu(context.Context, *SysMenuListItem) (*emptypb.Empty, error)
+	UpdateOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error)
 	UpdateResource(context.Context, *ResourceListItem) (*ResourceListItem, error)
 	UpdateRole(context.Context, *RoleListItem) (*RoleListItem, error)
+	UpsertUserDeptBinding(context.Context, *UserDeptBindingItem) (*UserDeptBindingItem, error)
 	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
 }
 
@@ -106,6 +136,21 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 	r.GET("/admin-api/v1/user-role-bindings", _AdminService_ListUserRoleBindings0_HTTP_Handler(srv))
 	r.PUT("/admin-api/v1/user-role-bindings/{user_id}", _AdminService_UpsertUserRoleBinding0_HTTP_Handler(srv))
 	r.DELETE("/admin-api/v1/user-role-bindings/{user_id}", _AdminService_DeleteUserRoleBinding0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/user-dept-bindings/{user_id}", _AdminService_GetUserDeptBinding0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/user-dept-bindings/{user_id}", _AdminService_UpsertUserDeptBinding0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/user-dept-bindings/{user_id}", _AdminService_DeleteUserDeptBinding0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/organizations", _AdminService_GetOrganizationList0_HTTP_Handler(srv))
+	r.POST("/admin-api/v1/organizations", _AdminService_AddOrganization0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/organizations/{id}", _AdminService_UpdateOrganization0_HTTP_Handler(srv))
+	r.DELETE("/admin-api/v1/organizations/{id}", _AdminService_DelOrganization0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/organizations/{organization_id}/members", _AdminService_GetOrganizationMembers0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/organizations/{organization_id}/members", _AdminService_SaveOrganizationMembers0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/organizations/{organization_id}/permission-scope", _AdminService_GetOrganizationPermissionScope0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/organizations/{organization_id}/permission-scope", _AdminService_SaveOrganizationPermissionScope0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/permission-catalog/current", _AdminService_GetCurrentPermissionCatalog0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/organizations/{organization_id}/permission-catalog", _AdminService_GetOrganizationPermissionCatalog0_HTTP_Handler(srv))
+	r.GET("/admin-api/v1/my/organizations", _AdminService_GetMyOrganizations0_HTTP_Handler(srv))
+	r.PUT("/admin-api/v1/my/current-organization", _AdminService_SwitchCurrentOrganization0_HTTP_Handler(srv))
 	r.GET("/admin-api/v1/depts", _AdminService_GetDeptList0_HTTP_Handler(srv))
 	r.POST("/admin-api/v1/depts", _AdminService_AddDept0_HTTP_Handler(srv))
 	r.PUT("/admin-api/v1/depts/{id}", _AdminService_UpdateDept0_HTTP_Handler(srv))
@@ -476,15 +521,348 @@ func _AdminService_DeleteUserRoleBinding0_HTTP_Handler(srv AdminServiceHTTPServe
 	}
 }
 
-func _AdminService_GetDeptList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+func _AdminService_GetUserDeptBinding0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserDeptBindingRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetUserDeptBinding)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUserDeptBinding(ctx, req.(*GetUserDeptBindingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserDeptBindingItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpsertUserDeptBinding0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UserDeptBindingItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpsertUserDeptBinding)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpsertUserDeptBinding(ctx, req.(*UserDeptBindingItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserDeptBindingItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DeleteUserDeptBinding0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUserDeptBindingRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDeleteUserDeptBinding)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteUserDeptBinding(ctx, req.(*DeleteUserDeptBindingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetOrganizationList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetOrganizationListParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetOrganizationList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetOrganizationList(ctx, req.(*GetOrganizationListParams))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetOrganizationListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_AddOrganization0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrganizationItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceAddOrganization)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddOrganization(ctx, req.(*OrganizationItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_UpdateOrganization0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OrganizationItem
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceUpdateOrganization)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateOrganization(ctx, req.(*OrganizationItem))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationItem)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_DelOrganization0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteOrganization
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceDelOrganization)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DelOrganization(ctx, req.(*DeleteOrganization))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetOrganizationMembers0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetOrganizationMembersRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetOrganizationMembers)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetOrganizationMembers(ctx, req.(*GetOrganizationMembersRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetOrganizationMembersReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_SaveOrganizationMembers0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SaveOrganizationMembersRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceSaveOrganizationMembers)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SaveOrganizationMembers(ctx, req.(*SaveOrganizationMembersRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetOrganizationMembersReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetOrganizationPermissionScope0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetOrganizationPermissionScopeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetOrganizationPermissionScope)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetOrganizationPermissionScope(ctx, req.(*GetOrganizationPermissionScopeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationPermissionScopeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_SaveOrganizationPermissionScope0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SaveOrganizationPermissionScopeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceSaveOrganizationPermissionScope)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SaveOrganizationPermissionScope(ctx, req.(*SaveOrganizationPermissionScopeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationPermissionScopeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetCurrentPermissionCatalog0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		http.SetOperation(ctx, OperationAdminServiceGetCurrentPermissionCatalog)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCurrentPermissionCatalog(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationPermissionCatalogReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetOrganizationPermissionCatalog0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetOrganizationPermissionCatalogRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetOrganizationPermissionCatalog)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetOrganizationPermissionCatalog(ctx, req.(*GetOrganizationPermissionCatalogRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OrganizationPermissionCatalogReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetMyOrganizations0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceGetMyOrganizations)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMyOrganizations(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMyOrganizationsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_SwitchCurrentOrganization0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SwitchCurrentOrganizationRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAdminServiceSwitchCurrentOrganization)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SwitchCurrentOrganization(ctx, req.(*SwitchCurrentOrganizationRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CurrentOrganizationReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AdminService_GetDeptList0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDeptListParams
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
 		http.SetOperation(ctx, OperationAdminServiceGetDeptList)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetDeptList(ctx, req.(*emptypb.Empty))
+			return srv.GetDeptList(ctx, req.(*GetDeptListParams))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -810,18 +1188,27 @@ func _AdminService_GetSysLogInfo0_HTTP_Handler(srv AdminServiceHTTPServer) func(
 type AdminServiceHTTPClient interface {
 	AddApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	AddDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
+	AddOrganization(ctx context.Context, req *OrganizationItem, opts ...http.CallOption) (rsp *OrganizationItem, err error)
 	AddResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	AddRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
 	CreateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelApi(ctx context.Context, req *DeleteApi, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelDept(ctx context.Context, req *DeleteDept, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DelOrganization(ctx context.Context, req *DeleteOrganization, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelResource(ctx context.Context, req *DeleteResource, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DelRole(ctx context.Context, req *DeleteRole, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteUserDeptBinding(ctx context.Context, req *DeleteUserDeptBindingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteUserRoleBinding(ctx context.Context, req *DeleteUserRoleBindingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetApiList(ctx context.Context, req *GetApiPageParams, opts ...http.CallOption) (rsp *GetApiListByPageReply, err error)
+	GetCurrentPermissionCatalog(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *OrganizationPermissionCatalogReply, err error)
 	GetCurrentUserMenus(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetCurrentUserMenusReply, err error)
-	GetDeptList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
+	GetDeptList(ctx context.Context, req *GetDeptListParams, opts ...http.CallOption) (rsp *GetDeptListReply, err error)
+	GetMyOrganizations(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMyOrganizationsReply, err error)
+	GetOrganizationList(ctx context.Context, req *GetOrganizationListParams, opts ...http.CallOption) (rsp *GetOrganizationListReply, err error)
+	GetOrganizationMembers(ctx context.Context, req *GetOrganizationMembersRequest, opts ...http.CallOption) (rsp *GetOrganizationMembersReply, err error)
+	GetOrganizationPermissionCatalog(ctx context.Context, req *GetOrganizationPermissionCatalogRequest, opts ...http.CallOption) (rsp *OrganizationPermissionCatalogReply, err error)
+	GetOrganizationPermissionScope(ctx context.Context, req *GetOrganizationPermissionScopeRequest, opts ...http.CallOption) (rsp *OrganizationPermissionScopeReply, err error)
 	GetProjectionSourceStatusList(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetProjectionSourceStatusListReply, err error)
 	GetResourceList(ctx context.Context, req *GetResourcePageParams, opts ...http.CallOption) (rsp *GetResourceListByPageReply, err error)
 	GetRoleList(ctx context.Context, req *RolePageParams, opts ...http.CallOption) (rsp *GetRoleListByPageReply, err error)
@@ -829,16 +1216,22 @@ type AdminServiceHTTPClient interface {
 	GetSysLogInfo(ctx context.Context, req *GetSysLogInfoParams, opts ...http.CallOption) (rsp *GetSysLogInfoReply, err error)
 	GetSysLogList(ctx context.Context, req *GetSysLogListParams, opts ...http.CallOption) (rsp *GetSysLogListReply, err error)
 	GetSysMenuList(ctx context.Context, req *MenuParams, opts ...http.CallOption) (rsp *GetSysMenuListReply, err error)
+	GetUserDeptBinding(ctx context.Context, req *GetUserDeptBindingRequest, opts ...http.CallOption) (rsp *UserDeptBindingItem, err error)
 	GetUserRoleBinding(ctx context.Context, req *GetUserRoleBindingRequest, opts ...http.CallOption) (rsp *UserRoleBindingItem, err error)
 	GetWalkRoute(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetWalkRouteReply, err error)
 	IsMenuNameExists(ctx context.Context, req *IsMenuNameExistsRequest, opts ...http.CallOption) (rsp *IsMenuNameExistsReply, err error)
 	IsMenuPathExists(ctx context.Context, req *IsMenuPathExistsRequest, opts ...http.CallOption) (rsp *IsMenuPathExistsReply, err error)
 	ListUserRoleBindings(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ListUserRoleBindingsReply, err error)
+	SaveOrganizationMembers(ctx context.Context, req *SaveOrganizationMembersRequest, opts ...http.CallOption) (rsp *GetOrganizationMembersReply, err error)
+	SaveOrganizationPermissionScope(ctx context.Context, req *SaveOrganizationPermissionScopeRequest, opts ...http.CallOption) (rsp *OrganizationPermissionScopeReply, err error)
+	SwitchCurrentOrganization(ctx context.Context, req *SwitchCurrentOrganizationRequest, opts ...http.CallOption) (rsp *CurrentOrganizationReply, err error)
 	UpdateApi(ctx context.Context, req *ApiListItem, opts ...http.CallOption) (rsp *ApiListItem, err error)
 	UpdateDept(ctx context.Context, req *DeptListItem, opts ...http.CallOption) (rsp *DeptListItem, err error)
 	UpdateMenu(ctx context.Context, req *SysMenuListItem, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateOrganization(ctx context.Context, req *OrganizationItem, opts ...http.CallOption) (rsp *OrganizationItem, err error)
 	UpdateResource(ctx context.Context, req *ResourceListItem, opts ...http.CallOption) (rsp *ResourceListItem, err error)
 	UpdateRole(ctx context.Context, req *RoleListItem, opts ...http.CallOption) (rsp *RoleListItem, err error)
+	UpsertUserDeptBinding(ctx context.Context, req *UserDeptBindingItem, opts ...http.CallOption) (rsp *UserDeptBindingItem, err error)
 	UpsertUserRoleBinding(ctx context.Context, req *UserRoleBindingItem, opts ...http.CallOption) (rsp *UserRoleBindingItem, err error)
 }
 
@@ -868,6 +1261,19 @@ func (c *AdminServiceHTTPClientImpl) AddDept(ctx context.Context, in *DeptListIt
 	pattern := "/admin-api/v1/depts"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceAddDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) AddOrganization(ctx context.Context, in *OrganizationItem, opts ...http.CallOption) (*OrganizationItem, error) {
+	var out OrganizationItem
+	pattern := "/admin-api/v1/organizations"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceAddOrganization))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -941,6 +1347,19 @@ func (c *AdminServiceHTTPClientImpl) DelDept(ctx context.Context, in *DeleteDept
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) DelOrganization(ctx context.Context, in *DeleteOrganization, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/organizations/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDelOrganization))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) DelResource(ctx context.Context, in *DeleteResource, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/admin-api/v1/resources/{id}"
@@ -980,6 +1399,19 @@ func (c *AdminServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteM
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) DeleteUserDeptBinding(ctx context.Context, in *DeleteUserDeptBindingRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/admin-api/v1/user-dept-bindings/{user_id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceDeleteUserDeptBinding))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/admin-api/v1/user-role-bindings/{user_id}"
@@ -1006,6 +1438,19 @@ func (c *AdminServiceHTTPClientImpl) GetApiList(ctx context.Context, in *GetApiP
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) GetCurrentPermissionCatalog(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*OrganizationPermissionCatalogReply, error) {
+	var out OrganizationPermissionCatalogReply
+	pattern := "/admin-api/v1/permission-catalog/current"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetCurrentPermissionCatalog))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) GetCurrentUserMenus(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetCurrentUserMenusReply, error) {
 	var out GetCurrentUserMenusReply
 	pattern := "/admin-api/v1/menus/current"
@@ -1019,11 +1464,76 @@ func (c *AdminServiceHTTPClientImpl) GetCurrentUserMenus(ctx context.Context, in
 	return &out, nil
 }
 
-func (c *AdminServiceHTTPClientImpl) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDeptListReply, error) {
+func (c *AdminServiceHTTPClientImpl) GetDeptList(ctx context.Context, in *GetDeptListParams, opts ...http.CallOption) (*GetDeptListReply, error) {
 	var out GetDeptListReply
 	pattern := "/admin-api/v1/depts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetDeptList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetMyOrganizations(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMyOrganizationsReply, error) {
+	var out GetMyOrganizationsReply
+	pattern := "/admin-api/v1/my/organizations"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetMyOrganizations))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetOrganizationList(ctx context.Context, in *GetOrganizationListParams, opts ...http.CallOption) (*GetOrganizationListReply, error) {
+	var out GetOrganizationListReply
+	pattern := "/admin-api/v1/organizations"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetOrganizationList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetOrganizationMembers(ctx context.Context, in *GetOrganizationMembersRequest, opts ...http.CallOption) (*GetOrganizationMembersReply, error) {
+	var out GetOrganizationMembersReply
+	pattern := "/admin-api/v1/organizations/{organization_id}/members"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetOrganizationMembers))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetOrganizationPermissionCatalog(ctx context.Context, in *GetOrganizationPermissionCatalogRequest, opts ...http.CallOption) (*OrganizationPermissionCatalogReply, error) {
+	var out OrganizationPermissionCatalogReply
+	pattern := "/admin-api/v1/organizations/{organization_id}/permission-catalog"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetOrganizationPermissionCatalog))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) GetOrganizationPermissionScope(ctx context.Context, in *GetOrganizationPermissionScopeRequest, opts ...http.CallOption) (*OrganizationPermissionScopeReply, error) {
+	var out OrganizationPermissionScopeReply
+	pattern := "/admin-api/v1/organizations/{organization_id}/permission-scope"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetOrganizationPermissionScope))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -1123,6 +1633,19 @@ func (c *AdminServiceHTTPClientImpl) GetSysMenuList(ctx context.Context, in *Men
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) GetUserDeptBinding(ctx context.Context, in *GetUserDeptBindingRequest, opts ...http.CallOption) (*UserDeptBindingItem, error) {
+	var out UserDeptBindingItem
+	pattern := "/admin-api/v1/user-dept-bindings/{user_id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAdminServiceGetUserDeptBinding))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) GetUserRoleBinding(ctx context.Context, in *GetUserRoleBindingRequest, opts ...http.CallOption) (*UserRoleBindingItem, error) {
 	var out UserRoleBindingItem
 	pattern := "/admin-api/v1/user-role-bindings/{user_id}"
@@ -1188,6 +1711,45 @@ func (c *AdminServiceHTTPClientImpl) ListUserRoleBindings(ctx context.Context, i
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) SaveOrganizationMembers(ctx context.Context, in *SaveOrganizationMembersRequest, opts ...http.CallOption) (*GetOrganizationMembersReply, error) {
+	var out GetOrganizationMembersReply
+	pattern := "/admin-api/v1/organizations/{organization_id}/members"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceSaveOrganizationMembers))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) SaveOrganizationPermissionScope(ctx context.Context, in *SaveOrganizationPermissionScopeRequest, opts ...http.CallOption) (*OrganizationPermissionScopeReply, error) {
+	var out OrganizationPermissionScopeReply
+	pattern := "/admin-api/v1/organizations/{organization_id}/permission-scope"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceSaveOrganizationPermissionScope))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) SwitchCurrentOrganization(ctx context.Context, in *SwitchCurrentOrganizationRequest, opts ...http.CallOption) (*CurrentOrganizationReply, error) {
+	var out CurrentOrganizationReply
+	pattern := "/admin-api/v1/my/current-organization"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceSwitchCurrentOrganization))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) UpdateApi(ctx context.Context, in *ApiListItem, opts ...http.CallOption) (*ApiListItem, error) {
 	var out ApiListItem
 	pattern := "/admin-api/v1/apis/{id}"
@@ -1227,6 +1789,19 @@ func (c *AdminServiceHTTPClientImpl) UpdateMenu(ctx context.Context, in *SysMenu
 	return &out, nil
 }
 
+func (c *AdminServiceHTTPClientImpl) UpdateOrganization(ctx context.Context, in *OrganizationItem, opts ...http.CallOption) (*OrganizationItem, error) {
+	var out OrganizationItem
+	pattern := "/admin-api/v1/organizations/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpdateOrganization))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *AdminServiceHTTPClientImpl) UpdateResource(ctx context.Context, in *ResourceListItem, opts ...http.CallOption) (*ResourceListItem, error) {
 	var out ResourceListItem
 	pattern := "/admin-api/v1/resources/{id}"
@@ -1245,6 +1820,19 @@ func (c *AdminServiceHTTPClientImpl) UpdateRole(ctx context.Context, in *RoleLis
 	pattern := "/admin-api/v1/roles/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceUpdateRole))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *AdminServiceHTTPClientImpl) UpsertUserDeptBinding(ctx context.Context, in *UserDeptBindingItem, opts ...http.CallOption) (*UserDeptBindingItem, error) {
+	var out UserDeptBindingItem
+	pattern := "/admin-api/v1/user-dept-bindings/{user_id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAdminServiceUpsertUserDeptBinding))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

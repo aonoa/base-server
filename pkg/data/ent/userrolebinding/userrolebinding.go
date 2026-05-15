@@ -21,6 +21,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldRoleID holds the string denoting the role_id field in the database.
 	FieldRoleID = "role_id"
+	// FieldOrganizationID holds the string denoting the organization_id field in the database.
+	FieldOrganizationID = "organization_id"
 	// Table holds the table name of the userrolebinding in the database.
 	Table = "sys_user_role_binding"
 )
@@ -32,6 +34,7 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldUserID,
 	FieldRoleID,
+	FieldOrganizationID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -79,4 +82,9 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 // ByRoleID orders the results by the role_id field.
 func ByRoleID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRoleID, opts...).ToFunc()
+}
+
+// ByOrganizationID orders the results by the organization_id field.
+func ByOrganizationID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizationID, opts...).ToFunc()
 }

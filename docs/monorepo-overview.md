@@ -49,7 +49,7 @@ base-server/
 | gateway | `app/gateway/service/cmd/service/main.go` | `app/gateway/service/configs` | 无独立业务库 | 外部统一入口 | 路由转发、JWT、Casbin、限流、请求日志 |
 | auth | `app/auth/service/cmd/service/main.go` | `app/auth/service/configs` | `auth` | `/auth-api/v1/*` | 登录、刷新 token、授权投影执行、Casbin |
 | user | `app/user/service/cmd/service/main.go` | `app/user/service/configs` | `user` | `/user-api/v1/*` | 用户 CRUD、用户认证信息、密码 |
-| admin | `app/admin/service/cmd/service/main.go` | `app/admin/service/configs` | `admin` | `/admin-api/v1/*` | 菜单、角色、资源、API 目录、部门、日志、平台治理、投影源状态 |
+| admin | `app/admin/service/cmd/service/main.go` | `app/admin/service/configs` | `admin` | `/admin-api/v1/*` | 菜单、角色、资源、API 目录、组织、部门、日志、平台治理、投影源状态 |
 | common | `app/common/service/cmd/service/main.go` | `app/common/service/configs` | `common` | `/common-api/v1/*` | 文件上传、Copilot SSE、站内信、通用能力 |
 
 ## 4. 共享层边界
@@ -112,12 +112,22 @@ make wire
   - `sys_resources`
   - `sys_role`
   - `sys_user_role_binding`
+  - `sys_organization`
+  - `sys_user_organization`
   - `sys_menu`
   - `sys_dept`
   - `sys_log`
   - `sys_service_registry`
   - `sys_projection_source_status`
 - `auth`：Casbin 投影执行，不是业务权限主数据中心
+
+当前组织上下文已经进入权限链路：
+
+- 前端在加载并校验当前用户组织后，通过 `x-organization-id` 发送当前组织 ID。
+- gateway 将 `x-organization-id` 作为 `organization_id` 传给 `auth.CheckAuthorization`。
+- `admin` 将 `sys_user_role_binding.organization_id` 投影为 auth 的组织 domain。
+- 因此用户在不同组织下可以有不同角色、菜单和接口权限。
+- 默认组织是全员组织；默认组织下无显式绑定的用户会获得 `default` 角色回退。
 
 需要结合阅读：
 

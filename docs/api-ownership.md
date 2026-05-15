@@ -6,7 +6,7 @@
 
 当前版本线不再使用业务域。API 归属只表达两个问题：
 
-- 这个接口由哪个服务提供：通过 `sys_service_registry.http_prefix -> service_code` 推导
+- 这个接口由哪个服务提供：由路由前缀和服务注册表描述，用于平台治理展示和排查
 - 这个接口需要哪个资源组权限：`resources_group`
 
 ## 2. 核心规则
@@ -19,7 +19,7 @@
 path + method -> resources_group
 ```
 
-`resources_group` 用于角色授权。`service_code` 不存放在 API 目录表中，由网关根据服务注册表的 HTTP 前缀解析得到，用于鉴权命名空间和排查定位。
+`resources_group` 用于角色授权。`service_code` 不存放在 API 目录表中，也不参与 gateway/auth 鉴权。
 
 ## 3. 字段语义
 
@@ -28,6 +28,7 @@ path + method -> resources_group
 网关可见的 HTTP 路径，例如：
 
 - `/admin-api/v1/apis`
+- `/admin-api/v1/my/organizations`
 - `/common-api/v1/site-messages/my`
 
 路径中的变量使用 proto/OpenAPI 风格：
@@ -58,7 +59,7 @@ HTTP 方法，例如：
 - `admin`
 - `common`
 
-网关优先按 `sys_service_registry.http_prefix` 识别请求所属服务；未命中时回退到内置前缀。服务注册表自身仍保留 `service_code`。
+服务注册表自身仍保留 `service_code`，用于平台治理页面展示、服务元数据和排查定位。
 
 ### 3.4 `resources_group`
 
@@ -73,7 +74,15 @@ HTTP 方法，例如：
 - `api`
 - `data`
 - `admin`
+- `organization`
 - `site_message_manage`
+
+当前组织切换接口是登录用户基础能力，路径为：
+
+- `GET /admin-api/v1/my/organizations`
+- `PUT /admin-api/v1/my/current-organization`
+
+它们归属 `admin` 服务，资源组为 `default`；组织管理 CRUD 和成员维护接口仍使用 `organization` 资源组。
 
 ## 4. 与服务注册的关系
 
@@ -86,7 +95,7 @@ HTTP 方法，例如：
 - `status`
 - `projection_enabled`
 
-网关使用 `http_prefix -> service_code` 推导鉴权命名空间。
+服务注册表不参与权限命名空间。接口授权只看 `path + method -> resources_group` 以及当前 `organization_id` 下角色是否拥有该资源组。
 
 ## 5. 与权限投影的关系
 
@@ -100,7 +109,7 @@ HTTP 方法，例如：
 
 1. 确认 `path + method` 是否已存在。
 2. 选择或新增合适的 `resources_group`。
-3. 如果这是新的服务前缀，先在 `sys_service_registry` 登记 `http_prefix` 和 `service_code`。
+3. 如果这是新的服务前缀，按平台治理需要在 `sys_service_registry` 登记 `http_prefix` 和 `service_code`。
 4. 在角色/资源关系中授权给对应角色。
 5. 触发权限投影同步。
 6. 如果前端调用该接口，同步 OpenAPI 和生成客户端。

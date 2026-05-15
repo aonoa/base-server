@@ -70,10 +70,8 @@ message CheckAuthorizationRequest {
   string user_id = 1;
   string path = 2;
   string method = 3;
-  string service = 4;
-  string scope_id = 5;
-  string resource_group = 7;
-  string action = 8;
+  string organization_id = 4;
+  string action = 5;
 }
 
 message CheckAuthorizationReply {
@@ -104,7 +102,9 @@ message PolicyRole {
   string remark = 5;
   repeated int32 menu_ids = 6;
   repeated PolicyRoleResource resources = 7;
-  string service = 8;
+  string organization_id = 9;
+  string data_scope = 10;
+  repeated int64 data_scope_dept_ids = 11;
 }
 
 message PolicyApi {
@@ -115,7 +115,6 @@ message PolicyApi {
   string module = 5;
   string module_description = 6;
   string resources_group = 7;
-  string service = 8;
 }
 
 message PolicyUserRoleBinding {
@@ -125,8 +124,7 @@ message PolicyUserRoleBinding {
   string role_value = 4;
   string create_time = 5;
   string update_time = 6;
-  string service = 7;
-  string scope_id = 8;
+  string organization_id = 7;
 }
 
 message RegisterPermissionSnapshotRequest {

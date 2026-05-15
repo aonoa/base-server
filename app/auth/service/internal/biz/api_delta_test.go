@@ -28,13 +28,12 @@ func TestApplyApiDeltaUpdatesGroupingPolicyOnPathChange(t *testing.T) {
 	}
 
 	uc.AddApiToGroup("/auth-api/v1/resources", "data")
-	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/auth-api/v1/resources", "api:data"); err != nil || !ok {
+	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/auth-api/v1/resources", "data"); err != nil || !ok {
 		t.Fatalf("expected old grouping policy to exist, ok=%v err=%v", ok, err)
 	}
 
 	err = uc.ApplyApiDelta(context.Background(), &v1.ApplyApiDeltaRequest{
-		SourceService: "admin",
-		Revision:      1,
+		Revision: 1,
 		Before: &v1.PolicyApi{
 			Path:           "/auth-api/v1/resources",
 			Method:         "GET",
@@ -50,10 +49,10 @@ func TestApplyApiDeltaUpdatesGroupingPolicyOnPathChange(t *testing.T) {
 		t.Fatalf("apply api delta: %v", err)
 	}
 
-	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/auth-api/v1/resources", "api:data"); err != nil || ok {
+	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/auth-api/v1/resources", "data"); err != nil || ok {
 		t.Fatalf("expected old grouping policy to be removed, ok=%v err=%v", ok, err)
 	}
-	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/admin-api/v1/resources", "api:data"); err != nil || !ok {
+	if ok, err := uc.e.HasNamedGroupingPolicy(ApiToGroup, "/admin-api/v1/resources", "data"); err != nil || !ok {
 		t.Fatalf("expected new grouping policy to exist, ok=%v err=%v", ok, err)
 	}
 }

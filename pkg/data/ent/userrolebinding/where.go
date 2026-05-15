@@ -74,6 +74,11 @@ func RoleID(v int64) predicate.UserRoleBinding {
 	return predicate.UserRoleBinding(sql.FieldEQ(FieldRoleID, v))
 }
 
+// OrganizationID applies equality check predicate on the "organization_id" field. It's identical to OrganizationIDEQ.
+func OrganizationID(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldEQ(FieldOrganizationID, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.UserRoleBinding {
 	return predicate.UserRoleBinding(sql.FieldEQ(FieldCreateTime, v))
@@ -257,6 +262,71 @@ func RoleIDLT(v int64) predicate.UserRoleBinding {
 // RoleIDLTE applies the LTE predicate on the "role_id" field.
 func RoleIDLTE(v int64) predicate.UserRoleBinding {
 	return predicate.UserRoleBinding(sql.FieldLTE(FieldRoleID, v))
+}
+
+// OrganizationIDEQ applies the EQ predicate on the "organization_id" field.
+func OrganizationIDEQ(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDNEQ applies the NEQ predicate on the "organization_id" field.
+func OrganizationIDNEQ(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldNEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDIn applies the In predicate on the "organization_id" field.
+func OrganizationIDIn(vs ...string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDNotIn applies the NotIn predicate on the "organization_id" field.
+func OrganizationIDNotIn(vs ...string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldNotIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDGT applies the GT predicate on the "organization_id" field.
+func OrganizationIDGT(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldGT(FieldOrganizationID, v))
+}
+
+// OrganizationIDGTE applies the GTE predicate on the "organization_id" field.
+func OrganizationIDGTE(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldGTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDLT applies the LT predicate on the "organization_id" field.
+func OrganizationIDLT(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldLT(FieldOrganizationID, v))
+}
+
+// OrganizationIDLTE applies the LTE predicate on the "organization_id" field.
+func OrganizationIDLTE(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldLTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDContains applies the Contains predicate on the "organization_id" field.
+func OrganizationIDContains(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldContains(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasPrefix applies the HasPrefix predicate on the "organization_id" field.
+func OrganizationIDHasPrefix(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldHasPrefix(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasSuffix applies the HasSuffix predicate on the "organization_id" field.
+func OrganizationIDHasSuffix(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldHasSuffix(FieldOrganizationID, v))
+}
+
+// OrganizationIDEqualFold applies the EqualFold predicate on the "organization_id" field.
+func OrganizationIDEqualFold(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldEqualFold(FieldOrganizationID, v))
+}
+
+// OrganizationIDContainsFold applies the ContainsFold predicate on the "organization_id" field.
+func OrganizationIDContainsFold(v string) predicate.UserRoleBinding {
+	return predicate.UserRoleBinding(sql.FieldContainsFold(FieldOrganizationID, v))
 }
 
 // And groups predicates with the AND operator between them.

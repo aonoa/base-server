@@ -45,7 +45,7 @@ var (
 		{Name: "status", Type: field.TypeBool, Comment: "0-锁定，1-正常"},
 		{Name: "desc", Type: field.TypeString, Comment: "备注"},
 		{Name: "extension", Type: field.TypeString, Comment: "扩展信息"},
-		{Name: "dom", Type: field.TypeInt64, Comment: "域"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
 		{Name: "pid", Type: field.TypeInt64, Nullable: true, Comment: "父节点id"},
 	}
 	// SysDeptTable holds the schema information for the "sys_dept" table.
@@ -108,6 +108,61 @@ var (
 		Columns:    SysMenuColumns,
 		PrimaryKey: []*schema.Column{SysMenuColumns[0]},
 	}
+	// SysOrganizationColumns holds the columns for the "sys_organization" table.
+	SysOrganizationColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "组织ID"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Comment: "组织名称"},
+		{Name: "code", Type: field.TypeString, Comment: "组织编码"},
+		{Name: "sort", Type: field.TypeInt32, Comment: "排序", Default: 0},
+		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用", Default: true},
+		{Name: "desc", Type: field.TypeString, Comment: "备注", Default: ""},
+		{Name: "extension", Type: field.TypeString, Comment: "扩展信息", Default: ""},
+	}
+	// SysOrganizationTable holds the schema information for the "sys_organization" table.
+	SysOrganizationTable = &schema.Table{
+		Name:       "sys_organization",
+		Comment:    "组织表",
+		Columns:    SysOrganizationColumns,
+		PrimaryKey: []*schema.Column{SysOrganizationColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "organization_code",
+				Unique:  true,
+				Columns: []*schema.Column{SysOrganizationColumns[4]},
+			},
+		},
+	}
+	// SysOrganizationPermissionScopeColumns holds the columns for the "sys_organization_permission_scope" table.
+	SysOrganizationPermissionScopeColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Comment: "范围记录ID"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
+		{Name: "permission_type", Type: field.TypeString, Comment: "权限类型: menu/resource"},
+		{Name: "permission_ref", Type: field.TypeString, Comment: "权限引用ID"},
+		{Name: "created_by", Type: field.TypeString, Comment: "创建人ID", Default: ""},
+	}
+	// SysOrganizationPermissionScopeTable holds the schema information for the "sys_organization_permission_scope" table.
+	SysOrganizationPermissionScopeTable = &schema.Table{
+		Name:       "sys_organization_permission_scope",
+		Comment:    "组织可用权限范围表",
+		Columns:    SysOrganizationPermissionScopeColumns,
+		PrimaryKey: []*schema.Column{SysOrganizationPermissionScopeColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "organizationpermissionscope_organization_id_permission_type_permission_ref",
+				Unique:  true,
+				Columns: []*schema.Column{SysOrganizationPermissionScopeColumns[3], SysOrganizationPermissionScopeColumns[4], SysOrganizationPermissionScopeColumns[5]},
+			},
+			{
+				Name:    "organizationpermissionscope_organization_id_permission_type",
+				Unique:  false,
+				Columns: []*schema.Column{SysOrganizationPermissionScopeColumns[3], SysOrganizationPermissionScopeColumns[4]},
+			},
+		},
+	}
 	// SysProjectionSourceStatusColumns holds the columns for the "sys_projection_source_status" table.
 	SysProjectionSourceStatusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Comment: "数据唯一标识"},
@@ -153,9 +208,12 @@ var (
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "name", Type: field.TypeString, Comment: "角色名称"},
 		{Name: "value", Type: field.TypeString, Comment: "角色值"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
 		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用"},
 		{Name: "desc", Type: field.TypeString, Comment: "简介"},
 		{Name: "menus", Type: field.TypeJSON, Comment: "权限菜单ID列表"},
+		{Name: "data_scope", Type: field.TypeString, Comment: "数据范围: all/self_dept/self_dept_and_child/self/custom_depts", Default: "self"},
+		{Name: "data_scope_dept_ids", Type: field.TypeJSON, Nullable: true, Comment: "自定义数据范围部门ID列表"},
 	}
 	// SysRoleTable holds the schema information for the "sys_role" table.
 	SysRoleTable = &schema.Table{
@@ -381,6 +439,73 @@ var (
 		Columns:    SysUserColumns,
 		PrimaryKey: []*schema.Column{SysUserColumns[0]},
 	}
+	// SysUserDeptMembershipColumns holds the columns for the "sys_user_dept_membership" table.
+	SysUserDeptMembershipColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "user_id", Type: field.TypeString, Comment: "用户ID"},
+		{Name: "dept_id", Type: field.TypeInt64, Comment: "部门ID"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
+	}
+	// SysUserDeptMembershipTable holds the schema information for the "sys_user_dept_membership" table.
+	SysUserDeptMembershipTable = &schema.Table{
+		Name:       "sys_user_dept_membership",
+		Comment:    "用户部门绑定表",
+		Columns:    SysUserDeptMembershipColumns,
+		PrimaryKey: []*schema.Column{SysUserDeptMembershipColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userdeptmembership_user_id_organization_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysUserDeptMembershipColumns[3], SysUserDeptMembershipColumns[5]},
+			},
+			{
+				Name:    "userdeptmembership_organization_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserDeptMembershipColumns[5]},
+			},
+			{
+				Name:    "userdeptmembership_dept_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserDeptMembershipColumns[4]},
+			},
+		},
+	}
+	// SysUserOrganizationColumns holds the columns for the "sys_user_organization" table.
+	SysUserOrganizationColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "user_id", Type: field.TypeString, Comment: "用户ID"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
+		{Name: "is_primary", Type: field.TypeBool, Comment: "是否主组织", Default: false},
+		{Name: "status", Type: field.TypeBool, Comment: "0-禁用，1-启用", Default: true},
+	}
+	// SysUserOrganizationTable holds the schema information for the "sys_user_organization" table.
+	SysUserOrganizationTable = &schema.Table{
+		Name:       "sys_user_organization",
+		Comment:    "用户组织成员表",
+		Columns:    SysUserOrganizationColumns,
+		PrimaryKey: []*schema.Column{SysUserOrganizationColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userorganization_user_id_organization_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysUserOrganizationColumns[3], SysUserOrganizationColumns[4]},
+			},
+			{
+				Name:    "userorganization_organization_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserOrganizationColumns[4]},
+			},
+			{
+				Name:    "userorganization_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserOrganizationColumns[3]},
+			},
+		},
+	}
 	// SysUserRoleBindingColumns holds the columns for the "sys_user_role_binding" table.
 	SysUserRoleBindingColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
@@ -388,6 +513,7 @@ var (
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "user_id", Type: field.TypeString, Comment: "用户ID"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "角色ID"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID"},
 	}
 	// SysUserRoleBindingTable holds the schema information for the "sys_user_role_binding" table.
 	SysUserRoleBindingTable = &schema.Table{
@@ -397,9 +523,9 @@ var (
 		PrimaryKey: []*schema.Column{SysUserRoleBindingColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "userrolebinding_user_id_role_id",
+				Name:    "userrolebinding_user_id_role_id_organization_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysUserRoleBindingColumns[3], SysUserRoleBindingColumns[4]},
+				Columns: []*schema.Column{SysUserRoleBindingColumns[3], SysUserRoleBindingColumns[4], SysUserRoleBindingColumns[5]},
 			},
 		},
 	}
@@ -458,6 +584,8 @@ var (
 		SysAPIResourcesTable,
 		SysDeptTable,
 		SysMenuTable,
+		SysOrganizationTable,
+		SysOrganizationPermissionScopeTable,
 		SysProjectionSourceStatusTable,
 		SysResourcesTable,
 		SysRoleTable,
@@ -466,6 +594,8 @@ var (
 		SysSiteMessageReceiptTable,
 		SysLogTable,
 		SysUserTable,
+		SysUserDeptMembershipTable,
+		SysUserOrganizationTable,
 		SysUserRoleBindingTable,
 		APIResourcesRolesTable,
 		ResourceRolesTable,
@@ -482,6 +612,12 @@ func init() {
 	}
 	SysMenuTable.Annotation = &entsql.Annotation{
 		Table: "sys_menu",
+	}
+	SysOrganizationTable.Annotation = &entsql.Annotation{
+		Table: "sys_organization",
+	}
+	SysOrganizationPermissionScopeTable.Annotation = &entsql.Annotation{
+		Table: "sys_organization_permission_scope",
 	}
 	SysProjectionSourceStatusTable.Annotation = &entsql.Annotation{
 		Table: "sys_projection_source_status",
@@ -506,6 +642,12 @@ func init() {
 	}
 	SysUserTable.Annotation = &entsql.Annotation{
 		Table: "sys_user",
+	}
+	SysUserDeptMembershipTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_dept_membership",
+	}
+	SysUserOrganizationTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_organization",
 	}
 	SysUserRoleBindingTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_role_binding",

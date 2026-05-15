@@ -121,7 +121,103 @@ service AdminService {
     };
   }
 
-  rpc GetDeptList(google.protobuf.Empty) returns (GetDeptListReply) {
+  rpc GetUserDeptBinding(GetUserDeptBindingRequest) returns (UserDeptBindingItem) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/user-dept-bindings/{user_id}"
+    };
+  }
+
+  rpc UpsertUserDeptBinding(UserDeptBindingItem) returns (UserDeptBindingItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/user-dept-bindings/{user_id}"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUserDeptBinding(DeleteUserDeptBindingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/user-dept-bindings/{user_id}"
+    };
+  }
+
+  rpc GetOrganizationList(GetOrganizationListParams) returns (GetOrganizationListReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/organizations"
+    };
+  }
+
+  rpc AddOrganization(OrganizationItem) returns (OrganizationItem) {
+    option (google.api.http) = {
+      post: "/admin-api/v1/organizations"
+      body: "*"
+    };
+  }
+
+  rpc UpdateOrganization(OrganizationItem) returns (OrganizationItem) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/organizations/{id}"
+      body: "*"
+    };
+  }
+
+  rpc DelOrganization(DeleteOrganization) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin-api/v1/organizations/{id}"
+    };
+  }
+
+  rpc GetOrganizationMembers(GetOrganizationMembersRequest) returns (GetOrganizationMembersReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/organizations/{organization_id}/members"
+    };
+  }
+
+  rpc SaveOrganizationMembers(SaveOrganizationMembersRequest) returns (GetOrganizationMembersReply) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/organizations/{organization_id}/members"
+      body: "*"
+    };
+  }
+
+  rpc GetOrganizationPermissionScope(GetOrganizationPermissionScopeRequest) returns (OrganizationPermissionScopeReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/organizations/{organization_id}/permission-scope"
+    };
+  }
+
+  rpc SaveOrganizationPermissionScope(SaveOrganizationPermissionScopeRequest) returns (OrganizationPermissionScopeReply) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/organizations/{organization_id}/permission-scope"
+      body: "*"
+    };
+  }
+
+  rpc GetCurrentPermissionCatalog(google.protobuf.Empty) returns (OrganizationPermissionCatalogReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/permission-catalog/current"
+    };
+  }
+
+  rpc GetOrganizationPermissionCatalog(GetOrganizationPermissionCatalogRequest) returns (OrganizationPermissionCatalogReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/organizations/{organization_id}/permission-catalog"
+    };
+  }
+
+  rpc GetMyOrganizations(google.protobuf.Empty) returns (GetMyOrganizationsReply) {
+    option (google.api.http) = {
+      get: "/admin-api/v1/my/organizations"
+    };
+  }
+
+  rpc SwitchCurrentOrganization(SwitchCurrentOrganizationRequest) returns (CurrentOrganizationReply) {
+    option (google.api.http) = {
+      put: "/admin-api/v1/my/current-organization"
+      body: "*"
+    };
+  }
+
+  rpc GetDeptList(GetDeptListParams) returns (GetDeptListReply) {
     option (google.api.http) = {
       get: "/admin-api/v1/depts"
     };
@@ -228,7 +324,123 @@ service AdminService {
   }
 }
 
+message GetOrganizationListParams {
+  int64 current_page = 1;
+  int64 page_size = 2;
+  string name = 3;
+  string code = 4;
+  int32 status = 5;
+}
+
+message OrganizationItem {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  int32 order_no = 4;
+  string remark = 5;
+  int32 status = 6;
+  string create_time = 7;
+  string update_time = 8;
+  int64 member_count = 9;
+  int64 dept_count = 10;
+}
+
+message GetOrganizationListReply {
+  repeated OrganizationItem items = 1;
+  int64 total = 2;
+}
+
+message DeleteOrganization {
+  string id = 1;
+}
+
+message GetOrganizationMembersRequest {
+  string organization_id = 1;
+}
+
+message OrganizationMemberItem {
+  string user_id = 1;
+  string username = 2;
+  string nickname = 3;
+  string email = 4;
+  string avatar = 5;
+  int32 user_status = 6;
+  int32 member_status = 7;
+  bool primary = 8;
+  string create_time = 9;
+}
+
+message GetOrganizationMembersReply {
+  repeated OrganizationMemberItem items = 1;
+  int64 total = 2;
+}
+
+message SaveOrganizationMembersRequest {
+  string organization_id = 1;
+  repeated string user_ids = 2;
+}
+
+message GetOrganizationPermissionScopeRequest {
+  string organization_id = 1;
+}
+
+message SaveOrganizationPermissionScopeRequest {
+  string organization_id = 1;
+  repeated int32 menu_ids = 2;
+  repeated string resource_ids = 3;
+}
+
+message OrganizationPermissionScopeReply {
+  string organization_id = 1;
+  repeated int32 menu_ids = 2;
+  repeated string resource_ids = 3;
+}
+
+message GetOrganizationPermissionCatalogRequest {
+  string organization_id = 1;
+}
+
+message OrganizationPermissionCatalogReply {
+  string organization_id = 1;
+  repeated SysMenuListItem menus = 2;
+  repeated ResourceListItem resources = 3;
+  repeated int32 scoped_menu_ids = 4;
+  repeated string scoped_resource_ids = 5;
+}
+
+message MyOrganizationItem {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  int32 order_no = 4;
+  string remark = 5;
+  int32 status = 6;
+  bool current = 7;
+  string create_time = 8;
+  string update_time = 9;
+}
+
+message GetMyOrganizationsReply {
+  repeated MyOrganizationItem items = 1;
+  string current_organization_id = 2;
+}
+
+message SwitchCurrentOrganizationRequest {
+  string organization_id = 1;
+}
+
+message CurrentOrganizationReply {
+  MyOrganizationItem current = 1;
+  string current_organization_id = 2;
+}
+
+message GetDeptListParams {
+  string organization_id = 1;
+}
+
 message DeptListItem {
+  reserved 9;
+
   string id = 1;
   string pid = 2;
   string name = 3;
@@ -236,8 +448,8 @@ message DeptListItem {
   string remark = 5;
   int32 status = 6;
   string create_time = 7;
-  int64 dom = 9;
   repeated DeptListItem children = 10;
+  string organization_id = 11;
 }
 
 message DeleteDept {
@@ -255,6 +467,7 @@ message RolePageParams {
   string name = 3;
   int64 status = 4;
   string dept_id = 5;
+  string organization_id = 6;
 }
 
 message RoleListItem {
@@ -268,6 +481,9 @@ message RoleListItem {
   repeated int32 permissions = 8;
   string dept = 9;
   repeated string api_permissions = 10;
+  string organization_id = 11;
+  string data_scope = 12;
+  repeated int64 data_scope_dept_ids = 13;
 }
 
 message GetRoleListByPageReply {
@@ -389,6 +605,7 @@ message ResolveRoleValuesReply {
 
 message GetUserRoleBindingRequest {
   string user_id = 1;
+  string organization_id = 2;
 }
 
 message UserRoleBindingItem {
@@ -398,6 +615,7 @@ message UserRoleBindingItem {
   string create_time = 4;
   string update_time = 5;
   repeated int64 role_ids = 6;
+  string organization_id = 7;
 }
 
 message ListUserRoleBindingsReply {
@@ -406,6 +624,27 @@ message ListUserRoleBindingsReply {
 
 message DeleteUserRoleBindingRequest {
   string user_id = 1;
+  string organization_id = 2;
+}
+
+message GetUserDeptBindingRequest {
+  string user_id = 1;
+  string organization_id = 2;
+}
+
+message UserDeptBindingItem {
+  string id = 1;
+  string user_id = 2;
+  string dept_id = 3;
+  string dept_name = 4;
+  string create_time = 5;
+  string update_time = 6;
+  string organization_id = 7;
+}
+
+message DeleteUserDeptBindingRequest {
+  string user_id = 1;
+  string organization_id = 2;
 }
 
 message MenuParams {

@@ -20,45 +20,60 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AdminService_GetRoleList_FullMethodName                   = "/api.admin.service.v1.AdminService/GetRoleList"
-	AdminService_AddRole_FullMethodName                       = "/api.admin.service.v1.AdminService/AddRole"
-	AdminService_UpdateRole_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateRole"
-	AdminService_DelRole_FullMethodName                       = "/api.admin.service.v1.AdminService/DelRole"
-	AdminService_GetApiList_FullMethodName                    = "/api.admin.service.v1.AdminService/GetApiList"
-	AdminService_AddApi_FullMethodName                        = "/api.admin.service.v1.AdminService/AddApi"
-	AdminService_UpdateApi_FullMethodName                     = "/api.admin.service.v1.AdminService/UpdateApi"
-	AdminService_DelApi_FullMethodName                        = "/api.admin.service.v1.AdminService/DelApi"
-	AdminService_GetResourceList_FullMethodName               = "/api.admin.service.v1.AdminService/GetResourceList"
-	AdminService_AddResource_FullMethodName                   = "/api.admin.service.v1.AdminService/AddResource"
-	AdminService_UpdateResource_FullMethodName                = "/api.admin.service.v1.AdminService/UpdateResource"
-	AdminService_DelResource_FullMethodName                   = "/api.admin.service.v1.AdminService/DelResource"
-	AdminService_GetAuthRoleCatalog_FullMethodName            = "/api.admin.service.v1.AdminService/GetAuthRoleCatalog"
-	AdminService_GetAuthApiCatalog_FullMethodName             = "/api.admin.service.v1.AdminService/GetAuthApiCatalog"
-	AdminService_GetAuthRole_FullMethodName                   = "/api.admin.service.v1.AdminService/GetAuthRole"
-	AdminService_ResolveRoleValues_FullMethodName             = "/api.admin.service.v1.AdminService/ResolveRoleValues"
-	AdminService_GetUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
-	AdminService_ListUserRoleBindings_FullMethodName          = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
-	AdminService_UpsertUserRoleBinding_FullMethodName         = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
-	AdminService_DeleteUserRoleBinding_FullMethodName         = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
-	AdminService_GetDeptList_FullMethodName                   = "/api.admin.service.v1.AdminService/GetDeptList"
-	AdminService_AddDept_FullMethodName                       = "/api.admin.service.v1.AdminService/AddDept"
-	AdminService_UpdateDept_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateDept"
-	AdminService_DelDept_FullMethodName                       = "/api.admin.service.v1.AdminService/DelDept"
-	AdminService_GetCurrentUserMenus_FullMethodName           = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
-	AdminService_GetSysMenuList_FullMethodName                = "/api.admin.service.v1.AdminService/GetSysMenuList"
-	AdminService_ListMenus_FullMethodName                     = "/api.admin.service.v1.AdminService/ListMenus"
-	AdminService_GetWalkRoute_FullMethodName                  = "/api.admin.service.v1.AdminService/GetWalkRoute"
-	AdminService_GetSelfWalkRoute_FullMethodName              = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
-	AdminService_IsMenuNameExists_FullMethodName              = "/api.admin.service.v1.AdminService/IsMenuNameExists"
-	AdminService_IsMenuPathExists_FullMethodName              = "/api.admin.service.v1.AdminService/IsMenuPathExists"
-	AdminService_CreateMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/CreateMenu"
-	AdminService_UpdateMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/UpdateMenu"
-	AdminService_DeleteMenu_FullMethodName                    = "/api.admin.service.v1.AdminService/DeleteMenu"
-	AdminService_GetServiceRegistryList_FullMethodName        = "/api.admin.service.v1.AdminService/GetServiceRegistryList"
-	AdminService_GetProjectionSourceStatusList_FullMethodName = "/api.admin.service.v1.AdminService/GetProjectionSourceStatusList"
-	AdminService_CreateSysLog_FullMethodName                  = "/api.admin.service.v1.AdminService/CreateSysLog"
-	AdminService_GetSysLogList_FullMethodName                 = "/api.admin.service.v1.AdminService/GetSysLogList"
-	AdminService_GetSysLogInfo_FullMethodName                 = "/api.admin.service.v1.AdminService/GetSysLogInfo"
+	AdminService_GetRoleList_FullMethodName                      = "/api.admin.service.v1.AdminService/GetRoleList"
+	AdminService_AddRole_FullMethodName                          = "/api.admin.service.v1.AdminService/AddRole"
+	AdminService_UpdateRole_FullMethodName                       = "/api.admin.service.v1.AdminService/UpdateRole"
+	AdminService_DelRole_FullMethodName                          = "/api.admin.service.v1.AdminService/DelRole"
+	AdminService_GetApiList_FullMethodName                       = "/api.admin.service.v1.AdminService/GetApiList"
+	AdminService_AddApi_FullMethodName                           = "/api.admin.service.v1.AdminService/AddApi"
+	AdminService_UpdateApi_FullMethodName                        = "/api.admin.service.v1.AdminService/UpdateApi"
+	AdminService_DelApi_FullMethodName                           = "/api.admin.service.v1.AdminService/DelApi"
+	AdminService_GetResourceList_FullMethodName                  = "/api.admin.service.v1.AdminService/GetResourceList"
+	AdminService_AddResource_FullMethodName                      = "/api.admin.service.v1.AdminService/AddResource"
+	AdminService_UpdateResource_FullMethodName                   = "/api.admin.service.v1.AdminService/UpdateResource"
+	AdminService_DelResource_FullMethodName                      = "/api.admin.service.v1.AdminService/DelResource"
+	AdminService_GetAuthRoleCatalog_FullMethodName               = "/api.admin.service.v1.AdminService/GetAuthRoleCatalog"
+	AdminService_GetAuthApiCatalog_FullMethodName                = "/api.admin.service.v1.AdminService/GetAuthApiCatalog"
+	AdminService_GetAuthRole_FullMethodName                      = "/api.admin.service.v1.AdminService/GetAuthRole"
+	AdminService_ResolveRoleValues_FullMethodName                = "/api.admin.service.v1.AdminService/ResolveRoleValues"
+	AdminService_GetUserRoleBinding_FullMethodName               = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
+	AdminService_ListUserRoleBindings_FullMethodName             = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
+	AdminService_UpsertUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
+	AdminService_DeleteUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
+	AdminService_GetUserDeptBinding_FullMethodName               = "/api.admin.service.v1.AdminService/GetUserDeptBinding"
+	AdminService_UpsertUserDeptBinding_FullMethodName            = "/api.admin.service.v1.AdminService/UpsertUserDeptBinding"
+	AdminService_DeleteUserDeptBinding_FullMethodName            = "/api.admin.service.v1.AdminService/DeleteUserDeptBinding"
+	AdminService_GetOrganizationList_FullMethodName              = "/api.admin.service.v1.AdminService/GetOrganizationList"
+	AdminService_AddOrganization_FullMethodName                  = "/api.admin.service.v1.AdminService/AddOrganization"
+	AdminService_UpdateOrganization_FullMethodName               = "/api.admin.service.v1.AdminService/UpdateOrganization"
+	AdminService_DelOrganization_FullMethodName                  = "/api.admin.service.v1.AdminService/DelOrganization"
+	AdminService_GetOrganizationMembers_FullMethodName           = "/api.admin.service.v1.AdminService/GetOrganizationMembers"
+	AdminService_SaveOrganizationMembers_FullMethodName          = "/api.admin.service.v1.AdminService/SaveOrganizationMembers"
+	AdminService_GetOrganizationPermissionScope_FullMethodName   = "/api.admin.service.v1.AdminService/GetOrganizationPermissionScope"
+	AdminService_SaveOrganizationPermissionScope_FullMethodName  = "/api.admin.service.v1.AdminService/SaveOrganizationPermissionScope"
+	AdminService_GetCurrentPermissionCatalog_FullMethodName      = "/api.admin.service.v1.AdminService/GetCurrentPermissionCatalog"
+	AdminService_GetOrganizationPermissionCatalog_FullMethodName = "/api.admin.service.v1.AdminService/GetOrganizationPermissionCatalog"
+	AdminService_GetMyOrganizations_FullMethodName               = "/api.admin.service.v1.AdminService/GetMyOrganizations"
+	AdminService_SwitchCurrentOrganization_FullMethodName        = "/api.admin.service.v1.AdminService/SwitchCurrentOrganization"
+	AdminService_GetDeptList_FullMethodName                      = "/api.admin.service.v1.AdminService/GetDeptList"
+	AdminService_AddDept_FullMethodName                          = "/api.admin.service.v1.AdminService/AddDept"
+	AdminService_UpdateDept_FullMethodName                       = "/api.admin.service.v1.AdminService/UpdateDept"
+	AdminService_DelDept_FullMethodName                          = "/api.admin.service.v1.AdminService/DelDept"
+	AdminService_GetCurrentUserMenus_FullMethodName              = "/api.admin.service.v1.AdminService/GetCurrentUserMenus"
+	AdminService_GetSysMenuList_FullMethodName                   = "/api.admin.service.v1.AdminService/GetSysMenuList"
+	AdminService_ListMenus_FullMethodName                        = "/api.admin.service.v1.AdminService/ListMenus"
+	AdminService_GetWalkRoute_FullMethodName                     = "/api.admin.service.v1.AdminService/GetWalkRoute"
+	AdminService_GetSelfWalkRoute_FullMethodName                 = "/api.admin.service.v1.AdminService/GetSelfWalkRoute"
+	AdminService_IsMenuNameExists_FullMethodName                 = "/api.admin.service.v1.AdminService/IsMenuNameExists"
+	AdminService_IsMenuPathExists_FullMethodName                 = "/api.admin.service.v1.AdminService/IsMenuPathExists"
+	AdminService_CreateMenu_FullMethodName                       = "/api.admin.service.v1.AdminService/CreateMenu"
+	AdminService_UpdateMenu_FullMethodName                       = "/api.admin.service.v1.AdminService/UpdateMenu"
+	AdminService_DeleteMenu_FullMethodName                       = "/api.admin.service.v1.AdminService/DeleteMenu"
+	AdminService_GetServiceRegistryList_FullMethodName           = "/api.admin.service.v1.AdminService/GetServiceRegistryList"
+	AdminService_GetProjectionSourceStatusList_FullMethodName    = "/api.admin.service.v1.AdminService/GetProjectionSourceStatusList"
+	AdminService_CreateSysLog_FullMethodName                     = "/api.admin.service.v1.AdminService/CreateSysLog"
+	AdminService_GetSysLogList_FullMethodName                    = "/api.admin.service.v1.AdminService/GetSysLogList"
+	AdminService_GetSysLogInfo_FullMethodName                    = "/api.admin.service.v1.AdminService/GetSysLogInfo"
 )
 
 // AdminServiceClient is the client API for AdminService service.
@@ -85,7 +100,22 @@ type AdminServiceClient interface {
 	ListUserRoleBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleBindingsReply, error)
 	UpsertUserRoleBinding(ctx context.Context, in *UserRoleBindingItem, opts ...grpc.CallOption) (*UserRoleBindingItem, error)
 	DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error)
+	GetUserDeptBinding(ctx context.Context, in *GetUserDeptBindingRequest, opts ...grpc.CallOption) (*UserDeptBindingItem, error)
+	UpsertUserDeptBinding(ctx context.Context, in *UserDeptBindingItem, opts ...grpc.CallOption) (*UserDeptBindingItem, error)
+	DeleteUserDeptBinding(ctx context.Context, in *DeleteUserDeptBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetOrganizationList(ctx context.Context, in *GetOrganizationListParams, opts ...grpc.CallOption) (*GetOrganizationListReply, error)
+	AddOrganization(ctx context.Context, in *OrganizationItem, opts ...grpc.CallOption) (*OrganizationItem, error)
+	UpdateOrganization(ctx context.Context, in *OrganizationItem, opts ...grpc.CallOption) (*OrganizationItem, error)
+	DelOrganization(ctx context.Context, in *DeleteOrganization, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetOrganizationMembers(ctx context.Context, in *GetOrganizationMembersRequest, opts ...grpc.CallOption) (*GetOrganizationMembersReply, error)
+	SaveOrganizationMembers(ctx context.Context, in *SaveOrganizationMembersRequest, opts ...grpc.CallOption) (*GetOrganizationMembersReply, error)
+	GetOrganizationPermissionScope(ctx context.Context, in *GetOrganizationPermissionScopeRequest, opts ...grpc.CallOption) (*OrganizationPermissionScopeReply, error)
+	SaveOrganizationPermissionScope(ctx context.Context, in *SaveOrganizationPermissionScopeRequest, opts ...grpc.CallOption) (*OrganizationPermissionScopeReply, error)
+	GetCurrentPermissionCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OrganizationPermissionCatalogReply, error)
+	GetOrganizationPermissionCatalog(ctx context.Context, in *GetOrganizationPermissionCatalogRequest, opts ...grpc.CallOption) (*OrganizationPermissionCatalogReply, error)
+	GetMyOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMyOrganizationsReply, error)
+	SwitchCurrentOrganization(ctx context.Context, in *SwitchCurrentOrganizationRequest, opts ...grpc.CallOption) (*CurrentOrganizationReply, error)
+	GetDeptList(ctx context.Context, in *GetDeptListParams, opts ...grpc.CallOption) (*GetDeptListReply, error)
 	AddDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	UpdateDept(ctx context.Context, in *DeptListItem, opts ...grpc.CallOption) (*DeptListItem, error)
 	DelDept(ctx context.Context, in *DeleteDept, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -314,7 +344,157 @@ func (c *adminServiceClient) DeleteUserRoleBinding(ctx context.Context, in *Dele
 	return out, nil
 }
 
-func (c *adminServiceClient) GetDeptList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDeptListReply, error) {
+func (c *adminServiceClient) GetUserDeptBinding(ctx context.Context, in *GetUserDeptBindingRequest, opts ...grpc.CallOption) (*UserDeptBindingItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserDeptBindingItem)
+	err := c.cc.Invoke(ctx, AdminService_GetUserDeptBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpsertUserDeptBinding(ctx context.Context, in *UserDeptBindingItem, opts ...grpc.CallOption) (*UserDeptBindingItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserDeptBindingItem)
+	err := c.cc.Invoke(ctx, AdminService_UpsertUserDeptBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DeleteUserDeptBinding(ctx context.Context, in *DeleteUserDeptBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DeleteUserDeptBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetOrganizationList(ctx context.Context, in *GetOrganizationListParams, opts ...grpc.CallOption) (*GetOrganizationListReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrganizationListReply)
+	err := c.cc.Invoke(ctx, AdminService_GetOrganizationList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) AddOrganization(ctx context.Context, in *OrganizationItem, opts ...grpc.CallOption) (*OrganizationItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationItem)
+	err := c.cc.Invoke(ctx, AdminService_AddOrganization_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateOrganization(ctx context.Context, in *OrganizationItem, opts ...grpc.CallOption) (*OrganizationItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationItem)
+	err := c.cc.Invoke(ctx, AdminService_UpdateOrganization_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) DelOrganization(ctx context.Context, in *DeleteOrganization, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, AdminService_DelOrganization_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetOrganizationMembers(ctx context.Context, in *GetOrganizationMembersRequest, opts ...grpc.CallOption) (*GetOrganizationMembersReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrganizationMembersReply)
+	err := c.cc.Invoke(ctx, AdminService_GetOrganizationMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SaveOrganizationMembers(ctx context.Context, in *SaveOrganizationMembersRequest, opts ...grpc.CallOption) (*GetOrganizationMembersReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrganizationMembersReply)
+	err := c.cc.Invoke(ctx, AdminService_SaveOrganizationMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetOrganizationPermissionScope(ctx context.Context, in *GetOrganizationPermissionScopeRequest, opts ...grpc.CallOption) (*OrganizationPermissionScopeReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationPermissionScopeReply)
+	err := c.cc.Invoke(ctx, AdminService_GetOrganizationPermissionScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SaveOrganizationPermissionScope(ctx context.Context, in *SaveOrganizationPermissionScopeRequest, opts ...grpc.CallOption) (*OrganizationPermissionScopeReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationPermissionScopeReply)
+	err := c.cc.Invoke(ctx, AdminService_SaveOrganizationPermissionScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetCurrentPermissionCatalog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*OrganizationPermissionCatalogReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationPermissionCatalogReply)
+	err := c.cc.Invoke(ctx, AdminService_GetCurrentPermissionCatalog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetOrganizationPermissionCatalog(ctx context.Context, in *GetOrganizationPermissionCatalogRequest, opts ...grpc.CallOption) (*OrganizationPermissionCatalogReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrganizationPermissionCatalogReply)
+	err := c.cc.Invoke(ctx, AdminService_GetOrganizationPermissionCatalog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetMyOrganizations(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetMyOrganizationsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyOrganizationsReply)
+	err := c.cc.Invoke(ctx, AdminService_GetMyOrganizations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) SwitchCurrentOrganization(ctx context.Context, in *SwitchCurrentOrganizationRequest, opts ...grpc.CallOption) (*CurrentOrganizationReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CurrentOrganizationReply)
+	err := c.cc.Invoke(ctx, AdminService_SwitchCurrentOrganization_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) GetDeptList(ctx context.Context, in *GetDeptListParams, opts ...grpc.CallOption) (*GetDeptListReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDeptListReply)
 	err := c.cc.Invoke(ctx, AdminService_GetDeptList_FullMethodName, in, out, cOpts...)
@@ -528,7 +708,22 @@ type AdminServiceServer interface {
 	ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error)
 	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
 	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
-	GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error)
+	GetUserDeptBinding(context.Context, *GetUserDeptBindingRequest) (*UserDeptBindingItem, error)
+	UpsertUserDeptBinding(context.Context, *UserDeptBindingItem) (*UserDeptBindingItem, error)
+	DeleteUserDeptBinding(context.Context, *DeleteUserDeptBindingRequest) (*emptypb.Empty, error)
+	GetOrganizationList(context.Context, *GetOrganizationListParams) (*GetOrganizationListReply, error)
+	AddOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error)
+	UpdateOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error)
+	DelOrganization(context.Context, *DeleteOrganization) (*emptypb.Empty, error)
+	GetOrganizationMembers(context.Context, *GetOrganizationMembersRequest) (*GetOrganizationMembersReply, error)
+	SaveOrganizationMembers(context.Context, *SaveOrganizationMembersRequest) (*GetOrganizationMembersReply, error)
+	GetOrganizationPermissionScope(context.Context, *GetOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error)
+	SaveOrganizationPermissionScope(context.Context, *SaveOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error)
+	GetCurrentPermissionCatalog(context.Context, *emptypb.Empty) (*OrganizationPermissionCatalogReply, error)
+	GetOrganizationPermissionCatalog(context.Context, *GetOrganizationPermissionCatalogRequest) (*OrganizationPermissionCatalogReply, error)
+	GetMyOrganizations(context.Context, *emptypb.Empty) (*GetMyOrganizationsReply, error)
+	SwitchCurrentOrganization(context.Context, *SwitchCurrentOrganizationRequest) (*CurrentOrganizationReply, error)
+	GetDeptList(context.Context, *GetDeptListParams) (*GetDeptListReply, error)
 	AddDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	UpdateDept(context.Context, *DeptListItem) (*DeptListItem, error)
 	DelDept(context.Context, *DeleteDept) (*emptypb.Empty, error)
@@ -617,7 +812,52 @@ func (UnimplementedAdminServiceServer) UpsertUserRoleBinding(context.Context, *U
 func (UnimplementedAdminServiceServer) DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserRoleBinding not implemented")
 }
-func (UnimplementedAdminServiceServer) GetDeptList(context.Context, *emptypb.Empty) (*GetDeptListReply, error) {
+func (UnimplementedAdminServiceServer) GetUserDeptBinding(context.Context, *GetUserDeptBindingRequest) (*UserDeptBindingItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserDeptBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) UpsertUserDeptBinding(context.Context, *UserDeptBindingItem) (*UserDeptBindingItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertUserDeptBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteUserDeptBinding(context.Context, *DeleteUserDeptBindingRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserDeptBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) GetOrganizationList(context.Context, *GetOrganizationListParams) (*GetOrganizationListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationList not implemented")
+}
+func (UnimplementedAdminServiceServer) AddOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddOrganization not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateOrganization(context.Context, *OrganizationItem) (*OrganizationItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrganization not implemented")
+}
+func (UnimplementedAdminServiceServer) DelOrganization(context.Context, *DeleteOrganization) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelOrganization not implemented")
+}
+func (UnimplementedAdminServiceServer) GetOrganizationMembers(context.Context, *GetOrganizationMembersRequest) (*GetOrganizationMembersReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationMembers not implemented")
+}
+func (UnimplementedAdminServiceServer) SaveOrganizationMembers(context.Context, *SaveOrganizationMembersRequest) (*GetOrganizationMembersReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveOrganizationMembers not implemented")
+}
+func (UnimplementedAdminServiceServer) GetOrganizationPermissionScope(context.Context, *GetOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationPermissionScope not implemented")
+}
+func (UnimplementedAdminServiceServer) SaveOrganizationPermissionScope(context.Context, *SaveOrganizationPermissionScopeRequest) (*OrganizationPermissionScopeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveOrganizationPermissionScope not implemented")
+}
+func (UnimplementedAdminServiceServer) GetCurrentPermissionCatalog(context.Context, *emptypb.Empty) (*OrganizationPermissionCatalogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentPermissionCatalog not implemented")
+}
+func (UnimplementedAdminServiceServer) GetOrganizationPermissionCatalog(context.Context, *GetOrganizationPermissionCatalogRequest) (*OrganizationPermissionCatalogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrganizationPermissionCatalog not implemented")
+}
+func (UnimplementedAdminServiceServer) GetMyOrganizations(context.Context, *emptypb.Empty) (*GetMyOrganizationsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyOrganizations not implemented")
+}
+func (UnimplementedAdminServiceServer) SwitchCurrentOrganization(context.Context, *SwitchCurrentOrganizationRequest) (*CurrentOrganizationReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SwitchCurrentOrganization not implemented")
+}
+func (UnimplementedAdminServiceServer) GetDeptList(context.Context, *GetDeptListParams) (*GetDeptListReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDeptList not implemented")
 }
 func (UnimplementedAdminServiceServer) AddDept(context.Context, *DeptListItem) (*DeptListItem, error) {
@@ -1055,8 +1295,278 @@ func _AdminService_DeleteUserRoleBinding_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AdminService_GetDeptList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AdminService_GetUserDeptBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserDeptBindingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetUserDeptBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetUserDeptBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetUserDeptBinding(ctx, req.(*GetUserDeptBindingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpsertUserDeptBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserDeptBindingItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpsertUserDeptBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpsertUserDeptBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpsertUserDeptBinding(ctx, req.(*UserDeptBindingItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DeleteUserDeptBinding_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserDeptBindingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteUserDeptBinding(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DeleteUserDeptBinding_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteUserDeptBinding(ctx, req.(*DeleteUserDeptBindingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetOrganizationList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationListParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetOrganizationList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetOrganizationList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetOrganizationList(ctx, req.(*GetOrganizationListParams))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_AddOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrganizationItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_AddOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddOrganization(ctx, req.(*OrganizationItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrganizationItem)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_UpdateOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateOrganization(ctx, req.(*OrganizationItem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_DelOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganization)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DelOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_DelOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DelOrganization(ctx, req.(*DeleteOrganization))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetOrganizationMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetOrganizationMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetOrganizationMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetOrganizationMembers(ctx, req.(*GetOrganizationMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SaveOrganizationMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOrganizationMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SaveOrganizationMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_SaveOrganizationMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SaveOrganizationMembers(ctx, req.(*SaveOrganizationMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetOrganizationPermissionScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationPermissionScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetOrganizationPermissionScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetOrganizationPermissionScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetOrganizationPermissionScope(ctx, req.(*GetOrganizationPermissionScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SaveOrganizationPermissionScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveOrganizationPermissionScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SaveOrganizationPermissionScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_SaveOrganizationPermissionScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SaveOrganizationPermissionScope(ctx, req.(*SaveOrganizationPermissionScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetCurrentPermissionCatalog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetCurrentPermissionCatalog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetCurrentPermissionCatalog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetCurrentPermissionCatalog(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetOrganizationPermissionCatalog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrganizationPermissionCatalogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetOrganizationPermissionCatalog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetOrganizationPermissionCatalog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetOrganizationPermissionCatalog(ctx, req.(*GetOrganizationPermissionCatalogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetMyOrganizations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).GetMyOrganizations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_GetMyOrganizations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).GetMyOrganizations(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_SwitchCurrentOrganization_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SwitchCurrentOrganizationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).SwitchCurrentOrganization(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_SwitchCurrentOrganization_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).SwitchCurrentOrganization(ctx, req.(*SwitchCurrentOrganizationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_GetDeptList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeptListParams)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1068,7 +1578,7 @@ func _AdminService_GetDeptList_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: AdminService_GetDeptList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetDeptList(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).GetDeptList(ctx, req.(*GetDeptListParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1483,6 +1993,66 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUserRoleBinding",
 			Handler:    _AdminService_DeleteUserRoleBinding_Handler,
+		},
+		{
+			MethodName: "GetUserDeptBinding",
+			Handler:    _AdminService_GetUserDeptBinding_Handler,
+		},
+		{
+			MethodName: "UpsertUserDeptBinding",
+			Handler:    _AdminService_UpsertUserDeptBinding_Handler,
+		},
+		{
+			MethodName: "DeleteUserDeptBinding",
+			Handler:    _AdminService_DeleteUserDeptBinding_Handler,
+		},
+		{
+			MethodName: "GetOrganizationList",
+			Handler:    _AdminService_GetOrganizationList_Handler,
+		},
+		{
+			MethodName: "AddOrganization",
+			Handler:    _AdminService_AddOrganization_Handler,
+		},
+		{
+			MethodName: "UpdateOrganization",
+			Handler:    _AdminService_UpdateOrganization_Handler,
+		},
+		{
+			MethodName: "DelOrganization",
+			Handler:    _AdminService_DelOrganization_Handler,
+		},
+		{
+			MethodName: "GetOrganizationMembers",
+			Handler:    _AdminService_GetOrganizationMembers_Handler,
+		},
+		{
+			MethodName: "SaveOrganizationMembers",
+			Handler:    _AdminService_SaveOrganizationMembers_Handler,
+		},
+		{
+			MethodName: "GetOrganizationPermissionScope",
+			Handler:    _AdminService_GetOrganizationPermissionScope_Handler,
+		},
+		{
+			MethodName: "SaveOrganizationPermissionScope",
+			Handler:    _AdminService_SaveOrganizationPermissionScope_Handler,
+		},
+		{
+			MethodName: "GetCurrentPermissionCatalog",
+			Handler:    _AdminService_GetCurrentPermissionCatalog_Handler,
+		},
+		{
+			MethodName: "GetOrganizationPermissionCatalog",
+			Handler:    _AdminService_GetOrganizationPermissionCatalog_Handler,
+		},
+		{
+			MethodName: "GetMyOrganizations",
+			Handler:    _AdminService_GetMyOrganizations_Handler,
+		},
+		{
+			MethodName: "SwitchCurrentOrganization",
+			Handler:    _AdminService_SwitchCurrentOrganization_Handler,
 		},
 		{
 			MethodName: "GetDeptList",

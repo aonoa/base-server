@@ -15,6 +15,12 @@ type Dept func(*sql.Selector)
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
 
+// Organization is the predicate function for organization builders.
+type Organization func(*sql.Selector)
+
+// OrganizationPermissionScope is the predicate function for organizationpermissionscope builders.
+type OrganizationPermissionScope func(*sql.Selector)
+
 // ProjectionSourceStatus is the predicate function for projectionsourcestatus builders.
 type ProjectionSourceStatus func(*sql.Selector)
 
@@ -38,6 +44,12 @@ type SysLogRecord func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// UserDeptMembership is the predicate function for userdeptmembership builders.
+type UserDeptMembership func(*sql.Selector)
+
+// UserOrganization is the predicate function for userorganization builders.
+type UserOrganization func(*sql.Selector)
 
 // UserRoleBinding is the predicate function for userrolebinding builders.
 type UserRoleBinding func(*sql.Selector)

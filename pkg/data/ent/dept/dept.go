@@ -28,8 +28,8 @@ const (
 	FieldDesc = "desc"
 	// FieldExtension holds the string denoting the extension field in the database.
 	FieldExtension = "extension"
-	// FieldDom holds the string denoting the dom field in the database.
-	FieldDom = "dom"
+	// FieldOrganizationID holds the string denoting the organization_id field in the database.
+	FieldOrganizationID = "organization_id"
 	// FieldPid holds the string denoting the pid field in the database.
 	FieldPid = "pid"
 	// EdgeParent holds the string denoting the parent edge name in mutations.
@@ -58,7 +58,7 @@ var Columns = []string{
 	FieldStatus,
 	FieldDesc,
 	FieldExtension,
-	FieldDom,
+	FieldOrganizationID,
 	FieldPid,
 }
 
@@ -124,9 +124,9 @@ func ByExtension(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldExtension, opts...).ToFunc()
 }
 
-// ByDom orders the results by the dom field.
-func ByDom(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDom, opts...).ToFunc()
+// ByOrganizationID orders the results by the organization_id field.
+func ByOrganizationID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizationID, opts...).ToFunc()
 }
 
 // ByPid orders the results by the pid field.
