@@ -11,6 +11,7 @@ Kratos + Go 多服务后端。当前仓库以 gateway + 四个领域服务运行
 
 - [docs/README.md](./docs/README.md)
 - [docs/monorepo-overview.md](./docs/monorepo-overview.md)
+- [docs/new-service-template.md](./docs/new-service-template.md)
 - [docs/permission-design.md](./docs/permission-design.md)
 - [docs/api-ownership.md](./docs/api-ownership.md)
 - [docs/table-ownership.md](./docs/table-ownership.md)

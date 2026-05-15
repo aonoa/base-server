@@ -149,14 +149,20 @@ make wire
 make frontend-api
 ```
 
-### 6.2 新增或修改数据表
+### 6.2 新增微服务
+
+新增独立服务时不要只复制目录。必须同步服务边界、proto、配置、Wire、Makefile、Docker Compose、gateway、服务注册、API 目录、权限资源组、数据库归属和前端 OpenAPI。
+
+详细步骤见 [new-service-template.md](./new-service-template.md)。
+
+### 6.3 新增或修改数据表
 
 1. 改 `pkg/data/schema/*.go`
 2. `make ent`
 3. 改服务内 `internal/data/**`
 4. 检查该表归属哪个服务、落在哪个数据库
 
-### 6.3 新增或修改权限接口
+### 6.4 新增或修改权限接口
 
 除了改 proto / handler 以外，还要同步检查：
 
@@ -180,6 +186,7 @@ make frontend-api
 ## 8. 配套文档
 
 - [README.md](../README.md)
+- [new-service-template.md](./new-service-template.md)
 - [permission-design.md](./permission-design.md)
 - [api-ownership.md](./api-ownership.md)
 - [table-ownership.md](./table-ownership.md)

@@ -8,6 +8,8 @@
   - 仓库级运行方式、代码生成、网关路由和本地调试说明
 - [monorepo-overview.md](./monorepo-overview.md)
   - 当前微服务版本线的结构、服务边界、常见改动路径和已知缺口
+- [new-service-template.md](./new-service-template.md)
+  - 新增一个微服务时的目录模板、接入步骤、权限/网关/部署同步点和验证清单
 - [permission-design.md](./permission-design.md)
   - 当前平台角色、菜单、API 资源组、服务前缀解析和组织域权限设计
 - [organization-permission-scope-design.md](./organization-permission-scope-design.md)
@@ -23,8 +25,9 @@
 
 1. 先读 [README.md](../README.md) 了解运行方式和入口目录。
 2. 再读 [monorepo-overview.md](./monorepo-overview.md) 建立当前代码布局和服务职责的整体图。
-3. 涉及权限、菜单、资源、API 目录时，继续读：
+3. 新增独立微服务时，继续读 [new-service-template.md](./new-service-template.md)。
+4. 涉及权限、菜单、资源、API 目录时，继续读：
    - [permission-design.md](./permission-design.md)
    - [api-ownership.md](./api-ownership.md)
    - [auth-incremental-sync-design.md](./auth-incremental-sync-design.md)
-4. 涉及数据库、Ent schema 或服务归库时，读 [table-ownership.md](./table-ownership.md)。
+5. 涉及数据库、Ent schema 或服务归库时，读 [table-ownership.md](./table-ownership.md)。
