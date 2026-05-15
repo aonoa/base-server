@@ -48,6 +48,7 @@ type AdminRepo interface {
 	CountOrganizationDepts(context.Context, string) (int64, error)
 	CountOrganizationMembers(context.Context, string) (int64, error)
 	ListOrganizationMembers(context.Context, string) ([]*v1.OrganizationMemberItem, error)
+	ListOrganizationMemberUserIDs(context.Context, string, bool) ([]string, error)
 	SaveOrganizationMembers(context.Context, string, []string) ([]*v1.OrganizationMemberItem, error)
 	EnsureAllUsersInDefaultOrganization(context.Context) error
 	EnsureUserInDefaultOrganization(context.Context, string) error
@@ -221,6 +222,33 @@ func (uc *AdminUsecase) GetUserRoleBinding(ctx context.Context, req *v1.GetUserR
 		}, nil
 	}
 	return userRoleBindingsToReply(req.UserId, organizationID, items), nil
+}
+
+func (uc *AdminUsecase) ListOrganizationMemberUserIds(ctx context.Context, req *v1.ListOrganizationMemberUserIdsRequest) (*v1.ListOrganizationMemberUserIdsReply, error) {
+	organizationID, err := normalizeOrganizationID(req.GetOrganizationId())
+	if err != nil {
+		return nil, err
+	}
+	defaultOrganizationID, err := uc.repo.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if organizationID == defaultOrganizationID {
+		if err := uc.repo.EnsureAllUsersInDefaultOrganization(ctx); err != nil {
+			return nil, err
+		}
+	}
+	if _, err := uc.repo.GetOrganization(ctx, organizationID); err != nil {
+		return nil, err
+	}
+	userIDs, err := uc.repo.ListOrganizationMemberUserIDs(ctx, organizationID, req.GetActiveUsersOnly())
+	if err != nil {
+		return nil, err
+	}
+	return &v1.ListOrganizationMemberUserIdsReply{
+		OrganizationId: organizationID,
+		UserIds:        userIDs,
+	}, nil
 }
 
 func (uc *AdminUsecase) ListUserRoleBindings(ctx context.Context) (*v1.ListUserRoleBindingsReply, error) {
@@ -2390,11 +2418,18 @@ func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 		status = 1
 	}
 	redirect := menu.Redirect
+	activeIcon := menu.ActiveIcon
 	activePath := menu.ActivePath
 	link := menu.Link
 	iframeSrc := menu.IframeSrc
 	keepAlive := menu.Keepalive
 	maxNumOfOpenTab := int64(menu.MaxNumOfOpenTab)
+	affixTab := menu.AffixTab
+	affixTabOrder := int64(menu.AffixTabOrder)
+	openInNewWindow := menu.OpenInNewWindow
+	noBasicLayout := menu.NoBasicLayout
+	fullPathKey := menu.FullPathKey
+	menuVisibleWithForbidden := menu.MenuVisibleWithForbidden
 	hideInMenu := menu.HideInMenu
 	hideInTab := menu.HideInTab
 	hideInBreadcrumb := menu.HideInBreadcrumb
@@ -2403,7 +2438,7 @@ func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 		Id:         int32(menu.ID),
 		Component:  menu.Component,
 		Status:     &status,
-		AuthCode:   "",
+		AuthCode:   strings.Join(splitAuthority(menu.Authority), ","),
 		Name:       menu.Name,
 		Path:       menu.Path,
 		Pid:        menu.Pid,
@@ -2411,20 +2446,30 @@ func entMenuToMenu(menu *ent.Menu) *v1.SysMenuListItem {
 		Type:       menu.Type,
 		CreateTime: menu.CreateTime.Format(time.DateTime),
 		Meta: &v1.Meta{
-			Order:              int64(menu.Order),
-			Icon:               menu.Icon,
-			Title:              menu.Title,
-			ActivePath:         &activePath,
-			IframeSrc:          &iframeSrc,
-			Link:               &link,
-			KeepAlive:          &keepAlive,
-			MaxNumOfOpenTab:    &maxNumOfOpenTab,
-			IgnoreAccess:       menu.IgnoreAccess,
-			HideInMenu:         &hideInMenu,
-			HideInTab:          &hideInTab,
-			HideInBreadcrumb:   &hideInBreadcrumb,
-			HideChildrenInMenu: &hideChildrenInMenu,
-			Authority:          splitAuthority(menu.Authority),
+			Order:                    int64(menu.Order),
+			Icon:                     menu.Icon,
+			Title:                    menu.Title,
+			ActiveIcon:               &activeIcon,
+			ActivePath:               &activePath,
+			AffixTab:                 &affixTab,
+			AffixTabOrder:            &affixTabOrder,
+			Badge:                    &menu.Badge,
+			BadgeType:                &menu.BadgeType,
+			BadgeVariants:            &menu.BadgeVariants,
+			IframeSrc:                &iframeSrc,
+			Link:                     &link,
+			KeepAlive:                &keepAlive,
+			MaxNumOfOpenTab:          &maxNumOfOpenTab,
+			NoBasicLayout:            &noBasicLayout,
+			OpenInNewWindow:          &openInNewWindow,
+			IgnoreAccess:             menu.IgnoreAccess,
+			FullPathKey:              &fullPathKey,
+			MenuVisibleWithForbidden: &menuVisibleWithForbidden,
+			HideInMenu:               &hideInMenu,
+			HideInTab:                &hideInTab,
+			HideInBreadcrumb:         &hideInBreadcrumb,
+			HideChildrenInMenu:       &hideChildrenInMenu,
+			Authority:                splitAuthority(menu.Authority),
 		},
 	}
 }
@@ -2472,35 +2517,56 @@ func menuToEntMenu(menu *v1.SysMenuListItem) *ent.Menu {
 	if menu.Status != nil && *menu.Status == 1 {
 		status = true
 	}
+	authority := normalizeAuthority(meta.Authority)
+	if len(authority) == 0 {
+		authority = normalizeAuthority(splitAuthority(menu.AuthCode))
+	}
 	return &ent.Menu{
-		ID:                 int64(menu.Id),
-		Pid:                menu.Pid,
-		Type:               menu.Type,
-		Status:             status,
-		Path:               menu.Path,
-		Redirect:           ptrToString(menu.Redirect),
-		Name:               menu.Name,
-		Component:          menu.Component,
-		Icon:               meta.Icon,
-		Title:              meta.Title,
-		Order:              int32(meta.Order),
-		Link:               ptrToString(meta.Link),
-		IframeSrc:          ptrToString(meta.IframeSrc),
-		ActivePath:         ptrToString(meta.ActivePath),
-		MaxNumOfOpenTab:    int16(ptrToInt64(meta.MaxNumOfOpenTab)),
-		Keepalive:          ptrToBool(meta.KeepAlive),
-		IgnoreAccess:       meta.IgnoreAccess,
-		Authority:          strings.Join(meta.Authority, ","),
-		HideInMenu:         ptrToBool(meta.HideInMenu),
-		HideInTab:          ptrToBool(meta.HideInTab),
-		HideInBreadcrumb:   ptrToBool(meta.HideInBreadcrumb),
-		HideChildrenInMenu: ptrToBool(meta.HideChildrenInMenu),
+		ID:                       int64(menu.Id),
+		Pid:                      menu.Pid,
+		Type:                     menu.Type,
+		Status:                   status,
+		Path:                     menu.Path,
+		Redirect:                 ptrToString(menu.Redirect),
+		Name:                     menu.Name,
+		Component:                menu.Component,
+		Icon:                     meta.Icon,
+		Title:                    meta.Title,
+		Order:                    int32(meta.Order),
+		Link:                     ptrToString(meta.Link),
+		IframeSrc:                ptrToString(meta.IframeSrc),
+		ActiveIcon:               ptrToString(meta.ActiveIcon),
+		ActivePath:               ptrToString(meta.ActivePath),
+		MaxNumOfOpenTab:          int16(ptrToInt64WithDefault(meta.MaxNumOfOpenTab, -1)),
+		Keepalive:                ptrToBool(meta.KeepAlive),
+		IgnoreAccess:             meta.IgnoreAccess,
+		Authority:                strings.Join(authority, ","),
+		AffixTab:                 ptrToBool(meta.AffixTab),
+		AffixTabOrder:            int16(ptrToInt64(meta.AffixTabOrder)),
+		OpenInNewWindow:          ptrToBool(meta.OpenInNewWindow),
+		NoBasicLayout:            ptrToBool(meta.NoBasicLayout),
+		FullPathKey:              ptrToBoolWithDefault(meta.FullPathKey, true),
+		MenuVisibleWithForbidden: ptrToBool(meta.MenuVisibleWithForbidden),
+		HideInMenu:               ptrToBool(meta.HideInMenu),
+		HideInTab:                ptrToBool(meta.HideInTab),
+		HideInBreadcrumb:         ptrToBool(meta.HideInBreadcrumb),
+		HideChildrenInMenu:       ptrToBool(meta.HideChildrenInMenu),
+		Badge:                    ptrToString(meta.Badge),
+		BadgeType:                ptrToStringWithDefault(meta.BadgeType, "normal"),
+		BadgeVariants:            ptrToStringWithDefault(meta.BadgeVariants, "success"),
 	}
 }
 
 func ptrToString(v *string) string {
 	if v == nil {
 		return ""
+	}
+	return *v
+}
+
+func ptrToStringWithDefault(v *string, defaultValue string) string {
+	if v == nil {
+		return defaultValue
 	}
 	return *v
 }
@@ -2512,11 +2578,45 @@ func ptrToBool(v *bool) bool {
 	return *v
 }
 
+func ptrToBoolWithDefault(v *bool, defaultValue bool) bool {
+	if v == nil {
+		return defaultValue
+	}
+	return *v
+}
+
 func ptrToInt64(v *int64) int64 {
 	if v == nil {
 		return 0
 	}
 	return *v
+}
+
+func ptrToInt64WithDefault(v *int64, defaultValue int64) int64 {
+	if v == nil {
+		return defaultValue
+	}
+	return *v
+}
+
+func normalizeAuthority(items []string) []string {
+	if len(items) == 0 {
+		return nil
+	}
+	res := make([]string, 0, len(items))
+	seen := make(map[string]struct{}, len(items))
+	for _, item := range items {
+		item = strings.TrimSpace(item)
+		if item == "" {
+			continue
+		}
+		if _, ok := seen[item]; ok {
+			continue
+		}
+		seen[item] = struct{}{}
+		res = append(res, item)
+	}
+	return res
 }
 
 func splitAuthority(v string) []string {

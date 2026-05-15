@@ -180,18 +180,19 @@ func (x *GetMySiteMessageListParams) GetReadStatus() int32 {
 }
 
 type SiteMessageItem struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	IsRead        bool                   `protobuf:"varint,4,opt,name=is_read,json=isRead,proto3" json:"is_read,omitempty"`
-	Link          string                 `protobuf:"bytes,5,opt,name=link,proto3" json:"link,omitempty"`
-	SenderId      string                 `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	SenderName    string                 `protobuf:"bytes,7,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
-	CreatedTime   string                 `protobuf:"bytes,8,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
-	ReadTime      string                 `protobuf:"bytes,9,opt,name=read_time,json=readTime,proto3" json:"read_time,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title          string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content        string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	IsRead         bool                   `protobuf:"varint,4,opt,name=is_read,json=isRead,proto3" json:"is_read,omitempty"`
+	Link           string                 `protobuf:"bytes,5,opt,name=link,proto3" json:"link,omitempty"`
+	SenderId       string                 `protobuf:"bytes,6,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SenderName     string                 `protobuf:"bytes,7,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
+	CreatedTime    string                 `protobuf:"bytes,8,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
+	ReadTime       string                 `protobuf:"bytes,9,opt,name=read_time,json=readTime,proto3" json:"read_time,omitempty"`
+	OrganizationId string                 `protobuf:"bytes,10,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SiteMessageItem) Reset() {
@@ -283,6 +284,13 @@ func (x *SiteMessageItem) GetCreatedTime() string {
 func (x *SiteMessageItem) GetReadTime() string {
 	if x != nil {
 		return x.ReadTime
+	}
+	return ""
+}
+
+func (x *SiteMessageItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
 	}
 	return ""
 }
@@ -546,6 +554,7 @@ type SiteMessageManageItem struct {
 	ScheduledPublishTime string                 `protobuf:"bytes,11,opt,name=scheduled_publish_time,json=scheduledPublishTime,proto3" json:"scheduled_publish_time,omitempty"`
 	PublishedTime        string                 `protobuf:"bytes,12,opt,name=published_time,json=publishedTime,proto3" json:"published_time,omitempty"`
 	RecalledTime         string                 `protobuf:"bytes,13,opt,name=recalled_time,json=recalledTime,proto3" json:"recalled_time,omitempty"`
+	OrganizationId       string                 `protobuf:"bytes,14,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -667,6 +676,13 @@ func (x *SiteMessageManageItem) GetPublishedTime() string {
 func (x *SiteMessageManageItem) GetRecalledTime() string {
 	if x != nil {
 		return x.RecalledTime
+	}
+	return ""
+}
+
+func (x *SiteMessageManageItem) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
 	}
 	return ""
 }
@@ -822,6 +838,7 @@ type CreateSiteMessageReply struct {
 	Status               string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
 	ScheduledPublishTime string                 `protobuf:"bytes,4,opt,name=scheduled_publish_time,json=scheduledPublishTime,proto3" json:"scheduled_publish_time,omitempty"`
 	PublishedTime        string                 `protobuf:"bytes,5,opt,name=published_time,json=publishedTime,proto3" json:"published_time,omitempty"`
+	OrganizationId       string                 `protobuf:"bytes,6,opt,name=organization_id,json=organizationId,proto3" json:"organization_id,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -887,6 +904,13 @@ func (x *CreateSiteMessageReply) GetScheduledPublishTime() string {
 func (x *CreateSiteMessageReply) GetPublishedTime() string {
 	if x != nil {
 		return x.PublishedTime
+	}
+	return ""
+}
+
+func (x *CreateSiteMessageReply) GetOrganizationId() string {
+	if x != nil {
+		return x.OrganizationId
 	}
 	return ""
 }
@@ -993,7 +1017,7 @@ const file_common_service_v1_common_proto_rawDesc = "" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x1f\n" +
 	"\vread_status\x18\x03 \x01(\x05R\n" +
-	"readStatus\"\xfc\x01\n" +
+	"readStatus\"\xa5\x02\n" +
 	"\x0fSiteMessageItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
@@ -1004,7 +1028,9 @@ const file_common_service_v1_common_proto_rawDesc = "" +
 	"\vsender_name\x18\a \x01(\tR\n" +
 	"senderName\x12!\n" +
 	"\fcreated_time\x18\b \x01(\tR\vcreatedTime\x12\x1b\n" +
-	"\tread_time\x18\t \x01(\tR\breadTime\"o\n" +
+	"\tread_time\x18\t \x01(\tR\breadTime\x12'\n" +
+	"\x0forganization_id\x18\n" +
+	" \x01(\tR\x0eorganizationId\"o\n" +
 	"\x19GetMySiteMessageListReply\x12<\n" +
 	"\x05items\x18\x01 \x03(\v2&.api.common.service.v1.SiteMessageItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"E\n" +
@@ -1018,7 +1044,7 @@ const file_common_service_v1_common_proto_rawDesc = "" +
 	"\x1eGetSiteMessageManageListParams\x12!\n" +
 	"\fcurrent_page\x18\x01 \x01(\x03R\vcurrentPage\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x03R\bpageSize\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\tR\x06status\"\xb0\x03\n" +
+	"\x06status\x18\x03 \x01(\tR\x06status\"\xd9\x03\n" +
 	"\x15SiteMessageManageItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x18\n" +
@@ -1034,7 +1060,8 @@ const file_common_service_v1_common_proto_rawDesc = "" +
 	" \x01(\tR\vupdatedTime\x124\n" +
 	"\x16scheduled_publish_time\x18\v \x01(\tR\x14scheduledPublishTime\x12%\n" +
 	"\x0epublished_time\x18\f \x01(\tR\rpublishedTime\x12#\n" +
-	"\rrecalled_time\x18\r \x01(\tR\frecalledTime\"y\n" +
+	"\rrecalled_time\x18\r \x01(\tR\frecalledTime\x12'\n" +
+	"\x0forganization_id\x18\x0e \x01(\tR\x0eorganizationId\"y\n" +
 	"\x1dGetSiteMessageManageListReply\x12B\n" +
 	"\x05items\x18\x01 \x03(\v2,.api.common.service.v1.SiteMessageManageItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total\"\xd8\x01\n" +
@@ -1045,13 +1072,14 @@ const file_common_service_v1_common_proto_rawDesc = "" +
 	"\bcategory\x18\x04 \x01(\tR\bcategory\x12\x12\n" +
 	"\x04link\x18\x05 \x01(\tR\x04link\x12\x16\n" +
 	"\x06action\x18\x06 \x01(\tR\x06action\x124\n" +
-	"\x16scheduled_publish_time\x18\a \x01(\tR\x14scheduledPublishTime\"\xc4\x01\n" +
+	"\x16scheduled_publish_time\x18\a \x01(\tR\x14scheduledPublishTime\"\xed\x01\n" +
 	"\x16CreateSiteMessageReply\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12%\n" +
 	"\x0ereceiver_count\x18\x02 \x01(\x03R\rreceiverCount\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\tR\x06status\x124\n" +
 	"\x16scheduled_publish_time\x18\x04 \x01(\tR\x14scheduledPublishTime\x12%\n" +
-	"\x0epublished_time\x18\x05 \x01(\tR\rpublishedTime\"*\n" +
+	"\x0epublished_time\x18\x05 \x01(\tR\rpublishedTime\x12'\n" +
+	"\x0forganization_id\x18\x06 \x01(\tR\x0eorganizationId\"*\n" +
 	"\x18RecallSiteMessageRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"1\n" +
 	"\x1fDeletePendingSiteMessageRequest\x12\x0e\n" +

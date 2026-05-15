@@ -85,8 +85,8 @@
 | `pkg/data/schema/log.go` | `sys_log` | `admin` | `admin` | 系统访问日志 / 操作日志 |
 | `pkg/data/schema/service_registry.go` | `sys_service_registry` | `admin` | `admin` | 平台服务注册信息 |
 | `pkg/data/schema/projection_source_status.go` | `sys_projection_source_status` | `admin` | `admin` | 权限投影源状态与同步观测信息 |
-| `pkg/data/schema/site_message.go` | `sys_site_message` | `common` | `common` | 站内信发布记录、草稿、定时发布、撤回状态 |
-| `pkg/data/schema/site_message_receipt.go` | `sys_site_message_receipt` | `common` | `common` | 站内信收件回执、已读/未读状态 |
+| `pkg/data/schema/site_message.go` | `sys_site_message` | `common` | `common` | 站内信发布记录、草稿、定时发布、撤回状态；通过 `organization_id` 归属当前组织 |
+| `pkg/data/schema/site_message_receipt.go` | `sys_site_message_receipt` | `common` | `common` | 站内信收件回执、已读/未读状态；通过 `organization_id` 隔离收件箱和未读数 |
 
 ## 5. 按服务看“直接拥有和直接写入”
 
@@ -322,6 +322,7 @@
 - 站内信发布记录
 - 草稿、定时发布、已发布、已撤回状态
 - 发布人、发布时间、计划发布时间、接收人数
+- 每条消息保存 `organization_id`，表示消息发布时所在组织
 
 直接读写方：
 
@@ -330,12 +331,14 @@
 间接依赖方：
 
 - `admin` 负责下发站内信管理菜单和管理接口权限
-- `user` 提供全员发布时的有效用户列表
+- `admin` 提供内部组织成员 ID 查询，供 `common` 发布时解析当前组织启用成员
 
 备注：
 
-- 当前实现只支持全员发布，不支持按指定用户投递
-- 定时发布是懒触发模式，由收件箱/管理接口访问时顺带提升到已发布
+- 当前实现只支持当前组织全员发布，不支持按指定用户投递。
+- 默认组织本身包含全员，所以默认组织下发布即全员发布；其他组织下发布只投递当前组织成员。
+- 定时发布是懒触发模式，由收件箱/管理接口访问时顺带提升到已发布。
+- 定时消息发布时使用消息记录中保存的 `organization_id` 解析收件人，避免投递范围随触发请求的当前组织漂移。
 
 #### `sys_site_message_receipt`
 
@@ -343,6 +346,7 @@
 
 - 记录每个用户是否已读
 - 支持单条标记已读 / 未读、全部标记已读
+- 每条回执保存 `organization_id`，收件箱、未读数、标记已读/未读都按当前组织过滤
 
 直接读写方：
 

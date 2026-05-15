@@ -8805,6 +8805,7 @@ type SiteMessageMutation struct {
 	title                  *string
 	content                *string
 	category               *string
+	organization_id        *string
 	status                 *string
 	receiver_count         *int64
 	addreceiver_count      *int64
@@ -9102,6 +9103,42 @@ func (m *SiteMessageMutation) OldCategory(ctx context.Context) (v string, err er
 // ResetCategory resets all changes to the "category" field.
 func (m *SiteMessageMutation) ResetCategory() {
 	m.category = nil
+}
+
+// SetOrganizationID sets the "organization_id" field.
+func (m *SiteMessageMutation) SetOrganizationID(s string) {
+	m.organization_id = &s
+}
+
+// OrganizationID returns the value of the "organization_id" field in the mutation.
+func (m *SiteMessageMutation) OrganizationID() (r string, exists bool) {
+	v := m.organization_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrganizationID returns the old "organization_id" field's value of the SiteMessage entity.
+// If the SiteMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageMutation) OldOrganizationID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrganizationID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrganizationID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrganizationID: %w", err)
+	}
+	return oldValue.OrganizationID, nil
+}
+
+// ResetOrganizationID resets all changes to the "organization_id" field.
+func (m *SiteMessageMutation) ResetOrganizationID() {
+	m.organization_id = nil
 }
 
 // SetStatus sets the "status" field.
@@ -9485,7 +9522,7 @@ func (m *SiteMessageMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SiteMessageMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 14)
 	if m.create_time != nil {
 		fields = append(fields, sitemessage.FieldCreateTime)
 	}
@@ -9500,6 +9537,9 @@ func (m *SiteMessageMutation) Fields() []string {
 	}
 	if m.category != nil {
 		fields = append(fields, sitemessage.FieldCategory)
+	}
+	if m.organization_id != nil {
+		fields = append(fields, sitemessage.FieldOrganizationID)
 	}
 	if m.status != nil {
 		fields = append(fields, sitemessage.FieldStatus)
@@ -9543,6 +9583,8 @@ func (m *SiteMessageMutation) Field(name string) (ent.Value, bool) {
 		return m.Content()
 	case sitemessage.FieldCategory:
 		return m.Category()
+	case sitemessage.FieldOrganizationID:
+		return m.OrganizationID()
 	case sitemessage.FieldStatus:
 		return m.Status()
 	case sitemessage.FieldReceiverCount:
@@ -9578,6 +9620,8 @@ func (m *SiteMessageMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldContent(ctx)
 	case sitemessage.FieldCategory:
 		return m.OldCategory(ctx)
+	case sitemessage.FieldOrganizationID:
+		return m.OldOrganizationID(ctx)
 	case sitemessage.FieldStatus:
 		return m.OldStatus(ctx)
 	case sitemessage.FieldReceiverCount:
@@ -9637,6 +9681,13 @@ func (m *SiteMessageMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCategory(v)
+		return nil
+	case sitemessage.FieldOrganizationID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrganizationID(v)
 		return nil
 	case sitemessage.FieldStatus:
 		v, ok := value.(string)
@@ -9794,6 +9845,9 @@ func (m *SiteMessageMutation) ResetField(name string) error {
 	case sitemessage.FieldCategory:
 		m.ResetCategory()
 		return nil
+	case sitemessage.FieldOrganizationID:
+		m.ResetOrganizationID()
+		return nil
 	case sitemessage.FieldStatus:
 		m.ResetStatus()
 		return nil
@@ -9873,19 +9927,20 @@ func (m *SiteMessageMutation) ResetEdge(name string) error {
 // SiteMessageReceiptMutation represents an operation that mutates the SiteMessageReceipt nodes in the graph.
 type SiteMessageReceiptMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *string
-	create_time   *time.Time
-	update_time   *time.Time
-	message_id    *string
-	user_id       *string
-	is_read       *bool
-	read_time     *time.Time
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*SiteMessageReceipt, error)
-	predicates    []predicate.SiteMessageReceipt
+	op              Op
+	typ             string
+	id              *string
+	create_time     *time.Time
+	update_time     *time.Time
+	message_id      *string
+	user_id         *string
+	organization_id *string
+	is_read         *bool
+	read_time       *time.Time
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*SiteMessageReceipt, error)
+	predicates      []predicate.SiteMessageReceipt
 }
 
 var _ ent.Mutation = (*SiteMessageReceiptMutation)(nil)
@@ -10136,6 +10191,42 @@ func (m *SiteMessageReceiptMutation) ResetUserID() {
 	m.user_id = nil
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (m *SiteMessageReceiptMutation) SetOrganizationID(s string) {
+	m.organization_id = &s
+}
+
+// OrganizationID returns the value of the "organization_id" field in the mutation.
+func (m *SiteMessageReceiptMutation) OrganizationID() (r string, exists bool) {
+	v := m.organization_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrganizationID returns the old "organization_id" field's value of the SiteMessageReceipt entity.
+// If the SiteMessageReceipt object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SiteMessageReceiptMutation) OldOrganizationID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrganizationID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrganizationID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrganizationID: %w", err)
+	}
+	return oldValue.OrganizationID, nil
+}
+
+// ResetOrganizationID resets all changes to the "organization_id" field.
+func (m *SiteMessageReceiptMutation) ResetOrganizationID() {
+	m.organization_id = nil
+}
+
 // SetIsRead sets the "is_read" field.
 func (m *SiteMessageReceiptMutation) SetIsRead(b bool) {
 	m.is_read = &b
@@ -10242,7 +10333,7 @@ func (m *SiteMessageReceiptMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *SiteMessageReceiptMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.create_time != nil {
 		fields = append(fields, sitemessagereceipt.FieldCreateTime)
 	}
@@ -10254,6 +10345,9 @@ func (m *SiteMessageReceiptMutation) Fields() []string {
 	}
 	if m.user_id != nil {
 		fields = append(fields, sitemessagereceipt.FieldUserID)
+	}
+	if m.organization_id != nil {
+		fields = append(fields, sitemessagereceipt.FieldOrganizationID)
 	}
 	if m.is_read != nil {
 		fields = append(fields, sitemessagereceipt.FieldIsRead)
@@ -10277,6 +10371,8 @@ func (m *SiteMessageReceiptMutation) Field(name string) (ent.Value, bool) {
 		return m.MessageID()
 	case sitemessagereceipt.FieldUserID:
 		return m.UserID()
+	case sitemessagereceipt.FieldOrganizationID:
+		return m.OrganizationID()
 	case sitemessagereceipt.FieldIsRead:
 		return m.IsRead()
 	case sitemessagereceipt.FieldReadTime:
@@ -10298,6 +10394,8 @@ func (m *SiteMessageReceiptMutation) OldField(ctx context.Context, name string) 
 		return m.OldMessageID(ctx)
 	case sitemessagereceipt.FieldUserID:
 		return m.OldUserID(ctx)
+	case sitemessagereceipt.FieldOrganizationID:
+		return m.OldOrganizationID(ctx)
 	case sitemessagereceipt.FieldIsRead:
 		return m.OldIsRead(ctx)
 	case sitemessagereceipt.FieldReadTime:
@@ -10338,6 +10436,13 @@ func (m *SiteMessageReceiptMutation) SetField(name string, value ent.Value) erro
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUserID(v)
+		return nil
+	case sitemessagereceipt.FieldOrganizationID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrganizationID(v)
 		return nil
 	case sitemessagereceipt.FieldIsRead:
 		v, ok := value.(bool)
@@ -10413,6 +10518,9 @@ func (m *SiteMessageReceiptMutation) ResetField(name string) error {
 		return nil
 	case sitemessagereceipt.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case sitemessagereceipt.FieldOrganizationID:
+		m.ResetOrganizationID()
 		return nil
 	case sitemessagereceipt.FieldIsRead:
 		m.ResetIsRead()

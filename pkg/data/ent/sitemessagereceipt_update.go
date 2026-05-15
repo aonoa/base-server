@@ -63,6 +63,20 @@ func (_u *SiteMessageReceiptUpdate) SetNillableUserID(v *string) *SiteMessageRec
 	return _u
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_u *SiteMessageReceiptUpdate) SetOrganizationID(v string) *SiteMessageReceiptUpdate {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *SiteMessageReceiptUpdate) SetNillableOrganizationID(v *string) *SiteMessageReceiptUpdate {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
+	return _u
+}
+
 // SetIsRead sets the "is_read" field.
 func (_u *SiteMessageReceiptUpdate) SetIsRead(v bool) *SiteMessageReceiptUpdate {
 	_u.mutation.SetIsRead(v)
@@ -132,6 +146,16 @@ func (_u *SiteMessageReceiptUpdate) defaults() {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *SiteMessageReceiptUpdate) check() error {
+	if v, ok := _u.mutation.OrganizationID(); ok {
+		if err := sitemessagereceipt.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessageReceipt.organization_id": %w`, err)}
+		}
+	}
+	return nil
+}
+
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
 func (_u *SiteMessageReceiptUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SiteMessageReceiptUpdate {
 	_u.modifiers = append(_u.modifiers, modifiers...)
@@ -139,6 +163,9 @@ func (_u *SiteMessageReceiptUpdate) Modify(modifiers ...func(u *sql.UpdateBuilde
 }
 
 func (_u *SiteMessageReceiptUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(sitemessagereceipt.Table, sitemessagereceipt.Columns, sqlgraph.NewFieldSpec(sitemessagereceipt.FieldID, field.TypeString))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -155,6 +182,9 @@ func (_u *SiteMessageReceiptUpdate) sqlSave(ctx context.Context) (_node int, err
 	}
 	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(sitemessagereceipt.FieldUserID, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessagereceipt.FieldOrganizationID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.IsRead(); ok {
 		_spec.SetField(sitemessagereceipt.FieldIsRead, field.TypeBool, value)
@@ -214,6 +244,20 @@ func (_u *SiteMessageReceiptUpdateOne) SetUserID(v string) *SiteMessageReceiptUp
 func (_u *SiteMessageReceiptUpdateOne) SetNillableUserID(v *string) *SiteMessageReceiptUpdateOne {
 	if v != nil {
 		_u.SetUserID(*v)
+	}
+	return _u
+}
+
+// SetOrganizationID sets the "organization_id" field.
+func (_u *SiteMessageReceiptUpdateOne) SetOrganizationID(v string) *SiteMessageReceiptUpdateOne {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *SiteMessageReceiptUpdateOne) SetNillableOrganizationID(v *string) *SiteMessageReceiptUpdateOne {
+	if v != nil {
+		_u.SetOrganizationID(*v)
 	}
 	return _u
 }
@@ -300,6 +344,16 @@ func (_u *SiteMessageReceiptUpdateOne) defaults() {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *SiteMessageReceiptUpdateOne) check() error {
+	if v, ok := _u.mutation.OrganizationID(); ok {
+		if err := sitemessagereceipt.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessageReceipt.organization_id": %w`, err)}
+		}
+	}
+	return nil
+}
+
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
 func (_u *SiteMessageReceiptUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *SiteMessageReceiptUpdateOne {
 	_u.modifiers = append(_u.modifiers, modifiers...)
@@ -307,6 +361,9 @@ func (_u *SiteMessageReceiptUpdateOne) Modify(modifiers ...func(u *sql.UpdateBui
 }
 
 func (_u *SiteMessageReceiptUpdateOne) sqlSave(ctx context.Context) (_node *SiteMessageReceipt, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(sitemessagereceipt.Table, sitemessagereceipt.Columns, sqlgraph.NewFieldSpec(sitemessagereceipt.FieldID, field.TypeString))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -340,6 +397,9 @@ func (_u *SiteMessageReceiptUpdateOne) sqlSave(ctx context.Context) (_node *Site
 	}
 	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(sitemessagereceipt.FieldUserID, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessagereceipt.FieldOrganizationID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.IsRead(); ok {
 		_spec.SetField(sitemessagereceipt.FieldIsRead, field.TypeBool, value)

@@ -61,10 +61,14 @@ func Action(ctx context.Context) string {
 
 func ForwardAuthorizationContext(ctx context.Context) context.Context {
 	authorization := strings.TrimSpace(AuthorizationFromContext(ctx))
-	if authorization == "" {
-		return ctx
+	organizationID := strings.TrimSpace(RequestHeader(ctx, HeaderOrganizationID))
+	if authorization != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, "authorization", authorization)
 	}
-	return metadata.AppendToOutgoingContext(ctx, "authorization", authorization)
+	if organizationID != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, HeaderOrganizationID, organizationID)
+	}
+	return ctx
 }
 
 func AuthorizationFromContext(ctx context.Context) string {

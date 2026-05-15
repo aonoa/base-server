@@ -89,6 +89,11 @@ func Category(v string) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldEQ(FieldCategory, v))
 }
 
+// OrganizationID applies equality check predicate on the "organization_id" field. It's identical to OrganizationIDEQ.
+func OrganizationID(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldEQ(FieldOrganizationID, v))
+}
+
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
 func Status(v string) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldEQ(FieldStatus, v))
@@ -402,6 +407,71 @@ func CategoryEqualFold(v string) predicate.SiteMessage {
 // CategoryContainsFold applies the ContainsFold predicate on the "category" field.
 func CategoryContainsFold(v string) predicate.SiteMessage {
 	return predicate.SiteMessage(sql.FieldContainsFold(FieldCategory, v))
+}
+
+// OrganizationIDEQ applies the EQ predicate on the "organization_id" field.
+func OrganizationIDEQ(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDNEQ applies the NEQ predicate on the "organization_id" field.
+func OrganizationIDNEQ(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldNEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDIn applies the In predicate on the "organization_id" field.
+func OrganizationIDIn(vs ...string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDNotIn applies the NotIn predicate on the "organization_id" field.
+func OrganizationIDNotIn(vs ...string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldNotIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDGT applies the GT predicate on the "organization_id" field.
+func OrganizationIDGT(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldGT(FieldOrganizationID, v))
+}
+
+// OrganizationIDGTE applies the GTE predicate on the "organization_id" field.
+func OrganizationIDGTE(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldGTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDLT applies the LT predicate on the "organization_id" field.
+func OrganizationIDLT(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldLT(FieldOrganizationID, v))
+}
+
+// OrganizationIDLTE applies the LTE predicate on the "organization_id" field.
+func OrganizationIDLTE(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldLTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDContains applies the Contains predicate on the "organization_id" field.
+func OrganizationIDContains(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldContains(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasPrefix applies the HasPrefix predicate on the "organization_id" field.
+func OrganizationIDHasPrefix(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldHasPrefix(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasSuffix applies the HasSuffix predicate on the "organization_id" field.
+func OrganizationIDHasSuffix(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldHasSuffix(FieldOrganizationID, v))
+}
+
+// OrganizationIDEqualFold applies the EqualFold predicate on the "organization_id" field.
+func OrganizationIDEqualFold(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldEqualFold(FieldOrganizationID, v))
+}
+
+// OrganizationIDContainsFold applies the ContainsFold predicate on the "organization_id" field.
+func OrganizationIDContainsFold(v string) predicate.SiteMessage {
+	return predicate.SiteMessage(sql.FieldContainsFold(FieldOrganizationID, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.

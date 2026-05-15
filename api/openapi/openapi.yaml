@@ -1709,6 +1709,10 @@ components:
                     type: array
                     items:
                         type: string
+                fullPathKey:
+                    type: boolean
+                menuVisibleWithForbidden:
+                    type: boolean
         api.admin.service.v1.MyOrganizationItem:
             type: object
             properties:
@@ -2086,6 +2090,8 @@ components:
                     type: string
                 publishedTime:
                     type: string
+                organizationId:
+                    type: string
         api.common.service.v1.CreateSiteMessageRequest:
             type: object
             properties:
@@ -2186,6 +2192,8 @@ components:
                     type: string
                 readTime:
                     type: string
+                organizationId:
+                    type: string
         api.common.service.v1.SiteMessageManageItem:
             type: object
             properties:
@@ -2214,6 +2222,8 @@ components:
                 publishedTime:
                     type: string
                 recalledTime:
+                    type: string
+                organizationId:
                     type: string
         api.common.service.v1.UploadResponse:
             type: object

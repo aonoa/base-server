@@ -17,6 +17,15 @@ auth:
   api_key: auth-service-secret
   whitelist:
     - /api.admin.service.v1.AdminService/CreateSysLog
+    - /api.admin.service.v1.AdminService/GetAuthRoleCatalog
+    - /api.admin.service.v1.AdminService/GetAuthApiCatalog
+    - /api.admin.service.v1.AdminService/GetAuthRole
+    - /api.admin.service.v1.AdminService/GetApiList
+    - /api.admin.service.v1.AdminService/ResolveRoleValues
+    - /api.admin.service.v1.AdminService/GetUserRoleBinding
+    - /api.admin.service.v1.AdminService/ListOrganizationMemberUserIds
+    - /api.admin.service.v1.AdminService/ListUserRoleBindings
+    - /api.admin.service.v1.AdminService/GetServiceRegistryList
 services:
   user:
     grpc_endpoint: user:9010

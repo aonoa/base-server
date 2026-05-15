@@ -102,6 +102,8 @@ service AdminService {
     };
   }
 
+  rpc ListOrganizationMemberUserIds(ListOrganizationMemberUserIdsRequest) returns (ListOrganizationMemberUserIdsReply);
+
   rpc ListUserRoleBindings(google.protobuf.Empty) returns (ListUserRoleBindingsReply) {
     option (google.api.http) = {
       get: "/admin-api/v1/user-role-bindings"
@@ -609,6 +611,16 @@ message GetUserRoleBindingRequest {
   string organization_id = 2;
 }
 
+message ListOrganizationMemberUserIdsRequest {
+  string organization_id = 1;
+  bool active_users_only = 2;
+}
+
+message ListOrganizationMemberUserIdsReply {
+  string organization_id = 1;
+  repeated string user_ids = 2;
+}
+
 message UserRoleBindingItem {
   string id = 1;
   string user_id = 2;
@@ -676,6 +688,8 @@ message Meta {
   optional bool openInNewWindow = 20;
   bool ignoreAccess = 21;
   repeated string authority = 22;
+  optional bool fullPathKey = 23;
+  optional bool menuVisibleWithForbidden = 24;
 }
 
 message SysMenuListItem {

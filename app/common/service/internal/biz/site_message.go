@@ -72,12 +72,12 @@ func (uc *CommonUsecase) currentUserID(ctx context.Context) (string, error) {
 	return userID, nil
 }
 
-func (uc *CommonUsecase) ensureManageAccess(ctx context.Context) (string, error) {
+func (uc *CommonUsecase) ensureManageAccess(ctx context.Context, organizationID string) (string, error) {
 	userID, err := uc.currentUserID(ctx)
 	if err != nil {
 		return "", err
 	}
-	values, err := uc.repo.GetUserRoleValues(ctx, userID)
+	values, err := uc.repo.GetUserRoleValues(ctx, userID, organizationID)
 	if err != nil {
 		return "", err
 	}
@@ -101,7 +101,8 @@ func (uc *CommonUsecase) GetMySiteMessageList(ctx context.Context, req *v1.GetMy
 	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
 		return nil, err
 	}
-	items, total, err := uc.repo.GetMySiteMessageList(ctx, userID, req)
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	items, total, err := uc.repo.GetMySiteMessageList(ctx, userID, organizationID, req)
 	if err != nil {
 		return nil, err
 	}
@@ -114,15 +115,16 @@ func (uc *CommonUsecase) GetMySiteMessageList(ctx context.Context, req *v1.GetMy
 			continue
 		}
 		reply.Items = append(reply.Items, &v1.SiteMessageItem{
-			Id:          item.Message.ID,
-			Title:       item.Message.Title,
-			Content:     item.Message.Content,
-			IsRead:      item.Receipt.IsRead,
-			Link:        item.Message.Link,
-			SenderId:    item.Message.SenderID,
-			SenderName:  item.Message.SenderName,
-			CreatedTime: siteMessageInboxCreatedTime(*item),
-			ReadTime:    formatSiteMessageTime(&item.Receipt.ReadTime),
+			Id:             item.Message.ID,
+			Title:          item.Message.Title,
+			Content:        item.Message.Content,
+			IsRead:         item.Receipt.IsRead,
+			Link:           item.Message.Link,
+			SenderId:       item.Message.SenderID,
+			SenderName:     item.Message.SenderName,
+			CreatedTime:    siteMessageInboxCreatedTime(*item),
+			ReadTime:       formatSiteMessageTime(&item.Receipt.ReadTime),
+			OrganizationId: item.Message.OrganizationID,
 		})
 	}
 	return reply, nil
@@ -136,7 +138,8 @@ func (uc *CommonUsecase) GetMySiteMessageUnreadCount(ctx context.Context) (*v1.G
 	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
 		return nil, err
 	}
-	count, err := uc.repo.GetMySiteMessageUnreadCount(ctx, userID)
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	count, err := uc.repo.GetMySiteMessageUnreadCount(ctx, userID, organizationID)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +154,7 @@ func (uc *CommonUsecase) MarkSiteMessageRead(ctx context.Context, req *v1.MarkSi
 	if strings.TrimSpace(req.GetMessageId()) == "" {
 		return kratoserrors.BadRequest("BAD_REQUEST", "message_id is required")
 	}
-	return uc.repo.MarkSiteMessageRead(ctx, userID, req.MessageId)
+	return uc.repo.MarkSiteMessageRead(ctx, userID, uc.repo.CurrentOrganizationID(ctx), req.MessageId)
 }
 
 func (uc *CommonUsecase) MarkSiteMessageUnread(ctx context.Context, req *v1.MarkSiteMessageReadRequest) error {
@@ -162,7 +165,7 @@ func (uc *CommonUsecase) MarkSiteMessageUnread(ctx context.Context, req *v1.Mark
 	if strings.TrimSpace(req.GetMessageId()) == "" {
 		return kratoserrors.BadRequest("BAD_REQUEST", "message_id is required")
 	}
-	return uc.repo.MarkSiteMessageUnread(ctx, userID, req.MessageId)
+	return uc.repo.MarkSiteMessageUnread(ctx, userID, uc.repo.CurrentOrganizationID(ctx), req.MessageId)
 }
 
 func (uc *CommonUsecase) MarkAllSiteMessagesRead(ctx context.Context) (*v1.MarkAllSiteMessagesReadReply, error) {
@@ -170,7 +173,7 @@ func (uc *CommonUsecase) MarkAllSiteMessagesRead(ctx context.Context) (*v1.MarkA
 	if err != nil {
 		return nil, err
 	}
-	updatedCount, err := uc.repo.MarkAllSiteMessagesRead(ctx, userID)
+	updatedCount, err := uc.repo.MarkAllSiteMessagesRead(ctx, userID, uc.repo.CurrentOrganizationID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -178,14 +181,15 @@ func (uc *CommonUsecase) MarkAllSiteMessagesRead(ctx context.Context) (*v1.MarkA
 }
 
 func (uc *CommonUsecase) GetSiteMessageManageList(ctx context.Context, req *v1.GetSiteMessageManageListParams) (*v1.GetSiteMessageManageListReply, error) {
-	if _, err := uc.ensureManageAccess(ctx); err != nil {
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	if _, err := uc.ensureManageAccess(ctx, organizationID); err != nil {
 		return nil, err
 	}
 	req.Status = normalizeSiteMessageStatus(req.Status)
 	if err := uc.promoteDueScheduledSiteMessages(ctx); err != nil {
 		return nil, err
 	}
-	items, total, err := uc.repo.GetSiteMessageManageList(ctx, req)
+	items, total, err := uc.repo.GetSiteMessageManageList(ctx, organizationID, req)
 	if err != nil {
 		return nil, err
 	}
@@ -211,13 +215,15 @@ func (uc *CommonUsecase) GetSiteMessageManageList(ctx context.Context, req *v1.G
 			ScheduledPublishTime: formatSiteMessageTime(item.ScheduledPublishTime),
 			PublishedTime:        formatSiteMessageTime(item.PublishedTime),
 			RecalledTime:         formatSiteMessageTime(item.RecalledTime),
+			OrganizationId:       item.OrganizationID,
 		})
 	}
 	return reply, nil
 }
 
 func (uc *CommonUsecase) CreateSiteMessage(ctx context.Context, req *v1.CreateSiteMessageRequest) (*v1.CreateSiteMessageReply, error) {
-	userID, err := uc.ensureManageAccess(ctx)
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	userID, err := uc.ensureManageAccess(ctx, organizationID)
 	if err != nil {
 		return nil, err
 	}
@@ -255,7 +261,7 @@ func (uc *CommonUsecase) CreateSiteMessage(ctx context.Context, req *v1.CreateSi
 	if err != nil {
 		return nil, err
 	}
-	message, err := uc.repo.CreateSiteMessage(ctx, userID, senderName, req)
+	message, err := uc.repo.CreateSiteMessage(ctx, userID, senderName, organizationID, req)
 	if err != nil {
 		return nil, err
 	}
@@ -265,25 +271,28 @@ func (uc *CommonUsecase) CreateSiteMessage(ctx context.Context, req *v1.CreateSi
 		Status:               message.Status,
 		ScheduledPublishTime: formatSiteMessageTime(message.ScheduledPublishTime),
 		PublishedTime:        formatSiteMessageTime(message.PublishedTime),
+		OrganizationId:       message.OrganizationID,
 	}, nil
 }
 
 func (uc *CommonUsecase) RecallSiteMessage(ctx context.Context, req *v1.RecallSiteMessageRequest) error {
-	if _, err := uc.ensureManageAccess(ctx); err != nil {
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	if _, err := uc.ensureManageAccess(ctx, organizationID); err != nil {
 		return err
 	}
 	if strings.TrimSpace(req.GetId()) == "" {
 		return kratoserrors.BadRequest("BAD_REQUEST", "id is required")
 	}
-	return uc.repo.RecallSiteMessage(ctx, req.Id)
+	return uc.repo.RecallSiteMessage(ctx, organizationID, req.Id)
 }
 
 func (uc *CommonUsecase) DeletePendingSiteMessage(ctx context.Context, req *v1.DeletePendingSiteMessageRequest) error {
-	if _, err := uc.ensureManageAccess(ctx); err != nil {
+	organizationID := uc.repo.CurrentOrganizationID(ctx)
+	if _, err := uc.ensureManageAccess(ctx, organizationID); err != nil {
 		return err
 	}
 	if strings.TrimSpace(req.GetId()) == "" {
 		return kratoserrors.BadRequest("BAD_REQUEST", "id is required")
 	}
-	return uc.repo.DeletePendingSiteMessage(ctx, req.Id)
+	return uc.repo.DeletePendingSiteMessage(ctx, organizationID, req.Id)
 }

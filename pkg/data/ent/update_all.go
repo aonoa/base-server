@@ -194,6 +194,7 @@ func (u *SiteMessageUpdateOne) UpdateAll(sitemessage *SiteMessage) *SiteMessageU
 	update = update.SetTitle(sitemessage.Title)
 	update = update.SetContent(sitemessage.Content)
 	update = update.SetCategory(sitemessage.Category)
+	update = update.SetOrganizationID(sitemessage.OrganizationID)
 	update = update.SetStatus(sitemessage.Status)
 	update = update.SetReceiverCount(sitemessage.ReceiverCount)
 	update = update.SetLink(sitemessage.Link)
@@ -227,6 +228,7 @@ func (u *SiteMessageReceiptUpdateOne) UpdateAll(sitemessagereceipt *SiteMessageR
 	update := u
 	update = update.SetMessageID(sitemessagereceipt.MessageID)
 	update = update.SetUserID(sitemessagereceipt.UserID)
+	update = update.SetOrganizationID(sitemessagereceipt.OrganizationID)
 	update = update.SetIsRead(sitemessagereceipt.IsRead)
 	update = update.SetReadTime(sitemessagereceipt.ReadTime)
 	return update

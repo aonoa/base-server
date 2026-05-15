@@ -47,6 +47,10 @@ func (s *AdminService) GetUserRoleBinding(ctx context.Context, req *v1.GetUserRo
 	return s.uc.GetUserRoleBinding(ctx, req)
 }
 
+func (s *AdminService) ListOrganizationMemberUserIds(ctx context.Context, req *v1.ListOrganizationMemberUserIdsRequest) (*v1.ListOrganizationMemberUserIdsReply, error) {
+	return s.uc.ListOrganizationMemberUserIds(ctx, req)
+}
+
 func (s *AdminService) ListUserRoleBindings(ctx context.Context, req *emptypb.Empty) (*v1.ListUserRoleBindingsReply, error) {
 	return s.uc.ListUserRoleBindings(ctx)
 }

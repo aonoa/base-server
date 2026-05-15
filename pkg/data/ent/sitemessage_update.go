@@ -77,6 +77,20 @@ func (_u *SiteMessageUpdate) SetNillableCategory(v *string) *SiteMessageUpdate {
 	return _u
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_u *SiteMessageUpdate) SetOrganizationID(v string) *SiteMessageUpdate {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *SiteMessageUpdate) SetNillableOrganizationID(v *string) *SiteMessageUpdate {
+	if v != nil {
+		_u.SetOrganizationID(*v)
+	}
+	return _u
+}
+
 // SetStatus sets the "status" field.
 func (_u *SiteMessageUpdate) SetStatus(v string) *SiteMessageUpdate {
 	_u.mutation.SetStatus(v)
@@ -267,6 +281,11 @@ func (_u *SiteMessageUpdate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "SiteMessage.content": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.OrganizationID(); ok {
+		if err := sitemessage.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessage.organization_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -299,6 +318,9 @@ func (_u *SiteMessageUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	}
 	if value, ok := _u.mutation.Category(); ok {
 		_spec.SetField(sitemessage.FieldCategory, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessage.FieldOrganizationID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)
@@ -402,6 +424,20 @@ func (_u *SiteMessageUpdateOne) SetCategory(v string) *SiteMessageUpdateOne {
 func (_u *SiteMessageUpdateOne) SetNillableCategory(v *string) *SiteMessageUpdateOne {
 	if v != nil {
 		_u.SetCategory(*v)
+	}
+	return _u
+}
+
+// SetOrganizationID sets the "organization_id" field.
+func (_u *SiteMessageUpdateOne) SetOrganizationID(v string) *SiteMessageUpdateOne {
+	_u.mutation.SetOrganizationID(v)
+	return _u
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_u *SiteMessageUpdateOne) SetNillableOrganizationID(v *string) *SiteMessageUpdateOne {
+	if v != nil {
+		_u.SetOrganizationID(*v)
 	}
 	return _u
 }
@@ -609,6 +645,11 @@ func (_u *SiteMessageUpdateOne) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "SiteMessage.content": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.OrganizationID(); ok {
+		if err := sitemessage.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessage.organization_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -658,6 +699,9 @@ func (_u *SiteMessageUpdateOne) sqlSave(ctx context.Context) (_node *SiteMessage
 	}
 	if value, ok := _u.mutation.Category(); ok {
 		_spec.SetField(sitemessage.FieldCategory, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessage.FieldOrganizationID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)

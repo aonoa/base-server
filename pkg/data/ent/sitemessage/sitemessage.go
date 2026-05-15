@@ -23,6 +23,8 @@ const (
 	FieldContent = "content"
 	// FieldCategory holds the string denoting the category field in the database.
 	FieldCategory = "category"
+	// FieldOrganizationID holds the string denoting the organization_id field in the database.
+	FieldOrganizationID = "organization_id"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldReceiverCount holds the string denoting the receiver_count field in the database.
@@ -51,6 +53,7 @@ var Columns = []string{
 	FieldTitle,
 	FieldContent,
 	FieldCategory,
+	FieldOrganizationID,
 	FieldStatus,
 	FieldReceiverCount,
 	FieldLink,
@@ -84,6 +87,10 @@ var (
 	ContentValidator func(string) error
 	// DefaultCategory holds the default value on creation for the "category" field.
 	DefaultCategory string
+	// DefaultOrganizationID holds the default value on creation for the "organization_id" field.
+	DefaultOrganizationID string
+	// OrganizationIDValidator is a validator for the "organization_id" field. It is called by the builders before save.
+	OrganizationIDValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus string
 	// DefaultReceiverCount holds the default value on creation for the "receiver_count" field.
@@ -129,6 +136,11 @@ func ByContent(opts ...sql.OrderTermOption) OrderOption {
 // ByCategory orders the results by the category field.
 func ByCategory(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCategory, opts...).ToFunc()
+}
+
+// ByOrganizationID orders the results by the organization_id field.
+func ByOrganizationID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizationID, opts...).ToFunc()
 }
 
 // ByStatus orders the results by the status field.

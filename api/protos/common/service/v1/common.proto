@@ -97,6 +97,7 @@ message SiteMessageItem {
   string sender_name = 7;
   string created_time = 8;
   string read_time = 9;
+  string organization_id = 10;
 }
 
 message GetMySiteMessageListReply {
@@ -136,6 +137,7 @@ message SiteMessageManageItem {
   string scheduled_publish_time = 11;
   string published_time = 12;
   string recalled_time = 13;
+  string organization_id = 14;
 }
 
 message GetSiteMessageManageListReply {
@@ -159,6 +161,7 @@ message CreateSiteMessageReply {
   string status = 3;
   string scheduled_publish_time = 4;
   string published_time = 5;
+  string organization_id = 6;
 }
 
 message RecallSiteMessageRequest {

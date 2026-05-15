@@ -250,6 +250,7 @@ var (
 		{Name: "title", Type: field.TypeString, Comment: "消息标题"},
 		{Name: "content", Type: field.TypeString, Comment: "消息正文"},
 		{Name: "category", Type: field.TypeString, Comment: "消息分类", Default: "system"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID", Default: "9f740c1b-0210-4e3a-858d-d128edea924d"},
 		{Name: "status", Type: field.TypeString, Comment: "消息状态 draft|scheduled|published|recalled", Default: "published"},
 		{Name: "receiver_count", Type: field.TypeInt64, Comment: "接收人数", Default: 0},
 		{Name: "link", Type: field.TypeString, Comment: "消息跳转链接", Default: ""},
@@ -272,6 +273,16 @@ var (
 				Columns: []*schema.Column{SysSiteMessageColumns[1]},
 			},
 			{
+				Name:    "sitemessage_organization_id_status",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[6], SysSiteMessageColumns[7]},
+			},
+			{
+				Name:    "sitemessage_organization_id_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysSiteMessageColumns[6], SysSiteMessageColumns[2]},
+			},
+			{
 				Name:    "sitemessage_category",
 				Unique:  false,
 				Columns: []*schema.Column{SysSiteMessageColumns[5]},
@@ -279,12 +290,12 @@ var (
 			{
 				Name:    "sitemessage_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysSiteMessageColumns[6]},
+				Columns: []*schema.Column{SysSiteMessageColumns[7]},
 			},
 			{
 				Name:    "sitemessage_scheduled_publish_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysSiteMessageColumns[11]},
+				Columns: []*schema.Column{SysSiteMessageColumns[12]},
 			},
 		},
 	}
@@ -295,6 +306,7 @@ var (
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "message_id", Type: field.TypeString, Comment: "站内信ID"},
 		{Name: "user_id", Type: field.TypeString, Comment: "收件用户ID"},
+		{Name: "organization_id", Type: field.TypeString, Comment: "组织ID", Default: "9f740c1b-0210-4e3a-858d-d128edea924d"},
 		{Name: "is_read", Type: field.TypeBool, Comment: "是否已读", Default: false},
 		{Name: "read_time", Type: field.TypeTime, Comment: "已读时间"},
 	}
@@ -306,9 +318,9 @@ var (
 		PrimaryKey: []*schema.Column{SysSiteMessageReceiptColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "sitemessagereceipt_user_id_is_read",
+				Name:    "sitemessagereceipt_organization_id_user_id_is_read",
 				Unique:  false,
-				Columns: []*schema.Column{SysSiteMessageReceiptColumns[4], SysSiteMessageReceiptColumns[5]},
+				Columns: []*schema.Column{SysSiteMessageReceiptColumns[5], SysSiteMessageReceiptColumns[4], SysSiteMessageReceiptColumns[6]},
 			},
 			{
 				Name:    "sitemessagereceipt_message_id_user_id",

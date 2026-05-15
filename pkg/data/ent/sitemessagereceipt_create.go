@@ -60,6 +60,20 @@ func (_c *SiteMessageReceiptCreate) SetUserID(v string) *SiteMessageReceiptCreat
 	return _c
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_c *SiteMessageReceiptCreate) SetOrganizationID(v string) *SiteMessageReceiptCreate {
+	_c.mutation.SetOrganizationID(v)
+	return _c
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_c *SiteMessageReceiptCreate) SetNillableOrganizationID(v *string) *SiteMessageReceiptCreate {
+	if v != nil {
+		_c.SetOrganizationID(*v)
+	}
+	return _c
+}
+
 // SetIsRead sets the "is_read" field.
 func (_c *SiteMessageReceiptCreate) SetIsRead(v bool) *SiteMessageReceiptCreate {
 	_c.mutation.SetIsRead(v)
@@ -145,6 +159,10 @@ func (_c *SiteMessageReceiptCreate) defaults() {
 		v := sitemessagereceipt.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		v := sitemessagereceipt.DefaultOrganizationID
+		_c.mutation.SetOrganizationID(v)
+	}
 	if _, ok := _c.mutation.IsRead(); !ok {
 		v := sitemessagereceipt.DefaultIsRead
 		_c.mutation.SetIsRead(v)
@@ -172,6 +190,14 @@ func (_c *SiteMessageReceiptCreate) check() error {
 	}
 	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "SiteMessageReceipt.user_id"`)}
+	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		return &ValidationError{Name: "organization_id", err: errors.New(`ent: missing required field "SiteMessageReceipt.organization_id"`)}
+	}
+	if v, ok := _c.mutation.OrganizationID(); ok {
+		if err := sitemessagereceipt.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessageReceipt.organization_id": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.IsRead(); !ok {
 		return &ValidationError{Name: "is_read", err: errors.New(`ent: missing required field "SiteMessageReceipt.is_read"`)}
@@ -229,6 +255,10 @@ func (_c *SiteMessageReceiptCreate) createSpec() (*SiteMessageReceipt, *sqlgraph
 	if value, ok := _c.mutation.UserID(); ok {
 		_spec.SetField(sitemessagereceipt.FieldUserID, field.TypeString, value)
 		_node.UserID = value
+	}
+	if value, ok := _c.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessagereceipt.FieldOrganizationID, field.TypeString, value)
+		_node.OrganizationID = value
 	}
 	if value, ok := _c.mutation.IsRead(); ok {
 		_spec.SetField(sitemessagereceipt.FieldIsRead, field.TypeBool, value)

@@ -26,6 +26,8 @@ type SiteMessageReceipt struct {
 	MessageID string `json:"message_id,omitempty"`
 	// 收件用户ID
 	UserID string `json:"user_id,omitempty"`
+	// 组织ID
+	OrganizationID string `json:"organization_id,omitempty"`
 	// 是否已读
 	IsRead bool `json:"is_read,omitempty"`
 	// 已读时间
@@ -40,7 +42,7 @@ func (*SiteMessageReceipt) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case sitemessagereceipt.FieldIsRead:
 			values[i] = new(sql.NullBool)
-		case sitemessagereceipt.FieldID, sitemessagereceipt.FieldMessageID, sitemessagereceipt.FieldUserID:
+		case sitemessagereceipt.FieldID, sitemessagereceipt.FieldMessageID, sitemessagereceipt.FieldUserID, sitemessagereceipt.FieldOrganizationID:
 			values[i] = new(sql.NullString)
 		case sitemessagereceipt.FieldCreateTime, sitemessagereceipt.FieldUpdateTime, sitemessagereceipt.FieldReadTime:
 			values[i] = new(sql.NullTime)
@@ -88,6 +90,12 @@ func (_m *SiteMessageReceipt) assignValues(columns []string, values []any) error
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
 				_m.UserID = value.String
+			}
+		case sitemessagereceipt.FieldOrganizationID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field organization_id", values[i])
+			} else if value.Valid {
+				_m.OrganizationID = value.String
 			}
 		case sitemessagereceipt.FieldIsRead:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -148,6 +156,9 @@ func (_m *SiteMessageReceipt) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(_m.UserID)
+	builder.WriteString(", ")
+	builder.WriteString("organization_id=")
+	builder.WriteString(_m.OrganizationID)
 	builder.WriteString(", ")
 	builder.WriteString("is_read=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsRead))

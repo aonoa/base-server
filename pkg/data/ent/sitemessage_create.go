@@ -74,6 +74,20 @@ func (_c *SiteMessageCreate) SetNillableCategory(v *string) *SiteMessageCreate {
 	return _c
 }
 
+// SetOrganizationID sets the "organization_id" field.
+func (_c *SiteMessageCreate) SetOrganizationID(v string) *SiteMessageCreate {
+	_c.mutation.SetOrganizationID(v)
+	return _c
+}
+
+// SetNillableOrganizationID sets the "organization_id" field if the given value is not nil.
+func (_c *SiteMessageCreate) SetNillableOrganizationID(v *string) *SiteMessageCreate {
+	if v != nil {
+		_c.SetOrganizationID(*v)
+	}
+	return _c
+}
+
 // SetStatus sets the "status" field.
 func (_c *SiteMessageCreate) SetStatus(v string) *SiteMessageCreate {
 	_c.mutation.SetStatus(v)
@@ -247,6 +261,10 @@ func (_c *SiteMessageCreate) defaults() {
 		v := sitemessage.DefaultCategory
 		_c.mutation.SetCategory(v)
 	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		v := sitemessage.DefaultOrganizationID
+		_c.mutation.SetOrganizationID(v)
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := sitemessage.DefaultStatus
 		_c.mutation.SetStatus(v)
@@ -299,6 +317,14 @@ func (_c *SiteMessageCreate) check() error {
 	}
 	if _, ok := _c.mutation.Category(); !ok {
 		return &ValidationError{Name: "category", err: errors.New(`ent: missing required field "SiteMessage.category"`)}
+	}
+	if _, ok := _c.mutation.OrganizationID(); !ok {
+		return &ValidationError{Name: "organization_id", err: errors.New(`ent: missing required field "SiteMessage.organization_id"`)}
+	}
+	if v, ok := _c.mutation.OrganizationID(); ok {
+		if err := sitemessage.OrganizationIDValidator(v); err != nil {
+			return &ValidationError{Name: "organization_id", err: fmt.Errorf(`ent: validator failed for field "SiteMessage.organization_id": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "SiteMessage.status"`)}
@@ -369,6 +395,10 @@ func (_c *SiteMessageCreate) createSpec() (*SiteMessage, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Category(); ok {
 		_spec.SetField(sitemessage.FieldCategory, field.TypeString, value)
 		_node.Category = value
+	}
+	if value, ok := _c.mutation.OrganizationID(); ok {
+		_spec.SetField(sitemessage.FieldOrganizationID, field.TypeString, value)
+		_node.OrganizationID = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(sitemessage.FieldStatus, field.TypeString, value)

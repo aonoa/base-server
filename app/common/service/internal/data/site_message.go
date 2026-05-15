@@ -19,8 +19,7 @@ import (
 )
 
 const (
-	activeUserStatus            = 1
-	siteMessageReceiverPageSize = 500
+	defaultOrganizationID       = "9f740c1b-0210-4e3a-858d-d128edea924d"
 	siteMessageReceiptBatchSize = 500
 )
 
@@ -39,9 +38,12 @@ func (r *commonRepo) GetUserDisplayName(ctx context.Context, userID string) (str
 	return userID, nil
 }
 
-func (r *commonRepo) GetUserRoleValues(ctx context.Context, userID string) ([]string, error) {
+func (r *commonRepo) GetUserRoleValues(ctx context.Context, userID string, organizationID string) ([]string, error) {
 	ctx = authx.ForwardAuthorizationContext(ctx)
-	bindingReply, err := r.data.adminClient.GetUserRoleBinding(ctx, &adminv1.GetUserRoleBindingRequest{UserId: userID})
+	bindingReply, err := r.data.adminClient.GetUserRoleBinding(ctx, &adminv1.GetUserRoleBindingRequest{
+		UserId:         userID,
+		OrganizationId: strings.TrimSpace(organizationID),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -79,59 +81,64 @@ func (r *commonRepo) GetUserRoleValues(ctx context.Context, userID string) ([]st
 	return values, nil
 }
 
-func (r *commonRepo) countActiveSiteMessageReceivers(ctx context.Context) (int64, error) {
-	ctx = authx.ForwardAuthorizationContext(ctx)
-	reply, err := r.data.userClient.GetUserList(ctx, &userv1.GetUserParams{
-		CurrentPage: 1,
-		PageSize:    1,
-		Status:      activeUserStatus,
-	})
-	if err != nil {
-		return 0, err
+func (r *commonRepo) CurrentOrganizationID(ctx context.Context) string {
+	organizationID := strings.TrimSpace(authx.RequestHeader(ctx, authx.HeaderOrganizationID))
+	if organizationID == "" {
+		return defaultOrganizationID
 	}
-	return reply.GetTotal(), nil
+	return organizationID
 }
 
-func (r *commonRepo) resolveSiteMessageReceivers(ctx context.Context) ([]string, error) {
+func (r *commonRepo) resolveSiteMessageReceivers(ctx context.Context, organizationID string) ([]string, error) {
 	ctx = authx.ForwardAuthorizationContext(ctx)
-	receiverIDs := make([]string, 0)
-	seen := make(map[string]struct{})
-	for currentPage := int64(1); ; currentPage++ {
-		reply, err := r.data.userClient.GetUserList(ctx, &userv1.GetUserParams{
-			CurrentPage: currentPage,
-			PageSize:    siteMessageReceiverPageSize,
-			Status:      activeUserStatus,
-		})
-		if err != nil {
-			return nil, err
-		}
-		items := reply.GetItems()
-		for _, item := range items {
-			userID := strings.TrimSpace(item.GetId())
-			if userID == "" {
-				continue
-			}
-			if _, ok := seen[userID]; ok {
-				continue
-			}
-			seen[userID] = struct{}{}
-			receiverIDs = append(receiverIDs, userID)
-		}
-		if len(items) == 0 || currentPage*siteMessageReceiverPageSize >= reply.GetTotal() {
-			break
-		}
+	reply, err := r.data.adminClient.ListOrganizationMemberUserIds(ctx, &adminv1.ListOrganizationMemberUserIdsRequest{
+		OrganizationId:  strings.TrimSpace(organizationID),
+		ActiveUsersOnly: true,
+	})
+	if err != nil {
+		return nil, err
 	}
+	receiverIDs := normalizeSiteMessageReceiverIDs(reply.GetUserIds())
 	if len(receiverIDs) == 0 {
 		return nil, kratoserrors.BadRequest("BAD_REQUEST", "no active receiver found")
 	}
 	return receiverIDs, nil
 }
 
+func (r *commonRepo) countActiveSiteMessageReceivers(ctx context.Context, organizationID string) (int64, error) {
+	ctx = authx.ForwardAuthorizationContext(ctx)
+	reply, err := r.data.adminClient.ListOrganizationMemberUserIds(ctx, &adminv1.ListOrganizationMemberUserIdsRequest{
+		OrganizationId:  strings.TrimSpace(organizationID),
+		ActiveUsersOnly: true,
+	})
+	if err != nil {
+		return 0, err
+	}
+	return int64(len(normalizeSiteMessageReceiverIDs(reply.GetUserIds()))), nil
+}
+
+func normalizeSiteMessageReceiverIDs(userIDs []string) []string {
+	receiverIDs := make([]string, 0, len(userIDs))
+	seen := make(map[string]struct{}, len(userIDs))
+	for _, userID := range userIDs {
+		userID = strings.TrimSpace(userID)
+		if userID == "" {
+			continue
+		}
+		if _, ok := seen[userID]; ok {
+			continue
+		}
+		seen[userID] = struct{}{}
+		receiverIDs = append(receiverIDs, userID)
+	}
+	return receiverIDs
+}
+
 func parseSiteMessageSchedule(value string) (time.Time, error) {
 	return time.ParseInLocation(time.DateTime, value, time.Local)
 }
 
-func (r *commonRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, messageID string, receiverIDs []string) error {
+func (r *commonRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, messageID string, organizationID string, receiverIDs []string) error {
 	if len(receiverIDs) == 0 {
 		return nil
 	}
@@ -144,6 +151,7 @@ func (r *commonRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, 
 		for _, receiverID := range receiverIDs[start:end] {
 			creates = append(creates, tx.SiteMessageReceipt.Create().
 				SetMessageID(messageID).
+				SetOrganizationID(organizationID).
 				SetUserID(receiverID))
 		}
 		if err := tx.SiteMessageReceipt.CreateBulk(creates...).Exec(ctx); err != nil {
@@ -153,8 +161,12 @@ func (r *commonRepo) createSiteMessageReceipts(ctx context.Context, tx *ent.Tx, 
 	return nil
 }
 
-func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName string, req *v1.CreateSiteMessageRequest) (*ent.SiteMessage, error) {
-	receiverCount, err := r.countActiveSiteMessageReceivers(ctx)
+func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName string, organizationID string, req *v1.CreateSiteMessageRequest) (*ent.SiteMessage, error) {
+	organizationID = strings.TrimSpace(organizationID)
+	if organizationID == "" {
+		organizationID = defaultOrganizationID
+	}
+	receiverCount, err := r.countActiveSiteMessageReceivers(ctx, organizationID)
 	if err != nil {
 		return nil, err
 	}
@@ -186,6 +198,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 			SetContent(req.GetContent()).
 			SetCategory(req.GetCategory()).
 			SetLink(req.GetLink()).
+			SetOrganizationID(organizationID).
 			SetSenderID(senderID).
 			SetSenderName(senderName)
 		switch req.GetAction() {
@@ -199,7 +212,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 				SetReceiverCount(receiverCount).
 				SetScheduledPublishTime(scheduledPublishTime)
 		default:
-			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx)
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, organizationID)
 			if err != nil {
 				return nil, err
 			}
@@ -211,7 +224,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 			if err != nil {
 				return nil, err
 			}
-			if err := r.createSiteMessageReceipts(ctx, tx, message.ID, actualReceiverIDs); err != nil {
+			if err := r.createSiteMessageReceipts(ctx, tx, message.ID, organizationID, actualReceiverIDs); err != nil {
 				return nil, err
 			}
 		}
@@ -222,7 +235,12 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 			}
 		}
 	default:
-		existing, err := tx.SiteMessage.Get(ctx, req.GetId())
+		existing, err := tx.SiteMessage.Query().
+			Where(
+				sitemessage.IDEQ(req.GetId()),
+				sitemessage.OrganizationIDEQ(organizationID),
+			).
+			Only(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -234,6 +252,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 			SetContent(req.GetContent()).
 			SetCategory(req.GetCategory()).
 			SetLink(req.GetLink()).
+			SetOrganizationID(organizationID).
 			SetSenderID(senderID).
 			SetSenderName(senderName)
 		switch req.GetAction() {
@@ -252,7 +271,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 				SetReceiverCount(receiverCount).
 				SetScheduledPublishTime(scheduledPublishTime)
 		default:
-			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx)
+			actualReceiverIDs, err := r.resolveSiteMessageReceivers(ctx, organizationID)
 			if err != nil {
 				return nil, err
 			}
@@ -266,7 +285,7 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 			if err != nil {
 				return nil, err
 			}
-			if err := r.createSiteMessageReceipts(ctx, tx, message.ID, actualReceiverIDs); err != nil {
+			if err := r.createSiteMessageReceipts(ctx, tx, message.ID, organizationID, actualReceiverIDs); err != nil {
 				return nil, err
 			}
 		}
@@ -285,9 +304,10 @@ func (r *commonRepo) CreateSiteMessage(ctx context.Context, senderID, senderName
 	return message, nil
 }
 
-func getMySiteMessageListQuery(userID string, params *v1.GetMySiteMessageListParams, isPage bool) func(s *sqlx.Selector) {
+func getMySiteMessageListQuery(userID string, organizationID string, params *v1.GetMySiteMessageListParams, isPage bool) func(s *sqlx.Selector) {
 	return func(s *sqlx.Selector) {
 		s.Where(sqlx.EQ(sitemessagereceipt.FieldUserID, userID))
+		s.Where(sqlx.EQ(sitemessagereceipt.FieldOrganizationID, organizationID))
 		switch params.GetReadStatus() {
 		case 1:
 			s.Where(sqlx.EQ(sitemessagereceipt.FieldIsRead, true))
@@ -306,12 +326,12 @@ func getMySiteMessageListQuery(userID string, params *v1.GetMySiteMessageListPar
 	}
 }
 
-func (r *commonRepo) GetMySiteMessageList(ctx context.Context, userID string, req *v1.GetMySiteMessageListParams) ([]*biz.SiteMessageEnvelope, int64, error) {
-	receipts, err := r.data.db.SiteMessageReceipt.Query().Modify(getMySiteMessageListQuery(userID, req, true)).All(ctx)
+func (r *commonRepo) GetMySiteMessageList(ctx context.Context, userID string, organizationID string, req *v1.GetMySiteMessageListParams) ([]*biz.SiteMessageEnvelope, int64, error) {
+	receipts, err := r.data.db.SiteMessageReceipt.Query().Modify(getMySiteMessageListQuery(userID, organizationID, req, true)).All(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
-	count, err := r.data.db.SiteMessageReceipt.Query().Modify(getMySiteMessageListQuery(userID, req, false)).Count(ctx)
+	count, err := r.data.db.SiteMessageReceipt.Query().Modify(getMySiteMessageListQuery(userID, organizationID, req, false)).Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -344,20 +364,22 @@ func (r *commonRepo) GetMySiteMessageList(ctx context.Context, userID string, re
 	return items, int64(count), nil
 }
 
-func (r *commonRepo) GetMySiteMessageUnreadCount(ctx context.Context, userID string) (int64, error) {
+func (r *commonRepo) GetMySiteMessageUnreadCount(ctx context.Context, userID string, organizationID string) (int64, error) {
 	count, err := r.data.db.SiteMessageReceipt.Query().
 		Where(
 			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
 			sitemessagereceipt.IsReadEQ(false),
 		).
 		Count(ctx)
 	return int64(count), err
 }
 
-func (r *commonRepo) MarkSiteMessageRead(ctx context.Context, userID, messageID string) error {
+func (r *commonRepo) MarkSiteMessageRead(ctx context.Context, userID, organizationID, messageID string) error {
 	_, err := r.data.db.SiteMessageReceipt.Update().
 		Where(
 			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
 			sitemessagereceipt.MessageIDEQ(messageID),
 		).
 		SetIsRead(true).
@@ -366,10 +388,11 @@ func (r *commonRepo) MarkSiteMessageRead(ctx context.Context, userID, messageID 
 	return err
 }
 
-func (r *commonRepo) MarkSiteMessageUnread(ctx context.Context, userID, messageID string) error {
+func (r *commonRepo) MarkSiteMessageUnread(ctx context.Context, userID, organizationID, messageID string) error {
 	_, err := r.data.db.SiteMessageReceipt.Update().
 		Where(
 			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
 			sitemessagereceipt.MessageIDEQ(messageID),
 		).
 		SetIsRead(false).
@@ -378,10 +401,11 @@ func (r *commonRepo) MarkSiteMessageUnread(ctx context.Context, userID, messageI
 	return err
 }
 
-func (r *commonRepo) MarkAllSiteMessagesRead(ctx context.Context, userID string) (int64, error) {
+func (r *commonRepo) MarkAllSiteMessagesRead(ctx context.Context, userID string, organizationID string) (int64, error) {
 	updated, err := r.data.db.SiteMessageReceipt.Update().
 		Where(
 			sitemessagereceipt.UserIDEQ(userID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
 			sitemessagereceipt.IsReadEQ(false),
 		).
 		SetIsRead(true).
@@ -390,8 +414,9 @@ func (r *commonRepo) MarkAllSiteMessagesRead(ctx context.Context, userID string)
 	return int64(updated), err
 }
 
-func getSiteMessageManageListQuery(params *v1.GetSiteMessageManageListParams, isPage bool) func(s *sqlx.Selector) {
+func getSiteMessageManageListQuery(organizationID string, params *v1.GetSiteMessageManageListParams, isPage bool) func(s *sqlx.Selector) {
 	return func(s *sqlx.Selector) {
+		s.Where(sqlx.EQ(sitemessage.FieldOrganizationID, organizationID))
 		if params.GetStatus() != "" {
 			s.Where(sqlx.EQ(sitemessage.FieldStatus, params.GetStatus()))
 		}
@@ -407,16 +432,16 @@ func getSiteMessageManageListQuery(params *v1.GetSiteMessageManageListParams, is
 	}
 }
 
-func (r *commonRepo) GetSiteMessageManageList(ctx context.Context, req *v1.GetSiteMessageManageListParams) ([]*ent.SiteMessage, int64, error) {
-	items, err := r.data.db.SiteMessage.Query().Modify(getSiteMessageManageListQuery(req, true)).All(ctx)
+func (r *commonRepo) GetSiteMessageManageList(ctx context.Context, organizationID string, req *v1.GetSiteMessageManageListParams) ([]*ent.SiteMessage, int64, error) {
+	items, err := r.data.db.SiteMessage.Query().Modify(getSiteMessageManageListQuery(organizationID, req, true)).All(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
-	count, err := r.data.db.SiteMessage.Query().Modify(getSiteMessageManageListQuery(req, false)).Count(ctx)
+	count, err := r.data.db.SiteMessage.Query().Modify(getSiteMessageManageListQuery(organizationID, req, false)).Count(ctx)
 	return items, int64(count), err
 }
 
-func (r *commonRepo) RecallSiteMessage(ctx context.Context, messageID string) error {
+func (r *commonRepo) RecallSiteMessage(ctx context.Context, organizationID string, messageID string) error {
 	tx, err := r.data.db.Tx(ctx)
 	if err != nil {
 		return err
@@ -427,7 +452,12 @@ func (r *commonRepo) RecallSiteMessage(ctx context.Context, messageID string) er
 			_ = tx.Rollback()
 		}
 	}()
-	messageItem, err := tx.SiteMessage.Get(ctx, messageID)
+	messageItem, err := tx.SiteMessage.Query().
+		Where(
+			sitemessage.IDEQ(messageID),
+			sitemessage.OrganizationIDEQ(organizationID),
+		).
+		Only(ctx)
 	if err != nil {
 		return err
 	}
@@ -441,7 +471,10 @@ func (r *commonRepo) RecallSiteMessage(ctx context.Context, messageID string) er
 		return err
 	}
 	if _, err := tx.SiteMessageReceipt.Delete().
-		Where(sitemessagereceipt.MessageIDEQ(messageID)).
+		Where(
+			sitemessagereceipt.MessageIDEQ(messageID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
+		).
 		Exec(ctx); err != nil {
 		return err
 	}
@@ -452,7 +485,7 @@ func (r *commonRepo) RecallSiteMessage(ctx context.Context, messageID string) er
 	return nil
 }
 
-func (r *commonRepo) DeletePendingSiteMessage(ctx context.Context, messageID string) error {
+func (r *commonRepo) DeletePendingSiteMessage(ctx context.Context, organizationID string, messageID string) error {
 	tx, err := r.data.db.Tx(ctx)
 	if err != nil {
 		return err
@@ -463,7 +496,12 @@ func (r *commonRepo) DeletePendingSiteMessage(ctx context.Context, messageID str
 			_ = tx.Rollback()
 		}
 	}()
-	messageItem, err := tx.SiteMessage.Get(ctx, messageID)
+	messageItem, err := tx.SiteMessage.Query().
+		Where(
+			sitemessage.IDEQ(messageID),
+			sitemessage.OrganizationIDEQ(organizationID),
+		).
+		Only(ctx)
 	if err != nil {
 		return err
 	}
@@ -471,7 +509,10 @@ func (r *commonRepo) DeletePendingSiteMessage(ctx context.Context, messageID str
 		return kratoserrors.BadRequest("BAD_REQUEST", "only draft or scheduled messages can be deleted")
 	}
 	if _, err := tx.SiteMessageReceipt.Delete().
-		Where(sitemessagereceipt.MessageIDEQ(messageID)).
+		Where(
+			sitemessagereceipt.MessageIDEQ(messageID),
+			sitemessagereceipt.OrganizationIDEQ(organizationID),
+		).
 		Exec(ctx); err != nil {
 		return err
 	}
@@ -496,7 +537,7 @@ func (r *commonRepo) promoteScheduledSiteMessage(ctx context.Context, messageIte
 			_ = tx.Rollback()
 		}
 	}()
-	receiverIDs, err := r.resolveSiteMessageReceivers(ctx)
+	receiverIDs, err := r.resolveSiteMessageReceivers(ctx, messageItem.OrganizationID)
 	if err != nil {
 		return err
 	}
@@ -516,7 +557,7 @@ func (r *commonRepo) promoteScheduledSiteMessage(ctx context.Context, messageIte
 	if updated == 0 {
 		return nil
 	}
-	if err := r.createSiteMessageReceipts(ctx, tx, messageItem.ID, receiverIDs); err != nil {
+	if err := r.createSiteMessageReceipts(ctx, tx, messageItem.ID, messageItem.OrganizationID, receiverIDs); err != nil {
 		return err
 	}
 	if err := tx.Commit(); err != nil {

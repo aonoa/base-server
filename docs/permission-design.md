@@ -295,6 +295,9 @@ admin DB
 
 - 普通用户通过 `/messages` 菜单和 `/common-api/v1/site-messages/my*` 接口查看收件箱。
 - 管理人员通过 `/system/site-message` 菜单和 `site_message_manage` 资源组管理站内信。
+- 站内信按当前组织投递和查询。`common` 从 `x-organization-id` 解析当前组织，消息和回执都会保存 `organization_id`。
+- 发布、草稿、定时任务保存时记录当前组织；定时任务到期后按记录里的组织 ID 解析收件人，不依赖触发发布时的请求组织。
+- 默认组织是全员组织，所以默认组织下发布等价于全员发布；其他组织下发布只投递该组织内启用成员。
 
 不再使用摘要、指定用户或业务域字段。
 

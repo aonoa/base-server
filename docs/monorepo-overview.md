@@ -175,7 +175,7 @@ make frontend-api
 - gateway 的 HTTP 统一入口是 `:8000`
 - OpenAPI 同步入口是 `make frontend-api`
 - `common` 服务的数据层仍偏骨架化，目前没有与 `admin` 同量级的治理主数据
-- `common` 服务当前已承载站内信收件箱 / 发布记录能力，并通过内部 gRPC 依赖 `user`、`admin` 服务补足收件人和角色校验
+- `common` 服务当前已承载站内信收件箱 / 发布记录能力，并通过内部 gRPC 依赖 `user`、`admin` 服务补足角色校验和当前组织成员收件人解析
 
 ## 8. 配套文档
 

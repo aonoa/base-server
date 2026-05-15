@@ -105,6 +105,48 @@ func TestSwitchCurrentOrganizationRejectsNonMember(t *testing.T) {
 	}
 }
 
+func TestListOrganizationMemberUserIDsFiltersActiveUsers(t *testing.T) {
+	ctx := context.Background()
+	repo, client := newOrganizationTestRepo(t)
+	defer client.Close()
+
+	const organizationID = "5d76c984-7e30-4b87-8433-ff271f902489"
+	createOrganization(t, client, defaultOrganizationID, "默认组织", "default")
+	createOrganization(t, client, organizationID, "第二组织", "second")
+	if _, err := client.UserOrganization.Create().
+		SetUserID("active-user").
+		SetOrganizationID(organizationID).
+		SetStatus(true).
+		SetIsPrimary(false).
+		Save(ctx); err != nil {
+		t.Fatalf("create active member: %v", err)
+	}
+	if _, err := client.UserOrganization.Create().
+		SetUserID("disabled-user").
+		SetOrganizationID(organizationID).
+		SetStatus(true).
+		SetIsPrimary(false).
+		Save(ctx); err != nil {
+		t.Fatalf("create disabled member: %v", err)
+	}
+	repo.data.userClient = &captureUserServiceClient{getUserListReply: &userv1.GetUserListReply{
+		Items: []*userv1.UserListItem{
+			{Id: "active-user", Status: 1},
+			{Id: "other-active-user", Status: 1},
+		},
+		Total: 2,
+	}}
+
+	got, err := repo.ListOrganizationMemberUserIDs(ctx, organizationID, true)
+	if err != nil {
+		t.Fatalf("ListOrganizationMemberUserIDs() error = %v", err)
+	}
+	want := []string{"active-user"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("ListOrganizationMemberUserIDs() = %#v, want %#v", got, want)
+	}
+}
+
 func TestEnsureUserInDefaultOrganizationPreservesExistingCurrentOrganization(t *testing.T) {
 	ctx := context.Background()
 	repo, client := newOrganizationTestRepo(t)

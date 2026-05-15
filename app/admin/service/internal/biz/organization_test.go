@@ -607,6 +607,10 @@ func (r *organizationPermissionScopeRepo) ListOrganizationMembers(context.Contex
 	return []*v1.OrganizationMemberItem{}, nil
 }
 
+func (r *organizationPermissionScopeRepo) ListOrganizationMemberUserIDs(context.Context, string, bool) ([]string, error) {
+	return []string{}, nil
+}
+
 func (r *organizationPermissionScopeRepo) SaveOrganizationMembers(context.Context, string, []string) ([]*v1.OrganizationMemberItem, error) {
 	return []*v1.OrganizationMemberItem{}, nil
 }

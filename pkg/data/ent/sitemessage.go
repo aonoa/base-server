@@ -28,6 +28,8 @@ type SiteMessage struct {
 	Content string `json:"content,omitempty"`
 	// 消息分类
 	Category string `json:"category,omitempty"`
+	// 组织ID
+	OrganizationID string `json:"organization_id,omitempty"`
 	// 消息状态 draft|scheduled|published|recalled
 	Status string `json:"status,omitempty"`
 	// 接收人数
@@ -54,7 +56,7 @@ func (*SiteMessage) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case sitemessage.FieldReceiverCount:
 			values[i] = new(sql.NullInt64)
-		case sitemessage.FieldID, sitemessage.FieldTitle, sitemessage.FieldContent, sitemessage.FieldCategory, sitemessage.FieldStatus, sitemessage.FieldLink, sitemessage.FieldSenderID, sitemessage.FieldSenderName:
+		case sitemessage.FieldID, sitemessage.FieldTitle, sitemessage.FieldContent, sitemessage.FieldCategory, sitemessage.FieldOrganizationID, sitemessage.FieldStatus, sitemessage.FieldLink, sitemessage.FieldSenderID, sitemessage.FieldSenderName:
 			values[i] = new(sql.NullString)
 		case sitemessage.FieldCreateTime, sitemessage.FieldUpdateTime, sitemessage.FieldScheduledPublishTime, sitemessage.FieldPublishedTime, sitemessage.FieldRecalledTime:
 			values[i] = new(sql.NullTime)
@@ -108,6 +110,12 @@ func (_m *SiteMessage) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field category", values[i])
 			} else if value.Valid {
 				_m.Category = value.String
+			}
+		case sitemessage.FieldOrganizationID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field organization_id", values[i])
+			} else if value.Valid {
+				_m.OrganizationID = value.String
 			}
 		case sitemessage.FieldStatus:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -210,6 +218,9 @@ func (_m *SiteMessage) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("category=")
 	builder.WriteString(_m.Category)
+	builder.WriteString(", ")
+	builder.WriteString("organization_id=")
+	builder.WriteString(_m.OrganizationID)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(_m.Status)

@@ -48,7 +48,10 @@ import (
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(NewData, NewAdminRepo)
 
-const defaultOrganizationID = "9f740c1b-0210-4e3a-858d-d128edea924d"
+const (
+	defaultOrganizationID = "9f740c1b-0210-4e3a-858d-d128edea924d"
+	activeUserStatus      = 1
+)
 
 // Data .
 type Data struct {
@@ -1052,6 +1055,67 @@ func (r *adminRepo) ListOrganizationMembers(ctx context.Context, organizationID 
 		return nil, err
 	}
 	return r.organizationMembersToReply(ctx, members)
+}
+
+func (r *adminRepo) ListOrganizationMemberUserIDs(ctx context.Context, organizationID string, activeUsersOnly bool) ([]string, error) {
+	members, err := r.data.db.UserOrganization.Query().
+		Where(
+			userorganization.OrganizationIDEQ(strings.TrimSpace(organizationID)),
+			userorganization.StatusEQ(true),
+		).
+		Order(userorganization.ByUserID()).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	userIDs := make([]string, 0, len(members))
+	for _, member := range members {
+		if member == nil || strings.TrimSpace(member.UserID) == "" {
+			continue
+		}
+		userIDs = append(userIDs, member.UserID)
+	}
+	userIDs = normalizeUserIDs(userIDs)
+	if !activeUsersOnly || len(userIDs) == 0 {
+		return userIDs, nil
+	}
+
+	activeUserIDs, err := r.listActiveUserIDSet(ctx)
+	if err != nil {
+		return nil, err
+	}
+	filtered := make([]string, 0, len(activeUserIDs))
+	for _, userID := range userIDs {
+		if _, ok := activeUserIDs[userID]; ok {
+			filtered = append(filtered, userID)
+		}
+	}
+	return filtered, nil
+}
+
+func (r *adminRepo) listActiveUserIDSet(ctx context.Context) (map[string]struct{}, error) {
+	const pageSize int64 = 1000
+	activeUserIDs := make(map[string]struct{})
+	for currentPage := int64(1); ; currentPage++ {
+		res, err := r.getUserList(ctx, &userv1.GetUserParams{
+			CurrentPage: currentPage,
+			PageSize:    pageSize,
+			Status:      activeUserStatus,
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, item := range res.GetItems() {
+			userID := strings.TrimSpace(item.GetId())
+			if userID != "" {
+				activeUserIDs[userID] = struct{}{}
+			}
+		}
+		if len(res.GetItems()) == 0 || currentPage*pageSize >= res.GetTotal() {
+			break
+		}
+	}
+	return activeUserIDs, nil
 }
 
 func (r *adminRepo) SaveOrganizationMembers(ctx context.Context, organizationID string, userIDs []string) ([]*v1.OrganizationMemberItem, error) {

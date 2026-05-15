@@ -84,6 +84,11 @@ func UserID(v string) predicate.SiteMessageReceipt {
 	return predicate.SiteMessageReceipt(sql.FieldEQ(FieldUserID, v))
 }
 
+// OrganizationID applies equality check predicate on the "organization_id" field. It's identical to OrganizationIDEQ.
+func OrganizationID(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldEQ(FieldOrganizationID, v))
+}
+
 // IsRead applies equality check predicate on the "is_read" field. It's identical to IsReadEQ.
 func IsRead(v bool) predicate.SiteMessageReceipt {
 	return predicate.SiteMessageReceipt(sql.FieldEQ(FieldIsRead, v))
@@ -302,6 +307,71 @@ func UserIDEqualFold(v string) predicate.SiteMessageReceipt {
 // UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
 func UserIDContainsFold(v string) predicate.SiteMessageReceipt {
 	return predicate.SiteMessageReceipt(sql.FieldContainsFold(FieldUserID, v))
+}
+
+// OrganizationIDEQ applies the EQ predicate on the "organization_id" field.
+func OrganizationIDEQ(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDNEQ applies the NEQ predicate on the "organization_id" field.
+func OrganizationIDNEQ(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldNEQ(FieldOrganizationID, v))
+}
+
+// OrganizationIDIn applies the In predicate on the "organization_id" field.
+func OrganizationIDIn(vs ...string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDNotIn applies the NotIn predicate on the "organization_id" field.
+func OrganizationIDNotIn(vs ...string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldNotIn(FieldOrganizationID, vs...))
+}
+
+// OrganizationIDGT applies the GT predicate on the "organization_id" field.
+func OrganizationIDGT(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldGT(FieldOrganizationID, v))
+}
+
+// OrganizationIDGTE applies the GTE predicate on the "organization_id" field.
+func OrganizationIDGTE(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldGTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDLT applies the LT predicate on the "organization_id" field.
+func OrganizationIDLT(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldLT(FieldOrganizationID, v))
+}
+
+// OrganizationIDLTE applies the LTE predicate on the "organization_id" field.
+func OrganizationIDLTE(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldLTE(FieldOrganizationID, v))
+}
+
+// OrganizationIDContains applies the Contains predicate on the "organization_id" field.
+func OrganizationIDContains(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldContains(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasPrefix applies the HasPrefix predicate on the "organization_id" field.
+func OrganizationIDHasPrefix(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldHasPrefix(FieldOrganizationID, v))
+}
+
+// OrganizationIDHasSuffix applies the HasSuffix predicate on the "organization_id" field.
+func OrganizationIDHasSuffix(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldHasSuffix(FieldOrganizationID, v))
+}
+
+// OrganizationIDEqualFold applies the EqualFold predicate on the "organization_id" field.
+func OrganizationIDEqualFold(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldEqualFold(FieldOrganizationID, v))
+}
+
+// OrganizationIDContainsFold applies the ContainsFold predicate on the "organization_id" field.
+func OrganizationIDContainsFold(v string) predicate.SiteMessageReceipt {
+	return predicate.SiteMessageReceipt(sql.FieldContainsFold(FieldOrganizationID, v))
 }
 
 // IsReadEQ applies the EQ predicate on the "is_read" field.

@@ -34,6 +34,10 @@ func (SiteMessage) Fields() []ent.Field {
 		field.String("title").NotEmpty().Comment("消息标题"),
 		field.String("content").NotEmpty().Comment("消息正文"),
 		field.String("category").Default("system").Comment("消息分类"),
+		field.String("organization_id").
+			Default("9f740c1b-0210-4e3a-858d-d128edea924d").
+			NotEmpty().
+			Comment("组织ID"),
 		field.String("status").Default("published").Comment("消息状态 draft|scheduled|published|recalled"),
 		field.Int64("receiver_count").Default(0).Comment("接收人数"),
 		field.String("link").Default("").Comment("消息跳转链接"),
@@ -54,6 +58,8 @@ func (SiteMessage) Mixin() []ent.Mixin {
 func (SiteMessage) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("create_time"),
+		index.Fields("organization_id", "status"),
+		index.Fields("organization_id", "update_time"),
 		index.Fields("category"),
 		index.Fields("status"),
 		index.Fields("scheduled_publish_time"),

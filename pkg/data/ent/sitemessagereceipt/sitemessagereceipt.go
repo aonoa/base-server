@@ -21,6 +21,8 @@ const (
 	FieldMessageID = "message_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldOrganizationID holds the string denoting the organization_id field in the database.
+	FieldOrganizationID = "organization_id"
 	// FieldIsRead holds the string denoting the is_read field in the database.
 	FieldIsRead = "is_read"
 	// FieldReadTime holds the string denoting the read_time field in the database.
@@ -36,6 +38,7 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldMessageID,
 	FieldUserID,
+	FieldOrganizationID,
 	FieldIsRead,
 	FieldReadTime,
 }
@@ -57,6 +60,10 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultOrganizationID holds the default value on creation for the "organization_id" field.
+	DefaultOrganizationID string
+	// OrganizationIDValidator is a validator for the "organization_id" field. It is called by the builders before save.
+	OrganizationIDValidator func(string) error
 	// DefaultIsRead holds the default value on creation for the "is_read" field.
 	DefaultIsRead bool
 	// DefaultReadTime holds the default value on creation for the "read_time" field.
@@ -91,6 +98,11 @@ func ByMessageID(opts ...sql.OrderTermOption) OrderOption {
 // ByUserID orders the results by the user_id field.
 func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
+}
+
+// ByOrganizationID orders the results by the organization_id field.
+func ByOrganizationID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrganizationID, opts...).ToFunc()
 }
 
 // ByIsRead orders the results by the is_read field.

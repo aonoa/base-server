@@ -154,6 +154,7 @@ func (c *SiteMessageCreate) CreateAll(SiteMessage *SiteMessage) *SiteMessageCrea
 	builder = builder.SetTitle(SiteMessage.Title)
 	builder = builder.SetContent(SiteMessage.Content)
 	builder = builder.SetCategory(SiteMessage.Category)
+	builder = builder.SetOrganizationID(SiteMessage.OrganizationID)
 	builder = builder.SetStatus(SiteMessage.Status)
 	builder = builder.SetReceiverCount(SiteMessage.ReceiverCount)
 	builder = builder.SetLink(SiteMessage.Link)
@@ -171,6 +172,7 @@ func (c *SiteMessageReceiptCreate) CreateAll(SiteMessageReceipt *SiteMessageRece
 	builder := c
 	builder = builder.SetMessageID(SiteMessageReceipt.MessageID)
 	builder = builder.SetUserID(SiteMessageReceipt.UserID)
+	builder = builder.SetOrganizationID(SiteMessageReceipt.OrganizationID)
 	builder = builder.SetIsRead(SiteMessageReceipt.IsRead)
 	builder = builder.SetReadTime(SiteMessageReceipt.ReadTime)
 	return builder

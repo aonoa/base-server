@@ -37,6 +37,7 @@ const (
 	AdminService_GetAuthRole_FullMethodName                      = "/api.admin.service.v1.AdminService/GetAuthRole"
 	AdminService_ResolveRoleValues_FullMethodName                = "/api.admin.service.v1.AdminService/ResolveRoleValues"
 	AdminService_GetUserRoleBinding_FullMethodName               = "/api.admin.service.v1.AdminService/GetUserRoleBinding"
+	AdminService_ListOrganizationMemberUserIds_FullMethodName    = "/api.admin.service.v1.AdminService/ListOrganizationMemberUserIds"
 	AdminService_ListUserRoleBindings_FullMethodName             = "/api.admin.service.v1.AdminService/ListUserRoleBindings"
 	AdminService_UpsertUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/UpsertUserRoleBinding"
 	AdminService_DeleteUserRoleBinding_FullMethodName            = "/api.admin.service.v1.AdminService/DeleteUserRoleBinding"
@@ -97,6 +98,7 @@ type AdminServiceClient interface {
 	GetAuthRole(ctx context.Context, in *GetAuthRoleRequest, opts ...grpc.CallOption) (*AuthRoleItem, error)
 	ResolveRoleValues(ctx context.Context, in *ResolveRoleValuesRequest, opts ...grpc.CallOption) (*ResolveRoleValuesReply, error)
 	GetUserRoleBinding(ctx context.Context, in *GetUserRoleBindingRequest, opts ...grpc.CallOption) (*UserRoleBindingItem, error)
+	ListOrganizationMemberUserIds(ctx context.Context, in *ListOrganizationMemberUserIdsRequest, opts ...grpc.CallOption) (*ListOrganizationMemberUserIdsReply, error)
 	ListUserRoleBindings(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUserRoleBindingsReply, error)
 	UpsertUserRoleBinding(ctx context.Context, in *UserRoleBindingItem, opts ...grpc.CallOption) (*UserRoleBindingItem, error)
 	DeleteUserRoleBinding(ctx context.Context, in *DeleteUserRoleBindingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -308,6 +310,16 @@ func (c *adminServiceClient) GetUserRoleBinding(ctx context.Context, in *GetUser
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserRoleBindingItem)
 	err := c.cc.Invoke(ctx, AdminService_GetUserRoleBinding_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) ListOrganizationMemberUserIds(ctx context.Context, in *ListOrganizationMemberUserIdsRequest, opts ...grpc.CallOption) (*ListOrganizationMemberUserIdsReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListOrganizationMemberUserIdsReply)
+	err := c.cc.Invoke(ctx, AdminService_ListOrganizationMemberUserIds_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -705,6 +717,7 @@ type AdminServiceServer interface {
 	GetAuthRole(context.Context, *GetAuthRoleRequest) (*AuthRoleItem, error)
 	ResolveRoleValues(context.Context, *ResolveRoleValuesRequest) (*ResolveRoleValuesReply, error)
 	GetUserRoleBinding(context.Context, *GetUserRoleBindingRequest) (*UserRoleBindingItem, error)
+	ListOrganizationMemberUserIds(context.Context, *ListOrganizationMemberUserIdsRequest) (*ListOrganizationMemberUserIdsReply, error)
 	ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error)
 	UpsertUserRoleBinding(context.Context, *UserRoleBindingItem) (*UserRoleBindingItem, error)
 	DeleteUserRoleBinding(context.Context, *DeleteUserRoleBindingRequest) (*emptypb.Empty, error)
@@ -802,6 +815,9 @@ func (UnimplementedAdminServiceServer) ResolveRoleValues(context.Context, *Resol
 }
 func (UnimplementedAdminServiceServer) GetUserRoleBinding(context.Context, *GetUserRoleBindingRequest) (*UserRoleBindingItem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoleBinding not implemented")
+}
+func (UnimplementedAdminServiceServer) ListOrganizationMemberUserIds(context.Context, *ListOrganizationMemberUserIdsRequest) (*ListOrganizationMemberUserIdsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizationMemberUserIds not implemented")
 }
 func (UnimplementedAdminServiceServer) ListUserRoleBindings(context.Context, *emptypb.Empty) (*ListUserRoleBindingsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoleBindings not implemented")
@@ -1237,6 +1253,24 @@ func _AdminService_GetUserRoleBinding_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).GetUserRoleBinding(ctx, req.(*GetUserRoleBindingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_ListOrganizationMemberUserIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationMemberUserIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).ListOrganizationMemberUserIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AdminService_ListOrganizationMemberUserIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).ListOrganizationMemberUserIds(ctx, req.(*ListOrganizationMemberUserIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1981,6 +2015,10 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserRoleBinding",
 			Handler:    _AdminService_GetUserRoleBinding_Handler,
+		},
+		{
+			MethodName: "ListOrganizationMemberUserIds",
+			Handler:    _AdminService_ListOrganizationMemberUserIds_Handler,
 		},
 		{
 			MethodName: "ListUserRoleBindings",
