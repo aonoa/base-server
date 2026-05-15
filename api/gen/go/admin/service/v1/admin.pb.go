@@ -216,11 +216,12 @@ func (x *OrganizationItem) GetDeptCount() int64 {
 }
 
 type GetOrganizationListReply struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*OrganizationItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Items                  []*OrganizationItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total                  int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	CanManageOrganizations bool                   `protobuf:"varint,3,opt,name=can_manage_organizations,json=canManageOrganizations,proto3" json:"can_manage_organizations,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *GetOrganizationListReply) Reset() {
@@ -265,6 +266,13 @@ func (x *GetOrganizationListReply) GetTotal() int64 {
 		return x.Total
 	}
 	return 0
+}
+
+func (x *GetOrganizationListReply) GetCanManageOrganizations() bool {
+	if x != nil {
+		return x.CanManageOrganizations
+	}
+	return false
 }
 
 type DeleteOrganization struct {
@@ -5440,10 +5448,11 @@ const file_admin_service_v1_admin_proto_rawDesc = "" +
 	"\fmember_count\x18\t \x01(\x03R\vmemberCount\x12\x1d\n" +
 	"\n" +
 	"dept_count\x18\n" +
-	" \x01(\x03R\tdeptCount\"n\n" +
+	" \x01(\x03R\tdeptCount\"\xa8\x01\n" +
 	"\x18GetOrganizationListReply\x12<\n" +
 	"\x05items\x18\x01 \x03(\v2&.api.admin.service.v1.OrganizationItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"$\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\x128\n" +
+	"\x18can_manage_organizations\x18\x03 \x01(\bR\x16canManageOrganizations\"$\n" +
 	"\x12DeleteOrganization\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"H\n" +
 	"\x1dGetOrganizationMembersRequest\x12'\n" +

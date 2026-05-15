@@ -1523,6 +1523,8 @@ components:
                         $ref: '#/components/schemas/api.admin.service.v1.OrganizationItem'
                 total:
                     type: string
+                canManageOrganizations:
+                    type: boolean
         api.admin.service.v1.GetOrganizationMembersReply:
             type: object
             properties:

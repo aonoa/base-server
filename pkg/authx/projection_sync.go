@@ -3,6 +3,7 @@ package authx
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -17,6 +18,8 @@ type ProjectionStartupSyncServer struct {
 	log              *log.Helper
 	successMessage   string
 	failureMessage   string
+	stopCh           chan struct{}
+	stopOnce         sync.Once
 }
 
 func NewProjectionStartupSyncServer(registerSnapshot func(context.Context) error, logger log.Logger, sourceService string) transport.Server {
@@ -26,6 +29,7 @@ func NewProjectionStartupSyncServer(registerSnapshot func(context.Context) error
 		log:              helper,
 		successMessage:   fmt.Sprintf("%s registered permission snapshot to auth", sourceService),
 		failureMessage:   fmt.Sprintf("%s register permission snapshot to auth failed", sourceService),
+		stopCh:           make(chan struct{}),
 	}
 }
 
@@ -35,8 +39,8 @@ func (s *ProjectionStartupSyncServer) Start(ctx context.Context) error {
 		err := s.registerSnapshot(ctx)
 		if err == nil {
 			s.log.Info(s.successMessage)
-			<-ctx.Done()
-			return ctx.Err()
+			<-s.stopCh
+			return nil
 		}
 		s.log.Errorf("%s: %v", s.failureMessage, err)
 		select {
@@ -55,6 +59,9 @@ func (s *ProjectionStartupSyncServer) Start(ctx context.Context) error {
 
 func (s *ProjectionStartupSyncServer) Stop(ctx context.Context) error {
 	_ = ctx
+	s.stopOnce.Do(func() {
+		close(s.stopCh)
+	})
 	return nil
 }
 

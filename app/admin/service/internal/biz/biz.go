@@ -2,7 +2,6 @@ package biz
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"regexp"
 	"sort"
@@ -25,8 +24,6 @@ import (
 
 // ProviderSet is biz providers.
 var ProviderSet = wire.NewSet(NewAdminUsecase)
-
-const bootstrapRootUserID = "f4f9e258-fa13-4467-95fb-c86019a377f9"
 
 type AdminRepo interface {
 	GetMenuList(context.Context) ([]*ent.Menu, error)
@@ -250,6 +247,10 @@ func (uc *AdminUsecase) UpsertUserRoleBinding(ctx context.Context, req *v1.UserR
 	if err != nil {
 		return nil, err
 	}
+	platformRoot, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return nil, err
+	}
 	for _, roleID := range roleIDs {
 		roleItem, err := uc.repo.GetRole(ctx, roleID)
 		if err != nil {
@@ -258,7 +259,7 @@ func (uc *AdminUsecase) UpsertUserRoleBinding(ctx context.Context, req *v1.UserR
 		if roleItem.OrganizationID != organizationID {
 			return nil, fmt.Errorf("role does not belong to organization")
 		}
-		if roleItem.Value == "root" && strings.TrimSpace(authx.UserID(ctx)) != bootstrapRootUserID {
+		if roleItem.Value == "root" && !platformRoot {
 			return nil, fmt.Errorf("root role can only be assigned by platform root")
 		}
 	}
@@ -356,14 +357,22 @@ func (uc *AdminUsecase) GetOrganizationList(ctx context.Context, req *v1.GetOrga
 	if err := uc.repo.EnsureAllUsersInDefaultOrganization(ctx); err != nil {
 		return nil, err
 	}
-	if actorUserID := strings.TrimSpace(authx.UserID(ctx)); actorUserID != "" && !isPlatformRoot(ctx) {
+	platformRoot, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if actorUserID := strings.TrimSpace(authx.UserID(ctx)); actorUserID != "" && !platformRoot {
 		return uc.getScopedOrganizationList(ctx, actorUserID, req)
 	}
 	list, count, err := uc.repo.ListOrganizations(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	res := &v1.GetOrganizationListReply{Items: make([]*v1.OrganizationItem, 0, len(list)), Total: count}
+	res := &v1.GetOrganizationListReply{
+		Items:                  make([]*v1.OrganizationItem, 0, len(list)),
+		Total:                  count,
+		CanManageOrganizations: platformRoot,
+	}
 	for _, item := range list {
 		reply, err := uc.organizationToReply(ctx, item)
 		if err != nil {
@@ -375,15 +384,11 @@ func (uc *AdminUsecase) GetOrganizationList(ctx context.Context, req *v1.GetOrga
 }
 
 func (uc *AdminUsecase) getScopedOrganizationList(ctx context.Context, actorUserID string, req *v1.GetOrganizationListParams) (*v1.GetOrganizationListReply, error) {
-	defaultOrganizationID, err := uc.repo.GetDefaultOrganizationID(ctx)
-	if err != nil {
-		return nil, err
-	}
 	currentOrganizationID, err := uc.repo.GetCurrentOrganizationID(ctx, actorUserID)
 	if err != nil {
 		return nil, err
 	}
-	ids := normalizeStringIDs([]string{defaultOrganizationID, currentOrganizationID})
+	ids := normalizeStringIDs([]string{currentOrganizationID})
 	list := make([]*ent.Organization, 0, len(ids))
 	for _, id := range ids {
 		item, err := uc.repo.GetOrganization(ctx, id)
@@ -406,7 +411,11 @@ func (uc *AdminUsecase) getScopedOrganizationList(ctx context.Context, actorUser
 	})
 	total := int64(len(list))
 	list = paginateOrganizations(list, req)
-	res := &v1.GetOrganizationListReply{Items: make([]*v1.OrganizationItem, 0, len(list)), Total: total}
+	res := &v1.GetOrganizationListReply{
+		Items:                  make([]*v1.OrganizationItem, 0, len(list)),
+		Total:                  total,
+		CanManageOrganizations: false,
+	}
 	for _, item := range list {
 		reply, err := uc.organizationToReply(ctx, item)
 		if err != nil {
@@ -458,7 +467,7 @@ func paginateOrganizations(items []*ent.Organization, req *v1.GetOrganizationLis
 }
 
 func (uc *AdminUsecase) AddOrganization(ctx context.Context, req *v1.OrganizationItem) (*v1.OrganizationItem, error) {
-	if err := requirePlatformRoot(ctx, "organization can only be created by platform root"); err != nil {
+	if err := uc.requirePlatformRoot(ctx, "organization can only be created by platform root"); err != nil {
 		return nil, err
 	}
 	item, err := uc.repo.AddOrganization(ctx, req)
@@ -469,7 +478,7 @@ func (uc *AdminUsecase) AddOrganization(ctx context.Context, req *v1.Organizatio
 }
 
 func (uc *AdminUsecase) UpdateOrganization(ctx context.Context, req *v1.OrganizationItem) (*v1.OrganizationItem, error) {
-	if err := requirePlatformRoot(ctx, "organization can only be updated by platform root"); err != nil {
+	if err := uc.requirePlatformRoot(ctx, "organization can only be updated by platform root"); err != nil {
 		return nil, err
 	}
 	id, err := normalizeOrganizationID(req.Id)
@@ -484,7 +493,7 @@ func (uc *AdminUsecase) UpdateOrganization(ctx context.Context, req *v1.Organiza
 }
 
 func (uc *AdminUsecase) DelOrganization(ctx context.Context, organizationID string) error {
-	if err := requirePlatformRoot(ctx, "organization can only be deleted by platform root"); err != nil {
+	if err := uc.requirePlatformRoot(ctx, "organization can only be deleted by platform root"); err != nil {
 		return err
 	}
 	id, err := normalizeOrganizationID(organizationID)
@@ -586,7 +595,7 @@ func (uc *AdminUsecase) GetOrganizationPermissionScope(ctx context.Context, req 
 }
 
 func (uc *AdminUsecase) SaveOrganizationPermissionScope(ctx context.Context, req *v1.SaveOrganizationPermissionScopeRequest) (*v1.OrganizationPermissionScopeReply, error) {
-	if err := requirePlatformRoot(ctx, "organization permission scope can only be updated by platform root"); err != nil {
+	if err := uc.requirePlatformRoot(ctx, "organization permission scope can only be updated by platform root"); err != nil {
 		return nil, err
 	}
 	organizationID, err := uc.resolveOrganizationID(ctx, req.GetOrganizationId())
@@ -769,8 +778,14 @@ func (uc *AdminUsecase) AddRole(ctx context.Context, req *v1.RoleListItem) (*v1.
 	if err := uc.normalizeSiteMessageRoleRequest(ctx, req); err != nil {
 		return nil, err
 	}
-	if req.GetValue() == "root" && strings.TrimSpace(authx.UserID(ctx)) != bootstrapRootUserID {
-		return nil, fmt.Errorf("root role can only be created by platform root")
+	if req.GetValue() == "root" {
+		platformRoot, err := uc.isPlatformRoot(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !platformRoot {
+			return nil, fmt.Errorf("root role can only be created by platform root")
+		}
 	}
 	if err := uc.validateRolePermissionScope(ctx, req.GetOrganizationId(), req.GetPermissions(), req.GetApiPermissions()); err != nil {
 		return nil, err
@@ -819,8 +834,14 @@ func (uc *AdminUsecase) UpdateRole(ctx context.Context, req *v1.RoleListItem) (*
 	if before.OrganizationID != req.GetOrganizationId() {
 		return nil, fmt.Errorf("role organization cannot be changed")
 	}
-	if before.Value == "root" && strings.TrimSpace(authx.UserID(ctx)) != bootstrapRootUserID {
-		return nil, fmt.Errorf("root role can only be updated by platform root")
+	if before.Value == "root" {
+		platformRoot, err := uc.isPlatformRoot(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !platformRoot {
+			return nil, fmt.Errorf("root role can only be updated by platform root")
+		}
 	}
 	if before.Value != "root" && req.GetValue() == "root" {
 		return nil, fmt.Errorf("role cannot be upgraded to root")
@@ -1338,7 +1359,11 @@ func (uc *AdminUsecase) resolveOrganizationID(ctx context.Context, idValue strin
 	if err != nil {
 		return "", err
 	}
-	if actorUserID != "" && !isPlatformRoot(ctx) {
+	platformRoot, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return "", err
+	}
+	if actorUserID != "" && !platformRoot {
 		currentOrganizationID, err := uc.repo.GetCurrentOrganizationID(ctx, actorUserID)
 		if err != nil {
 			return "", err
@@ -1358,8 +1383,13 @@ func (uc *AdminUsecase) resolveOrganizationMemberReadID(ctx context.Context, idV
 	if err != nil {
 		return "", err
 	}
-	if strings.TrimSpace(authx.UserID(ctx)) != "" && !isPlatformRoot(ctx) {
-		currentOrganizationID, err := uc.repo.GetCurrentOrganizationID(ctx, authx.UserID(ctx))
+	actorUserID := strings.TrimSpace(authx.UserID(ctx))
+	platformRoot, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return "", err
+	}
+	if actorUserID != "" && !platformRoot {
+		currentOrganizationID, err := uc.repo.GetCurrentOrganizationID(ctx, actorUserID)
 		if err != nil {
 			return "", err
 		}
@@ -1377,15 +1407,109 @@ func (uc *AdminUsecase) resolveOrganizationMemberReadID(ctx context.Context, idV
 	return id, nil
 }
 
-func isPlatformRoot(ctx context.Context) bool {
-	return strings.TrimSpace(authx.UserID(ctx)) == bootstrapRootUserID
+func (uc *AdminUsecase) isPlatformRoot(ctx context.Context) (bool, error) {
+	userID := strings.TrimSpace(authx.UserID(ctx))
+	if userID == "" {
+		return false, nil
+	}
+	defaultOrganizationID, err := uc.repo.GetDefaultOrganizationID(ctx)
+	if err != nil {
+		return false, err
+	}
+	currentOrganizationID, err := uc.repo.GetCurrentOrganizationID(ctx, userID)
+	if err != nil {
+		return false, err
+	}
+	if currentOrganizationID != defaultOrganizationID {
+		return false, nil
+	}
+	return uc.userHasRoleInOrganization(ctx, userID, "root", defaultOrganizationID)
 }
 
-func requirePlatformRoot(ctx context.Context, message string) error {
-	if isPlatformRoot(ctx) {
+func (uc *AdminUsecase) userHasRole(ctx context.Context, userID, roleValue string) (bool, error) {
+	userID = strings.TrimSpace(userID)
+	roleValue = strings.TrimSpace(roleValue)
+	if userID == "" || roleValue == "" {
+		return false, nil
+	}
+	bindings, err := uc.repo.ListUserRoleBindings(ctx)
+	if err != nil {
+		return false, err
+	}
+	roleIDs := make([]int64, 0, len(bindings))
+	seen := make(map[int64]struct{}, len(bindings))
+	for _, binding := range bindings {
+		if binding == nil || binding.UserID != userID || binding.RoleID <= 0 {
+			continue
+		}
+		if _, ok := seen[binding.RoleID]; ok {
+			continue
+		}
+		seen[binding.RoleID] = struct{}{}
+		roleIDs = append(roleIDs, binding.RoleID)
+	}
+	if len(roleIDs) == 0 {
+		return false, nil
+	}
+	values, err := uc.repo.ResolveRoleValues(ctx, roleIDs)
+	if err != nil {
+		return false, err
+	}
+	for _, value := range values {
+		if value == roleValue {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (uc *AdminUsecase) userHasRoleInOrganization(ctx context.Context, userID, roleValue string, organizationID string) (bool, error) {
+	userID = strings.TrimSpace(userID)
+	roleValue = strings.TrimSpace(roleValue)
+	organizationID = strings.TrimSpace(organizationID)
+	if userID == "" || roleValue == "" || organizationID == "" {
+		return false, nil
+	}
+	bindings, err := uc.repo.ListUserRoleBindings(ctx)
+	if err != nil {
+		return false, err
+	}
+	roleIDs := make([]int64, 0, len(bindings))
+	seen := make(map[int64]struct{}, len(bindings))
+	for _, binding := range bindings {
+		if binding == nil || binding.UserID != userID || binding.OrganizationID != organizationID || binding.RoleID <= 0 {
+			continue
+		}
+		if _, ok := seen[binding.RoleID]; ok {
+			continue
+		}
+		seen[binding.RoleID] = struct{}{}
+		roleIDs = append(roleIDs, binding.RoleID)
+	}
+	if len(roleIDs) == 0 {
+		return false, nil
+	}
+	values, err := uc.repo.ResolveRoleValues(ctx, roleIDs)
+	if err != nil {
+		return false, err
+	}
+	for _, value := range values {
+		if value == roleValue {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (uc *AdminUsecase) requirePlatformRoot(ctx context.Context, message string) error {
+	ok, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return err
+	}
+	if ok {
 		return nil
 	}
-	return errors.New(message)
+	return fmt.Errorf("%s", message)
 }
 
 func (uc *AdminUsecase) resolveRoleBindingOrganization(ctx context.Context, idValue string) (string, error) {
@@ -1711,7 +1835,11 @@ func (grant *actorPermissionGrant) hasAnyDataScope(scopes ...string) bool {
 
 func (uc *AdminUsecase) actorPermissionGrant(ctx context.Context, organizationID string) (*actorPermissionGrant, error) {
 	actorUserID := strings.TrimSpace(authx.UserID(ctx))
-	if actorUserID == bootstrapRootUserID {
+	platformRoot, err := uc.isPlatformRoot(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if platformRoot {
 		return &actorPermissionGrant{isPlatformRoot: true}, nil
 	}
 	if actorUserID == "" {

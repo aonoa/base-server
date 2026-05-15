@@ -37,7 +37,6 @@ var (
 	PolicyUserToData             = "p"
 	PolicyUserToApi              = "p2"
 	PolicyApiToData              = "p3"
-	BootstrapRootUserID          = "f4f9e258-fa13-4467-95fb-c86019a377f9"
 	DefaultOrganizationID        = "9f740c1b-0210-4e3a-858d-d128edea924d"
 	GlobalRootDomain             = "global"
 )
@@ -621,7 +620,6 @@ func (uc *AuthUsecase) applyPermissionSnapshot(req *v1.RegisterPermissionSnapsho
 		domain := roleBindingDomain(binding.OrganizationId, roleValue)
 		uc.AddDomainUserRoles(binding.UserId, domain, []string{roleValue})
 	}
-	uc.AddDomainUserRoles(BootstrapRootUserID, GlobalRootDomain, []string{"root"})
 	for _, role := range req.Roles {
 		uc.syncRolePolicies(role)
 	}

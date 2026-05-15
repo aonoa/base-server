@@ -153,9 +153,10 @@ Date: 2026-05-14
   - Scope shrink is blocked when an existing role in that organization still uses a removed menu/resource.
   - Role create/update now enforces selected menus/resources are inside configured organization scope.
   - Role create/update and user-role binding now enforce actor-grantable boundaries for menus, API resources, and role data scope.
-  - Only bootstrap root user `f4f9e258-fa13-4467-95fb-c86019a377f9` can create/update/assign `root`.
-  - Only bootstrap root can create, update, or delete organization master data.
-  - Only bootstrap root can update an organization's permission scope.
+  - Only users with the `root` role can create/update/assign `root`.
+  - Only users with the `root` role can create, update, or delete organization master data.
+  - Only users with the `root` role can update an organization's permission scope.
+  - Platform root capability is role-derived and must not be checked with a fixed user ID.
   - Non-root organization list reads are scoped to the default organization and the actor's current organization so the member drawer can still compare "all members" with the current organization without exposing unrelated organizations.
   - Non-root actors cannot pass an explicit `organization_id` that differs from their current organization on organization-scoped role, department, member-save, permission-scope, or permission-catalog APIs. Member read keeps the required exception that an organization admin may read the default organization member source and the current organization.
   - User role and department bindings now require the target user to belong to the target organization.

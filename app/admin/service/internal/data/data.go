@@ -1705,9 +1705,9 @@ func (r *adminRepo) ensureDefaultOrganizationPermissionScope(ctx context.Context
 func (r *adminRepo) ensureDefaultOrganizationMenuScope(ctx context.Context) error {
 	const query = `
 INSERT INTO sys_organization_permission_scope (
-  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+  id, create_time, update_time, organization_id, permission_type, permission_ref, created_by
 )
-SELECT NOW(), NOW(), $1, 'menu', id::text, ''
+SELECT 'scope-' || md5($1 || ':menu:' || id::text), NOW(), NOW(), $1, 'menu', id::text, ''
 FROM sys_menu
 ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING`
 	_, err := r.data.sqlDB.ExecContext(ctx, query, defaultOrganizationID)
@@ -1717,9 +1717,9 @@ ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING`
 func (r *adminRepo) ensureDefaultOrganizationResourceScope(ctx context.Context) error {
 	const query = `
 INSERT INTO sys_organization_permission_scope (
-  create_time, update_time, organization_id, permission_type, permission_ref, created_by
+  id, create_time, update_time, organization_id, permission_type, permission_ref, created_by
 )
-SELECT NOW(), NOW(), $1, 'resource', id, ''
+SELECT 'scope-' || md5($1 || ':resource:' || id), NOW(), NOW(), $1, 'resource', id, ''
 FROM sys_resources
 ON CONFLICT (organization_id, permission_type, permission_ref) DO NOTHING`
 	_, err := r.data.sqlDB.ExecContext(ctx, query, defaultOrganizationID)

@@ -16,6 +16,8 @@ import (
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
 
+const rootActorID = "root-actor"
+
 func TestValidateDeptParentOrganization(t *testing.T) {
 	tests := []struct {
 		name           string
@@ -147,7 +149,12 @@ func TestEnsureUserOrganizationMemberRejectsNonMember(t *testing.T) {
 func TestSaveOrganizationPermissionScopeRequiresPlatformRoot(t *testing.T) {
 	repo := &organizationPermissionScopeRepo{
 		roles:                 []*ent.Role{},
-		currentOrganizationID: "org-a",
+		currentOrganizationID: "default-org",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
 	}
 	uc := NewAdminUsecase(repo, log.NewStdLogger(io.Discard))
 
@@ -159,7 +166,7 @@ func TestSaveOrganizationPermissionScopeRequiresPlatformRoot(t *testing.T) {
 	}
 
 	if _, err := uc.SaveOrganizationPermissionScope(
-		testUserContext(bootstrapRootUserID),
+		testUserContext(rootActorID),
 		&v1.SaveOrganizationPermissionScopeRequest{OrganizationId: "org-b"},
 	); err != nil {
 		t.Fatalf("platform root should save organization scope, got %v", err)
@@ -169,8 +176,35 @@ func TestSaveOrganizationPermissionScopeRequiresPlatformRoot(t *testing.T) {
 	}
 }
 
+func TestSaveOrganizationPermissionScopeRejectsRootOutsideDefaultOrganization(t *testing.T) {
+	repo := &organizationPermissionScopeRepo{
+		roles:                 []*ent.Role{},
+		currentOrganizationID: "org-a",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+	}
+	uc := NewAdminUsecase(repo, log.NewStdLogger(io.Discard))
+
+	if _, err := uc.SaveOrganizationPermissionScope(
+		testUserContext(rootActorID),
+		&v1.SaveOrganizationPermissionScopeRequest{OrganizationId: "org-b"},
+	); err == nil {
+		t.Fatal("expected root outside default organization to be rejected")
+	}
+}
+
 func TestOrganizationMutationRequiresPlatformRoot(t *testing.T) {
-	repo := &organizationPermissionScopeRepo{}
+	repo := &organizationPermissionScopeRepo{
+		currentOrganizationID: "default-org",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+	}
 	uc := NewAdminUsecase(repo, log.NewStdLogger(io.Discard))
 
 	if _, err := uc.AddOrganization(
@@ -189,7 +223,7 @@ func TestOrganizationMutationRequiresPlatformRoot(t *testing.T) {
 		t.Fatal("expected non-root organization delete to be rejected")
 	}
 	if _, err := uc.AddOrganization(
-		testUserContext(bootstrapRootUserID),
+		testUserContext(rootActorID),
 		&v1.OrganizationItem{Id: "org-a", Name: "A"},
 	); err != nil {
 		t.Fatalf("platform root organization create error = %v", err)
@@ -199,7 +233,7 @@ func TestOrganizationMutationRequiresPlatformRoot(t *testing.T) {
 	}
 }
 
-func TestGetOrganizationListScopesNonRootToDefaultAndCurrent(t *testing.T) {
+func TestGetOrganizationListScopesNonRootToCurrent(t *testing.T) {
 	uc := NewAdminUsecase(&organizationPermissionScopeRepo{
 		currentOrganizationID: "org-a",
 		defaultOrganizationID: "default-org",
@@ -218,24 +252,101 @@ func TestGetOrganizationListScopesNonRootToDefaultAndCurrent(t *testing.T) {
 	for _, item := range reply.Items {
 		got = append(got, item.Id)
 	}
-	want := []string{"default-org", "org-a"}
+	want := []string{"org-a"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("organization ids = %#v, want %#v", got, want)
+	}
+	if reply.CanManageOrganizations {
+		t.Fatal("non-root organization list should not expose organization management capability")
+	}
+}
+
+func TestGetOrganizationListAllowsRootRoleToManageOrganizations(t *testing.T) {
+	uc := NewAdminUsecase(&organizationPermissionScopeRepo{
+		currentOrganizationID: "default-org",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+		organizations: map[string]*ent.Organization{
+			"default-org": {ID: "default-org", Name: "默认组织", Code: "default", Sort: 0, Status: true},
+			"org-a":       {ID: "org-a", Name: "A 组织", Code: "a", Sort: 1, Status: true},
+			"org-b":       {ID: "org-b", Name: "B 组织", Code: "b", Sort: 2, Status: true},
+		},
+	}, log.NewStdLogger(io.Discard))
+
+	reply, err := uc.GetOrganizationList(testUserContext(rootActorID), &v1.GetOrganizationListParams{PageSize: 200})
+	if err != nil {
+		t.Fatalf("GetOrganizationList() error = %v", err)
+	}
+	got := make([]string, 0, len(reply.Items))
+	for _, item := range reply.Items {
+		got = append(got, item.Id)
+	}
+	want := []string{"default-org", "org-a", "org-b"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("organization ids = %#v, want %#v", got, want)
+	}
+	if !reply.CanManageOrganizations {
+		t.Fatal("root role organization list should expose organization management capability")
+	}
+}
+
+func TestGetOrganizationListScopesRootOutsideDefaultOrganizationToCurrent(t *testing.T) {
+	uc := NewAdminUsecase(&organizationPermissionScopeRepo{
+		currentOrganizationID: "org-a",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+		organizations: map[string]*ent.Organization{
+			"default-org": {ID: "default-org", Name: "默认组织", Code: "default", Sort: 0, Status: true},
+			"org-a":       {ID: "org-a", Name: "A 组织", Code: "a", Sort: 1, Status: true},
+			"org-b":       {ID: "org-b", Name: "B 组织", Code: "b", Sort: 2, Status: true},
+		},
+	}, log.NewStdLogger(io.Discard))
+
+	reply, err := uc.GetOrganizationList(testUserContext(rootActorID), &v1.GetOrganizationListParams{PageSize: 200})
+	if err != nil {
+		t.Fatalf("GetOrganizationList() error = %v", err)
+	}
+	got := make([]string, 0, len(reply.Items))
+	for _, item := range reply.Items {
+		got = append(got, item.Id)
+	}
+	want := []string{"org-a"}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("organization ids = %#v, want %#v", got, want)
+	}
+	if reply.CanManageOrganizations {
+		t.Fatal("root outside default organization should not expose organization management capability")
 	}
 }
 
 func TestResolveOrganizationIDRejectsCrossOrganizationForNonRoot(t *testing.T) {
-	uc := NewAdminUsecase(&organizationPermissionScopeRepo{
+	nonRootUC := NewAdminUsecase(&organizationPermissionScopeRepo{
 		currentOrganizationID: "org-a",
+		defaultOrganizationID: "default-org",
 	}, log.NewStdLogger(io.Discard))
 
-	if _, err := uc.resolveOrganizationID(testUserContext("actor-a"), "org-b"); err == nil {
+	if _, err := nonRootUC.resolveOrganizationID(testUserContext("actor-a"), "org-b"); err == nil {
 		t.Fatal("expected cross-organization id to be rejected for non-root actor")
 	}
-	if got, err := uc.resolveOrganizationID(testUserContext("actor-a"), "org-a"); err != nil || got != "org-a" {
+	if got, err := nonRootUC.resolveOrganizationID(testUserContext("actor-a"), "org-a"); err != nil || got != "org-a" {
 		t.Fatalf("current organization resolve = %s, err = %v", got, err)
 	}
-	if got, err := uc.resolveOrganizationID(testUserContext(bootstrapRootUserID), "org-b"); err != nil || got != "org-b" {
+
+	rootUC := NewAdminUsecase(&organizationPermissionScopeRepo{
+		currentOrganizationID: "default-org",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+	}, log.NewStdLogger(io.Discard))
+	if got, err := rootUC.resolveOrganizationID(testUserContext(rootActorID), "org-b"); err != nil || got != "org-b" {
 		t.Fatalf("platform root cross-organization resolve = %s, err = %v", got, err)
 	}
 }
@@ -334,16 +445,23 @@ func TestValidateRoleGrantableRejectsOutsideActorGrant(t *testing.T) {
 	}
 }
 
-func TestValidateRoleGrantableAllowsBootstrapRoot(t *testing.T) {
-	uc := NewAdminUsecase(&organizationPermissionScopeRepo{}, log.NewStdLogger(io.Discard))
+func TestValidateRoleGrantableAllowsRootRole(t *testing.T) {
+	uc := NewAdminUsecase(&organizationPermissionScopeRepo{
+		currentOrganizationID: "default-org",
+		defaultOrganizationID: "default-org",
+		roleBindings: []*ent.UserRoleBinding{
+			{UserID: rootActorID, RoleID: 1, OrganizationID: "default-org"},
+		},
+		roleValues: map[int64]string{1: "root"},
+	}, log.NewStdLogger(io.Discard))
 
 	if err := uc.validateRoleGrantable(
-		testUserContext(bootstrapRootUserID),
+		testUserContext(rootActorID),
 		"org-a",
 		[]int32{999},
 		[]string{"resource-any"},
 	); err != nil {
-		t.Fatalf("bootstrap root should bypass grantable scope, got %v", err)
+		t.Fatalf("root role should bypass grantable scope, got %v", err)
 	}
 }
 
@@ -418,6 +536,8 @@ type organizationPermissionScopeRepo struct {
 	scopes                []*ent.OrganizationPermissionScope
 	roles                 []*ent.Role
 	rolesByID             map[int64]*ent.Role
+	roleBindings          []*ent.UserRoleBinding
+	roleValues            map[int64]string
 	userRoles             []*ent.Role
 	userBelongs           map[string]bool
 	currentOrganizationID string
@@ -513,6 +633,24 @@ func (r *organizationPermissionScopeRepo) GetRole(_ context.Context, roleID int6
 		}
 	}
 	return &ent.Role{ID: roleID}, nil
+}
+
+func (r *organizationPermissionScopeRepo) ListUserRoleBindings(context.Context) ([]*ent.UserRoleBinding, error) {
+	return r.roleBindings, nil
+}
+
+func (r *organizationPermissionScopeRepo) ResolveRoleValues(_ context.Context, roleIDs []int64) (map[int64]string, error) {
+	values := make(map[int64]string, len(roleIDs))
+	for _, roleID := range roleIDs {
+		if value := r.roleValues[roleID]; value != "" {
+			values[roleID] = value
+			continue
+		}
+		if item := r.rolesByID[roleID]; item != nil {
+			values[roleID] = item.Value
+		}
+	}
+	return values, nil
 }
 
 func (r *organizationPermissionScopeRepo) UserBelongsToOrganization(_ context.Context, userID string, organizationID string) (bool, error) {

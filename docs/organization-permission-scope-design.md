@@ -380,7 +380,7 @@ role.data_scope_dept_ids 全部属于当前组织
 - 已校验 `role.menus` / `role.resources` 不超过组织已配置可用范围。
 - 已校验 `role.menus` / `role.resources` 不超过操作者当前组织角色拥有的可分配范围。
 - 已校验 `role.data_scope` 不超过操作者可授权的数据范围：`all` 只能由拥有 `all` 的操作者授权，`custom_depts` 只能授权操作者已有的指定部门集合子集。
-- 只有 bootstrap root 用户可以创建、更新或分配 `root`。
+- 只有拥有 `root` 角色的用户可以创建、更新或分配 `root`；平台 root 能力只来自角色绑定，不允许通过固定用户 ID 判断。
 - 组织权限范围为空时表示该组织没有可分配的对应权限；角色不能选择超出已显式配置范围的菜单或资源。
 
 `data_scope_dept_ids` 可在 v1 用 JSON 数组落在 `sys_role` 上，便于和现有 `menus` 字段一致；如果后续需要审计每个部门授权变化，再拆成独立关联表。

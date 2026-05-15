@@ -348,6 +348,7 @@ message OrganizationItem {
 message GetOrganizationListReply {
   repeated OrganizationItem items = 1;
   int64 total = 2;
+  bool can_manage_organizations = 3;
 }
 
 message DeleteOrganization {
